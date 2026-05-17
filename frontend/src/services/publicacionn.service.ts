@@ -94,15 +94,20 @@ export const publicacionService = {
       totalCompartidos: Number(pub.totalCompartidos ?? 0),
     }));
   },
-// ==================== NUEVOS MÉTODOS HU-11 ====================
+  // ==================== NUEVOS MÉTODOS HU-11 ====================
   // PUBLICIDAD DE PROPIEDADES
 
   // Iniciar proceso de publicidad (simula pago)
-  async iniciarPublicidad(publicacionId: number): Promise<{ checkoutUrl: string }> {
-    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar`, {
-      method: "POST",
-      headers: getHeaders(),
-    });
+  async iniciarPublicidad(
+    publicacionId: number,
+  ): Promise<{ checkoutUrl: string }> {
+    const response = await fetch(
+      `${API_URL}/api/publicaciones/${publicacionId}/publicitar`,
+      {
+        method: "POST",
+        headers: getHeaders(),
+      },
+    );
 
     const data = await response.json();
 
@@ -117,13 +122,16 @@ export const publicacionService = {
   async confirmarPublicidad(
     publicacionId: number,
     paymentIntentId: string,
-    planId?: number
+    planId?: number,
   ): Promise<any> {
-    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar/confirmar`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify({ paymentIntentId, planId }),
-    });
+    const response = await fetch(
+      `${API_URL}/api/publicaciones/${publicacionId}/publicitar/confirmar`,
+      {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({ paymentIntentId, planId }),
+      },
+    );
 
     const data = await response.json();
 
@@ -135,11 +143,16 @@ export const publicacionService = {
   },
 
   // Cancelar publicidad activa
-  async cancelarPublicidad(publicacionId: number): Promise<{ ok: boolean; message: string }> {
-    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar/cancelar`, {
-      method: "DELETE",
-      headers: getHeaders(),
-    });
+  async cancelarPublicidad(
+    publicacionId: number,
+  ): Promise<{ ok: boolean; message: string }> {
+    const response = await fetch(
+      `${API_URL}/api/publicaciones/${publicacionId}/publicitar/cancelar`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      },
+    );
 
     const data = await response.json();
 
@@ -152,10 +165,13 @@ export const publicacionService = {
 
   // Obtener estado de publicidad de una publicación
   async obtenerEstadoPublicidad(publicacionId: number): Promise<any> {
-    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar/estado`, {
-      method: "GET",
-      headers: getHeaders(),
-    });
+    const response = await fetch(
+      `${API_URL}/api/publicaciones/${publicacionId}/publicitar/estado`,
+      {
+        method: "GET",
+        headers: getHeaders(),
+      },
+    );
 
     const data = await response.json();
 

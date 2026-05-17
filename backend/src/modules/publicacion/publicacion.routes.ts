@@ -38,7 +38,6 @@ router.put(
 router.put("/:id", requireAuth, editarPublicacionController);
 router.delete("/:id", requireAuth, eliminarPublicacionController);
 
-
 // ==================== NUEVAS RUTAS HU-11 ====================
 // PUBLICIDAD DE PROPIEDADES
 
@@ -49,14 +48,14 @@ router.post("/:id/publicitar", requireAuth, iniciarPublicidadController);
 router.post(
   "/:id/publicitar/confirmar",
   requireAuth,
-  confirmarPublicidadController
+  confirmarPublicidadController,
 );
 
 // Cancelar publicidad activa
 router.delete(
   "/:id/publicitar/cancelar",
   requireAuth,
-  cancelarPublicidadController
+  cancelarPublicidadController,
 );
 
 // Obtener estado de publicidad de una publicación

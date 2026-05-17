@@ -7,136 +7,137 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model grupo_marcadores
  *
  */
 export type grupo_marcadoresModel =
-  runtime.Types.Result.DefaultSelection<Prisma.$grupo_marcadoresPayload>
+  runtime.Types.Result.DefaultSelection<Prisma.$grupo_marcadoresPayload>;
 
 export type AggregateGrupo_marcadores = {
-  _count: Grupo_marcadoresCountAggregateOutputType | null
-  _avg: Grupo_marcadoresAvgAggregateOutputType | null
-  _sum: Grupo_marcadoresSumAggregateOutputType | null
-  _min: Grupo_marcadoresMinAggregateOutputType | null
-  _max: Grupo_marcadoresMaxAggregateOutputType | null
-}
+  _count: Grupo_marcadoresCountAggregateOutputType | null;
+  _avg: Grupo_marcadoresAvgAggregateOutputType | null;
+  _sum: Grupo_marcadoresSumAggregateOutputType | null;
+  _min: Grupo_marcadoresMinAggregateOutputType | null;
+  _max: Grupo_marcadoresMaxAggregateOutputType | null;
+};
 
 export type Grupo_marcadoresAvgAggregateOutputType = {
-  id: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  cantidad_inmuebles: number | null
-  nivel_zoom: number | null
-  radio_km: runtime.Decimal | null
-}
+  id: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  cantidad_inmuebles: number | null;
+  nivel_zoom: number | null;
+  radio_km: runtime.Decimal | null;
+};
 
 export type Grupo_marcadoresSumAggregateOutputType = {
-  id: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  cantidad_inmuebles: number | null
-  nivel_zoom: number | null
-  radio_km: runtime.Decimal | null
-}
+  id: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  cantidad_inmuebles: number | null;
+  nivel_zoom: number | null;
+  radio_km: runtime.Decimal | null;
+};
 
 export type Grupo_marcadoresMinAggregateOutputType = {
-  id: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  cantidad_inmuebles: number | null
-  nivel_color: string | null
-  nivel_zoom: number | null
-  radio_km: runtime.Decimal | null
-  actualizado_en: Date | null
-}
+  id: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  cantidad_inmuebles: number | null;
+  nivel_color: string | null;
+  nivel_zoom: number | null;
+  radio_km: runtime.Decimal | null;
+  actualizado_en: Date | null;
+};
 
 export type Grupo_marcadoresMaxAggregateOutputType = {
-  id: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  cantidad_inmuebles: number | null
-  nivel_color: string | null
-  nivel_zoom: number | null
-  radio_km: runtime.Decimal | null
-  actualizado_en: Date | null
-}
+  id: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  cantidad_inmuebles: number | null;
+  nivel_color: string | null;
+  nivel_zoom: number | null;
+  radio_km: runtime.Decimal | null;
+  actualizado_en: Date | null;
+};
 
 export type Grupo_marcadoresCountAggregateOutputType = {
-  id: number
-  latitud_centro: number
-  longitud_centro: number
-  cantidad_inmuebles: number
-  nivel_color: number
-  nivel_zoom: number
-  radio_km: number
-  actualizado_en: number
-  _all: number
-}
+  id: number;
+  latitud_centro: number;
+  longitud_centro: number;
+  cantidad_inmuebles: number;
+  nivel_color: number;
+  nivel_zoom: number;
+  radio_km: number;
+  actualizado_en: number;
+  _all: number;
+};
 
 export type Grupo_marcadoresAvgAggregateInputType = {
-  id?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  cantidad_inmuebles?: true
-  nivel_zoom?: true
-  radio_km?: true
-}
+  id?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  cantidad_inmuebles?: true;
+  nivel_zoom?: true;
+  radio_km?: true;
+};
 
 export type Grupo_marcadoresSumAggregateInputType = {
-  id?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  cantidad_inmuebles?: true
-  nivel_zoom?: true
-  radio_km?: true
-}
+  id?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  cantidad_inmuebles?: true;
+  nivel_zoom?: true;
+  radio_km?: true;
+};
 
 export type Grupo_marcadoresMinAggregateInputType = {
-  id?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  cantidad_inmuebles?: true
-  nivel_color?: true
-  nivel_zoom?: true
-  radio_km?: true
-  actualizado_en?: true
-}
+  id?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  cantidad_inmuebles?: true;
+  nivel_color?: true;
+  nivel_zoom?: true;
+  radio_km?: true;
+  actualizado_en?: true;
+};
 
 export type Grupo_marcadoresMaxAggregateInputType = {
-  id?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  cantidad_inmuebles?: true
-  nivel_color?: true
-  nivel_zoom?: true
-  radio_km?: true
-  actualizado_en?: true
-}
+  id?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  cantidad_inmuebles?: true;
+  nivel_color?: true;
+  nivel_zoom?: true;
+  radio_km?: true;
+  actualizado_en?: true;
+};
 
 export type Grupo_marcadoresCountAggregateInputType = {
-  id?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  cantidad_inmuebles?: true
-  nivel_color?: true
-  nivel_zoom?: true
-  radio_km?: true
-  actualizado_en?: true
-  _all?: true
-}
+  id?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  cantidad_inmuebles?: true;
+  nivel_color?: true;
+  nivel_zoom?: true;
+  radio_km?: true;
+  actualizado_en?: true;
+  _all?: true;
+};
 
 export type Grupo_marcadoresAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which grupo_marcadores to aggregate.
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -144,265 +145,292 @@ export type Grupo_marcadoresAggregateArgs<
    */
   orderBy?:
     | Prisma.grupo_marcadoresOrderByWithRelationInput
-    | Prisma.grupo_marcadoresOrderByWithRelationInput[]
+    | Prisma.grupo_marcadoresOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.grupo_marcadoresWhereUniqueInput
+  cursor?: Prisma.grupo_marcadoresWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` grupo_marcadores from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` grupo_marcadores.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned grupo_marcadores
    **/
-  _count?: true | Grupo_marcadoresCountAggregateInputType
+  _count?: true | Grupo_marcadoresCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Grupo_marcadoresAvgAggregateInputType
+  _avg?: Grupo_marcadoresAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Grupo_marcadoresSumAggregateInputType
+  _sum?: Grupo_marcadoresSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Grupo_marcadoresMinAggregateInputType
+  _min?: Grupo_marcadoresMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Grupo_marcadoresMaxAggregateInputType
-}
+  _max?: Grupo_marcadoresMaxAggregateInputType;
+};
 
-export type GetGrupo_marcadoresAggregateType<T extends Grupo_marcadoresAggregateArgs> = {
-  [P in keyof T & keyof AggregateGrupo_marcadores]: P extends '_count' | 'count'
+export type GetGrupo_marcadoresAggregateType<
+  T extends Grupo_marcadoresAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateGrupo_marcadores]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateGrupo_marcadores[P]>
-    : Prisma.GetScalarType<T[P], AggregateGrupo_marcadores[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateGrupo_marcadores[P]>;
+};
 
 export type grupo_marcadoresGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   orderBy?:
     | Prisma.grupo_marcadoresOrderByWithAggregationInput
-    | Prisma.grupo_marcadoresOrderByWithAggregationInput[]
-  by: Prisma.Grupo_marcadoresScalarFieldEnum[] | Prisma.Grupo_marcadoresScalarFieldEnum
-  having?: Prisma.grupo_marcadoresScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Grupo_marcadoresCountAggregateInputType | true
-  _avg?: Grupo_marcadoresAvgAggregateInputType
-  _sum?: Grupo_marcadoresSumAggregateInputType
-  _min?: Grupo_marcadoresMinAggregateInputType
-  _max?: Grupo_marcadoresMaxAggregateInputType
-}
+    | Prisma.grupo_marcadoresOrderByWithAggregationInput[];
+  by:
+    | Prisma.Grupo_marcadoresScalarFieldEnum[]
+    | Prisma.Grupo_marcadoresScalarFieldEnum;
+  having?: Prisma.grupo_marcadoresScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Grupo_marcadoresCountAggregateInputType | true;
+  _avg?: Grupo_marcadoresAvgAggregateInputType;
+  _sum?: Grupo_marcadoresSumAggregateInputType;
+  _min?: Grupo_marcadoresMinAggregateInputType;
+  _max?: Grupo_marcadoresMaxAggregateInputType;
+};
 
 export type Grupo_marcadoresGroupByOutputType = {
-  id: number
-  latitud_centro: runtime.Decimal
-  longitud_centro: runtime.Decimal
-  cantidad_inmuebles: number
-  nivel_color: string | null
-  nivel_zoom: number
-  radio_km: runtime.Decimal | null
-  actualizado_en: Date | null
-  _count: Grupo_marcadoresCountAggregateOutputType | null
-  _avg: Grupo_marcadoresAvgAggregateOutputType | null
-  _sum: Grupo_marcadoresSumAggregateOutputType | null
-  _min: Grupo_marcadoresMinAggregateOutputType | null
-  _max: Grupo_marcadoresMaxAggregateOutputType | null
-}
+  id: number;
+  latitud_centro: runtime.Decimal;
+  longitud_centro: runtime.Decimal;
+  cantidad_inmuebles: number;
+  nivel_color: string | null;
+  nivel_zoom: number;
+  radio_km: runtime.Decimal | null;
+  actualizado_en: Date | null;
+  _count: Grupo_marcadoresCountAggregateOutputType | null;
+  _avg: Grupo_marcadoresAvgAggregateOutputType | null;
+  _sum: Grupo_marcadoresSumAggregateOutputType | null;
+  _min: Grupo_marcadoresMinAggregateOutputType | null;
+  _max: Grupo_marcadoresMaxAggregateOutputType | null;
+};
 
-export type GetGrupo_marcadoresGroupByPayload<T extends grupo_marcadoresGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<Grupo_marcadoresGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Grupo_marcadoresGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], Grupo_marcadoresGroupByOutputType[P]>
+export type GetGrupo_marcadoresGroupByPayload<
+  T extends grupo_marcadoresGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<Grupo_marcadoresGroupByOutputType, T["by"]> & {
+      [P in keyof T &
+        keyof Grupo_marcadoresGroupByOutputType]: P extends "_count"
+        ? T[P] extends boolean
+          ? number
           : Prisma.GetScalarType<T[P], Grupo_marcadoresGroupByOutputType[P]>
-      }
-    >
+        : Prisma.GetScalarType<T[P], Grupo_marcadoresGroupByOutputType[P]>;
+    }
   >
+>;
 
 export type grupo_marcadoresWhereInput = {
-  AND?: Prisma.grupo_marcadoresWhereInput | Prisma.grupo_marcadoresWhereInput[]
-  OR?: Prisma.grupo_marcadoresWhereInput[]
-  NOT?: Prisma.grupo_marcadoresWhereInput | Prisma.grupo_marcadoresWhereInput[]
-  id?: Prisma.IntFilter<'grupo_marcadores'> | number
+  AND?: Prisma.grupo_marcadoresWhereInput | Prisma.grupo_marcadoresWhereInput[];
+  OR?: Prisma.grupo_marcadoresWhereInput[];
+  NOT?: Prisma.grupo_marcadoresWhereInput | Prisma.grupo_marcadoresWhereInput[];
+  id?: Prisma.IntFilter<"grupo_marcadores"> | number;
   latitud_centro?:
-    | Prisma.DecimalFilter<'grupo_marcadores'>
+    | Prisma.DecimalFilter<"grupo_marcadores">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
-    | Prisma.DecimalFilter<'grupo_marcadores'>
+    | Prisma.DecimalFilter<"grupo_marcadores">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFilter<'grupo_marcadores'> | number
-  nivel_color?: Prisma.StringNullableFilter<'grupo_marcadores'> | string | null
-  nivel_zoom?: Prisma.IntFilter<'grupo_marcadores'> | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFilter<"grupo_marcadores"> | number;
+  nivel_color?: Prisma.StringNullableFilter<"grupo_marcadores"> | string | null;
+  nivel_zoom?: Prisma.IntFilter<"grupo_marcadores"> | number;
   radio_km?:
-    | Prisma.DecimalNullableFilter<'grupo_marcadores'>
+    | Prisma.DecimalNullableFilter<"grupo_marcadores">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.DateTimeNullableFilter<'grupo_marcadores'> | Date | string | null
-  detalle_grupo?: Prisma.Detalle_grupoListRelationFilter
-}
+    | null;
+  actualizado_en?:
+    | Prisma.DateTimeNullableFilter<"grupo_marcadores">
+    | Date
+    | string
+    | null;
+  detalle_grupo?: Prisma.Detalle_grupoListRelationFilter;
+};
 
 export type grupo_marcadoresOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_color?: Prisma.SortOrderInput | Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualizado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  detalle_grupo?: Prisma.detalle_grupoOrderByRelationAggregateInput
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_color?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrderInput | Prisma.SortOrder;
+  actualizado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  detalle_grupo?: Prisma.detalle_grupoOrderByRelationAggregateInput;
+};
 
 export type grupo_marcadoresWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.grupo_marcadoresWhereInput | Prisma.grupo_marcadoresWhereInput[]
-    OR?: Prisma.grupo_marcadoresWhereInput[]
-    NOT?: Prisma.grupo_marcadoresWhereInput | Prisma.grupo_marcadoresWhereInput[]
+    id?: number;
+    AND?:
+      | Prisma.grupo_marcadoresWhereInput
+      | Prisma.grupo_marcadoresWhereInput[];
+    OR?: Prisma.grupo_marcadoresWhereInput[];
+    NOT?:
+      | Prisma.grupo_marcadoresWhereInput
+      | Prisma.grupo_marcadoresWhereInput[];
     latitud_centro?:
-      | Prisma.DecimalFilter<'grupo_marcadores'>
+      | Prisma.DecimalFilter<"grupo_marcadores">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
+      | string;
     longitud_centro?:
-      | Prisma.DecimalFilter<'grupo_marcadores'>
+      | Prisma.DecimalFilter<"grupo_marcadores">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
+      | string;
+    cantidad_inmuebles?: Prisma.IntFilter<"grupo_marcadores"> | number;
+    nivel_color?:
+      | Prisma.StringNullableFilter<"grupo_marcadores">
       | string
-    cantidad_inmuebles?: Prisma.IntFilter<'grupo_marcadores'> | number
-    nivel_color?: Prisma.StringNullableFilter<'grupo_marcadores'> | string | null
-    nivel_zoom?: Prisma.IntFilter<'grupo_marcadores'> | number
+      | null;
+    nivel_zoom?: Prisma.IntFilter<"grupo_marcadores"> | number;
     radio_km?:
-      | Prisma.DecimalNullableFilter<'grupo_marcadores'>
+      | Prisma.DecimalNullableFilter<"grupo_marcadores">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
-    actualizado_en?: Prisma.DateTimeNullableFilter<'grupo_marcadores'> | Date | string | null
-    detalle_grupo?: Prisma.Detalle_grupoListRelationFilter
+      | null;
+    actualizado_en?:
+      | Prisma.DateTimeNullableFilter<"grupo_marcadores">
+      | Date
+      | string
+      | null;
+    detalle_grupo?: Prisma.Detalle_grupoListRelationFilter;
   },
-  'id'
->
+  "id"
+>;
 
 export type grupo_marcadoresOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_color?: Prisma.SortOrderInput | Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualizado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.grupo_marcadoresCountOrderByAggregateInput
-  _avg?: Prisma.grupo_marcadoresAvgOrderByAggregateInput
-  _max?: Prisma.grupo_marcadoresMaxOrderByAggregateInput
-  _min?: Prisma.grupo_marcadoresMinOrderByAggregateInput
-  _sum?: Prisma.grupo_marcadoresSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_color?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrderInput | Prisma.SortOrder;
+  actualizado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.grupo_marcadoresCountOrderByAggregateInput;
+  _avg?: Prisma.grupo_marcadoresAvgOrderByAggregateInput;
+  _max?: Prisma.grupo_marcadoresMaxOrderByAggregateInput;
+  _min?: Prisma.grupo_marcadoresMinOrderByAggregateInput;
+  _sum?: Prisma.grupo_marcadoresSumOrderByAggregateInput;
+};
 
 export type grupo_marcadoresScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.grupo_marcadoresScalarWhereWithAggregatesInput
-    | Prisma.grupo_marcadoresScalarWhereWithAggregatesInput[]
-  OR?: Prisma.grupo_marcadoresScalarWhereWithAggregatesInput[]
+    | Prisma.grupo_marcadoresScalarWhereWithAggregatesInput[];
+  OR?: Prisma.grupo_marcadoresScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.grupo_marcadoresScalarWhereWithAggregatesInput
-    | Prisma.grupo_marcadoresScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'grupo_marcadores'> | number
+    | Prisma.grupo_marcadoresScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"grupo_marcadores"> | number;
   latitud_centro?:
-    | Prisma.DecimalWithAggregatesFilter<'grupo_marcadores'>
+    | Prisma.DecimalWithAggregatesFilter<"grupo_marcadores">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
-    | Prisma.DecimalWithAggregatesFilter<'grupo_marcadores'>
+    | Prisma.DecimalWithAggregatesFilter<"grupo_marcadores">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  cantidad_inmuebles?:
+    | Prisma.IntWithAggregatesFilter<"grupo_marcadores">
+    | number;
+  nivel_color?:
+    | Prisma.StringNullableWithAggregatesFilter<"grupo_marcadores">
     | string
-  cantidad_inmuebles?: Prisma.IntWithAggregatesFilter<'grupo_marcadores'> | number
-  nivel_color?: Prisma.StringNullableWithAggregatesFilter<'grupo_marcadores'> | string | null
-  nivel_zoom?: Prisma.IntWithAggregatesFilter<'grupo_marcadores'> | number
+    | null;
+  nivel_zoom?: Prisma.IntWithAggregatesFilter<"grupo_marcadores"> | number;
   radio_km?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'grupo_marcadores'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"grupo_marcadores">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   actualizado_en?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'grupo_marcadores'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"grupo_marcadores">
     | Date
     | string
-    | null
-}
+    | null;
+};
 
 export type grupo_marcadoresCreateInput = {
-  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cantidad_inmuebles: number
-  nivel_color?: string | null
-  nivel_zoom: number
-  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  actualizado_en?: Date | string | null
-  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutGrupo_marcadoresInput
-}
+  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  cantidad_inmuebles: number;
+  nivel_color?: string | null;
+  nivel_zoom: number;
+  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  actualizado_en?: Date | string | null;
+  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutGrupo_marcadoresInput;
+};
 
 export type grupo_marcadoresUncheckedCreateInput = {
-  id?: number
-  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cantidad_inmuebles: number
-  nivel_color?: string | null
-  nivel_zoom: number
-  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  actualizado_en?: Date | string | null
-  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutGrupo_marcadoresInput
-}
+  id?: number;
+  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  cantidad_inmuebles: number;
+  nivel_color?: string | null;
+  nivel_zoom: number;
+  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  actualizado_en?: Date | string | null;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutGrupo_marcadoresInput;
+};
 
 export type grupo_marcadoresUpdateInput = {
   latitud_centro?:
@@ -410,65 +438,73 @@ export type grupo_marcadoresUpdateInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number
-  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number;
+  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   radio_km?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutGrupo_marcadoresNestedInput
-}
+    | null;
+  actualizado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutGrupo_marcadoresNestedInput;
+};
 
 export type grupo_marcadoresUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number
-  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number;
+  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   radio_km?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutGrupo_marcadoresNestedInput
-}
+    | null;
+  actualizado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutGrupo_marcadoresNestedInput;
+};
 
 export type grupo_marcadoresCreateManyInput = {
-  id?: number
-  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cantidad_inmuebles: number
-  nivel_color?: string | null
-  nivel_zoom: number
-  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  actualizado_en?: Date | string | null
-}
+  id?: number;
+  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  cantidad_inmuebles: number;
+  nivel_color?: string | null;
+  nivel_zoom: number;
+  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  actualizado_en?: Date | string | null;
+};
 
 export type grupo_marcadoresUpdateManyMutationInput = {
   latitud_centro?:
@@ -476,199 +512,207 @@ export type grupo_marcadoresUpdateManyMutationInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number
-  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number;
+  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   radio_km?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  actualizado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type grupo_marcadoresUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number
-  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number;
+  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   radio_km?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  actualizado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type Grupo_marcadoresScalarRelationFilter = {
-  is?: Prisma.grupo_marcadoresWhereInput
-  isNot?: Prisma.grupo_marcadoresWhereInput
-}
+  is?: Prisma.grupo_marcadoresWhereInput;
+  isNot?: Prisma.grupo_marcadoresWhereInput;
+};
 
 export type grupo_marcadoresCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_color?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrder
-  actualizado_en?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_color?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrder;
+  actualizado_en?: Prisma.SortOrder;
+};
 
 export type grupo_marcadoresAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrder;
+};
 
 export type grupo_marcadoresMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_color?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrder
-  actualizado_en?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_color?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrder;
+  actualizado_en?: Prisma.SortOrder;
+};
 
 export type grupo_marcadoresMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_color?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrder
-  actualizado_en?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_color?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrder;
+  actualizado_en?: Prisma.SortOrder;
+};
 
 export type grupo_marcadoresSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  cantidad_inmuebles?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  radio_km?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  cantidad_inmuebles?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  radio_km?: Prisma.SortOrder;
+};
 
 export type grupo_marcadoresCreateNestedOneWithoutDetalle_grupoInput = {
   create?: Prisma.XOR<
     Prisma.grupo_marcadoresCreateWithoutDetalle_grupoInput,
     Prisma.grupo_marcadoresUncheckedCreateWithoutDetalle_grupoInput
-  >
-  connectOrCreate?: Prisma.grupo_marcadoresCreateOrConnectWithoutDetalle_grupoInput
-  connect?: Prisma.grupo_marcadoresWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.grupo_marcadoresCreateOrConnectWithoutDetalle_grupoInput;
+  connect?: Prisma.grupo_marcadoresWhereUniqueInput;
+};
 
 export type grupo_marcadoresUpdateOneRequiredWithoutDetalle_grupoNestedInput = {
   create?: Prisma.XOR<
     Prisma.grupo_marcadoresCreateWithoutDetalle_grupoInput,
     Prisma.grupo_marcadoresUncheckedCreateWithoutDetalle_grupoInput
-  >
-  connectOrCreate?: Prisma.grupo_marcadoresCreateOrConnectWithoutDetalle_grupoInput
-  upsert?: Prisma.grupo_marcadoresUpsertWithoutDetalle_grupoInput
-  connect?: Prisma.grupo_marcadoresWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.grupo_marcadoresCreateOrConnectWithoutDetalle_grupoInput;
+  upsert?: Prisma.grupo_marcadoresUpsertWithoutDetalle_grupoInput;
+  connect?: Prisma.grupo_marcadoresWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.grupo_marcadoresUpdateToOneWithWhereWithoutDetalle_grupoInput,
       Prisma.grupo_marcadoresUpdateWithoutDetalle_grupoInput
     >,
     Prisma.grupo_marcadoresUncheckedUpdateWithoutDetalle_grupoInput
-  >
-}
+  >;
+};
 
 export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+};
 
 export type NullableDecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+};
 
 export type grupo_marcadoresCreateWithoutDetalle_grupoInput = {
-  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cantidad_inmuebles: number
-  nivel_color?: string | null
-  nivel_zoom: number
-  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  actualizado_en?: Date | string | null
-}
+  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  cantidad_inmuebles: number;
+  nivel_color?: string | null;
+  nivel_zoom: number;
+  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  actualizado_en?: Date | string | null;
+};
 
 export type grupo_marcadoresUncheckedCreateWithoutDetalle_grupoInput = {
-  id?: number
-  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string
-  cantidad_inmuebles: number
-  nivel_color?: string | null
-  nivel_zoom: number
-  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  actualizado_en?: Date | string | null
-}
+  id?: number;
+  latitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud_centro: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  cantidad_inmuebles: number;
+  nivel_color?: string | null;
+  nivel_zoom: number;
+  radio_km?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  actualizado_en?: Date | string | null;
+};
 
 export type grupo_marcadoresCreateOrConnectWithoutDetalle_grupoInput = {
-  where: Prisma.grupo_marcadoresWhereUniqueInput
+  where: Prisma.grupo_marcadoresWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.grupo_marcadoresCreateWithoutDetalle_grupoInput,
     Prisma.grupo_marcadoresUncheckedCreateWithoutDetalle_grupoInput
-  >
-}
+  >;
+};
 
 export type grupo_marcadoresUpsertWithoutDetalle_grupoInput = {
   update: Prisma.XOR<
     Prisma.grupo_marcadoresUpdateWithoutDetalle_grupoInput,
     Prisma.grupo_marcadoresUncheckedUpdateWithoutDetalle_grupoInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.grupo_marcadoresCreateWithoutDetalle_grupoInput,
     Prisma.grupo_marcadoresUncheckedCreateWithoutDetalle_grupoInput
-  >
-  where?: Prisma.grupo_marcadoresWhereInput
-}
+  >;
+  where?: Prisma.grupo_marcadoresWhereInput;
+};
 
 export type grupo_marcadoresUpdateToOneWithWhereWithoutDetalle_grupoInput = {
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   data: Prisma.XOR<
     Prisma.grupo_marcadoresUpdateWithoutDetalle_grupoInput,
     Prisma.grupo_marcadoresUncheckedUpdateWithoutDetalle_grupoInput
-  >
-}
+  >;
+};
 
 export type grupo_marcadoresUpdateWithoutDetalle_grupoInput = {
   latitud_centro?:
@@ -676,216 +720,246 @@ export type grupo_marcadoresUpdateWithoutDetalle_grupoInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number
-  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number;
+  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   radio_km?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  actualizado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type grupo_marcadoresUncheckedUpdateWithoutDetalle_grupoInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud_centro?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number
-  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | string;
+  cantidad_inmuebles?: Prisma.IntFieldUpdateOperationsInput | number;
+  nivel_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   radio_km?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  actualizado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  actualizado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 /**
  * Count Type Grupo_marcadoresCountOutputType
  */
 
 export type Grupo_marcadoresCountOutputType = {
-  detalle_grupo: number
-}
+  detalle_grupo: number;
+};
 
 export type Grupo_marcadoresCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  detalle_grupo?: boolean | Grupo_marcadoresCountOutputTypeCountDetalle_grupoArgs
-}
+  detalle_grupo?:
+    | boolean
+    | Grupo_marcadoresCountOutputTypeCountDetalle_grupoArgs;
+};
 
 /**
  * Grupo_marcadoresCountOutputType without action
  */
 export type Grupo_marcadoresCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the Grupo_marcadoresCountOutputType
    */
-  select?: Prisma.Grupo_marcadoresCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.Grupo_marcadoresCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * Grupo_marcadoresCountOutputType without action
  */
 export type Grupo_marcadoresCountOutputTypeCountDetalle_grupoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.detalle_grupoWhereInput
-}
+  where?: Prisma.detalle_grupoWhereInput;
+};
 
 export type grupo_marcadoresSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    latitud_centro?: boolean
-    longitud_centro?: boolean
-    cantidad_inmuebles?: boolean
-    nivel_color?: boolean
-    nivel_zoom?: boolean
-    radio_km?: boolean
-    actualizado_en?: boolean
-    detalle_grupo?: boolean | Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs>
-    _count?: boolean | Prisma.Grupo_marcadoresCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    latitud_centro?: boolean;
+    longitud_centro?: boolean;
+    cantidad_inmuebles?: boolean;
+    nivel_color?: boolean;
+    nivel_zoom?: boolean;
+    radio_km?: boolean;
+    actualizado_en?: boolean;
+    detalle_grupo?:
+      | boolean
+      | Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs>;
+    _count?:
+      | boolean
+      | Prisma.Grupo_marcadoresCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['grupo_marcadores']
->
+  ExtArgs["result"]["grupo_marcadores"]
+>;
 
 export type grupo_marcadoresSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    latitud_centro?: boolean
-    longitud_centro?: boolean
-    cantidad_inmuebles?: boolean
-    nivel_color?: boolean
-    nivel_zoom?: boolean
-    radio_km?: boolean
-    actualizado_en?: boolean
+    id?: boolean;
+    latitud_centro?: boolean;
+    longitud_centro?: boolean;
+    cantidad_inmuebles?: boolean;
+    nivel_color?: boolean;
+    nivel_zoom?: boolean;
+    radio_km?: boolean;
+    actualizado_en?: boolean;
   },
-  ExtArgs['result']['grupo_marcadores']
->
+  ExtArgs["result"]["grupo_marcadores"]
+>;
 
 export type grupo_marcadoresSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    latitud_centro?: boolean
-    longitud_centro?: boolean
-    cantidad_inmuebles?: boolean
-    nivel_color?: boolean
-    nivel_zoom?: boolean
-    radio_km?: boolean
-    actualizado_en?: boolean
+    id?: boolean;
+    latitud_centro?: boolean;
+    longitud_centro?: boolean;
+    cantidad_inmuebles?: boolean;
+    nivel_color?: boolean;
+    nivel_zoom?: boolean;
+    radio_km?: boolean;
+    actualizado_en?: boolean;
   },
-  ExtArgs['result']['grupo_marcadores']
->
+  ExtArgs["result"]["grupo_marcadores"]
+>;
 
 export type grupo_marcadoresSelectScalar = {
-  id?: boolean
-  latitud_centro?: boolean
-  longitud_centro?: boolean
-  cantidad_inmuebles?: boolean
-  nivel_color?: boolean
-  nivel_zoom?: boolean
-  radio_km?: boolean
-  actualizado_en?: boolean
-}
+  id?: boolean;
+  latitud_centro?: boolean;
+  longitud_centro?: boolean;
+  cantidad_inmuebles?: boolean;
+  nivel_color?: boolean;
+  nivel_zoom?: boolean;
+  radio_km?: boolean;
+  actualizado_en?: boolean;
+};
 
 export type grupo_marcadoresOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'latitud_centro'
-  | 'longitud_centro'
-  | 'cantidad_inmuebles'
-  | 'nivel_color'
-  | 'nivel_zoom'
-  | 'radio_km'
-  | 'actualizado_en',
-  ExtArgs['result']['grupo_marcadores']
->
+  | "id"
+  | "latitud_centro"
+  | "longitud_centro"
+  | "cantidad_inmuebles"
+  | "nivel_color"
+  | "nivel_zoom"
+  | "radio_km"
+  | "actualizado_en",
+  ExtArgs["result"]["grupo_marcadores"]
+>;
 export type grupo_marcadoresInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  detalle_grupo?: boolean | Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs>
-  _count?: boolean | Prisma.Grupo_marcadoresCountOutputTypeDefaultArgs<ExtArgs>
-}
+  detalle_grupo?: boolean | Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs>;
+  _count?: boolean | Prisma.Grupo_marcadoresCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type grupo_marcadoresIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 export type grupo_marcadoresIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 
 export type $grupo_marcadoresPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'grupo_marcadores'
+  name: "grupo_marcadores";
   objects: {
-    detalle_grupo: Prisma.$detalle_grupoPayload<ExtArgs>[]
-  }
+    detalle_grupo: Prisma.$detalle_grupoPayload<ExtArgs>[];
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      latitud_centro: runtime.Decimal
-      longitud_centro: runtime.Decimal
-      cantidad_inmuebles: number
-      nivel_color: string | null
-      nivel_zoom: number
-      radio_km: runtime.Decimal | null
-      actualizado_en: Date | null
+      id: number;
+      latitud_centro: runtime.Decimal;
+      longitud_centro: runtime.Decimal;
+      cantidad_inmuebles: number;
+      nivel_color: string | null;
+      nivel_zoom: number;
+      radio_km: runtime.Decimal | null;
+      actualizado_en: Date | null;
     },
-    ExtArgs['result']['grupo_marcadores']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["grupo_marcadores"]
+  >;
+  composites: {};
+};
 
 export type grupo_marcadoresGetPayload<
-  S extends boolean | null | undefined | grupo_marcadoresDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$grupo_marcadoresPayload, S>
+  S extends boolean | null | undefined | grupo_marcadoresDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$grupo_marcadoresPayload, S>;
 
 export type grupo_marcadoresCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<grupo_marcadoresFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Grupo_marcadoresCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  grupo_marcadoresFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Grupo_marcadoresCountAggregateInputType | true;
+};
 
 export interface grupo_marcadoresDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['grupo_marcadores']
-    meta: { name: 'grupo_marcadores' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["grupo_marcadores"];
+    meta: { name: "grupo_marcadores" };
+  };
   /**
    * Find zero or one Grupo_marcadores that matches the filter.
    * @param {grupo_marcadoresFindUniqueArgs} args - Arguments to find a Grupo_marcadores
@@ -898,18 +972,18 @@ export interface grupo_marcadoresDelegate<
    * })
    */
   findUnique<T extends grupo_marcadoresFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, grupo_marcadoresFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Grupo_marcadores that matches the filter or throw an error with `error.code='P2025'`
@@ -924,18 +998,21 @@ export interface grupo_marcadoresDelegate<
    * })
    */
   findUniqueOrThrow<T extends grupo_marcadoresFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      grupo_marcadoresFindUniqueOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Grupo_marcadores that matches the filter.
@@ -951,18 +1028,18 @@ export interface grupo_marcadoresDelegate<
    * })
    */
   findFirst<T extends grupo_marcadoresFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, grupo_marcadoresFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, grupo_marcadoresFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Grupo_marcadores that matches the filter or
@@ -979,18 +1056,21 @@ export interface grupo_marcadoresDelegate<
    * })
    */
   findFirstOrThrow<T extends grupo_marcadoresFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, grupo_marcadoresFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      grupo_marcadoresFindFirstOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Grupo_marcadores that matches the filter.
@@ -1009,15 +1089,15 @@ export interface grupo_marcadoresDelegate<
    *
    */
   findMany<T extends grupo_marcadoresFindManyArgs>(
-    args?: Prisma.SelectSubset<T, grupo_marcadoresFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, grupo_marcadoresFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Grupo_marcadores.
@@ -1032,18 +1112,18 @@ export interface grupo_marcadoresDelegate<
    *
    */
   create<T extends grupo_marcadoresCreateArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, grupo_marcadoresCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Grupo_marcadores.
@@ -1058,8 +1138,8 @@ export interface grupo_marcadoresDelegate<
    *
    */
   createMany<T extends grupo_marcadoresCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, grupo_marcadoresCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, grupo_marcadoresCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Grupo_marcadores and returns the data saved in the database.
@@ -1084,15 +1164,18 @@ export interface grupo_marcadoresDelegate<
    *
    */
   createManyAndReturn<T extends grupo_marcadoresCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, grupo_marcadoresCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      grupo_marcadoresCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Grupo_marcadores.
@@ -1107,18 +1190,18 @@ export interface grupo_marcadoresDelegate<
    *
    */
   delete<T extends grupo_marcadoresDeleteArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, grupo_marcadoresDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Grupo_marcadores.
@@ -1136,18 +1219,18 @@ export interface grupo_marcadoresDelegate<
    *
    */
   update<T extends grupo_marcadoresUpdateArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, grupo_marcadoresUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Grupo_marcadores.
@@ -1162,8 +1245,8 @@ export interface grupo_marcadoresDelegate<
    *
    */
   deleteMany<T extends grupo_marcadoresDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, grupo_marcadoresDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, grupo_marcadoresDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Grupo_marcadores.
@@ -1183,8 +1266,8 @@ export interface grupo_marcadoresDelegate<
    *
    */
   updateMany<T extends grupo_marcadoresUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, grupo_marcadoresUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Grupo_marcadores and returns the data updated in the database.
@@ -1215,15 +1298,18 @@ export interface grupo_marcadoresDelegate<
    *
    */
   updateManyAndReturn<T extends grupo_marcadoresUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      grupo_marcadoresUpdateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Grupo_marcadores.
@@ -1243,18 +1329,18 @@ export interface grupo_marcadoresDelegate<
    * })
    */
   upsert<T extends grupo_marcadoresUpsertArgs>(
-    args: Prisma.SelectSubset<T, grupo_marcadoresUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, grupo_marcadoresUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     runtime.Types.Result.GetResult<
       Prisma.$grupo_marcadoresPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Grupo_marcadores.
@@ -1270,14 +1356,17 @@ export interface grupo_marcadoresDelegate<
    * })
    **/
   count<T extends grupo_marcadoresCountArgs>(
-    args?: Prisma.Subset<T, grupo_marcadoresCountArgs>
+    args?: Prisma.Subset<T, grupo_marcadoresCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Grupo_marcadoresCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Grupo_marcadoresCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Grupo_marcadores.
@@ -1304,8 +1393,8 @@ export interface grupo_marcadoresDelegate<
    * })
    **/
   aggregate<T extends Grupo_marcadoresAggregateArgs>(
-    args: Prisma.Subset<T, Grupo_marcadoresAggregateArgs>
-  ): Prisma.PrismaPromise<GetGrupo_marcadoresAggregateType<T>>
+    args: Prisma.Subset<T, Grupo_marcadoresAggregateArgs>,
+  ): Prisma.PrismaPromise<GetGrupo_marcadoresAggregateType<T>>;
 
   /**
    * Group by Grupo_marcadores.
@@ -1328,20 +1417,20 @@ export interface grupo_marcadoresDelegate<
   groupBy<
     T extends grupo_marcadoresGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: grupo_marcadoresGroupByArgs['orderBy'] }
-      : { orderBy?: grupo_marcadoresGroupByArgs['orderBy'] },
+      ? { orderBy: grupo_marcadoresGroupByArgs["orderBy"] }
+      : { orderBy?: grupo_marcadoresGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1350,26 +1439,31 @@ export interface grupo_marcadoresDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1377,17 +1471,22 @@ export interface grupo_marcadoresDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, grupo_marcadoresGroupByArgs, OrderByArg> & InputErrors
+    args: Prisma.SubsetIntersection<
+      T,
+      grupo_marcadoresGroupByArgs,
+      OrderByArg
+    > &
+      InputErrors,
   ): {} extends InputErrors
     ? GetGrupo_marcadoresGroupByPayload<T>
-    : Prisma.PrismaPromise<InputErrors>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the grupo_marcadores model
    */
-  readonly fields: grupo_marcadoresFieldRefs
+  readonly fields: grupo_marcadoresFieldRefs;
 }
 
 /**
@@ -1399,21 +1498,24 @@ export interface grupo_marcadoresDelegate<
 export interface Prisma__grupo_marcadoresClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  detalle_grupo<T extends Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  detalle_grupo<
+    T extends Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.grupo_marcadores$detalle_grupoArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$detalle_grupoPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1421,38 +1523,49 @@ export interface Prisma__grupo_marcadoresClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the grupo_marcadores model
  */
 export interface grupo_marcadoresFieldRefs {
-  readonly id: Prisma.FieldRef<'grupo_marcadores', 'Int'>
-  readonly latitud_centro: Prisma.FieldRef<'grupo_marcadores', 'Decimal'>
-  readonly longitud_centro: Prisma.FieldRef<'grupo_marcadores', 'Decimal'>
-  readonly cantidad_inmuebles: Prisma.FieldRef<'grupo_marcadores', 'Int'>
-  readonly nivel_color: Prisma.FieldRef<'grupo_marcadores', 'String'>
-  readonly nivel_zoom: Prisma.FieldRef<'grupo_marcadores', 'Int'>
-  readonly radio_km: Prisma.FieldRef<'grupo_marcadores', 'Decimal'>
-  readonly actualizado_en: Prisma.FieldRef<'grupo_marcadores', 'DateTime'>
+  readonly id: Prisma.FieldRef<"grupo_marcadores", "Int">;
+  readonly latitud_centro: Prisma.FieldRef<"grupo_marcadores", "Decimal">;
+  readonly longitud_centro: Prisma.FieldRef<"grupo_marcadores", "Decimal">;
+  readonly cantidad_inmuebles: Prisma.FieldRef<"grupo_marcadores", "Int">;
+  readonly nivel_color: Prisma.FieldRef<"grupo_marcadores", "String">;
+  readonly nivel_zoom: Prisma.FieldRef<"grupo_marcadores", "Int">;
+  readonly radio_km: Prisma.FieldRef<"grupo_marcadores", "Decimal">;
+  readonly actualizado_en: Prisma.FieldRef<"grupo_marcadores", "DateTime">;
 }
 
 // Custom InputTypes
@@ -1460,72 +1573,75 @@ export interface grupo_marcadoresFieldRefs {
  * grupo_marcadores findUnique
  */
 export type grupo_marcadoresFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * Filter, which grupo_marcadores to fetch.
    */
-  where: Prisma.grupo_marcadoresWhereUniqueInput
-}
+  where: Prisma.grupo_marcadoresWhereUniqueInput;
+};
 
 /**
  * grupo_marcadores findUniqueOrThrow
  */
 export type grupo_marcadoresFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * Filter, which grupo_marcadores to fetch.
    */
-  where: Prisma.grupo_marcadoresWhereUniqueInput
-}
+  where: Prisma.grupo_marcadoresWhereUniqueInput;
+};
 
 /**
  * grupo_marcadores findFirst
  */
 export type grupo_marcadoresFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * Filter, which grupo_marcadores to fetch.
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1533,55 +1649,58 @@ export type grupo_marcadoresFindFirstArgs<
    */
   orderBy?:
     | Prisma.grupo_marcadoresOrderByWithRelationInput
-    | Prisma.grupo_marcadoresOrderByWithRelationInput[]
+    | Prisma.grupo_marcadoresOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for grupo_marcadores.
    */
-  cursor?: Prisma.grupo_marcadoresWhereUniqueInput
+  cursor?: Prisma.grupo_marcadoresWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` grupo_marcadores from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` grupo_marcadores.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of grupo_marcadores.
    */
-  distinct?: Prisma.Grupo_marcadoresScalarFieldEnum | Prisma.Grupo_marcadoresScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Grupo_marcadoresScalarFieldEnum
+    | Prisma.Grupo_marcadoresScalarFieldEnum[];
+};
 
 /**
  * grupo_marcadores findFirstOrThrow
  */
 export type grupo_marcadoresFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * Filter, which grupo_marcadores to fetch.
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1589,55 +1708,58 @@ export type grupo_marcadoresFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.grupo_marcadoresOrderByWithRelationInput
-    | Prisma.grupo_marcadoresOrderByWithRelationInput[]
+    | Prisma.grupo_marcadoresOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for grupo_marcadores.
    */
-  cursor?: Prisma.grupo_marcadoresWhereUniqueInput
+  cursor?: Prisma.grupo_marcadoresWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` grupo_marcadores from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` grupo_marcadores.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of grupo_marcadores.
    */
-  distinct?: Prisma.Grupo_marcadoresScalarFieldEnum | Prisma.Grupo_marcadoresScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Grupo_marcadoresScalarFieldEnum
+    | Prisma.Grupo_marcadoresScalarFieldEnum[];
+};
 
 /**
  * grupo_marcadores findMany
  */
 export type grupo_marcadoresFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * Filter, which grupo_marcadores to fetch.
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1645,124 +1767,141 @@ export type grupo_marcadoresFindManyArgs<
    */
   orderBy?:
     | Prisma.grupo_marcadoresOrderByWithRelationInput
-    | Prisma.grupo_marcadoresOrderByWithRelationInput[]
+    | Prisma.grupo_marcadoresOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing grupo_marcadores.
    */
-  cursor?: Prisma.grupo_marcadoresWhereUniqueInput
+  cursor?: Prisma.grupo_marcadoresWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` grupo_marcadores from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` grupo_marcadores.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of grupo_marcadores.
    */
-  distinct?: Prisma.Grupo_marcadoresScalarFieldEnum | Prisma.Grupo_marcadoresScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Grupo_marcadoresScalarFieldEnum
+    | Prisma.Grupo_marcadoresScalarFieldEnum[];
+};
 
 /**
  * grupo_marcadores create
  */
 export type grupo_marcadoresCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * The data needed to create a grupo_marcadores.
    */
-  data: Prisma.XOR<Prisma.grupo_marcadoresCreateInput, Prisma.grupo_marcadoresUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.grupo_marcadoresCreateInput,
+    Prisma.grupo_marcadoresUncheckedCreateInput
+  >;
+};
 
 /**
  * grupo_marcadores createMany
  */
 export type grupo_marcadoresCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many grupo_marcadores.
    */
-  data: Prisma.grupo_marcadoresCreateManyInput | Prisma.grupo_marcadoresCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.grupo_marcadoresCreateManyInput
+    | Prisma.grupo_marcadoresCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * grupo_marcadores createManyAndReturn
  */
 export type grupo_marcadoresCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * The data used to create many grupo_marcadores.
    */
-  data: Prisma.grupo_marcadoresCreateManyInput | Prisma.grupo_marcadoresCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.grupo_marcadoresCreateManyInput
+    | Prisma.grupo_marcadoresCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * grupo_marcadores update
  */
 export type grupo_marcadoresUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * The data needed to update a grupo_marcadores.
    */
-  data: Prisma.XOR<Prisma.grupo_marcadoresUpdateInput, Prisma.grupo_marcadoresUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.grupo_marcadoresUpdateInput,
+    Prisma.grupo_marcadoresUncheckedUpdateInput
+  >;
   /**
    * Choose, which grupo_marcadores to update.
    */
-  where: Prisma.grupo_marcadoresWhereUniqueInput
-}
+  where: Prisma.grupo_marcadoresWhereUniqueInput;
+};
 
 /**
  * grupo_marcadores updateMany
  */
 export type grupo_marcadoresUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update grupo_marcadores.
@@ -1770,170 +1909,178 @@ export type grupo_marcadoresUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.grupo_marcadoresUpdateManyMutationInput,
     Prisma.grupo_marcadoresUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which grupo_marcadores to update
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * Limit how many grupo_marcadores to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * grupo_marcadores updateManyAndReturn
  */
 export type grupo_marcadoresUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * The data used to update grupo_marcadores.
    */
   data: Prisma.XOR<
     Prisma.grupo_marcadoresUpdateManyMutationInput,
     Prisma.grupo_marcadoresUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which grupo_marcadores to update
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * Limit how many grupo_marcadores to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * grupo_marcadores upsert
  */
 export type grupo_marcadoresUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * The filter to search for the grupo_marcadores to update in case it exists.
    */
-  where: Prisma.grupo_marcadoresWhereUniqueInput
+  where: Prisma.grupo_marcadoresWhereUniqueInput;
   /**
    * In case the grupo_marcadores found by the `where` argument doesn't exist, create a new grupo_marcadores with this data.
    */
   create: Prisma.XOR<
     Prisma.grupo_marcadoresCreateInput,
     Prisma.grupo_marcadoresUncheckedCreateInput
-  >
+  >;
   /**
    * In case the grupo_marcadores was found with the provided `where` argument, update it with this data.
    */
   update: Prisma.XOR<
     Prisma.grupo_marcadoresUpdateInput,
     Prisma.grupo_marcadoresUncheckedUpdateInput
-  >
-}
+  >;
+};
 
 /**
  * grupo_marcadores delete
  */
 export type grupo_marcadoresDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
   /**
    * Filter which grupo_marcadores to delete.
    */
-  where: Prisma.grupo_marcadoresWhereUniqueInput
-}
+  where: Prisma.grupo_marcadoresWhereUniqueInput;
+};
 
 /**
  * grupo_marcadores deleteMany
  */
 export type grupo_marcadoresDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which grupo_marcadores to delete
    */
-  where?: Prisma.grupo_marcadoresWhereInput
+  where?: Prisma.grupo_marcadoresWhereInput;
   /**
    * Limit how many grupo_marcadores to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * grupo_marcadores.detalle_grupo
  */
 export type grupo_marcadores$detalle_grupoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
-  where?: Prisma.detalle_grupoWhereInput
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
+  where?: Prisma.detalle_grupoWhereInput;
   orderBy?:
     | Prisma.detalle_grupoOrderByWithRelationInput
-    | Prisma.detalle_grupoOrderByWithRelationInput[]
-  cursor?: Prisma.detalle_grupoWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Detalle_grupoScalarFieldEnum | Prisma.Detalle_grupoScalarFieldEnum[]
-}
+    | Prisma.detalle_grupoOrderByWithRelationInput[];
+  cursor?: Prisma.detalle_grupoWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Detalle_grupoScalarFieldEnum
+    | Prisma.Detalle_grupoScalarFieldEnum[];
+};
 
 /**
  * grupo_marcadores without action
  */
 export type grupo_marcadoresDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the grupo_marcadores
    */
-  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null
+  select?: Prisma.grupo_marcadoresSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the grupo_marcadores
    */
-  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null
+  omit?: Prisma.grupo_marcadoresOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null
-}
+  include?: Prisma.grupo_marcadoresInclude<ExtArgs> | null;
+};

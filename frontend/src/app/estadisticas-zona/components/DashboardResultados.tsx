@@ -1,34 +1,42 @@
-'use client'
-import dynamic from 'next/dynamic'
-import { MapPin, SlidersHorizontal, AlertCircle } from 'lucide-react'
-import type { EstadisticasData, TipoOperacion, ZonaSeleccionada } from '../page'
+"use client";
+import dynamic from "next/dynamic";
+import { MapPin, SlidersHorizontal, AlertCircle } from "lucide-react";
+import type {
+  EstadisticasData,
+  TipoOperacion,
+  ZonaSeleccionada,
+} from "../page";
 
 // Carga dinámica para evitar SSR con Recharts
-const GraficoEvolucion = dynamic(() => import('./GraficoEvolucion'), { ssr: false })
-const GraficoDistribucion = dynamic(() => import('./GraficoDistribucion'), { ssr: false })
+const GraficoEvolucion = dynamic(() => import("./GraficoEvolucion"), {
+  ssr: false,
+});
+const GraficoDistribucion = dynamic(() => import("./GraficoDistribucion"), {
+  ssr: false,
+});
 
 interface Props {
-  estadisticas: EstadisticasData | null
-  sinDatos: boolean
-  zona: ZonaSeleccionada | null
-  tipoOperacion: TipoOperacion
-  onCambiarFiltros: () => void
+  estadisticas: EstadisticasData | null;
+  sinDatos: boolean;
+  zona: ZonaSeleccionada | null;
+  tipoOperacion: TipoOperacion;
+  onCambiarFiltros: () => void;
 }
 
 const TIPO_LABELS: Record<TipoOperacion, string> = {
-  VENTA: 'Venta',
-  ALQUILER: 'Alquiler',
-  ANTICRETO: 'Anticrético'
-}
+  VENTA: "Venta",
+  ALQUILER: "Alquiler",
+  ANTICRETO: "Anticrético",
+};
 
 function formatUSD(valor: number): string {
-  return `USD ${valor.toLocaleString('es-BO')}`
+  return `USD ${valor.toLocaleString("es-BO")}`;
 }
 
 interface MetricaCardProps {
-  titulo: string
-  valor: string
-  subtitulo: string
+  titulo: string;
+  valor: string;
+  subtitulo: string;
 }
 
 function MetricaCard({ titulo, valor, subtitulo }: MetricaCardProps) {
@@ -38,7 +46,7 @@ function MetricaCard({ titulo, valor, subtitulo }: MetricaCardProps) {
       <p className="text-2xl font-bold text-gray-900 mb-1">{valor}</p>
       <p className="text-xs text-gray-400">{subtitulo}</p>
     </div>
-  )
+  );
 }
 
 export default function DashboardResultados({
@@ -46,7 +54,7 @@ export default function DashboardResultados({
   sinDatos,
   zona,
   tipoOperacion,
-  onCambiarFiltros
+  onCambiarFiltros,
 }: Props) {
   // CA 4: Sin datos suficientes
   if (sinDatos) {
@@ -56,10 +64,14 @@ export default function DashboardResultados({
           <AlertCircle size={32} className="text-amber-500" />
         </div>
         <div>
-          <p className="font-semibold text-gray-900 mb-1">No hay datos suficientes</p>
+          <p className="font-semibold text-gray-900 mb-1">
+            No hay datos suficientes
+          </p>
           <p className="text-sm text-gray-500 max-w-sm">
-            No se encontraron propiedades en la zona <strong>{zona?.nombre}</strong> con tipo de
-            operación <strong>{TIPO_LABELS[tipoOperacion]}</strong> para calcular estadísticas.
+            No se encontraron propiedades en la zona{" "}
+            <strong>{zona?.nombre}</strong> con tipo de operación{" "}
+            <strong>{TIPO_LABELS[tipoOperacion]}</strong> para calcular
+            estadísticas.
           </p>
         </div>
         <button
@@ -70,10 +82,10 @@ export default function DashboardResultados({
           Cambiar filtros
         </button>
       </div>
-    )
+    );
   }
 
-  if (!estadisticas) return null
+  if (!estadisticas) return null;
 
   return (
     <div className="flex flex-col gap-5">
@@ -84,13 +96,17 @@ export default function DashboardResultados({
             <p className="text-xs text-gray-400 mb-0.5">Zona seleccionada</p>
             <div className="flex items-center gap-1.5">
               <MapPin size={14} className="text-[#E07B2A]" />
-              <span className="text-sm font-semibold text-gray-800">{estadisticas.zona.nombre}</span>
+              <span className="text-sm font-semibold text-gray-800">
+                {estadisticas.zona.nombre}
+              </span>
             </div>
           </div>
           <div className="hidden sm:block w-px h-8 bg-gray-100" />
           <div>
             <p className="text-xs text-gray-400 mb-0.5">Tipo de operación</p>
-            <p className="text-sm font-semibold text-[#E07B2A]">{TIPO_LABELS[tipoOperacion]}</p>
+            <p className="text-sm font-semibold text-[#E07B2A]">
+              {TIPO_LABELS[tipoOperacion]}
+            </p>
           </div>
         </div>
         <button
@@ -146,5 +162,5 @@ export default function DashboardResultados({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -9,77 +9,81 @@
  */
 
 export const categoria = {
-  CASA: 'CASA',
-  DEPARTAMENTO: 'DEPARTAMENTO',
-  TERRENO: 'TERRENO',
-  OFICINA: 'OFICINA'
-} as const
+  CASA: "CASA",
+  DEPARTAMENTO: "DEPARTAMENTO",
+  TERRENO: "TERRENO",
+  OFICINA: "OFICINA",
+} as const;
 
-export type categoria = (typeof categoria)[keyof typeof categoria]
+export type categoria = (typeof categoria)[keyof typeof categoria];
 
 export const estado_inmueble = {
-  ACTIVO: 'ACTIVO',
-  INACTIVO: 'INACTIVO',
-  VENDIDO: 'VENDIDO',
-  ALQUILADO: 'ALQUILADO',
-  RESERVADO: 'RESERVADO'
-} as const
+  ACTIVO: "ACTIVO",
+  INACTIVO: "INACTIVO",
+  VENDIDO: "VENDIDO",
+  ALQUILADO: "ALQUILADO",
+  RESERVADO: "RESERVADO",
+} as const;
 
-export type estado_inmueble = (typeof estado_inmueble)[keyof typeof estado_inmueble]
+export type estado_inmueble =
+  (typeof estado_inmueble)[keyof typeof estado_inmueble];
 
 export const estado_publicacion = {
-  ACTIVA: 'ACTIVA',
-  PAUSADA: 'PAUSADA',
-  ELIMINADA: 'ELIMINADA'
-} as const
+  ACTIVA: "ACTIVA",
+  PAUSADA: "PAUSADA",
+  ELIMINADA: "ELIMINADA",
+} as const;
 
-export type estado_publicacion = (typeof estado_publicacion)[keyof typeof estado_publicacion]
+export type estado_publicacion =
+  (typeof estado_publicacion)[keyof typeof estado_publicacion];
 
 export const genero = {
-  MASCULINO: 'MASCULINO',
-  FEMENINO: 'FEMENINO',
-  OTRO: 'OTRO'
-} as const
+  MASCULINO: "MASCULINO",
+  FEMENINO: "FEMENINO",
+  OTRO: "OTRO",
+} as const;
 
-export type genero = (typeof genero)[keyof typeof genero]
+export type genero = (typeof genero)[keyof typeof genero];
 
 export const rol_nombre = {
-  ADMIN: 'ADMIN',
-  PROPIETARIO: 'PROPIETARIO',
-  AGENTE: 'AGENTE',
-  VISITANTE: 'VISITANTE'
-} as const
+  ADMIN: "ADMIN",
+  PROPIETARIO: "PROPIETARIO",
+  AGENTE: "AGENTE",
+  VISITANTE: "VISITANTE",
+} as const;
 
-export type rol_nombre = (typeof rol_nombre)[keyof typeof rol_nombre]
+export type rol_nombre = (typeof rol_nombre)[keyof typeof rol_nombre];
 
 export const tipo_accion = {
-  VENTA: 'VENTA',
-  ALQUILER: 'ALQUILER',
-  ANTICRETO: 'ANTICRETO'
-} as const
+  VENTA: "VENTA",
+  ALQUILER: "ALQUILER",
+  ANTICRETO: "ANTICRETO",
+} as const;
 
-export type tipo_accion = (typeof tipo_accion)[keyof typeof tipo_accion]
+export type tipo_accion = (typeof tipo_accion)[keyof typeof tipo_accion];
 
 export const tipo_interaccion = {
-  CLICK: 'CLICK',
-  HOVER: 'HOVER',
-  ZOOM: 'ZOOM',
-  DRAG: 'DRAG'
-} as const
+  CLICK: "CLICK",
+  HOVER: "HOVER",
+  ZOOM: "ZOOM",
+  DRAG: "DRAG",
+} as const;
 
-export type tipo_interaccion = (typeof tipo_interaccion)[keyof typeof tipo_interaccion]
+export type tipo_interaccion =
+  (typeof tipo_interaccion)[keyof typeof tipo_interaccion];
 
 export const tipo_marcador = {
-  NORMAL: 'NORMAL',
-  DESTACADO: 'DESTACADO',
-  CLUSTER: 'CLUSTER'
-} as const
+  NORMAL: "NORMAL",
+  DESTACADO: "DESTACADO",
+  CLUSTER: "CLUSTER",
+} as const;
 
-export type tipo_marcador = (typeof tipo_marcador)[keyof typeof tipo_marcador]
+export type tipo_marcador = (typeof tipo_marcador)[keyof typeof tipo_marcador];
 
 export const tipo_multimedia = {
-  IMAGEN: 'IMAGEN',
-  VIDEO: 'VIDEO'
-} as const
+  IMAGEN: "IMAGEN",
+  VIDEO: "VIDEO",
+} as const;
 
-export type tipo_multimedia = (typeof tipo_multimedia)[keyof typeof tipo_multimedia]
+export type tipo_multimedia =
+  (typeof tipo_multimedia)[keyof typeof tipo_multimedia];

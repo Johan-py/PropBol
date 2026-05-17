@@ -12,7 +12,7 @@ interface BlogSidebarProps {
 export default function BlogSidebar({
   statusLabel,
   isSubmitting,
-  onAction
+  onAction,
 }: BlogSidebarProps) {
   const isPendiente = statusLabel === "PENDIENTE";
   const isRechazado = statusLabel === "RECHAZADO";
@@ -34,7 +34,11 @@ export default function BlogSidebar({
                 disabled={isSubmitting}
                 className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#B45309] text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#92400E] shadow-lg shadow-amber-900/10 disabled:opacity-50"
               >
-                {isSubmitting ? "Enviando..." : isRechazado ? "Volver a enviar" : "Publicar"}
+                {isSubmitting
+                  ? "Enviando..."
+                  : isRechazado
+                    ? "Volver a enviar"
+                    : "Publicar"}
               </button>
               <button
                 type="button"
@@ -49,12 +53,17 @@ export default function BlogSidebar({
         </div>
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm font-medium text-[#78716C]">Estado</span>
-          <span className={`inline-flex items-center rounded-lg px-3 py-1 text-[10px] font-bold ${
-            isPendiente ? "bg-amber-100 text-amber-700" :
-            isRechazado ? "bg-red-100 text-red-600" :
-            statusLabel === "PUBLICADO" ? "bg-green-100 text-green-700" :
-            "bg-[#E7E5E4] text-[#44403C]"
-          }`}>
+          <span
+            className={`inline-flex items-center rounded-lg px-3 py-1 text-[10px] font-bold ${
+              isPendiente
+                ? "bg-amber-100 text-amber-700"
+                : isRechazado
+                  ? "bg-red-100 text-red-600"
+                  : statusLabel === "PUBLICADO"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-[#E7E5E4] text-[#44403C]"
+            }`}
+          >
             {statusLabel ?? "BORRADOR"}
           </span>
         </div>
@@ -63,7 +72,9 @@ export default function BlogSidebar({
       <div className="rounded-[32px] bg-[#F5F5F4]/60 p-8 space-y-6">
         <div className="flex items-center gap-3">
           <BookOpen className="h-5 w-5 text-[#B45309]" />
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#78716C]">Guías de un buen post</h3>
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#78716C]">
+            Guías de un buen post
+          </h3>
         </div>
         <div className="space-y-6">
           {[
@@ -72,8 +83,12 @@ export default function BlogSidebar({
             "Los enlaces deben abrirse en pestañas nuevas y dirigir a fuentes autorizadas.",
           ].map((text, i) => (
             <div key={i} className="flex gap-4">
-              <span className="text-xl font-black text-[#B45309] leading-none">0{i + 1}</span>
-              <p className="text-xs font-medium leading-relaxed text-[#57534E]">{text}</p>
+              <span className="text-xl font-black text-[#B45309] leading-none">
+                0{i + 1}
+              </span>
+              <p className="text-xs font-medium leading-relaxed text-[#57534E]">
+                {text}
+              </p>
             </div>
           ))}
         </div>

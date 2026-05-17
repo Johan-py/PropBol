@@ -21,7 +21,7 @@ export class LocationsRepository {
       const municipios = await prisma.municipio.findMany({
         where: { nombre: { contains: cleanQuery, mode: "insensitive" } },
         include: {
-          provincia: { include: { departamento: true } }
+          provincia: { include: { departamento: true } },
         },
         take: 3,
       });
@@ -33,22 +33,22 @@ export class LocationsRepository {
           zona: {
             include: {
               municipio: {
-                include: { provincia: { include: { departamento: true } } }
-              }
-            }
-          }
+                include: { provincia: { include: { departamento: true } } },
+              },
+            },
+          },
         },
         take: 4,
       });
 
       // 3. Mapeamos Municipios al formato que el Frontend espera
       const resultadosMunicipios = municipios.map((m) => ({
-        id: m.id + 10000, 
-        nombre: m.nombre, 
+        id: m.id + 10000,
+        nombre: m.nombre,
         municipio: m.nombre,
         // Usamos ?. para evitar el error y ?? para poner un valor por defecto
-        departamento: m.provincia?.departamento.nombre ?? "Cochabamba", 
-        tipo: "Municipio" 
+        departamento: m.provincia?.departamento.nombre ?? "Cochabamba",
+        tipo: "Municipio",
       }));
 
       // 4. Mapeamos Barrios al formato que el Frontend espera
@@ -56,13 +56,13 @@ export class LocationsRepository {
         id: b.id,
         nombre: b.nombre,
         municipio: b.zona.municipio.nombre,
-        departamento: b.zona.municipio.provincia?.departamento.nombre ?? "Cochabamba", 
-        tipo: "Barrio"
+        departamento:
+          b.zona.municipio.provincia?.departamento.nombre ?? "Cochabamba",
+        tipo: "Barrio",
       }));
 
       // 5. Unimos los resultados (Priorizando Municipios, luego Barrios)
       return [...resultadosMunicipios, ...resultadosBarrios].slice(0, 5);
-
     } catch (error) {
       console.error("❌ Error en LocationsRepository.findByName:", error);
       return [];

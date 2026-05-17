@@ -22,7 +22,7 @@ export default function BlogInfoFields({
   setCategoriaId,
   categories,
   isLoadingCategories,
-  errors
+  errors,
 }: BlogInfoFieldsProps) {
   return (
     <div className="space-y-8">
@@ -39,7 +39,9 @@ export default function BlogInfoFields({
           className="w-full rounded-[20px] bg-[#F5F5F4] px-6 py-5 text-xl font-bold text-[#1C1917] placeholder:text-[#D6D3D1] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20"
         />
         {errors.titulo && (
-          <p className="px-2 text-sm font-medium text-red-500">{errors.titulo}</p>
+          <p className="px-2 text-sm font-medium text-red-500">
+            {errors.titulo}
+          </p>
         )}
       </div>
 
@@ -65,13 +67,25 @@ export default function BlogInfoFields({
             ))}
           </select>
           <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
-            <svg className="h-4 w-4 text-[#A8A29E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className="h-4 w-4 text-[#A8A29E]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </div>
         </div>
         {errors.categoria_id && (
-          <p className="px-2 text-sm font-medium text-red-500">{errors.categoria_id}</p>
+          <p className="px-2 text-sm font-medium text-red-500">
+            {errors.categoria_id}
+          </p>
         )}
       </div>
     </div>

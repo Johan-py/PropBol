@@ -7,169 +7,171 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model transacciones
  *
  */
-export type transaccionesModel = runtime.Types.Result.DefaultSelection<Prisma.$transaccionesPayload>
+export type transaccionesModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$transaccionesPayload>;
 
 export type AggregateTransacciones = {
-  _count: TransaccionesCountAggregateOutputType | null
-  _avg: TransaccionesAvgAggregateOutputType | null
-  _sum: TransaccionesSumAggregateOutputType | null
-  _min: TransaccionesMinAggregateOutputType | null
-  _max: TransaccionesMaxAggregateOutputType | null
-}
+  _count: TransaccionesCountAggregateOutputType | null;
+  _avg: TransaccionesAvgAggregateOutputType | null;
+  _sum: TransaccionesSumAggregateOutputType | null;
+  _min: TransaccionesMinAggregateOutputType | null;
+  _max: TransaccionesMaxAggregateOutputType | null;
+};
 
 export type TransaccionesAvgAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  subtotal: runtime.Decimal | null
-  iva_porcentaje: runtime.Decimal | null
-  iva_monto: runtime.Decimal | null
-  total: runtime.Decimal | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  subtotal: runtime.Decimal | null;
+  iva_porcentaje: runtime.Decimal | null;
+  iva_monto: runtime.Decimal | null;
+  total: runtime.Decimal | null;
+};
 
 export type TransaccionesSumAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  subtotal: runtime.Decimal | null
-  iva_porcentaje: runtime.Decimal | null
-  iva_monto: runtime.Decimal | null
-  total: runtime.Decimal | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  subtotal: runtime.Decimal | null;
+  iva_porcentaje: runtime.Decimal | null;
+  iva_monto: runtime.Decimal | null;
+  total: runtime.Decimal | null;
+};
 
 export type TransaccionesMinAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  subtotal: runtime.Decimal | null
-  iva_porcentaje: runtime.Decimal | null
-  iva_monto: runtime.Decimal | null
-  total: runtime.Decimal | null
-  metodo_pago: string | null
-  fecha_intento: Date | null
-  fecha_completado: Date | null
-  estado: string | null
-  verificacion_requerida: boolean | null
-  tiempo_activacion: Date | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  subtotal: runtime.Decimal | null;
+  iva_porcentaje: runtime.Decimal | null;
+  iva_monto: runtime.Decimal | null;
+  total: runtime.Decimal | null;
+  metodo_pago: string | null;
+  fecha_intento: Date | null;
+  fecha_completado: Date | null;
+  estado: string | null;
+  verificacion_requerida: boolean | null;
+  tiempo_activacion: Date | null;
+};
 
 export type TransaccionesMaxAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  subtotal: runtime.Decimal | null
-  iva_porcentaje: runtime.Decimal | null
-  iva_monto: runtime.Decimal | null
-  total: runtime.Decimal | null
-  metodo_pago: string | null
-  fecha_intento: Date | null
-  fecha_completado: Date | null
-  estado: string | null
-  verificacion_requerida: boolean | null
-  tiempo_activacion: Date | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  subtotal: runtime.Decimal | null;
+  iva_porcentaje: runtime.Decimal | null;
+  iva_monto: runtime.Decimal | null;
+  total: runtime.Decimal | null;
+  metodo_pago: string | null;
+  fecha_intento: Date | null;
+  fecha_completado: Date | null;
+  estado: string | null;
+  verificacion_requerida: boolean | null;
+  tiempo_activacion: Date | null;
+};
 
 export type TransaccionesCountAggregateOutputType = {
-  id: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: number
-  iva_porcentaje: number
-  iva_monto: number
-  total: number
-  metodo_pago: number
-  fecha_intento: number
-  fecha_completado: number
-  estado: number
-  verificacion_requerida: number
-  tiempo_activacion: number
-  _all: number
-}
+  id: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: number;
+  iva_porcentaje: number;
+  iva_monto: number;
+  total: number;
+  metodo_pago: number;
+  fecha_intento: number;
+  fecha_completado: number;
+  estado: number;
+  verificacion_requerida: number;
+  tiempo_activacion: number;
+  _all: number;
+};
 
 export type TransaccionesAvgAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  subtotal?: true
-  iva_porcentaje?: true
-  iva_monto?: true
-  total?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  subtotal?: true;
+  iva_porcentaje?: true;
+  iva_monto?: true;
+  total?: true;
+};
 
 export type TransaccionesSumAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  subtotal?: true
-  iva_porcentaje?: true
-  iva_monto?: true
-  total?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  subtotal?: true;
+  iva_porcentaje?: true;
+  iva_monto?: true;
+  total?: true;
+};
 
 export type TransaccionesMinAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  subtotal?: true
-  iva_porcentaje?: true
-  iva_monto?: true
-  total?: true
-  metodo_pago?: true
-  fecha_intento?: true
-  fecha_completado?: true
-  estado?: true
-  verificacion_requerida?: true
-  tiempo_activacion?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  subtotal?: true;
+  iva_porcentaje?: true;
+  iva_monto?: true;
+  total?: true;
+  metodo_pago?: true;
+  fecha_intento?: true;
+  fecha_completado?: true;
+  estado?: true;
+  verificacion_requerida?: true;
+  tiempo_activacion?: true;
+};
 
 export type TransaccionesMaxAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  subtotal?: true
-  iva_porcentaje?: true
-  iva_monto?: true
-  total?: true
-  metodo_pago?: true
-  fecha_intento?: true
-  fecha_completado?: true
-  estado?: true
-  verificacion_requerida?: true
-  tiempo_activacion?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  subtotal?: true;
+  iva_porcentaje?: true;
+  iva_monto?: true;
+  total?: true;
+  metodo_pago?: true;
+  fecha_intento?: true;
+  fecha_completado?: true;
+  estado?: true;
+  verificacion_requerida?: true;
+  tiempo_activacion?: true;
+};
 
 export type TransaccionesCountAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  subtotal?: true
-  iva_porcentaje?: true
-  iva_monto?: true
-  total?: true
-  metodo_pago?: true
-  fecha_intento?: true
-  fecha_completado?: true
-  estado?: true
-  verificacion_requerida?: true
-  tiempo_activacion?: true
-  _all?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  subtotal?: true;
+  iva_porcentaje?: true;
+  iva_monto?: true;
+  total?: true;
+  metodo_pago?: true;
+  fecha_intento?: true;
+  fecha_completado?: true;
+  estado?: true;
+  verificacion_requerida?: true;
+  tiempo_activacion?: true;
+  _all?: true;
+};
 
 export type TransaccionesAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which transacciones to aggregate.
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -177,347 +179,398 @@ export type TransaccionesAggregateArgs<
    */
   orderBy?:
     | Prisma.transaccionesOrderByWithRelationInput
-    | Prisma.transaccionesOrderByWithRelationInput[]
+    | Prisma.transaccionesOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.transaccionesWhereUniqueInput
+  cursor?: Prisma.transaccionesWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` transacciones from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` transacciones.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned transacciones
    **/
-  _count?: true | TransaccionesCountAggregateInputType
+  _count?: true | TransaccionesCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: TransaccionesAvgAggregateInputType
+  _avg?: TransaccionesAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: TransaccionesSumAggregateInputType
+  _sum?: TransaccionesSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: TransaccionesMinAggregateInputType
+  _min?: TransaccionesMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: TransaccionesMaxAggregateInputType
-}
+  _max?: TransaccionesMaxAggregateInputType;
+};
 
-export type GetTransaccionesAggregateType<T extends TransaccionesAggregateArgs> = {
-  [P in keyof T & keyof AggregateTransacciones]: P extends '_count' | 'count'
+export type GetTransaccionesAggregateType<
+  T extends TransaccionesAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateTransacciones]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateTransacciones[P]>
-    : Prisma.GetScalarType<T[P], AggregateTransacciones[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateTransacciones[P]>;
+};
 
 export type transaccionesGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   orderBy?:
     | Prisma.transaccionesOrderByWithAggregationInput
-    | Prisma.transaccionesOrderByWithAggregationInput[]
-  by: Prisma.TransaccionesScalarFieldEnum[] | Prisma.TransaccionesScalarFieldEnum
-  having?: Prisma.transaccionesScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: TransaccionesCountAggregateInputType | true
-  _avg?: TransaccionesAvgAggregateInputType
-  _sum?: TransaccionesSumAggregateInputType
-  _min?: TransaccionesMinAggregateInputType
-  _max?: TransaccionesMaxAggregateInputType
-}
+    | Prisma.transaccionesOrderByWithAggregationInput[];
+  by:
+    | Prisma.TransaccionesScalarFieldEnum[]
+    | Prisma.TransaccionesScalarFieldEnum;
+  having?: Prisma.transaccionesScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: TransaccionesCountAggregateInputType | true;
+  _avg?: TransaccionesAvgAggregateInputType;
+  _sum?: TransaccionesSumAggregateInputType;
+  _min?: TransaccionesMinAggregateInputType;
+  _max?: TransaccionesMaxAggregateInputType;
+};
 
 export type TransaccionesGroupByOutputType = {
-  id: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal
-  iva_porcentaje: runtime.Decimal
-  iva_monto: runtime.Decimal
-  total: runtime.Decimal
-  metodo_pago: string | null
-  fecha_intento: Date | null
-  fecha_completado: Date | null
-  estado: string | null
-  verificacion_requerida: boolean | null
-  tiempo_activacion: Date | null
-  _count: TransaccionesCountAggregateOutputType | null
-  _avg: TransaccionesAvgAggregateOutputType | null
-  _sum: TransaccionesSumAggregateOutputType | null
-  _min: TransaccionesMinAggregateOutputType | null
-  _max: TransaccionesMaxAggregateOutputType | null
-}
+  id: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal;
+  iva_porcentaje: runtime.Decimal;
+  iva_monto: runtime.Decimal;
+  total: runtime.Decimal;
+  metodo_pago: string | null;
+  fecha_intento: Date | null;
+  fecha_completado: Date | null;
+  estado: string | null;
+  verificacion_requerida: boolean | null;
+  tiempo_activacion: Date | null;
+  _count: TransaccionesCountAggregateOutputType | null;
+  _avg: TransaccionesAvgAggregateOutputType | null;
+  _sum: TransaccionesSumAggregateOutputType | null;
+  _min: TransaccionesMinAggregateOutputType | null;
+  _max: TransaccionesMaxAggregateOutputType | null;
+};
 
 export type GetTransaccionesGroupByPayload<T extends transaccionesGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
-      Prisma.PickEnumerable<TransaccionesGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof TransaccionesGroupByOutputType]: P extends '_count'
+      Prisma.PickEnumerable<TransaccionesGroupByOutputType, T["by"]> & {
+        [P in keyof T &
+          keyof TransaccionesGroupByOutputType]: P extends "_count"
           ? T[P] extends boolean
             ? number
             : Prisma.GetScalarType<T[P], TransaccionesGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], TransaccionesGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], TransaccionesGroupByOutputType[P]>;
       }
     >
-  >
+  >;
 
 export type transaccionesWhereInput = {
-  AND?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[]
-  OR?: Prisma.transaccionesWhereInput[]
-  NOT?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[]
-  id?: Prisma.IntFilter<'transacciones'> | number
-  id_usuario?: Prisma.IntFilter<'transacciones'> | number
-  id_suscripcion?: Prisma.IntFilter<'transacciones'> | number
+  AND?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[];
+  OR?: Prisma.transaccionesWhereInput[];
+  NOT?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[];
+  id?: Prisma.IntFilter<"transacciones"> | number;
+  id_usuario?: Prisma.IntFilter<"transacciones"> | number;
+  id_suscripcion?: Prisma.IntFilter<"transacciones"> | number;
   subtotal?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.StringNullableFilter<"transacciones"> | string | null;
+  fecha_intento?:
+    | Prisma.DateTimeNullableFilter<"transacciones">
+    | Date
     | string
-  metodo_pago?: Prisma.StringNullableFilter<'transacciones'> | string | null
-  fecha_intento?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  fecha_completado?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
-  verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
-  tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter
-  suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter
+    | null;
+  fecha_completado?:
+    | Prisma.DateTimeNullableFilter<"transacciones">
+    | Date
+    | string
+    | null;
+  estado?: Prisma.StringNullableFilter<"transacciones"> | string | null;
+  verificacion_requerida?:
+    | Prisma.BoolNullableFilter<"transacciones">
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.DateTimeNullableFilter<"transacciones">
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter;
+  suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter;
   plan_suscripcion?: Prisma.XOR<
     Prisma.Plan_suscripcionScalarRelationFilter,
     Prisma.plan_suscripcionWhereInput
-  >
-  usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-  verificacion_pago?: Prisma.Verificacion_pagoListRelationFilter
-}
+  >;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  >;
+  verificacion_pago?: Prisma.Verificacion_pagoListRelationFilter;
+};
 
 export type transaccionesOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-  metodo_pago?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_intento?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_completado?: Prisma.SortOrderInput | Prisma.SortOrder
-  estado?: Prisma.SortOrderInput | Prisma.SortOrder
-  verificacion_requerida?: Prisma.SortOrderInput | Prisma.SortOrder
-  tiempo_activacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  bitacora_pagos?: Prisma.bitacora_pagosOrderByRelationAggregateInput
-  suscripciones_activas?: Prisma.suscripciones_activasOrderByRelationAggregateInput
-  plan_suscripcion?: Prisma.plan_suscripcionOrderByWithRelationInput
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-  verificacion_pago?: Prisma.verificacion_pagoOrderByRelationAggregateInput
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+  metodo_pago?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_intento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_completado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  verificacion_requerida?: Prisma.SortOrderInput | Prisma.SortOrder;
+  tiempo_activacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  bitacora_pagos?: Prisma.bitacora_pagosOrderByRelationAggregateInput;
+  suscripciones_activas?: Prisma.suscripciones_activasOrderByRelationAggregateInput;
+  plan_suscripcion?: Prisma.plan_suscripcionOrderByWithRelationInput;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+  verificacion_pago?: Prisma.verificacion_pagoOrderByRelationAggregateInput;
+};
 
 export type transaccionesWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[]
-    OR?: Prisma.transaccionesWhereInput[]
-    NOT?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[]
-    id_usuario?: Prisma.IntFilter<'transacciones'> | number
-    id_suscripcion?: Prisma.IntFilter<'transacciones'> | number
+    id?: number;
+    AND?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[];
+    OR?: Prisma.transaccionesWhereInput[];
+    NOT?: Prisma.transaccionesWhereInput | Prisma.transaccionesWhereInput[];
+    id_usuario?: Prisma.IntFilter<"transacciones"> | number;
+    id_suscripcion?: Prisma.IntFilter<"transacciones"> | number;
     subtotal?:
-      | Prisma.DecimalFilter<'transacciones'>
+      | Prisma.DecimalFilter<"transacciones">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
+      | string;
     iva_porcentaje?:
-      | Prisma.DecimalFilter<'transacciones'>
+      | Prisma.DecimalFilter<"transacciones">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
+      | string;
     iva_monto?:
-      | Prisma.DecimalFilter<'transacciones'>
+      | Prisma.DecimalFilter<"transacciones">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
+      | string;
     total?:
-      | Prisma.DecimalFilter<'transacciones'>
+      | Prisma.DecimalFilter<"transacciones">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
+      | string;
+    metodo_pago?: Prisma.StringNullableFilter<"transacciones"> | string | null;
+    fecha_intento?:
+      | Prisma.DateTimeNullableFilter<"transacciones">
+      | Date
       | string
-    metodo_pago?: Prisma.StringNullableFilter<'transacciones'> | string | null
-    fecha_intento?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-    fecha_completado?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-    estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
-    verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
-    tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-    bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter
-    suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter
+      | null;
+    fecha_completado?:
+      | Prisma.DateTimeNullableFilter<"transacciones">
+      | Date
+      | string
+      | null;
+    estado?: Prisma.StringNullableFilter<"transacciones"> | string | null;
+    verificacion_requerida?:
+      | Prisma.BoolNullableFilter<"transacciones">
+      | boolean
+      | null;
+    tiempo_activacion?:
+      | Prisma.DateTimeNullableFilter<"transacciones">
+      | Date
+      | string
+      | null;
+    bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter;
+    suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter;
     plan_suscripcion?: Prisma.XOR<
       Prisma.Plan_suscripcionScalarRelationFilter,
       Prisma.plan_suscripcionWhereInput
-    >
-    usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-    verificacion_pago?: Prisma.Verificacion_pagoListRelationFilter
+    >;
+    usuario?: Prisma.XOR<
+      Prisma.UsuarioScalarRelationFilter,
+      Prisma.usuarioWhereInput
+    >;
+    verificacion_pago?: Prisma.Verificacion_pagoListRelationFilter;
   },
-  'id'
->
+  "id"
+>;
 
 export type transaccionesOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-  metodo_pago?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_intento?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_completado?: Prisma.SortOrderInput | Prisma.SortOrder
-  estado?: Prisma.SortOrderInput | Prisma.SortOrder
-  verificacion_requerida?: Prisma.SortOrderInput | Prisma.SortOrder
-  tiempo_activacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.transaccionesCountOrderByAggregateInput
-  _avg?: Prisma.transaccionesAvgOrderByAggregateInput
-  _max?: Prisma.transaccionesMaxOrderByAggregateInput
-  _min?: Prisma.transaccionesMinOrderByAggregateInput
-  _sum?: Prisma.transaccionesSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+  metodo_pago?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_intento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_completado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  verificacion_requerida?: Prisma.SortOrderInput | Prisma.SortOrder;
+  tiempo_activacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.transaccionesCountOrderByAggregateInput;
+  _avg?: Prisma.transaccionesAvgOrderByAggregateInput;
+  _max?: Prisma.transaccionesMaxOrderByAggregateInput;
+  _min?: Prisma.transaccionesMinOrderByAggregateInput;
+  _sum?: Prisma.transaccionesSumOrderByAggregateInput;
+};
 
 export type transaccionesScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.transaccionesScalarWhereWithAggregatesInput
-    | Prisma.transaccionesScalarWhereWithAggregatesInput[]
-  OR?: Prisma.transaccionesScalarWhereWithAggregatesInput[]
+    | Prisma.transaccionesScalarWhereWithAggregatesInput[];
+  OR?: Prisma.transaccionesScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.transaccionesScalarWhereWithAggregatesInput
-    | Prisma.transaccionesScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'transacciones'> | number
-  id_usuario?: Prisma.IntWithAggregatesFilter<'transacciones'> | number
-  id_suscripcion?: Prisma.IntWithAggregatesFilter<'transacciones'> | number
+    | Prisma.transaccionesScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"transacciones"> | number;
+  id_usuario?: Prisma.IntWithAggregatesFilter<"transacciones"> | number;
+  id_suscripcion?: Prisma.IntWithAggregatesFilter<"transacciones"> | number;
   subtotal?:
-    | Prisma.DecimalWithAggregatesFilter<'transacciones'>
+    | Prisma.DecimalWithAggregatesFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
-    | Prisma.DecimalWithAggregatesFilter<'transacciones'>
+    | Prisma.DecimalWithAggregatesFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
-    | Prisma.DecimalWithAggregatesFilter<'transacciones'>
+    | Prisma.DecimalWithAggregatesFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
-    | Prisma.DecimalWithAggregatesFilter<'transacciones'>
+    | Prisma.DecimalWithAggregatesFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?:
+    | Prisma.StringNullableWithAggregatesFilter<"transacciones">
     | string
-  metodo_pago?: Prisma.StringNullableWithAggregatesFilter<'transacciones'> | string | null
+    | null;
   fecha_intento?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'transacciones'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"transacciones">
     | Date
     | string
-    | null
+    | null;
   fecha_completado?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'transacciones'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"transacciones">
     | Date
     | string
-    | null
-  estado?: Prisma.StringNullableWithAggregatesFilter<'transacciones'> | string | null
-  verificacion_requerida?: Prisma.BoolNullableWithAggregatesFilter<'transacciones'> | boolean | null
+    | null;
+  estado?:
+    | Prisma.StringNullableWithAggregatesFilter<"transacciones">
+    | string
+    | null;
+  verificacion_requerida?:
+    | Prisma.BoolNullableWithAggregatesFilter<"transacciones">
+    | boolean
+    | null;
   tiempo_activacion?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'transacciones'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"transacciones">
     | Date
     | string
-    | null
-}
+    | null;
+};
 
 export type transaccionesCreateInput = {
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
-  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
-}
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput;
+  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesUncheckedCreateInput = {
-  id?: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
-}
+  id?: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesUpdateInput = {
   subtotal?:
@@ -525,92 +578,122 @@ export type transaccionesUpdateInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesCreateManyInput = {
-  id?: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-}
+  id?: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+};
 
 export type transaccionesUpdateManyMutationInput = {
   subtotal?:
@@ -618,179 +701,209 @@ export type transaccionesUpdateManyMutationInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type transaccionesUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type TransaccionesNullableScalarRelationFilter = {
-  is?: Prisma.transaccionesWhereInput | null
-  isNot?: Prisma.transaccionesWhereInput | null
-}
+  is?: Prisma.transaccionesWhereInput | null;
+  isNot?: Prisma.transaccionesWhereInput | null;
+};
 
 export type TransaccionesListRelationFilter = {
-  every?: Prisma.transaccionesWhereInput
-  some?: Prisma.transaccionesWhereInput
-  none?: Prisma.transaccionesWhereInput
-}
+  every?: Prisma.transaccionesWhereInput;
+  some?: Prisma.transaccionesWhereInput;
+  none?: Prisma.transaccionesWhereInput;
+};
 
 export type transaccionesOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type transaccionesCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-  metodo_pago?: Prisma.SortOrder
-  fecha_intento?: Prisma.SortOrder
-  fecha_completado?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  verificacion_requerida?: Prisma.SortOrder
-  tiempo_activacion?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+  metodo_pago?: Prisma.SortOrder;
+  fecha_intento?: Prisma.SortOrder;
+  fecha_completado?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  verificacion_requerida?: Prisma.SortOrder;
+  tiempo_activacion?: Prisma.SortOrder;
+};
 
 export type transaccionesAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+};
 
 export type transaccionesMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-  metodo_pago?: Prisma.SortOrder
-  fecha_intento?: Prisma.SortOrder
-  fecha_completado?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  verificacion_requerida?: Prisma.SortOrder
-  tiempo_activacion?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+  metodo_pago?: Prisma.SortOrder;
+  fecha_intento?: Prisma.SortOrder;
+  fecha_completado?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  verificacion_requerida?: Prisma.SortOrder;
+  tiempo_activacion?: Prisma.SortOrder;
+};
 
 export type transaccionesMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-  metodo_pago?: Prisma.SortOrder
-  fecha_intento?: Prisma.SortOrder
-  fecha_completado?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  verificacion_requerida?: Prisma.SortOrder
-  tiempo_activacion?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+  metodo_pago?: Prisma.SortOrder;
+  fecha_intento?: Prisma.SortOrder;
+  fecha_completado?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  verificacion_requerida?: Prisma.SortOrder;
+  tiempo_activacion?: Prisma.SortOrder;
+};
 
 export type transaccionesSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  subtotal?: Prisma.SortOrder
-  iva_porcentaje?: Prisma.SortOrder
-  iva_monto?: Prisma.SortOrder
-  total?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  subtotal?: Prisma.SortOrder;
+  iva_porcentaje?: Prisma.SortOrder;
+  iva_monto?: Prisma.SortOrder;
+  total?: Prisma.SortOrder;
+};
 
 export type transaccionesCreateNestedOneWithoutBitacora_pagosInput = {
   create?: Prisma.XOR<
     Prisma.transaccionesCreateWithoutBitacora_pagosInput,
     Prisma.transaccionesUncheckedCreateWithoutBitacora_pagosInput
-  >
-  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutBitacora_pagosInput
-  connect?: Prisma.transaccionesWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutBitacora_pagosInput;
+  connect?: Prisma.transaccionesWhereUniqueInput;
+};
 
 export type transaccionesUpdateOneWithoutBitacora_pagosNestedInput = {
   create?: Prisma.XOR<
     Prisma.transaccionesCreateWithoutBitacora_pagosInput,
     Prisma.transaccionesUncheckedCreateWithoutBitacora_pagosInput
-  >
-  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutBitacora_pagosInput
-  upsert?: Prisma.transaccionesUpsertWithoutBitacora_pagosInput
-  disconnect?: Prisma.transaccionesWhereInput | boolean
-  delete?: Prisma.transaccionesWhereInput | boolean
-  connect?: Prisma.transaccionesWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutBitacora_pagosInput;
+  upsert?: Prisma.transaccionesUpsertWithoutBitacora_pagosInput;
+  disconnect?: Prisma.transaccionesWhereInput | boolean;
+  delete?: Prisma.transaccionesWhereInput | boolean;
+  connect?: Prisma.transaccionesWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.transaccionesUpdateToOneWithWhereWithoutBitacora_pagosInput,
       Prisma.transaccionesUpdateWithoutBitacora_pagosInput
     >,
     Prisma.transaccionesUncheckedUpdateWithoutBitacora_pagosInput
-  >
-}
+  >;
+};
 
 export type transaccionesCreateNestedManyWithoutPlan_suscripcionInput = {
   create?:
@@ -799,28 +912,33 @@ export type transaccionesCreateNestedManyWithoutPlan_suscripcionInput = {
         Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
       >
     | Prisma.transaccionesCreateWithoutPlan_suscripcionInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[];
   connectOrCreate?:
     | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-}
+    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[];
+  createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope;
+  connect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+};
 
-export type transaccionesUncheckedCreateNestedManyWithoutPlan_suscripcionInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.transaccionesCreateWithoutPlan_suscripcionInput,
-        Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
-      >
-    | Prisma.transaccionesCreateWithoutPlan_suscripcionInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[]
-  connectOrCreate?:
-    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-}
+export type transaccionesUncheckedCreateNestedManyWithoutPlan_suscripcionInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.transaccionesCreateWithoutPlan_suscripcionInput,
+          Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
+        >
+      | Prisma.transaccionesCreateWithoutPlan_suscripcionInput[]
+      | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[];
+    connectOrCreate?:
+      | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput
+      | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[];
+    createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope;
+    connect?:
+      | Prisma.transaccionesWhereUniqueInput
+      | Prisma.transaccionesWhereUniqueInput[];
+  };
 
 export type transaccionesUpdateManyWithoutPlan_suscripcionNestedInput = {
   create?:
@@ -829,82 +947,103 @@ export type transaccionesUpdateManyWithoutPlan_suscripcionNestedInput = {
         Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
       >
     | Prisma.transaccionesCreateWithoutPlan_suscripcionInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[];
   connectOrCreate?:
     | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[]
+    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[];
   upsert?:
     | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope
-  set?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  disconnect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  delete?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput[];
+  createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope;
+  set?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  disconnect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  delete?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  connect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
   update?:
     | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput[]
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput[];
   updateMany?:
     | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput
-    | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput[]
-  deleteMany?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-}
+    | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput[];
+  deleteMany?:
+    | Prisma.transaccionesScalarWhereInput
+    | Prisma.transaccionesScalarWhereInput[];
+};
 
-export type transaccionesUncheckedUpdateManyWithoutPlan_suscripcionNestedInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.transaccionesCreateWithoutPlan_suscripcionInput,
-        Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
-      >
-    | Prisma.transaccionesCreateWithoutPlan_suscripcionInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[]
-  connectOrCreate?:
-    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[]
-  upsert?:
-    | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope
-  set?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  disconnect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  delete?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  update?:
-    | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput[]
-  updateMany?:
-    | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput
-    | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput[]
-  deleteMany?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-}
+export type transaccionesUncheckedUpdateManyWithoutPlan_suscripcionNestedInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.transaccionesCreateWithoutPlan_suscripcionInput,
+          Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
+        >
+      | Prisma.transaccionesCreateWithoutPlan_suscripcionInput[]
+      | Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput[];
+    connectOrCreate?:
+      | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput
+      | Prisma.transaccionesCreateOrConnectWithoutPlan_suscripcionInput[];
+    upsert?:
+      | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput
+      | Prisma.transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput[];
+    createMany?: Prisma.transaccionesCreateManyPlan_suscripcionInputEnvelope;
+    set?:
+      | Prisma.transaccionesWhereUniqueInput
+      | Prisma.transaccionesWhereUniqueInput[];
+    disconnect?:
+      | Prisma.transaccionesWhereUniqueInput
+      | Prisma.transaccionesWhereUniqueInput[];
+    delete?:
+      | Prisma.transaccionesWhereUniqueInput
+      | Prisma.transaccionesWhereUniqueInput[];
+    connect?:
+      | Prisma.transaccionesWhereUniqueInput
+      | Prisma.transaccionesWhereUniqueInput[];
+    update?:
+      | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput
+      | Prisma.transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput[];
+    updateMany?:
+      | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput
+      | Prisma.transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput[];
+    deleteMany?:
+      | Prisma.transaccionesScalarWhereInput
+      | Prisma.transaccionesScalarWhereInput[];
+  };
 
 export type transaccionesCreateNestedOneWithoutSuscripciones_activasInput = {
   create?: Prisma.XOR<
     Prisma.transaccionesCreateWithoutSuscripciones_activasInput,
     Prisma.transaccionesUncheckedCreateWithoutSuscripciones_activasInput
-  >
-  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutSuscripciones_activasInput
-  connect?: Prisma.transaccionesWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutSuscripciones_activasInput;
+  connect?: Prisma.transaccionesWhereUniqueInput;
+};
 
 export type transaccionesUpdateOneWithoutSuscripciones_activasNestedInput = {
   create?: Prisma.XOR<
     Prisma.transaccionesCreateWithoutSuscripciones_activasInput,
     Prisma.transaccionesUncheckedCreateWithoutSuscripciones_activasInput
-  >
-  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutSuscripciones_activasInput
-  upsert?: Prisma.transaccionesUpsertWithoutSuscripciones_activasInput
-  disconnect?: Prisma.transaccionesWhereInput | boolean
-  delete?: Prisma.transaccionesWhereInput | boolean
-  connect?: Prisma.transaccionesWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutSuscripciones_activasInput;
+  upsert?: Prisma.transaccionesUpsertWithoutSuscripciones_activasInput;
+  disconnect?: Prisma.transaccionesWhereInput | boolean;
+  delete?: Prisma.transaccionesWhereInput | boolean;
+  connect?: Prisma.transaccionesWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.transaccionesUpdateToOneWithWhereWithoutSuscripciones_activasInput,
       Prisma.transaccionesUpdateWithoutSuscripciones_activasInput
     >,
     Prisma.transaccionesUncheckedUpdateWithoutSuscripciones_activasInput
-  >
-}
+  >;
+};
 
 export type transaccionesCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -913,13 +1052,15 @@ export type transaccionesCreateNestedManyWithoutUsuarioInput = {
         Prisma.transaccionesUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.transaccionesCreateWithoutUsuarioInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput
-    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-}
+    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+};
 
 export type transaccionesUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -928,13 +1069,15 @@ export type transaccionesUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.transaccionesUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.transaccionesCreateWithoutUsuarioInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput
-    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-}
+    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+};
 
 export type transaccionesUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -943,26 +1086,36 @@ export type transaccionesUpdateManyWithoutUsuarioNestedInput = {
         Prisma.transaccionesUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.transaccionesCreateWithoutUsuarioInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput
-    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.transaccionesUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.transaccionesUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope
-  set?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  disconnect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  delete?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  disconnect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  delete?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  connect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
   update?:
     | Prisma.transaccionesUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.transaccionesUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.transaccionesUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.transaccionesUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-}
+    | Prisma.transaccionesUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.transaccionesScalarWhereInput
+    | Prisma.transaccionesScalarWhereInput[];
+};
 
 export type transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -971,117 +1124,127 @@ export type transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.transaccionesUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.transaccionesCreateWithoutUsuarioInput[]
-    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput
-    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.transaccionesCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.transaccionesUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.transaccionesUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope
-  set?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  disconnect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  delete?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
-  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.transaccionesCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  disconnect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  delete?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
+  connect?:
+    | Prisma.transaccionesWhereUniqueInput
+    | Prisma.transaccionesWhereUniqueInput[];
   update?:
     | Prisma.transaccionesUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.transaccionesUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.transaccionesUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.transaccionesUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-}
+    | Prisma.transaccionesUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.transaccionesScalarWhereInput
+    | Prisma.transaccionesScalarWhereInput[];
+};
 
 export type transaccionesCreateNestedOneWithoutVerificacion_pagoInput = {
   create?: Prisma.XOR<
     Prisma.transaccionesCreateWithoutVerificacion_pagoInput,
     Prisma.transaccionesUncheckedCreateWithoutVerificacion_pagoInput
-  >
-  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutVerificacion_pagoInput
-  connect?: Prisma.transaccionesWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutVerificacion_pagoInput;
+  connect?: Prisma.transaccionesWhereUniqueInput;
+};
 
 export type transaccionesUpdateOneWithoutVerificacion_pagoNestedInput = {
   create?: Prisma.XOR<
     Prisma.transaccionesCreateWithoutVerificacion_pagoInput,
     Prisma.transaccionesUncheckedCreateWithoutVerificacion_pagoInput
-  >
-  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutVerificacion_pagoInput
-  upsert?: Prisma.transaccionesUpsertWithoutVerificacion_pagoInput
-  disconnect?: Prisma.transaccionesWhereInput | boolean
-  delete?: Prisma.transaccionesWhereInput | boolean
-  connect?: Prisma.transaccionesWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.transaccionesCreateOrConnectWithoutVerificacion_pagoInput;
+  upsert?: Prisma.transaccionesUpsertWithoutVerificacion_pagoInput;
+  disconnect?: Prisma.transaccionesWhereInput | boolean;
+  delete?: Prisma.transaccionesWhereInput | boolean;
+  connect?: Prisma.transaccionesWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.transaccionesUpdateToOneWithWhereWithoutVerificacion_pagoInput,
       Prisma.transaccionesUpdateWithoutVerificacion_pagoInput
     >,
     Prisma.transaccionesUncheckedUpdateWithoutVerificacion_pagoInput
-  >
-}
+  >;
+};
 
 export type transaccionesCreateWithoutBitacora_pagosInput = {
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
-  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
-}
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput;
+  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesUncheckedCreateWithoutBitacora_pagosInput = {
-  id?: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
-}
+  id?: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesCreateOrConnectWithoutBitacora_pagosInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutBitacora_pagosInput,
     Prisma.transaccionesUncheckedCreateWithoutBitacora_pagosInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpsertWithoutBitacora_pagosInput = {
   update: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutBitacora_pagosInput,
     Prisma.transaccionesUncheckedUpdateWithoutBitacora_pagosInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutBitacora_pagosInput,
     Prisma.transaccionesUncheckedCreateWithoutBitacora_pagosInput
-  >
-  where?: Prisma.transaccionesWhereInput
-}
+  >;
+  where?: Prisma.transaccionesWhereInput;
+};
 
 export type transaccionesUpdateToOneWithWhereWithoutBitacora_pagosInput = {
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   data: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutBitacora_pagosInput,
     Prisma.transaccionesUncheckedUpdateWithoutBitacora_pagosInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpdateWithoutBitacora_pagosInput = {
   subtotal?:
@@ -1089,254 +1252,304 @@ export type transaccionesUpdateWithoutBitacora_pagosInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateWithoutBitacora_pagosInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesCreateWithoutPlan_suscripcionInput = {
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
-}
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesUncheckedCreateWithoutPlan_suscripcionInput = {
-  id?: number
-  id_usuario: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
-}
+  id?: number;
+  id_usuario: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesCreateOrConnectWithoutPlan_suscripcionInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutPlan_suscripcionInput,
     Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type transaccionesCreateManyPlan_suscripcionInputEnvelope = {
   data:
     | Prisma.transaccionesCreateManyPlan_suscripcionInput
-    | Prisma.transaccionesCreateManyPlan_suscripcionInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.transaccionesCreateManyPlan_suscripcionInput[];
+  skipDuplicates?: boolean;
+};
 
 export type transaccionesUpsertWithWhereUniqueWithoutPlan_suscripcionInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutPlan_suscripcionInput,
     Prisma.transaccionesUncheckedUpdateWithoutPlan_suscripcionInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutPlan_suscripcionInput,
     Prisma.transaccionesUncheckedCreateWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpdateWithWhereUniqueWithoutPlan_suscripcionInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutPlan_suscripcionInput,
     Prisma.transaccionesUncheckedUpdateWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput = {
-  where: Prisma.transaccionesScalarWhereInput
+  where: Prisma.transaccionesScalarWhereInput;
   data: Prisma.XOR<
     Prisma.transaccionesUpdateManyMutationInput,
     Prisma.transaccionesUncheckedUpdateManyWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type transaccionesScalarWhereInput = {
-  AND?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-  OR?: Prisma.transaccionesScalarWhereInput[]
-  NOT?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-  id?: Prisma.IntFilter<'transacciones'> | number
-  id_usuario?: Prisma.IntFilter<'transacciones'> | number
-  id_suscripcion?: Prisma.IntFilter<'transacciones'> | number
+  AND?:
+    | Prisma.transaccionesScalarWhereInput
+    | Prisma.transaccionesScalarWhereInput[];
+  OR?: Prisma.transaccionesScalarWhereInput[];
+  NOT?:
+    | Prisma.transaccionesScalarWhereInput
+    | Prisma.transaccionesScalarWhereInput[];
+  id?: Prisma.IntFilter<"transacciones"> | number;
+  id_usuario?: Prisma.IntFilter<"transacciones"> | number;
+  id_suscripcion?: Prisma.IntFilter<"transacciones"> | number;
   subtotal?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
-    | Prisma.DecimalFilter<'transacciones'>
+    | Prisma.DecimalFilter<"transacciones">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.StringNullableFilter<"transacciones"> | string | null;
+  fecha_intento?:
+    | Prisma.DateTimeNullableFilter<"transacciones">
+    | Date
     | string
-  metodo_pago?: Prisma.StringNullableFilter<'transacciones'> | string | null
-  fecha_intento?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  fecha_completado?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
-  verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
-  tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-}
+    | null;
+  fecha_completado?:
+    | Prisma.DateTimeNullableFilter<"transacciones">
+    | Date
+    | string
+    | null;
+  estado?: Prisma.StringNullableFilter<"transacciones"> | string | null;
+  verificacion_requerida?:
+    | Prisma.BoolNullableFilter<"transacciones">
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.DateTimeNullableFilter<"transacciones">
+    | Date
+    | string
+    | null;
+};
 
 export type transaccionesCreateWithoutSuscripciones_activasInput = {
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
-  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
-}
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput;
+  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesUncheckedCreateWithoutSuscripciones_activasInput = {
-  id?: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
-}
+  id?: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesCreateOrConnectWithoutSuscripciones_activasInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutSuscripciones_activasInput,
     Prisma.transaccionesUncheckedCreateWithoutSuscripciones_activasInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpsertWithoutSuscripciones_activasInput = {
   update: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutSuscripciones_activasInput,
     Prisma.transaccionesUncheckedUpdateWithoutSuscripciones_activasInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutSuscripciones_activasInput,
     Prisma.transaccionesUncheckedCreateWithoutSuscripciones_activasInput
-  >
-  where?: Prisma.transaccionesWhereInput
-}
+  >;
+  where?: Prisma.transaccionesWhereInput;
+};
 
-export type transaccionesUpdateToOneWithWhereWithoutSuscripciones_activasInput = {
-  where?: Prisma.transaccionesWhereInput
-  data: Prisma.XOR<
-    Prisma.transaccionesUpdateWithoutSuscripciones_activasInput,
-    Prisma.transaccionesUncheckedUpdateWithoutSuscripciones_activasInput
-  >
-}
+export type transaccionesUpdateToOneWithWhereWithoutSuscripciones_activasInput =
+  {
+    where?: Prisma.transaccionesWhereInput;
+    data: Prisma.XOR<
+      Prisma.transaccionesUpdateWithoutSuscripciones_activasInput,
+      Prisma.transaccionesUncheckedUpdateWithoutSuscripciones_activasInput
+    >;
+  };
 
 export type transaccionesUpdateWithoutSuscripciones_activasInput = {
   subtotal?:
@@ -1344,213 +1557,245 @@ export type transaccionesUpdateWithoutSuscripciones_activasInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateWithoutSuscripciones_activasInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesCreateWithoutUsuarioInput = {
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
-  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
-}
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput;
+  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
-}
+  id?: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutUsuarioInput,
     Prisma.transaccionesUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type transaccionesCreateManyUsuarioInputEnvelope = {
-  data: Prisma.transaccionesCreateManyUsuarioInput | Prisma.transaccionesCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.transaccionesCreateManyUsuarioInput
+    | Prisma.transaccionesCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type transaccionesUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutUsuarioInput,
     Prisma.transaccionesUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutUsuarioInput,
     Prisma.transaccionesUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutUsuarioInput,
     Prisma.transaccionesUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.transaccionesScalarWhereInput
+  where: Prisma.transaccionesScalarWhereInput;
   data: Prisma.XOR<
     Prisma.transaccionesUpdateManyMutationInput,
     Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type transaccionesCreateWithoutVerificacion_pagoInput = {
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
-  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
-}
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput;
+  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput;
+};
 
 export type transaccionesUncheckedCreateWithoutVerificacion_pagoInput = {
-  id?: number
-  id_usuario: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
-}
+  id?: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput;
+};
 
 export type transaccionesCreateOrConnectWithoutVerificacion_pagoInput = {
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutVerificacion_pagoInput,
     Prisma.transaccionesUncheckedCreateWithoutVerificacion_pagoInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpsertWithoutVerificacion_pagoInput = {
   update: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutVerificacion_pagoInput,
     Prisma.transaccionesUncheckedUpdateWithoutVerificacion_pagoInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.transaccionesCreateWithoutVerificacion_pagoInput,
     Prisma.transaccionesUncheckedCreateWithoutVerificacion_pagoInput
-  >
-  where?: Prisma.transaccionesWhereInput
-}
+  >;
+  where?: Prisma.transaccionesWhereInput;
+};
 
 export type transaccionesUpdateToOneWithWhereWithoutVerificacion_pagoInput = {
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   data: Prisma.XOR<
     Prisma.transaccionesUpdateWithoutVerificacion_pagoInput,
     Prisma.transaccionesUncheckedUpdateWithoutVerificacion_pagoInput
-  >
-}
+  >;
+};
 
 export type transaccionesUpdateWithoutVerificacion_pagoInput = {
   subtotal?:
@@ -1558,89 +1803,119 @@ export type transaccionesUpdateWithoutVerificacion_pagoInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateWithoutVerificacion_pagoInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesCreateManyPlan_suscripcionInput = {
-  id?: number
-  id_usuario: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-}
+  id?: number;
+  id_usuario: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+};
 
 export type transaccionesUpdateWithoutPlan_suscripcionInput = {
   subtotal?:
@@ -1648,124 +1923,169 @@ export type transaccionesUpdateWithoutPlan_suscripcionInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateWithoutPlan_suscripcionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateManyWithoutPlan_suscripcionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type transaccionesCreateManyUsuarioInput = {
-  id?: number
-  id_suscripcion: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
-  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total: runtime.Decimal | runtime.DecimalJsLike | number | string
-  metodo_pago?: string | null
-  fecha_intento?: Date | string | null
-  fecha_completado?: Date | string | null
-  estado?: string | null
-  verificacion_requerida?: boolean | null
-  tiempo_activacion?: Date | string | null
-}
+  id?: number;
+  id_suscripcion: number;
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  metodo_pago?: string | null;
+  fecha_intento?: Date | string | null;
+  fecha_completado?: Date | string | null;
+  estado?: string | null;
+  verificacion_requerida?: boolean | null;
+  tiempo_activacion?: Date | string | null;
+};
 
 export type transaccionesUpdateWithoutUsuarioInput = {
   subtotal?:
@@ -1773,347 +2093,424 @@ export type transaccionesUpdateWithoutUsuarioInput = {
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
-  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
-  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput;
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput;
+};
 
 export type transaccionesUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number;
   subtotal?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_porcentaje?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   iva_monto?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   total?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
+    | string;
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_intento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
     | string
-  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_completado?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  verificacion_requerida?:
+    | Prisma.NullableBoolFieldUpdateOperationsInput
+    | boolean
+    | null;
+  tiempo_activacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 /**
  * Count Type TransaccionesCountOutputType
  */
 
 export type TransaccionesCountOutputType = {
-  bitacora_pagos: number
-  suscripciones_activas: number
-  verificacion_pago: number
-}
+  bitacora_pagos: number;
+  suscripciones_activas: number;
+  verificacion_pago: number;
+};
 
 export type TransaccionesCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  bitacora_pagos?: boolean | TransaccionesCountOutputTypeCountBitacora_pagosArgs
-  suscripciones_activas?: boolean | TransaccionesCountOutputTypeCountSuscripciones_activasArgs
-  verificacion_pago?: boolean | TransaccionesCountOutputTypeCountVerificacion_pagoArgs
-}
+  bitacora_pagos?:
+    | boolean
+    | TransaccionesCountOutputTypeCountBitacora_pagosArgs;
+  suscripciones_activas?:
+    | boolean
+    | TransaccionesCountOutputTypeCountSuscripciones_activasArgs;
+  verificacion_pago?:
+    | boolean
+    | TransaccionesCountOutputTypeCountVerificacion_pagoArgs;
+};
 
 /**
  * TransaccionesCountOutputType without action
  */
 export type TransaccionesCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the TransaccionesCountOutputType
    */
-  select?: Prisma.TransaccionesCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.TransaccionesCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * TransaccionesCountOutputType without action
  */
 export type TransaccionesCountOutputTypeCountBitacora_pagosArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.bitacora_pagosWhereInput
-}
+  where?: Prisma.bitacora_pagosWhereInput;
+};
 
 /**
  * TransaccionesCountOutputType without action
  */
 export type TransaccionesCountOutputTypeCountSuscripciones_activasArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.suscripciones_activasWhereInput
-}
+  where?: Prisma.suscripciones_activasWhereInput;
+};
 
 /**
  * TransaccionesCountOutputType without action
  */
 export type TransaccionesCountOutputTypeCountVerificacion_pagoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.verificacion_pagoWhereInput
-}
+  where?: Prisma.verificacion_pagoWhereInput;
+};
 
 export type transaccionesSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    id_usuario?: boolean
-    id_suscripcion?: boolean
-    subtotal?: boolean
-    iva_porcentaje?: boolean
-    iva_monto?: boolean
-    total?: boolean
-    metodo_pago?: boolean
-    fecha_intento?: boolean
-    fecha_completado?: boolean
-    estado?: boolean
-    verificacion_requerida?: boolean
-    tiempo_activacion?: boolean
-    bitacora_pagos?: boolean | Prisma.transacciones$bitacora_pagosArgs<ExtArgs>
-    suscripciones_activas?: boolean | Prisma.transacciones$suscripciones_activasArgs<ExtArgs>
-    plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-    verificacion_pago?: boolean | Prisma.transacciones$verificacion_pagoArgs<ExtArgs>
-    _count?: boolean | Prisma.TransaccionesCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    id_usuario?: boolean;
+    id_suscripcion?: boolean;
+    subtotal?: boolean;
+    iva_porcentaje?: boolean;
+    iva_monto?: boolean;
+    total?: boolean;
+    metodo_pago?: boolean;
+    fecha_intento?: boolean;
+    fecha_completado?: boolean;
+    estado?: boolean;
+    verificacion_requerida?: boolean;
+    tiempo_activacion?: boolean;
+    bitacora_pagos?: boolean | Prisma.transacciones$bitacora_pagosArgs<ExtArgs>;
+    suscripciones_activas?:
+      | boolean
+      | Prisma.transacciones$suscripciones_activasArgs<ExtArgs>;
+    plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+    verificacion_pago?:
+      | boolean
+      | Prisma.transacciones$verificacion_pagoArgs<ExtArgs>;
+    _count?: boolean | Prisma.TransaccionesCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['transacciones']
->
+  ExtArgs["result"]["transacciones"]
+>;
 
 export type transaccionesSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    id_usuario?: boolean
-    id_suscripcion?: boolean
-    subtotal?: boolean
-    iva_porcentaje?: boolean
-    iva_monto?: boolean
-    total?: boolean
-    metodo_pago?: boolean
-    fecha_intento?: boolean
-    fecha_completado?: boolean
-    estado?: boolean
-    verificacion_requerida?: boolean
-    tiempo_activacion?: boolean
-    plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    id_usuario?: boolean;
+    id_suscripcion?: boolean;
+    subtotal?: boolean;
+    iva_porcentaje?: boolean;
+    iva_monto?: boolean;
+    total?: boolean;
+    metodo_pago?: boolean;
+    fecha_intento?: boolean;
+    fecha_completado?: boolean;
+    estado?: boolean;
+    verificacion_requerida?: boolean;
+    tiempo_activacion?: boolean;
+    plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['transacciones']
->
+  ExtArgs["result"]["transacciones"]
+>;
 
 export type transaccionesSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    id_usuario?: boolean
-    id_suscripcion?: boolean
-    subtotal?: boolean
-    iva_porcentaje?: boolean
-    iva_monto?: boolean
-    total?: boolean
-    metodo_pago?: boolean
-    fecha_intento?: boolean
-    fecha_completado?: boolean
-    estado?: boolean
-    verificacion_requerida?: boolean
-    tiempo_activacion?: boolean
-    plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    id_usuario?: boolean;
+    id_suscripcion?: boolean;
+    subtotal?: boolean;
+    iva_porcentaje?: boolean;
+    iva_monto?: boolean;
+    total?: boolean;
+    metodo_pago?: boolean;
+    fecha_intento?: boolean;
+    fecha_completado?: boolean;
+    estado?: boolean;
+    verificacion_requerida?: boolean;
+    tiempo_activacion?: boolean;
+    plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['transacciones']
->
+  ExtArgs["result"]["transacciones"]
+>;
 
 export type transaccionesSelectScalar = {
-  id?: boolean
-  id_usuario?: boolean
-  id_suscripcion?: boolean
-  subtotal?: boolean
-  iva_porcentaje?: boolean
-  iva_monto?: boolean
-  total?: boolean
-  metodo_pago?: boolean
-  fecha_intento?: boolean
-  fecha_completado?: boolean
-  estado?: boolean
-  verificacion_requerida?: boolean
-  tiempo_activacion?: boolean
-}
+  id?: boolean;
+  id_usuario?: boolean;
+  id_suscripcion?: boolean;
+  subtotal?: boolean;
+  iva_porcentaje?: boolean;
+  iva_monto?: boolean;
+  total?: boolean;
+  metodo_pago?: boolean;
+  fecha_intento?: boolean;
+  fecha_completado?: boolean;
+  estado?: boolean;
+  verificacion_requerida?: boolean;
+  tiempo_activacion?: boolean;
+};
 
 export type transaccionesOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'id_usuario'
-  | 'id_suscripcion'
-  | 'subtotal'
-  | 'iva_porcentaje'
-  | 'iva_monto'
-  | 'total'
-  | 'metodo_pago'
-  | 'fecha_intento'
-  | 'fecha_completado'
-  | 'estado'
-  | 'verificacion_requerida'
-  | 'tiempo_activacion',
-  ExtArgs['result']['transacciones']
->
+  | "id"
+  | "id_usuario"
+  | "id_suscripcion"
+  | "subtotal"
+  | "iva_porcentaje"
+  | "iva_monto"
+  | "total"
+  | "metodo_pago"
+  | "fecha_intento"
+  | "fecha_completado"
+  | "estado"
+  | "verificacion_requerida"
+  | "tiempo_activacion",
+  ExtArgs["result"]["transacciones"]
+>;
 export type transaccionesInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  bitacora_pagos?: boolean | Prisma.transacciones$bitacora_pagosArgs<ExtArgs>
-  suscripciones_activas?: boolean | Prisma.transacciones$suscripciones_activasArgs<ExtArgs>
-  plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-  verificacion_pago?: boolean | Prisma.transacciones$verificacion_pagoArgs<ExtArgs>
-  _count?: boolean | Prisma.TransaccionesCountOutputTypeDefaultArgs<ExtArgs>
-}
+  bitacora_pagos?: boolean | Prisma.transacciones$bitacora_pagosArgs<ExtArgs>;
+  suscripciones_activas?:
+    | boolean
+    | Prisma.transacciones$suscripciones_activasArgs<ExtArgs>;
+  plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>;
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+  verificacion_pago?:
+    | boolean
+    | Prisma.transacciones$verificacion_pagoArgs<ExtArgs>;
+  _count?: boolean | Prisma.TransaccionesCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type transaccionesIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>;
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type transaccionesIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>;
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 
 export type $transaccionesPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'transacciones'
+  name: "transacciones";
   objects: {
-    bitacora_pagos: Prisma.$bitacora_pagosPayload<ExtArgs>[]
-    suscripciones_activas: Prisma.$suscripciones_activasPayload<ExtArgs>[]
-    plan_suscripcion: Prisma.$plan_suscripcionPayload<ExtArgs>
-    usuario: Prisma.$usuarioPayload<ExtArgs>
-    verificacion_pago: Prisma.$verificacion_pagoPayload<ExtArgs>[]
-  }
+    bitacora_pagos: Prisma.$bitacora_pagosPayload<ExtArgs>[];
+    suscripciones_activas: Prisma.$suscripciones_activasPayload<ExtArgs>[];
+    plan_suscripcion: Prisma.$plan_suscripcionPayload<ExtArgs>;
+    usuario: Prisma.$usuarioPayload<ExtArgs>;
+    verificacion_pago: Prisma.$verificacion_pagoPayload<ExtArgs>[];
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      id_usuario: number
-      id_suscripcion: number
-      subtotal: runtime.Decimal
-      iva_porcentaje: runtime.Decimal
-      iva_monto: runtime.Decimal
-      total: runtime.Decimal
-      metodo_pago: string | null
-      fecha_intento: Date | null
-      fecha_completado: Date | null
-      estado: string | null
-      verificacion_requerida: boolean | null
-      tiempo_activacion: Date | null
+      id: number;
+      id_usuario: number;
+      id_suscripcion: number;
+      subtotal: runtime.Decimal;
+      iva_porcentaje: runtime.Decimal;
+      iva_monto: runtime.Decimal;
+      total: runtime.Decimal;
+      metodo_pago: string | null;
+      fecha_intento: Date | null;
+      fecha_completado: Date | null;
+      estado: string | null;
+      verificacion_requerida: boolean | null;
+      tiempo_activacion: Date | null;
     },
-    ExtArgs['result']['transacciones']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["transacciones"]
+  >;
+  composites: {};
+};
 
 export type transaccionesGetPayload<
-  S extends boolean | null | undefined | transaccionesDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$transaccionesPayload, S>
+  S extends boolean | null | undefined | transaccionesDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$transaccionesPayload, S>;
 
 export type transaccionesCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<transaccionesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: TransaccionesCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  transaccionesFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: TransaccionesCountAggregateInputType | true;
+};
 
 export interface transaccionesDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['transacciones']
-    meta: { name: 'transacciones' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["transacciones"];
+    meta: { name: "transacciones" };
+  };
   /**
    * Find zero or one Transacciones that matches the filter.
    * @param {transaccionesFindUniqueArgs} args - Arguments to find a Transacciones
@@ -2126,18 +2523,18 @@ export interface transaccionesDelegate<
    * })
    */
   findUnique<T extends transaccionesFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, transaccionesFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Transacciones that matches the filter or throw an error with `error.code='P2025'`
@@ -2152,18 +2549,18 @@ export interface transaccionesDelegate<
    * })
    */
   findUniqueOrThrow<T extends transaccionesFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, transaccionesFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Transacciones that matches the filter.
@@ -2179,18 +2576,18 @@ export interface transaccionesDelegate<
    * })
    */
   findFirst<T extends transaccionesFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, transaccionesFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, transaccionesFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Transacciones that matches the filter or
@@ -2207,18 +2604,18 @@ export interface transaccionesDelegate<
    * })
    */
   findFirstOrThrow<T extends transaccionesFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, transaccionesFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, transaccionesFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Transacciones that matches the filter.
@@ -2237,15 +2634,15 @@ export interface transaccionesDelegate<
    *
    */
   findMany<T extends transaccionesFindManyArgs>(
-    args?: Prisma.SelectSubset<T, transaccionesFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, transaccionesFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Transacciones.
@@ -2260,18 +2657,18 @@ export interface transaccionesDelegate<
    *
    */
   create<T extends transaccionesCreateArgs>(
-    args: Prisma.SelectSubset<T, transaccionesCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Transacciones.
@@ -2286,8 +2683,8 @@ export interface transaccionesDelegate<
    *
    */
   createMany<T extends transaccionesCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, transaccionesCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, transaccionesCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Transacciones and returns the data saved in the database.
@@ -2312,15 +2709,18 @@ export interface transaccionesDelegate<
    *
    */
   createManyAndReturn<T extends transaccionesCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, transaccionesCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      transaccionesCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Transacciones.
@@ -2335,18 +2735,18 @@ export interface transaccionesDelegate<
    *
    */
   delete<T extends transaccionesDeleteArgs>(
-    args: Prisma.SelectSubset<T, transaccionesDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Transacciones.
@@ -2364,18 +2764,18 @@ export interface transaccionesDelegate<
    *
    */
   update<T extends transaccionesUpdateArgs>(
-    args: Prisma.SelectSubset<T, transaccionesUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Transacciones.
@@ -2390,8 +2790,8 @@ export interface transaccionesDelegate<
    *
    */
   deleteMany<T extends transaccionesDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, transaccionesDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, transaccionesDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Transacciones.
@@ -2411,8 +2811,8 @@ export interface transaccionesDelegate<
    *
    */
   updateMany<T extends transaccionesUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, transaccionesUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, transaccionesUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Transacciones and returns the data updated in the database.
@@ -2443,15 +2843,15 @@ export interface transaccionesDelegate<
    *
    */
   updateManyAndReturn<T extends transaccionesUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, transaccionesUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Transacciones.
@@ -2471,18 +2871,18 @@ export interface transaccionesDelegate<
    * })
    */
   upsert<T extends transaccionesUpsertArgs>(
-    args: Prisma.SelectSubset<T, transaccionesUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, transaccionesUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Transacciones.
@@ -2498,14 +2898,17 @@ export interface transaccionesDelegate<
    * })
    **/
   count<T extends transaccionesCountArgs>(
-    args?: Prisma.Subset<T, transaccionesCountArgs>
+    args?: Prisma.Subset<T, transaccionesCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], TransaccionesCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            TransaccionesCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Transacciones.
@@ -2532,8 +2935,8 @@ export interface transaccionesDelegate<
    * })
    **/
   aggregate<T extends TransaccionesAggregateArgs>(
-    args: Prisma.Subset<T, TransaccionesAggregateArgs>
-  ): Prisma.PrismaPromise<GetTransaccionesAggregateType<T>>
+    args: Prisma.Subset<T, TransaccionesAggregateArgs>,
+  ): Prisma.PrismaPromise<GetTransaccionesAggregateType<T>>;
 
   /**
    * Group by Transacciones.
@@ -2556,20 +2959,20 @@ export interface transaccionesDelegate<
   groupBy<
     T extends transaccionesGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: transaccionesGroupByArgs['orderBy'] }
-      : { orderBy?: transaccionesGroupByArgs['orderBy'] },
+      ? { orderBy: transaccionesGroupByArgs["orderBy"] }
+      : { orderBy?: transaccionesGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -2578,26 +2981,31 @@ export interface transaccionesDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -2605,15 +3013,18 @@ export interface transaccionesDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, transaccionesGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetTransaccionesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, transaccionesGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetTransaccionesGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the transacciones model
    */
-  readonly fields: transaccionesFieldRefs
+  readonly fields: transaccionesFieldRefs;
 }
 
 /**
@@ -2625,71 +3036,84 @@ export interface transaccionesDelegate<
 export interface Prisma__transaccionesClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  bitacora_pagos<T extends Prisma.transacciones$bitacora_pagosArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.transacciones$bitacora_pagosArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  bitacora_pagos<
+    T extends Prisma.transacciones$bitacora_pagosArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.transacciones$bitacora_pagosArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$bitacora_pagosPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
-  suscripciones_activas<T extends Prisma.transacciones$suscripciones_activasArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.transacciones$suscripciones_activasArgs<ExtArgs>>
+  >;
+  suscripciones_activas<
+    T extends Prisma.transacciones$suscripciones_activasArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<
+      T,
+      Prisma.transacciones$suscripciones_activasArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$suscripciones_activasPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   plan_suscripcion<T extends Prisma.plan_suscripcionDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.plan_suscripcionDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.plan_suscripcionDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__plan_suscripcionClient<
     | runtime.Types.Result.GetResult<
         Prisma.$plan_suscripcionPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     | runtime.Types.Result.GetResult<
         Prisma.$usuarioPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
-  verificacion_pago<T extends Prisma.transacciones$verificacion_pagoArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.transacciones$verificacion_pagoArgs<ExtArgs>>
+  >;
+  verificacion_pago<
+    T extends Prisma.transacciones$verificacion_pagoArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<
+      T,
+      Prisma.transacciones$verificacion_pagoArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$verificacion_pagoPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2697,43 +3121,54 @@ export interface Prisma__transaccionesClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the transacciones model
  */
 export interface transaccionesFieldRefs {
-  readonly id: Prisma.FieldRef<'transacciones', 'Int'>
-  readonly id_usuario: Prisma.FieldRef<'transacciones', 'Int'>
-  readonly id_suscripcion: Prisma.FieldRef<'transacciones', 'Int'>
-  readonly subtotal: Prisma.FieldRef<'transacciones', 'Decimal'>
-  readonly iva_porcentaje: Prisma.FieldRef<'transacciones', 'Decimal'>
-  readonly iva_monto: Prisma.FieldRef<'transacciones', 'Decimal'>
-  readonly total: Prisma.FieldRef<'transacciones', 'Decimal'>
-  readonly metodo_pago: Prisma.FieldRef<'transacciones', 'String'>
-  readonly fecha_intento: Prisma.FieldRef<'transacciones', 'DateTime'>
-  readonly fecha_completado: Prisma.FieldRef<'transacciones', 'DateTime'>
-  readonly estado: Prisma.FieldRef<'transacciones', 'String'>
-  readonly verificacion_requerida: Prisma.FieldRef<'transacciones', 'Boolean'>
-  readonly tiempo_activacion: Prisma.FieldRef<'transacciones', 'DateTime'>
+  readonly id: Prisma.FieldRef<"transacciones", "Int">;
+  readonly id_usuario: Prisma.FieldRef<"transacciones", "Int">;
+  readonly id_suscripcion: Prisma.FieldRef<"transacciones", "Int">;
+  readonly subtotal: Prisma.FieldRef<"transacciones", "Decimal">;
+  readonly iva_porcentaje: Prisma.FieldRef<"transacciones", "Decimal">;
+  readonly iva_monto: Prisma.FieldRef<"transacciones", "Decimal">;
+  readonly total: Prisma.FieldRef<"transacciones", "Decimal">;
+  readonly metodo_pago: Prisma.FieldRef<"transacciones", "String">;
+  readonly fecha_intento: Prisma.FieldRef<"transacciones", "DateTime">;
+  readonly fecha_completado: Prisma.FieldRef<"transacciones", "DateTime">;
+  readonly estado: Prisma.FieldRef<"transacciones", "String">;
+  readonly verificacion_requerida: Prisma.FieldRef<"transacciones", "Boolean">;
+  readonly tiempo_activacion: Prisma.FieldRef<"transacciones", "DateTime">;
 }
 
 // Custom InputTypes
@@ -2741,72 +3176,75 @@ export interface transaccionesFieldRefs {
  * transacciones findUnique
  */
 export type transaccionesFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * Filter, which transacciones to fetch.
    */
-  where: Prisma.transaccionesWhereUniqueInput
-}
+  where: Prisma.transaccionesWhereUniqueInput;
+};
 
 /**
  * transacciones findUniqueOrThrow
  */
 export type transaccionesFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * Filter, which transacciones to fetch.
    */
-  where: Prisma.transaccionesWhereUniqueInput
-}
+  where: Prisma.transaccionesWhereUniqueInput;
+};
 
 /**
  * transacciones findFirst
  */
 export type transaccionesFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * Filter, which transacciones to fetch.
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -2814,55 +3252,58 @@ export type transaccionesFindFirstArgs<
    */
   orderBy?:
     | Prisma.transaccionesOrderByWithRelationInput
-    | Prisma.transaccionesOrderByWithRelationInput[]
+    | Prisma.transaccionesOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for transacciones.
    */
-  cursor?: Prisma.transaccionesWhereUniqueInput
+  cursor?: Prisma.transaccionesWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` transacciones from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` transacciones.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of transacciones.
    */
-  distinct?: Prisma.TransaccionesScalarFieldEnum | Prisma.TransaccionesScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.TransaccionesScalarFieldEnum
+    | Prisma.TransaccionesScalarFieldEnum[];
+};
 
 /**
  * transacciones findFirstOrThrow
  */
 export type transaccionesFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * Filter, which transacciones to fetch.
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -2870,55 +3311,58 @@ export type transaccionesFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.transaccionesOrderByWithRelationInput
-    | Prisma.transaccionesOrderByWithRelationInput[]
+    | Prisma.transaccionesOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for transacciones.
    */
-  cursor?: Prisma.transaccionesWhereUniqueInput
+  cursor?: Prisma.transaccionesWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` transacciones from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` transacciones.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of transacciones.
    */
-  distinct?: Prisma.TransaccionesScalarFieldEnum | Prisma.TransaccionesScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.TransaccionesScalarFieldEnum
+    | Prisma.TransaccionesScalarFieldEnum[];
+};
 
 /**
  * transacciones findMany
  */
 export type transaccionesFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * Filter, which transacciones to fetch.
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -2926,128 +3370,145 @@ export type transaccionesFindManyArgs<
    */
   orderBy?:
     | Prisma.transaccionesOrderByWithRelationInput
-    | Prisma.transaccionesOrderByWithRelationInput[]
+    | Prisma.transaccionesOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing transacciones.
    */
-  cursor?: Prisma.transaccionesWhereUniqueInput
+  cursor?: Prisma.transaccionesWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` transacciones from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` transacciones.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of transacciones.
    */
-  distinct?: Prisma.TransaccionesScalarFieldEnum | Prisma.TransaccionesScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.TransaccionesScalarFieldEnum
+    | Prisma.TransaccionesScalarFieldEnum[];
+};
 
 /**
  * transacciones create
  */
 export type transaccionesCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * The data needed to create a transacciones.
    */
-  data: Prisma.XOR<Prisma.transaccionesCreateInput, Prisma.transaccionesUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.transaccionesCreateInput,
+    Prisma.transaccionesUncheckedCreateInput
+  >;
+};
 
 /**
  * transacciones createMany
  */
 export type transaccionesCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many transacciones.
    */
-  data: Prisma.transaccionesCreateManyInput | Prisma.transaccionesCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.transaccionesCreateManyInput
+    | Prisma.transaccionesCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * transacciones createManyAndReturn
  */
 export type transaccionesCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.transaccionesSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * The data used to create many transacciones.
    */
-  data: Prisma.transaccionesCreateManyInput | Prisma.transaccionesCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.transaccionesCreateManyInput
+    | Prisma.transaccionesCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.transaccionesIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * transacciones update
  */
 export type transaccionesUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * The data needed to update a transacciones.
    */
-  data: Prisma.XOR<Prisma.transaccionesUpdateInput, Prisma.transaccionesUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.transaccionesUpdateInput,
+    Prisma.transaccionesUncheckedUpdateInput
+  >;
   /**
    * Choose, which transacciones to update.
    */
-  where: Prisma.transaccionesWhereUniqueInput
-}
+  where: Prisma.transaccionesWhereUniqueInput;
+};
 
 /**
  * transacciones updateMany
  */
 export type transaccionesUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update transacciones.
@@ -3055,226 +3516,244 @@ export type transaccionesUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.transaccionesUpdateManyMutationInput,
     Prisma.transaccionesUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which transacciones to update
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * Limit how many transacciones to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * transacciones updateManyAndReturn
  */
 export type transaccionesUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.transaccionesSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * The data used to update transacciones.
    */
   data: Prisma.XOR<
     Prisma.transaccionesUpdateManyMutationInput,
     Prisma.transaccionesUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which transacciones to update
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * Limit how many transacciones to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.transaccionesIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * transacciones upsert
  */
 export type transaccionesUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * The filter to search for the transacciones to update in case it exists.
    */
-  where: Prisma.transaccionesWhereUniqueInput
+  where: Prisma.transaccionesWhereUniqueInput;
   /**
    * In case the transacciones found by the `where` argument doesn't exist, create a new transacciones with this data.
    */
-  create: Prisma.XOR<Prisma.transaccionesCreateInput, Prisma.transaccionesUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.transaccionesCreateInput,
+    Prisma.transaccionesUncheckedCreateInput
+  >;
   /**
    * In case the transacciones was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.transaccionesUpdateInput, Prisma.transaccionesUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.transaccionesUpdateInput,
+    Prisma.transaccionesUncheckedUpdateInput
+  >;
+};
 
 /**
  * transacciones delete
  */
 export type transaccionesDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
   /**
    * Filter which transacciones to delete.
    */
-  where: Prisma.transaccionesWhereUniqueInput
-}
+  where: Prisma.transaccionesWhereUniqueInput;
+};
 
 /**
  * transacciones deleteMany
  */
 export type transaccionesDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which transacciones to delete
    */
-  where?: Prisma.transaccionesWhereInput
+  where?: Prisma.transaccionesWhereInput;
   /**
    * Limit how many transacciones to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * transacciones.bitacora_pagos
  */
 export type transacciones$bitacora_pagosArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
-  where?: Prisma.bitacora_pagosWhereInput
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
+  where?: Prisma.bitacora_pagosWhereInput;
   orderBy?:
     | Prisma.bitacora_pagosOrderByWithRelationInput
-    | Prisma.bitacora_pagosOrderByWithRelationInput[]
-  cursor?: Prisma.bitacora_pagosWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Bitacora_pagosScalarFieldEnum | Prisma.Bitacora_pagosScalarFieldEnum[]
-}
+    | Prisma.bitacora_pagosOrderByWithRelationInput[];
+  cursor?: Prisma.bitacora_pagosWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Bitacora_pagosScalarFieldEnum
+    | Prisma.Bitacora_pagosScalarFieldEnum[];
+};
 
 /**
  * transacciones.suscripciones_activas
  */
 export type transacciones$suscripciones_activasArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the suscripciones_activas
    */
-  select?: Prisma.suscripciones_activasSelect<ExtArgs> | null
+  select?: Prisma.suscripciones_activasSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the suscripciones_activas
    */
-  omit?: Prisma.suscripciones_activasOmit<ExtArgs> | null
+  omit?: Prisma.suscripciones_activasOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.suscripciones_activasInclude<ExtArgs> | null
-  where?: Prisma.suscripciones_activasWhereInput
+  include?: Prisma.suscripciones_activasInclude<ExtArgs> | null;
+  where?: Prisma.suscripciones_activasWhereInput;
   orderBy?:
     | Prisma.suscripciones_activasOrderByWithRelationInput
-    | Prisma.suscripciones_activasOrderByWithRelationInput[]
-  cursor?: Prisma.suscripciones_activasWhereUniqueInput
-  take?: number
-  skip?: number
+    | Prisma.suscripciones_activasOrderByWithRelationInput[];
+  cursor?: Prisma.suscripciones_activasWhereUniqueInput;
+  take?: number;
+  skip?: number;
   distinct?:
     | Prisma.Suscripciones_activasScalarFieldEnum
-    | Prisma.Suscripciones_activasScalarFieldEnum[]
-}
+    | Prisma.Suscripciones_activasScalarFieldEnum[];
+};
 
 /**
  * transacciones.verificacion_pago
  */
 export type transacciones$verificacion_pagoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the verificacion_pago
    */
-  select?: Prisma.verificacion_pagoSelect<ExtArgs> | null
+  select?: Prisma.verificacion_pagoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the verificacion_pago
    */
-  omit?: Prisma.verificacion_pagoOmit<ExtArgs> | null
+  omit?: Prisma.verificacion_pagoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.verificacion_pagoInclude<ExtArgs> | null
-  where?: Prisma.verificacion_pagoWhereInput
+  include?: Prisma.verificacion_pagoInclude<ExtArgs> | null;
+  where?: Prisma.verificacion_pagoWhereInput;
   orderBy?:
     | Prisma.verificacion_pagoOrderByWithRelationInput
-    | Prisma.verificacion_pagoOrderByWithRelationInput[]
-  cursor?: Prisma.verificacion_pagoWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Verificacion_pagoScalarFieldEnum | Prisma.Verificacion_pagoScalarFieldEnum[]
-}
+    | Prisma.verificacion_pagoOrderByWithRelationInput[];
+  cursor?: Prisma.verificacion_pagoWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Verificacion_pagoScalarFieldEnum
+    | Prisma.Verificacion_pagoScalarFieldEnum[];
+};
 
 /**
  * transacciones without action
  */
 export type transaccionesDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
-}
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
+};

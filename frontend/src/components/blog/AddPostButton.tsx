@@ -1,6 +1,6 @@
 "use client";
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const USER_STORAGE_KEY = "propbol_user";
 const TOKEN_STORAGE_KEY = "token";
@@ -13,7 +13,7 @@ export default function AddPostButton() {
       setIsAuthenticated(
         Boolean(
           localStorage.getItem(TOKEN_STORAGE_KEY) ||
-            localStorage.getItem(USER_STORAGE_KEY),
+          localStorage.getItem(USER_STORAGE_KEY),
         ),
       );
     };

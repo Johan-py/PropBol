@@ -7,113 +7,115 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model banner_home
  *
  */
-export type banner_homeModel = runtime.Types.Result.DefaultSelection<Prisma.$banner_homePayload>
+export type banner_homeModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$banner_homePayload>;
 
 export type AggregateBanner_home = {
-  _count: Banner_homeCountAggregateOutputType | null
-  _avg: Banner_homeAvgAggregateOutputType | null
-  _sum: Banner_homeSumAggregateOutputType | null
-  _min: Banner_homeMinAggregateOutputType | null
-  _max: Banner_homeMaxAggregateOutputType | null
-}
+  _count: Banner_homeCountAggregateOutputType | null;
+  _avg: Banner_homeAvgAggregateOutputType | null;
+  _sum: Banner_homeSumAggregateOutputType | null;
+  _min: Banner_homeMinAggregateOutputType | null;
+  _max: Banner_homeMaxAggregateOutputType | null;
+};
 
 export type Banner_homeAvgAggregateOutputType = {
-  id: number | null
-  orden: number | null
-}
+  id: number | null;
+  orden: number | null;
+};
 
 export type Banner_homeSumAggregateOutputType = {
-  id: number | null
-  orden: number | null
-}
+  id: number | null;
+  orden: number | null;
+};
 
 export type Banner_homeMinAggregateOutputType = {
-  id: number | null
-  url_imagen: string | null
-  orden: number | null
-  activo: boolean | null
-  fecha_creacion: Date | null
-  titulo: string | null
-  subtitulo: string | null
-}
+  id: number | null;
+  url_imagen: string | null;
+  orden: number | null;
+  activo: boolean | null;
+  fecha_creacion: Date | null;
+  titulo: string | null;
+  subtitulo: string | null;
+};
 
 export type Banner_homeMaxAggregateOutputType = {
-  id: number | null
-  url_imagen: string | null
-  orden: number | null
-  activo: boolean | null
-  fecha_creacion: Date | null
-  titulo: string | null
-  subtitulo: string | null
-}
+  id: number | null;
+  url_imagen: string | null;
+  orden: number | null;
+  activo: boolean | null;
+  fecha_creacion: Date | null;
+  titulo: string | null;
+  subtitulo: string | null;
+};
 
 export type Banner_homeCountAggregateOutputType = {
-  id: number
-  url_imagen: number
-  orden: number
-  activo: number
-  fecha_creacion: number
-  titulo: number
-  subtitulo: number
-  _all: number
-}
+  id: number;
+  url_imagen: number;
+  orden: number;
+  activo: number;
+  fecha_creacion: number;
+  titulo: number;
+  subtitulo: number;
+  _all: number;
+};
 
 export type Banner_homeAvgAggregateInputType = {
-  id?: true
-  orden?: true
-}
+  id?: true;
+  orden?: true;
+};
 
 export type Banner_homeSumAggregateInputType = {
-  id?: true
-  orden?: true
-}
+  id?: true;
+  orden?: true;
+};
 
 export type Banner_homeMinAggregateInputType = {
-  id?: true
-  url_imagen?: true
-  orden?: true
-  activo?: true
-  fecha_creacion?: true
-  titulo?: true
-  subtitulo?: true
-}
+  id?: true;
+  url_imagen?: true;
+  orden?: true;
+  activo?: true;
+  fecha_creacion?: true;
+  titulo?: true;
+  subtitulo?: true;
+};
 
 export type Banner_homeMaxAggregateInputType = {
-  id?: true
-  url_imagen?: true
-  orden?: true
-  activo?: true
-  fecha_creacion?: true
-  titulo?: true
-  subtitulo?: true
-}
+  id?: true;
+  url_imagen?: true;
+  orden?: true;
+  activo?: true;
+  fecha_creacion?: true;
+  titulo?: true;
+  subtitulo?: true;
+};
 
 export type Banner_homeCountAggregateInputType = {
-  id?: true
-  url_imagen?: true
-  orden?: true
-  activo?: true
-  fecha_creacion?: true
-  titulo?: true
-  subtitulo?: true
-  _all?: true
-}
+  id?: true;
+  url_imagen?: true;
+  orden?: true;
+  activo?: true;
+  fecha_creacion?: true;
+  titulo?: true;
+  subtitulo?: true;
+  _all?: true;
+};
 
 export type Banner_homeAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which banner_home to aggregate.
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -121,411 +123,467 @@ export type Banner_homeAggregateArgs<
    */
   orderBy?:
     | Prisma.banner_homeOrderByWithRelationInput
-    | Prisma.banner_homeOrderByWithRelationInput[]
+    | Prisma.banner_homeOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.banner_homeWhereUniqueInput
+  cursor?: Prisma.banner_homeWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` banner_homes from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` banner_homes.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned banner_homes
    **/
-  _count?: true | Banner_homeCountAggregateInputType
+  _count?: true | Banner_homeCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Banner_homeAvgAggregateInputType
+  _avg?: Banner_homeAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Banner_homeSumAggregateInputType
+  _sum?: Banner_homeSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Banner_homeMinAggregateInputType
+  _min?: Banner_homeMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Banner_homeMaxAggregateInputType
-}
+  _max?: Banner_homeMaxAggregateInputType;
+};
 
 export type GetBanner_homeAggregateType<T extends Banner_homeAggregateArgs> = {
-  [P in keyof T & keyof AggregateBanner_home]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateBanner_home]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateBanner_home[P]>
-    : Prisma.GetScalarType<T[P], AggregateBanner_home[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateBanner_home[P]>;
+};
 
 export type banner_homeGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   orderBy?:
     | Prisma.banner_homeOrderByWithAggregationInput
-    | Prisma.banner_homeOrderByWithAggregationInput[]
-  by: Prisma.Banner_homeScalarFieldEnum[] | Prisma.Banner_homeScalarFieldEnum
-  having?: Prisma.banner_homeScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Banner_homeCountAggregateInputType | true
-  _avg?: Banner_homeAvgAggregateInputType
-  _sum?: Banner_homeSumAggregateInputType
-  _min?: Banner_homeMinAggregateInputType
-  _max?: Banner_homeMaxAggregateInputType
-}
+    | Prisma.banner_homeOrderByWithAggregationInput[];
+  by: Prisma.Banner_homeScalarFieldEnum[] | Prisma.Banner_homeScalarFieldEnum;
+  having?: Prisma.banner_homeScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Banner_homeCountAggregateInputType | true;
+  _avg?: Banner_homeAvgAggregateInputType;
+  _sum?: Banner_homeSumAggregateInputType;
+  _min?: Banner_homeMinAggregateInputType;
+  _max?: Banner_homeMaxAggregateInputType;
+};
 
 export type Banner_homeGroupByOutputType = {
-  id: number
-  url_imagen: string
-  orden: number
-  activo: boolean | null
-  fecha_creacion: Date | null
-  titulo: string | null
-  subtitulo: string | null
-  _count: Banner_homeCountAggregateOutputType | null
-  _avg: Banner_homeAvgAggregateOutputType | null
-  _sum: Banner_homeSumAggregateOutputType | null
-  _min: Banner_homeMinAggregateOutputType | null
-  _max: Banner_homeMaxAggregateOutputType | null
-}
+  id: number;
+  url_imagen: string;
+  orden: number;
+  activo: boolean | null;
+  fecha_creacion: Date | null;
+  titulo: string | null;
+  subtitulo: string | null;
+  _count: Banner_homeCountAggregateOutputType | null;
+  _avg: Banner_homeAvgAggregateOutputType | null;
+  _sum: Banner_homeSumAggregateOutputType | null;
+  _min: Banner_homeMinAggregateOutputType | null;
+  _max: Banner_homeMaxAggregateOutputType | null;
+};
 
-export type GetBanner_homeGroupByPayload<T extends banner_homeGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<Banner_homeGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof Banner_homeGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], Banner_homeGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], Banner_homeGroupByOutputType[P]>
-    }
-  >
->
+export type GetBanner_homeGroupByPayload<T extends banner_homeGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<Banner_homeGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof Banner_homeGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Banner_homeGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], Banner_homeGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type banner_homeWhereInput = {
-  AND?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[]
-  OR?: Prisma.banner_homeWhereInput[]
-  NOT?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[]
-  id?: Prisma.IntFilter<'banner_home'> | number
-  url_imagen?: Prisma.StringFilter<'banner_home'> | string
-  orden?: Prisma.IntFilter<'banner_home'> | number
-  activo?: Prisma.BoolNullableFilter<'banner_home'> | boolean | null
-  fecha_creacion?: Prisma.DateTimeNullableFilter<'banner_home'> | Date | string | null
-  titulo?: Prisma.StringNullableFilter<'banner_home'> | string | null
-  subtitulo?: Prisma.StringNullableFilter<'banner_home'> | string | null
-}
+  AND?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[];
+  OR?: Prisma.banner_homeWhereInput[];
+  NOT?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[];
+  id?: Prisma.IntFilter<"banner_home"> | number;
+  url_imagen?: Prisma.StringFilter<"banner_home"> | string;
+  orden?: Prisma.IntFilter<"banner_home"> | number;
+  activo?: Prisma.BoolNullableFilter<"banner_home"> | boolean | null;
+  fecha_creacion?:
+    | Prisma.DateTimeNullableFilter<"banner_home">
+    | Date
+    | string
+    | null;
+  titulo?: Prisma.StringNullableFilter<"banner_home"> | string | null;
+  subtitulo?: Prisma.StringNullableFilter<"banner_home"> | string | null;
+};
 
 export type banner_homeOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  url_imagen?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-  activo?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  titulo?: Prisma.SortOrderInput | Prisma.SortOrder
-  subtitulo?: Prisma.SortOrderInput | Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url_imagen?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+  activo?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  titulo?: Prisma.SortOrderInput | Prisma.SortOrder;
+  subtitulo?: Prisma.SortOrderInput | Prisma.SortOrder;
+};
 
 export type banner_homeWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[]
-    OR?: Prisma.banner_homeWhereInput[]
-    NOT?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[]
-    url_imagen?: Prisma.StringFilter<'banner_home'> | string
-    orden?: Prisma.IntFilter<'banner_home'> | number
-    activo?: Prisma.BoolNullableFilter<'banner_home'> | boolean | null
-    fecha_creacion?: Prisma.DateTimeNullableFilter<'banner_home'> | Date | string | null
-    titulo?: Prisma.StringNullableFilter<'banner_home'> | string | null
-    subtitulo?: Prisma.StringNullableFilter<'banner_home'> | string | null
+    id?: number;
+    AND?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[];
+    OR?: Prisma.banner_homeWhereInput[];
+    NOT?: Prisma.banner_homeWhereInput | Prisma.banner_homeWhereInput[];
+    url_imagen?: Prisma.StringFilter<"banner_home"> | string;
+    orden?: Prisma.IntFilter<"banner_home"> | number;
+    activo?: Prisma.BoolNullableFilter<"banner_home"> | boolean | null;
+    fecha_creacion?:
+      | Prisma.DateTimeNullableFilter<"banner_home">
+      | Date
+      | string
+      | null;
+    titulo?: Prisma.StringNullableFilter<"banner_home"> | string | null;
+    subtitulo?: Prisma.StringNullableFilter<"banner_home"> | string | null;
   },
-  'id'
->
+  "id"
+>;
 
 export type banner_homeOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  url_imagen?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-  activo?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  titulo?: Prisma.SortOrderInput | Prisma.SortOrder
-  subtitulo?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.banner_homeCountOrderByAggregateInput
-  _avg?: Prisma.banner_homeAvgOrderByAggregateInput
-  _max?: Prisma.banner_homeMaxOrderByAggregateInput
-  _min?: Prisma.banner_homeMinOrderByAggregateInput
-  _sum?: Prisma.banner_homeSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  url_imagen?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+  activo?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  titulo?: Prisma.SortOrderInput | Prisma.SortOrder;
+  subtitulo?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.banner_homeCountOrderByAggregateInput;
+  _avg?: Prisma.banner_homeAvgOrderByAggregateInput;
+  _max?: Prisma.banner_homeMaxOrderByAggregateInput;
+  _min?: Prisma.banner_homeMinOrderByAggregateInput;
+  _sum?: Prisma.banner_homeSumOrderByAggregateInput;
+};
 
 export type banner_homeScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.banner_homeScalarWhereWithAggregatesInput
-    | Prisma.banner_homeScalarWhereWithAggregatesInput[]
-  OR?: Prisma.banner_homeScalarWhereWithAggregatesInput[]
+    | Prisma.banner_homeScalarWhereWithAggregatesInput[];
+  OR?: Prisma.banner_homeScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.banner_homeScalarWhereWithAggregatesInput
-    | Prisma.banner_homeScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'banner_home'> | number
-  url_imagen?: Prisma.StringWithAggregatesFilter<'banner_home'> | string
-  orden?: Prisma.IntWithAggregatesFilter<'banner_home'> | number
-  activo?: Prisma.BoolNullableWithAggregatesFilter<'banner_home'> | boolean | null
-  fecha_creacion?: Prisma.DateTimeNullableWithAggregatesFilter<'banner_home'> | Date | string | null
-  titulo?: Prisma.StringNullableWithAggregatesFilter<'banner_home'> | string | null
-  subtitulo?: Prisma.StringNullableWithAggregatesFilter<'banner_home'> | string | null
-}
+    | Prisma.banner_homeScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"banner_home"> | number;
+  url_imagen?: Prisma.StringWithAggregatesFilter<"banner_home"> | string;
+  orden?: Prisma.IntWithAggregatesFilter<"banner_home"> | number;
+  activo?:
+    | Prisma.BoolNullableWithAggregatesFilter<"banner_home">
+    | boolean
+    | null;
+  fecha_creacion?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"banner_home">
+    | Date
+    | string
+    | null;
+  titulo?:
+    | Prisma.StringNullableWithAggregatesFilter<"banner_home">
+    | string
+    | null;
+  subtitulo?:
+    | Prisma.StringNullableWithAggregatesFilter<"banner_home">
+    | string
+    | null;
+};
 
 export type banner_homeCreateInput = {
-  url_imagen: string
-  orden: number
-  activo?: boolean | null
-  fecha_creacion?: Date | string | null
-  titulo?: string | null
-  subtitulo?: string | null
-}
+  url_imagen: string;
+  orden: number;
+  activo?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  titulo?: string | null;
+  subtitulo?: string | null;
+};
 
 export type banner_homeUncheckedCreateInput = {
-  id?: number
-  url_imagen: string
-  orden: number
-  activo?: boolean | null
-  fecha_creacion?: Date | string | null
-  titulo?: string | null
-  subtitulo?: string | null
-}
+  id?: number;
+  url_imagen: string;
+  orden: number;
+  activo?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  titulo?: string | null;
+  subtitulo?: string | null;
+};
 
 export type banner_homeUpdateInput = {
-  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string
-  orden?: Prisma.IntFieldUpdateOperationsInput | number
-  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
+  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string;
+  orden?: Prisma.IntFieldUpdateOperationsInput | number;
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
 
 export type banner_homeUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string
-  orden?: Prisma.IntFieldUpdateOperationsInput | number
-  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string;
+  orden?: Prisma.IntFieldUpdateOperationsInput | number;
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
 
 export type banner_homeCreateManyInput = {
-  id?: number
-  url_imagen: string
-  orden: number
-  activo?: boolean | null
-  fecha_creacion?: Date | string | null
-  titulo?: string | null
-  subtitulo?: string | null
-}
+  id?: number;
+  url_imagen: string;
+  orden: number;
+  activo?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  titulo?: string | null;
+  subtitulo?: string | null;
+};
 
 export type banner_homeUpdateManyMutationInput = {
-  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string
-  orden?: Prisma.IntFieldUpdateOperationsInput | number
-  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
+  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string;
+  orden?: Prisma.IntFieldUpdateOperationsInput | number;
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
 
 export type banner_homeUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string
-  orden?: Prisma.IntFieldUpdateOperationsInput | number
-  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  url_imagen?: Prisma.StringFieldUpdateOperationsInput | string;
+  orden?: Prisma.IntFieldUpdateOperationsInput | number;
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  titulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  subtitulo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
 
 export type banner_homeCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  url_imagen?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-  activo?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  subtitulo?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url_imagen?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+  activo?: Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  subtitulo?: Prisma.SortOrder;
+};
 
 export type banner_homeAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+};
 
 export type banner_homeMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  url_imagen?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-  activo?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  subtitulo?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url_imagen?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+  activo?: Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  subtitulo?: Prisma.SortOrder;
+};
 
 export type banner_homeMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  url_imagen?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-  activo?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  subtitulo?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url_imagen?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+  activo?: Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  subtitulo?: Prisma.SortOrder;
+};
 
 export type banner_homeSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  orden?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  orden?: Prisma.SortOrder;
+};
 
 export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
+  set?: string;
+};
 
 export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
+  set?: number;
+  increment?: number;
+  decrement?: number;
+  multiply?: number;
+  divide?: number;
+};
 
 export type NullableBoolFieldUpdateOperationsInput = {
-  set?: boolean | null
-}
+  set?: boolean | null;
+};
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
+  set?: Date | string | null;
+};
 
 export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
+  set?: string | null;
+};
 
 export type banner_homeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    url_imagen?: boolean
-    orden?: boolean
-    activo?: boolean
-    fecha_creacion?: boolean
-    titulo?: boolean
-    subtitulo?: boolean
+    id?: boolean;
+    url_imagen?: boolean;
+    orden?: boolean;
+    activo?: boolean;
+    fecha_creacion?: boolean;
+    titulo?: boolean;
+    subtitulo?: boolean;
   },
-  ExtArgs['result']['banner_home']
->
+  ExtArgs["result"]["banner_home"]
+>;
 
 export type banner_homeSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    url_imagen?: boolean
-    orden?: boolean
-    activo?: boolean
-    fecha_creacion?: boolean
-    titulo?: boolean
-    subtitulo?: boolean
+    id?: boolean;
+    url_imagen?: boolean;
+    orden?: boolean;
+    activo?: boolean;
+    fecha_creacion?: boolean;
+    titulo?: boolean;
+    subtitulo?: boolean;
   },
-  ExtArgs['result']['banner_home']
->
+  ExtArgs["result"]["banner_home"]
+>;
 
 export type banner_homeSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    url_imagen?: boolean
-    orden?: boolean
-    activo?: boolean
-    fecha_creacion?: boolean
-    titulo?: boolean
-    subtitulo?: boolean
+    id?: boolean;
+    url_imagen?: boolean;
+    orden?: boolean;
+    activo?: boolean;
+    fecha_creacion?: boolean;
+    titulo?: boolean;
+    subtitulo?: boolean;
   },
-  ExtArgs['result']['banner_home']
->
+  ExtArgs["result"]["banner_home"]
+>;
 
 export type banner_homeSelectScalar = {
-  id?: boolean
-  url_imagen?: boolean
-  orden?: boolean
-  activo?: boolean
-  fecha_creacion?: boolean
-  titulo?: boolean
-  subtitulo?: boolean
-}
+  id?: boolean;
+  url_imagen?: boolean;
+  orden?: boolean;
+  activo?: boolean;
+  fecha_creacion?: boolean;
+  titulo?: boolean;
+  subtitulo?: boolean;
+};
 
 export type banner_homeOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'url_imagen' | 'orden' | 'activo' | 'fecha_creacion' | 'titulo' | 'subtitulo',
-  ExtArgs['result']['banner_home']
->
+  | "id"
+  | "url_imagen"
+  | "orden"
+  | "activo"
+  | "fecha_creacion"
+  | "titulo"
+  | "subtitulo",
+  ExtArgs["result"]["banner_home"]
+>;
 
 export type $banner_homePayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'banner_home'
-  objects: {}
+  name: "banner_home";
+  objects: {};
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      url_imagen: string
-      orden: number
-      activo: boolean | null
-      fecha_creacion: Date | null
-      titulo: string | null
-      subtitulo: string | null
+      id: number;
+      url_imagen: string;
+      orden: number;
+      activo: boolean | null;
+      fecha_creacion: Date | null;
+      titulo: string | null;
+      subtitulo: string | null;
     },
-    ExtArgs['result']['banner_home']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["banner_home"]
+  >;
+  composites: {};
+};
 
-export type banner_homeGetPayload<S extends boolean | null | undefined | banner_homeDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$banner_homePayload, S>
+export type banner_homeGetPayload<
+  S extends boolean | null | undefined | banner_homeDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$banner_homePayload, S>;
 
 export type banner_homeCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<banner_homeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Banner_homeCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  banner_homeFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Banner_homeCountAggregateInputType | true;
+};
 
 export interface banner_homeDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['banner_home']
-    meta: { name: 'banner_home' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["banner_home"];
+    meta: { name: "banner_home" };
+  };
   /**
    * Find zero or one Banner_home that matches the filter.
    * @param {banner_homeFindUniqueArgs} args - Arguments to find a Banner_home
@@ -538,18 +596,18 @@ export interface banner_homeDelegate<
    * })
    */
   findUnique<T extends banner_homeFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, banner_homeFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Banner_home that matches the filter or throw an error with `error.code='P2025'`
@@ -564,18 +622,18 @@ export interface banner_homeDelegate<
    * })
    */
   findUniqueOrThrow<T extends banner_homeFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, banner_homeFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Banner_home that matches the filter.
@@ -591,18 +649,18 @@ export interface banner_homeDelegate<
    * })
    */
   findFirst<T extends banner_homeFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, banner_homeFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, banner_homeFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Banner_home that matches the filter or
@@ -619,18 +677,18 @@ export interface banner_homeDelegate<
    * })
    */
   findFirstOrThrow<T extends banner_homeFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, banner_homeFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, banner_homeFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Banner_homes that matches the filter.
@@ -649,15 +707,15 @@ export interface banner_homeDelegate<
    *
    */
   findMany<T extends banner_homeFindManyArgs>(
-    args?: Prisma.SelectSubset<T, banner_homeFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, banner_homeFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Banner_home.
@@ -672,18 +730,18 @@ export interface banner_homeDelegate<
    *
    */
   create<T extends banner_homeCreateArgs>(
-    args: Prisma.SelectSubset<T, banner_homeCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Banner_homes.
@@ -698,8 +756,8 @@ export interface banner_homeDelegate<
    *
    */
   createMany<T extends banner_homeCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, banner_homeCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, banner_homeCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Banner_homes and returns the data saved in the database.
@@ -724,15 +782,15 @@ export interface banner_homeDelegate<
    *
    */
   createManyAndReturn<T extends banner_homeCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, banner_homeCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, banner_homeCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Banner_home.
@@ -747,18 +805,18 @@ export interface banner_homeDelegate<
    *
    */
   delete<T extends banner_homeDeleteArgs>(
-    args: Prisma.SelectSubset<T, banner_homeDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Banner_home.
@@ -776,18 +834,18 @@ export interface banner_homeDelegate<
    *
    */
   update<T extends banner_homeUpdateArgs>(
-    args: Prisma.SelectSubset<T, banner_homeUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Banner_homes.
@@ -802,8 +860,8 @@ export interface banner_homeDelegate<
    *
    */
   deleteMany<T extends banner_homeDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, banner_homeDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, banner_homeDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Banner_homes.
@@ -823,8 +881,8 @@ export interface banner_homeDelegate<
    *
    */
   updateMany<T extends banner_homeUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, banner_homeUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, banner_homeUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Banner_homes and returns the data updated in the database.
@@ -855,15 +913,15 @@ export interface banner_homeDelegate<
    *
    */
   updateManyAndReturn<T extends banner_homeUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, banner_homeUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Banner_home.
@@ -883,18 +941,18 @@ export interface banner_homeDelegate<
    * })
    */
   upsert<T extends banner_homeUpsertArgs>(
-    args: Prisma.SelectSubset<T, banner_homeUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, banner_homeUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__banner_homeClient<
     runtime.Types.Result.GetResult<
       Prisma.$banner_homePayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Banner_homes.
@@ -910,14 +968,14 @@ export interface banner_homeDelegate<
    * })
    **/
   count<T extends banner_homeCountArgs>(
-    args?: Prisma.Subset<T, banner_homeCountArgs>
+    args?: Prisma.Subset<T, banner_homeCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Banner_homeCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], Banner_homeCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Banner_home.
@@ -944,8 +1002,8 @@ export interface banner_homeDelegate<
    * })
    **/
   aggregate<T extends Banner_homeAggregateArgs>(
-    args: Prisma.Subset<T, Banner_homeAggregateArgs>
-  ): Prisma.PrismaPromise<GetBanner_homeAggregateType<T>>
+    args: Prisma.Subset<T, Banner_homeAggregateArgs>,
+  ): Prisma.PrismaPromise<GetBanner_homeAggregateType<T>>;
 
   /**
    * Group by Banner_home.
@@ -968,20 +1026,20 @@ export interface banner_homeDelegate<
   groupBy<
     T extends banner_homeGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: banner_homeGroupByArgs['orderBy'] }
-      : { orderBy?: banner_homeGroupByArgs['orderBy'] },
+      ? { orderBy: banner_homeGroupByArgs["orderBy"] }
+      : { orderBy?: banner_homeGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -990,26 +1048,31 @@ export interface banner_homeDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1017,15 +1080,18 @@ export interface banner_homeDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, banner_homeGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetBanner_homeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, banner_homeGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetBanner_homeGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the banner_home model
    */
-  readonly fields: banner_homeFieldRefs
+  readonly fields: banner_homeFieldRefs;
 }
 
 /**
@@ -1037,10 +1103,11 @@ export interface banner_homeDelegate<
 export interface Prisma__banner_homeClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1048,37 +1115,48 @@ export interface Prisma__banner_homeClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the banner_home model
  */
 export interface banner_homeFieldRefs {
-  readonly id: Prisma.FieldRef<'banner_home', 'Int'>
-  readonly url_imagen: Prisma.FieldRef<'banner_home', 'String'>
-  readonly orden: Prisma.FieldRef<'banner_home', 'Int'>
-  readonly activo: Prisma.FieldRef<'banner_home', 'Boolean'>
-  readonly fecha_creacion: Prisma.FieldRef<'banner_home', 'DateTime'>
-  readonly titulo: Prisma.FieldRef<'banner_home', 'String'>
-  readonly subtitulo: Prisma.FieldRef<'banner_home', 'String'>
+  readonly id: Prisma.FieldRef<"banner_home", "Int">;
+  readonly url_imagen: Prisma.FieldRef<"banner_home", "String">;
+  readonly orden: Prisma.FieldRef<"banner_home", "Int">;
+  readonly activo: Prisma.FieldRef<"banner_home", "Boolean">;
+  readonly fecha_creacion: Prisma.FieldRef<"banner_home", "DateTime">;
+  readonly titulo: Prisma.FieldRef<"banner_home", "String">;
+  readonly subtitulo: Prisma.FieldRef<"banner_home", "String">;
 }
 
 // Custom InputTypes
@@ -1086,60 +1164,63 @@ export interface banner_homeFieldRefs {
  * banner_home findUnique
  */
 export type banner_homeFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * Filter, which banner_home to fetch.
    */
-  where: Prisma.banner_homeWhereUniqueInput
-}
+  where: Prisma.banner_homeWhereUniqueInput;
+};
 
 /**
  * banner_home findUniqueOrThrow
  */
 export type banner_homeFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * Filter, which banner_home to fetch.
    */
-  where: Prisma.banner_homeWhereUniqueInput
-}
+  where: Prisma.banner_homeWhereUniqueInput;
+};
 
 /**
  * banner_home findFirst
  */
 export type banner_homeFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * Filter, which banner_home to fetch.
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1147,51 +1228,54 @@ export type banner_homeFindFirstArgs<
    */
   orderBy?:
     | Prisma.banner_homeOrderByWithRelationInput
-    | Prisma.banner_homeOrderByWithRelationInput[]
+    | Prisma.banner_homeOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for banner_homes.
    */
-  cursor?: Prisma.banner_homeWhereUniqueInput
+  cursor?: Prisma.banner_homeWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` banner_homes from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` banner_homes.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of banner_homes.
    */
-  distinct?: Prisma.Banner_homeScalarFieldEnum | Prisma.Banner_homeScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Banner_homeScalarFieldEnum
+    | Prisma.Banner_homeScalarFieldEnum[];
+};
 
 /**
  * banner_home findFirstOrThrow
  */
 export type banner_homeFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * Filter, which banner_home to fetch.
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1199,51 +1283,54 @@ export type banner_homeFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.banner_homeOrderByWithRelationInput
-    | Prisma.banner_homeOrderByWithRelationInput[]
+    | Prisma.banner_homeOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for banner_homes.
    */
-  cursor?: Prisma.banner_homeWhereUniqueInput
+  cursor?: Prisma.banner_homeWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` banner_homes from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` banner_homes.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of banner_homes.
    */
-  distinct?: Prisma.Banner_homeScalarFieldEnum | Prisma.Banner_homeScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Banner_homeScalarFieldEnum
+    | Prisma.Banner_homeScalarFieldEnum[];
+};
 
 /**
  * banner_home findMany
  */
 export type banner_homeFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * Filter, which banner_homes to fetch.
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1251,116 +1338,129 @@ export type banner_homeFindManyArgs<
    */
   orderBy?:
     | Prisma.banner_homeOrderByWithRelationInput
-    | Prisma.banner_homeOrderByWithRelationInput[]
+    | Prisma.banner_homeOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing banner_homes.
    */
-  cursor?: Prisma.banner_homeWhereUniqueInput
+  cursor?: Prisma.banner_homeWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` banner_homes from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` banner_homes.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of banner_homes.
    */
-  distinct?: Prisma.Banner_homeScalarFieldEnum | Prisma.Banner_homeScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Banner_homeScalarFieldEnum
+    | Prisma.Banner_homeScalarFieldEnum[];
+};
 
 /**
  * banner_home create
  */
 export type banner_homeCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * The data needed to create a banner_home.
    */
-  data: Prisma.XOR<Prisma.banner_homeCreateInput, Prisma.banner_homeUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.banner_homeCreateInput,
+    Prisma.banner_homeUncheckedCreateInput
+  >;
+};
 
 /**
  * banner_home createMany
  */
 export type banner_homeCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many banner_homes.
    */
-  data: Prisma.banner_homeCreateManyInput | Prisma.banner_homeCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.banner_homeCreateManyInput | Prisma.banner_homeCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * banner_home createManyAndReturn
  */
 export type banner_homeCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.banner_homeSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * The data used to create many banner_homes.
    */
-  data: Prisma.banner_homeCreateManyInput | Prisma.banner_homeCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.banner_homeCreateManyInput | Prisma.banner_homeCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * banner_home update
  */
 export type banner_homeUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * The data needed to update a banner_home.
    */
-  data: Prisma.XOR<Prisma.banner_homeUpdateInput, Prisma.banner_homeUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.banner_homeUpdateInput,
+    Prisma.banner_homeUncheckedUpdateInput
+  >;
   /**
    * Choose, which banner_home to update.
    */
-  where: Prisma.banner_homeWhereUniqueInput
-}
+  where: Prisma.banner_homeWhereUniqueInput;
+};
 
 /**
  * banner_home updateMany
  */
 export type banner_homeUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update banner_homes.
@@ -1368,124 +1468,135 @@ export type banner_homeUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.banner_homeUpdateManyMutationInput,
     Prisma.banner_homeUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which banner_homes to update
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * Limit how many banner_homes to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * banner_home updateManyAndReturn
  */
 export type banner_homeUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.banner_homeSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * The data used to update banner_homes.
    */
   data: Prisma.XOR<
     Prisma.banner_homeUpdateManyMutationInput,
     Prisma.banner_homeUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which banner_homes to update
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * Limit how many banner_homes to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * banner_home upsert
  */
 export type banner_homeUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * The filter to search for the banner_home to update in case it exists.
    */
-  where: Prisma.banner_homeWhereUniqueInput
+  where: Prisma.banner_homeWhereUniqueInput;
   /**
    * In case the banner_home found by the `where` argument doesn't exist, create a new banner_home with this data.
    */
-  create: Prisma.XOR<Prisma.banner_homeCreateInput, Prisma.banner_homeUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.banner_homeCreateInput,
+    Prisma.banner_homeUncheckedCreateInput
+  >;
   /**
    * In case the banner_home was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.banner_homeUpdateInput, Prisma.banner_homeUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.banner_homeUpdateInput,
+    Prisma.banner_homeUncheckedUpdateInput
+  >;
+};
 
 /**
  * banner_home delete
  */
 export type banner_homeDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
   /**
    * Filter which banner_home to delete.
    */
-  where: Prisma.banner_homeWhereUniqueInput
-}
+  where: Prisma.banner_homeWhereUniqueInput;
+};
 
 /**
  * banner_home deleteMany
  */
 export type banner_homeDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which banner_homes to delete
    */
-  where?: Prisma.banner_homeWhereInput
+  where?: Prisma.banner_homeWhereInput;
   /**
    * Limit how many banner_homes to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * banner_home without action
  */
 export type banner_homeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the banner_home
    */
-  select?: Prisma.banner_homeSelect<ExtArgs> | null
+  select?: Prisma.banner_homeSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the banner_home
    */
-  omit?: Prisma.banner_homeOmit<ExtArgs> | null
-}
+  omit?: Prisma.banner_homeOmit<ExtArgs> | null;
+};

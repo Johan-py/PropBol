@@ -7,136 +7,137 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model interaccion_mapa
  *
  */
 export type interaccion_mapaModel =
-  runtime.Types.Result.DefaultSelection<Prisma.$interaccion_mapaPayload>
+  runtime.Types.Result.DefaultSelection<Prisma.$interaccion_mapaPayload>;
 
 export type AggregateInteraccion_mapa = {
-  _count: Interaccion_mapaCountAggregateOutputType | null
-  _avg: Interaccion_mapaAvgAggregateOutputType | null
-  _sum: Interaccion_mapaSumAggregateOutputType | null
-  _min: Interaccion_mapaMinAggregateOutputType | null
-  _max: Interaccion_mapaMaxAggregateOutputType | null
-}
+  _count: Interaccion_mapaCountAggregateOutputType | null;
+  _avg: Interaccion_mapaAvgAggregateOutputType | null;
+  _sum: Interaccion_mapaSumAggregateOutputType | null;
+  _min: Interaccion_mapaMinAggregateOutputType | null;
+  _max: Interaccion_mapaMaxAggregateOutputType | null;
+};
 
 export type Interaccion_mapaAvgAggregateOutputType = {
-  id: number | null
-  latitud_momento: runtime.Decimal | null
-  longitud_momento: runtime.Decimal | null
-  zoom_momento: number | null
-  sesion_id: number | null
-  marcador_id: number | null
-}
+  id: number | null;
+  latitud_momento: runtime.Decimal | null;
+  longitud_momento: runtime.Decimal | null;
+  zoom_momento: number | null;
+  sesion_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Interaccion_mapaSumAggregateOutputType = {
-  id: number | null
-  latitud_momento: runtime.Decimal | null
-  longitud_momento: runtime.Decimal | null
-  zoom_momento: number | null
-  sesion_id: number | null
-  marcador_id: number | null
-}
+  id: number | null;
+  latitud_momento: runtime.Decimal | null;
+  longitud_momento: runtime.Decimal | null;
+  zoom_momento: number | null;
+  sesion_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Interaccion_mapaMinAggregateOutputType = {
-  id: number | null
-  tipo: $Enums.tipo_interaccion | null
-  latitud_momento: runtime.Decimal | null
-  longitud_momento: runtime.Decimal | null
-  zoom_momento: number | null
-  ocurrio_en: Date | null
-  sesion_id: number | null
-  marcador_id: number | null
-}
+  id: number | null;
+  tipo: $Enums.tipo_interaccion | null;
+  latitud_momento: runtime.Decimal | null;
+  longitud_momento: runtime.Decimal | null;
+  zoom_momento: number | null;
+  ocurrio_en: Date | null;
+  sesion_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Interaccion_mapaMaxAggregateOutputType = {
-  id: number | null
-  tipo: $Enums.tipo_interaccion | null
-  latitud_momento: runtime.Decimal | null
-  longitud_momento: runtime.Decimal | null
-  zoom_momento: number | null
-  ocurrio_en: Date | null
-  sesion_id: number | null
-  marcador_id: number | null
-}
+  id: number | null;
+  tipo: $Enums.tipo_interaccion | null;
+  latitud_momento: runtime.Decimal | null;
+  longitud_momento: runtime.Decimal | null;
+  zoom_momento: number | null;
+  ocurrio_en: Date | null;
+  sesion_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Interaccion_mapaCountAggregateOutputType = {
-  id: number
-  tipo: number
-  latitud_momento: number
-  longitud_momento: number
-  zoom_momento: number
-  ocurrio_en: number
-  sesion_id: number
-  marcador_id: number
-  _all: number
-}
+  id: number;
+  tipo: number;
+  latitud_momento: number;
+  longitud_momento: number;
+  zoom_momento: number;
+  ocurrio_en: number;
+  sesion_id: number;
+  marcador_id: number;
+  _all: number;
+};
 
 export type Interaccion_mapaAvgAggregateInputType = {
-  id?: true
-  latitud_momento?: true
-  longitud_momento?: true
-  zoom_momento?: true
-  sesion_id?: true
-  marcador_id?: true
-}
+  id?: true;
+  latitud_momento?: true;
+  longitud_momento?: true;
+  zoom_momento?: true;
+  sesion_id?: true;
+  marcador_id?: true;
+};
 
 export type Interaccion_mapaSumAggregateInputType = {
-  id?: true
-  latitud_momento?: true
-  longitud_momento?: true
-  zoom_momento?: true
-  sesion_id?: true
-  marcador_id?: true
-}
+  id?: true;
+  latitud_momento?: true;
+  longitud_momento?: true;
+  zoom_momento?: true;
+  sesion_id?: true;
+  marcador_id?: true;
+};
 
 export type Interaccion_mapaMinAggregateInputType = {
-  id?: true
-  tipo?: true
-  latitud_momento?: true
-  longitud_momento?: true
-  zoom_momento?: true
-  ocurrio_en?: true
-  sesion_id?: true
-  marcador_id?: true
-}
+  id?: true;
+  tipo?: true;
+  latitud_momento?: true;
+  longitud_momento?: true;
+  zoom_momento?: true;
+  ocurrio_en?: true;
+  sesion_id?: true;
+  marcador_id?: true;
+};
 
 export type Interaccion_mapaMaxAggregateInputType = {
-  id?: true
-  tipo?: true
-  latitud_momento?: true
-  longitud_momento?: true
-  zoom_momento?: true
-  ocurrio_en?: true
-  sesion_id?: true
-  marcador_id?: true
-}
+  id?: true;
+  tipo?: true;
+  latitud_momento?: true;
+  longitud_momento?: true;
+  zoom_momento?: true;
+  ocurrio_en?: true;
+  sesion_id?: true;
+  marcador_id?: true;
+};
 
 export type Interaccion_mapaCountAggregateInputType = {
-  id?: true
-  tipo?: true
-  latitud_momento?: true
-  longitud_momento?: true
-  zoom_momento?: true
-  ocurrio_en?: true
-  sesion_id?: true
-  marcador_id?: true
-  _all?: true
-}
+  id?: true;
+  tipo?: true;
+  latitud_momento?: true;
+  longitud_momento?: true;
+  zoom_momento?: true;
+  ocurrio_en?: true;
+  sesion_id?: true;
+  marcador_id?: true;
+  _all?: true;
+};
 
 export type Interaccion_mapaAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which interaccion_mapa to aggregate.
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -144,432 +145,518 @@ export type Interaccion_mapaAggregateArgs<
    */
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithRelationInput
-    | Prisma.interaccion_mapaOrderByWithRelationInput[]
+    | Prisma.interaccion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.interaccion_mapaWhereUniqueInput
+  cursor?: Prisma.interaccion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` interaccion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` interaccion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned interaccion_mapas
    **/
-  _count?: true | Interaccion_mapaCountAggregateInputType
+  _count?: true | Interaccion_mapaCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Interaccion_mapaAvgAggregateInputType
+  _avg?: Interaccion_mapaAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Interaccion_mapaSumAggregateInputType
+  _sum?: Interaccion_mapaSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Interaccion_mapaMinAggregateInputType
+  _min?: Interaccion_mapaMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Interaccion_mapaMaxAggregateInputType
-}
+  _max?: Interaccion_mapaMaxAggregateInputType;
+};
 
-export type GetInteraccion_mapaAggregateType<T extends Interaccion_mapaAggregateArgs> = {
-  [P in keyof T & keyof AggregateInteraccion_mapa]: P extends '_count' | 'count'
+export type GetInteraccion_mapaAggregateType<
+  T extends Interaccion_mapaAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateInteraccion_mapa]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateInteraccion_mapa[P]>
-    : Prisma.GetScalarType<T[P], AggregateInteraccion_mapa[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateInteraccion_mapa[P]>;
+};
 
 export type interaccion_mapaGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithAggregationInput
-    | Prisma.interaccion_mapaOrderByWithAggregationInput[]
-  by: Prisma.Interaccion_mapaScalarFieldEnum[] | Prisma.Interaccion_mapaScalarFieldEnum
-  having?: Prisma.interaccion_mapaScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Interaccion_mapaCountAggregateInputType | true
-  _avg?: Interaccion_mapaAvgAggregateInputType
-  _sum?: Interaccion_mapaSumAggregateInputType
-  _min?: Interaccion_mapaMinAggregateInputType
-  _max?: Interaccion_mapaMaxAggregateInputType
-}
+    | Prisma.interaccion_mapaOrderByWithAggregationInput[];
+  by:
+    | Prisma.Interaccion_mapaScalarFieldEnum[]
+    | Prisma.Interaccion_mapaScalarFieldEnum;
+  having?: Prisma.interaccion_mapaScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Interaccion_mapaCountAggregateInputType | true;
+  _avg?: Interaccion_mapaAvgAggregateInputType;
+  _sum?: Interaccion_mapaSumAggregateInputType;
+  _min?: Interaccion_mapaMinAggregateInputType;
+  _max?: Interaccion_mapaMaxAggregateInputType;
+};
 
 export type Interaccion_mapaGroupByOutputType = {
-  id: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento: runtime.Decimal | null
-  longitud_momento: runtime.Decimal | null
-  zoom_momento: number | null
-  ocurrio_en: Date | null
-  sesion_id: number | null
-  marcador_id: number | null
-  _count: Interaccion_mapaCountAggregateOutputType | null
-  _avg: Interaccion_mapaAvgAggregateOutputType | null
-  _sum: Interaccion_mapaSumAggregateOutputType | null
-  _min: Interaccion_mapaMinAggregateOutputType | null
-  _max: Interaccion_mapaMaxAggregateOutputType | null
-}
+  id: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento: runtime.Decimal | null;
+  longitud_momento: runtime.Decimal | null;
+  zoom_momento: number | null;
+  ocurrio_en: Date | null;
+  sesion_id: number | null;
+  marcador_id: number | null;
+  _count: Interaccion_mapaCountAggregateOutputType | null;
+  _avg: Interaccion_mapaAvgAggregateOutputType | null;
+  _sum: Interaccion_mapaSumAggregateOutputType | null;
+  _min: Interaccion_mapaMinAggregateOutputType | null;
+  _max: Interaccion_mapaMaxAggregateOutputType | null;
+};
 
-export type GetInteraccion_mapaGroupByPayload<T extends interaccion_mapaGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<Interaccion_mapaGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Interaccion_mapaGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], Interaccion_mapaGroupByOutputType[P]>
+export type GetInteraccion_mapaGroupByPayload<
+  T extends interaccion_mapaGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<Interaccion_mapaGroupByOutputType, T["by"]> & {
+      [P in keyof T &
+        keyof Interaccion_mapaGroupByOutputType]: P extends "_count"
+        ? T[P] extends boolean
+          ? number
           : Prisma.GetScalarType<T[P], Interaccion_mapaGroupByOutputType[P]>
-      }
-    >
+        : Prisma.GetScalarType<T[P], Interaccion_mapaGroupByOutputType[P]>;
+    }
   >
+>;
 
 export type interaccion_mapaWhereInput = {
-  AND?: Prisma.interaccion_mapaWhereInput | Prisma.interaccion_mapaWhereInput[]
-  OR?: Prisma.interaccion_mapaWhereInput[]
-  NOT?: Prisma.interaccion_mapaWhereInput | Prisma.interaccion_mapaWhereInput[]
-  id?: Prisma.IntFilter<'interaccion_mapa'> | number
-  tipo?: Prisma.Enumtipo_interaccionFilter<'interaccion_mapa'> | $Enums.tipo_interaccion
+  AND?: Prisma.interaccion_mapaWhereInput | Prisma.interaccion_mapaWhereInput[];
+  OR?: Prisma.interaccion_mapaWhereInput[];
+  NOT?: Prisma.interaccion_mapaWhereInput | Prisma.interaccion_mapaWhereInput[];
+  id?: Prisma.IntFilter<"interaccion_mapa"> | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFilter<"interaccion_mapa">
+    | $Enums.tipo_interaccion;
   latitud_momento?:
-    | Prisma.DecimalNullableFilter<'interaccion_mapa'>
+    | Prisma.DecimalNullableFilter<"interaccion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
-    | Prisma.DecimalNullableFilter<'interaccion_mapa'>
+    | Prisma.DecimalNullableFilter<"interaccion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-  ocurrio_en?: Prisma.DateTimeNullableFilter<'interaccion_mapa'> | Date | string | null
-  sesion_id?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-  marcador_id?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
+    | null;
+  zoom_momento?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+  ocurrio_en?:
+    | Prisma.DateTimeNullableFilter<"interaccion_mapa">
+    | Date
+    | string
+    | null;
+  sesion_id?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+  marcador_id?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
   marcador_mapa?: Prisma.XOR<
     Prisma.Marcador_mapaNullableScalarRelationFilter,
     Prisma.marcador_mapaWhereInput
-  > | null
+  > | null;
   sesion_mapa?: Prisma.XOR<
     Prisma.Sesion_mapaNullableScalarRelationFilter,
     Prisma.sesion_mapaWhereInput
-  > | null
-}
+  > | null;
+};
 
 export type interaccion_mapaOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrderInput | Prisma.SortOrder
-  ocurrio_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  sesion_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  marcador_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  marcador_mapa?: Prisma.marcador_mapaOrderByWithRelationInput
-  sesion_mapa?: Prisma.sesion_mapaOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  ocurrio_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrderInput | Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrderInput | Prisma.SortOrder;
+  marcador_mapa?: Prisma.marcador_mapaOrderByWithRelationInput;
+  sesion_mapa?: Prisma.sesion_mapaOrderByWithRelationInput;
+};
 
 export type interaccion_mapaWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.interaccion_mapaWhereInput | Prisma.interaccion_mapaWhereInput[]
-    OR?: Prisma.interaccion_mapaWhereInput[]
-    NOT?: Prisma.interaccion_mapaWhereInput | Prisma.interaccion_mapaWhereInput[]
-    tipo?: Prisma.Enumtipo_interaccionFilter<'interaccion_mapa'> | $Enums.tipo_interaccion
+    id?: number;
+    AND?:
+      | Prisma.interaccion_mapaWhereInput
+      | Prisma.interaccion_mapaWhereInput[];
+    OR?: Prisma.interaccion_mapaWhereInput[];
+    NOT?:
+      | Prisma.interaccion_mapaWhereInput
+      | Prisma.interaccion_mapaWhereInput[];
+    tipo?:
+      | Prisma.Enumtipo_interaccionFilter<"interaccion_mapa">
+      | $Enums.tipo_interaccion;
     latitud_momento?:
-      | Prisma.DecimalNullableFilter<'interaccion_mapa'>
+      | Prisma.DecimalNullableFilter<"interaccion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
+      | null;
     longitud_momento?:
-      | Prisma.DecimalNullableFilter<'interaccion_mapa'>
+      | Prisma.DecimalNullableFilter<"interaccion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
-    zoom_momento?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-    ocurrio_en?: Prisma.DateTimeNullableFilter<'interaccion_mapa'> | Date | string | null
-    sesion_id?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-    marcador_id?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
+      | null;
+    zoom_momento?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+    ocurrio_en?:
+      | Prisma.DateTimeNullableFilter<"interaccion_mapa">
+      | Date
+      | string
+      | null;
+    sesion_id?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+    marcador_id?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
     marcador_mapa?: Prisma.XOR<
       Prisma.Marcador_mapaNullableScalarRelationFilter,
       Prisma.marcador_mapaWhereInput
-    > | null
+    > | null;
     sesion_mapa?: Prisma.XOR<
       Prisma.Sesion_mapaNullableScalarRelationFilter,
       Prisma.sesion_mapaWhereInput
-    > | null
+    > | null;
   },
-  'id'
->
+  "id"
+>;
 
 export type interaccion_mapaOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrderInput | Prisma.SortOrder
-  ocurrio_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  sesion_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  marcador_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.interaccion_mapaCountOrderByAggregateInput
-  _avg?: Prisma.interaccion_mapaAvgOrderByAggregateInput
-  _max?: Prisma.interaccion_mapaMaxOrderByAggregateInput
-  _min?: Prisma.interaccion_mapaMinOrderByAggregateInput
-  _sum?: Prisma.interaccion_mapaSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  ocurrio_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrderInput | Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.interaccion_mapaCountOrderByAggregateInput;
+  _avg?: Prisma.interaccion_mapaAvgOrderByAggregateInput;
+  _max?: Prisma.interaccion_mapaMaxOrderByAggregateInput;
+  _min?: Prisma.interaccion_mapaMinOrderByAggregateInput;
+  _sum?: Prisma.interaccion_mapaSumOrderByAggregateInput;
+};
 
 export type interaccion_mapaScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.interaccion_mapaScalarWhereWithAggregatesInput
-    | Prisma.interaccion_mapaScalarWhereWithAggregatesInput[]
-  OR?: Prisma.interaccion_mapaScalarWhereWithAggregatesInput[]
+    | Prisma.interaccion_mapaScalarWhereWithAggregatesInput[];
+  OR?: Prisma.interaccion_mapaScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.interaccion_mapaScalarWhereWithAggregatesInput
-    | Prisma.interaccion_mapaScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'interaccion_mapa'> | number
+    | Prisma.interaccion_mapaScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"interaccion_mapa"> | number;
   tipo?:
-    | Prisma.Enumtipo_interaccionWithAggregatesFilter<'interaccion_mapa'>
-    | $Enums.tipo_interaccion
+    | Prisma.Enumtipo_interaccionWithAggregatesFilter<"interaccion_mapa">
+    | $Enums.tipo_interaccion;
   latitud_momento?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'interaccion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"interaccion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'interaccion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"interaccion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.IntNullableWithAggregatesFilter<'interaccion_mapa'> | number | null
+    | null;
+  zoom_momento?:
+    | Prisma.IntNullableWithAggregatesFilter<"interaccion_mapa">
+    | number
+    | null;
   ocurrio_en?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'interaccion_mapa'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"interaccion_mapa">
     | Date
     | string
-    | null
-  sesion_id?: Prisma.IntNullableWithAggregatesFilter<'interaccion_mapa'> | number | null
-  marcador_id?: Prisma.IntNullableWithAggregatesFilter<'interaccion_mapa'> | number | null
-}
+    | null;
+  sesion_id?:
+    | Prisma.IntNullableWithAggregatesFilter<"interaccion_mapa">
+    | number
+    | null;
+  marcador_id?:
+    | Prisma.IntNullableWithAggregatesFilter<"interaccion_mapa">
+    | number
+    | null;
+};
 
 export type interaccion_mapaCreateInput = {
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedOneWithoutInteraccion_mapaInput
-  sesion_mapa?: Prisma.sesion_mapaCreateNestedOneWithoutInteraccion_mapaInput
-}
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedOneWithoutInteraccion_mapaInput;
+  sesion_mapa?: Prisma.sesion_mapaCreateNestedOneWithoutInteraccion_mapaInput;
+};
 
 export type interaccion_mapaUncheckedCreateInput = {
-  id?: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  sesion_id?: number | null
-  marcador_id?: number | null
-}
+  id?: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  sesion_id?: number | null;
+  marcador_id?: number | null;
+};
 
 export type interaccion_mapaUpdateInput = {
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  marcador_mapa?: Prisma.marcador_mapaUpdateOneWithoutInteraccion_mapaNestedInput
-  sesion_mapa?: Prisma.sesion_mapaUpdateOneWithoutInteraccion_mapaNestedInput
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  marcador_mapa?: Prisma.marcador_mapaUpdateOneWithoutInteraccion_mapaNestedInput;
+  sesion_mapa?: Prisma.sesion_mapaUpdateOneWithoutInteraccion_mapaNestedInput;
+};
 
 export type interaccion_mapaUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type interaccion_mapaCreateManyInput = {
-  id?: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  sesion_id?: number | null
-  marcador_id?: number | null
-}
+  id?: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  sesion_id?: number | null;
+  marcador_id?: number | null;
+};
 
 export type interaccion_mapaUpdateManyMutationInput = {
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type interaccion_mapaUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type interaccion_mapaCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrder
-  ocurrio_en?: Prisma.SortOrder
-  sesion_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrder;
+  ocurrio_en?: Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type interaccion_mapaAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrder
-  sesion_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type interaccion_mapaMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrder
-  ocurrio_en?: Prisma.SortOrder
-  sesion_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrder;
+  ocurrio_en?: Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type interaccion_mapaMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrder
-  ocurrio_en?: Prisma.SortOrder
-  sesion_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrder;
+  ocurrio_en?: Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type interaccion_mapaSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud_momento?: Prisma.SortOrder
-  longitud_momento?: Prisma.SortOrder
-  zoom_momento?: Prisma.SortOrder
-  sesion_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud_momento?: Prisma.SortOrder;
+  longitud_momento?: Prisma.SortOrder;
+  zoom_momento?: Prisma.SortOrder;
+  sesion_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type Interaccion_mapaListRelationFilter = {
-  every?: Prisma.interaccion_mapaWhereInput
-  some?: Prisma.interaccion_mapaWhereInput
-  none?: Prisma.interaccion_mapaWhereInput
-}
+  every?: Prisma.interaccion_mapaWhereInput;
+  some?: Prisma.interaccion_mapaWhereInput;
+  none?: Prisma.interaccion_mapaWhereInput;
+};
 
 export type interaccion_mapaOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type Enumtipo_interaccionFieldUpdateOperationsInput = {
-  set?: $Enums.tipo_interaccion
-}
+  set?: $Enums.tipo_interaccion;
+};
 
 export type interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput = {
   create?:
@@ -578,28 +665,33 @@ export type interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput = {
         Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
       >
     | Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[]
+    | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[];
   connectOrCreate?:
     | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-}
+    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[];
+  createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope;
+  connect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+};
 
-export type interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput,
-        Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
-      >
-    | Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[]
-  connectOrCreate?:
-    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-}
+export type interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput,
+          Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
+        >
+      | Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput[]
+      | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[];
+    connectOrCreate?:
+      | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput
+      | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[];
+    createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope;
+    connect?:
+      | Prisma.interaccion_mapaWhereUniqueInput
+      | Prisma.interaccion_mapaWhereUniqueInput[];
+  };
 
 export type interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput = {
   create?:
@@ -608,54 +700,75 @@ export type interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput = {
         Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
       >
     | Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[]
+    | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[];
   connectOrCreate?:
     | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[]
+    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[];
   upsert?:
     | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope
-  set?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  disconnect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  delete?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
+    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput[];
+  createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope;
+  set?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  delete?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  connect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
   update?:
     | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput[]
+    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput[];
   updateMany?:
     | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput[]
-  deleteMany?: Prisma.interaccion_mapaScalarWhereInput | Prisma.interaccion_mapaScalarWhereInput[]
-}
+    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput[];
+  deleteMany?:
+    | Prisma.interaccion_mapaScalarWhereInput
+    | Prisma.interaccion_mapaScalarWhereInput[];
+};
 
-export type interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput,
-        Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
-      >
-    | Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[]
-  connectOrCreate?:
-    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[]
-  upsert?:
-    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope
-  set?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  disconnect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  delete?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  update?:
-    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput[]
-  updateMany?:
-    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput
-    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput[]
-  deleteMany?: Prisma.interaccion_mapaScalarWhereInput | Prisma.interaccion_mapaScalarWhereInput[]
-}
+export type interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput,
+          Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
+        >
+      | Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput[]
+      | Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput[];
+    connectOrCreate?:
+      | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput
+      | Prisma.interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput[];
+    upsert?:
+      | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput
+      | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput[];
+    createMany?: Prisma.interaccion_mapaCreateManyMarcador_mapaInputEnvelope;
+    set?:
+      | Prisma.interaccion_mapaWhereUniqueInput
+      | Prisma.interaccion_mapaWhereUniqueInput[];
+    disconnect?:
+      | Prisma.interaccion_mapaWhereUniqueInput
+      | Prisma.interaccion_mapaWhereUniqueInput[];
+    delete?:
+      | Prisma.interaccion_mapaWhereUniqueInput
+      | Prisma.interaccion_mapaWhereUniqueInput[];
+    connect?:
+      | Prisma.interaccion_mapaWhereUniqueInput
+      | Prisma.interaccion_mapaWhereUniqueInput[];
+    update?:
+      | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput
+      | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput[];
+    updateMany?:
+      | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput
+      | Prisma.interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput[];
+    deleteMany?:
+      | Prisma.interaccion_mapaScalarWhereInput
+      | Prisma.interaccion_mapaScalarWhereInput[];
+  };
 
 export type interaccion_mapaCreateNestedManyWithoutSesion_mapaInput = {
   create?:
@@ -664,13 +777,15 @@ export type interaccion_mapaCreateNestedManyWithoutSesion_mapaInput = {
         Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput
       >
     | Prisma.interaccion_mapaCreateWithoutSesion_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[];
   connectOrCreate?:
     | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-}
+    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[];
+  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope;
+  connect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+};
 
 export type interaccion_mapaUncheckedCreateNestedManyWithoutSesion_mapaInput = {
   create?:
@@ -679,13 +794,15 @@ export type interaccion_mapaUncheckedCreateNestedManyWithoutSesion_mapaInput = {
         Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput
       >
     | Prisma.interaccion_mapaCreateWithoutSesion_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[];
   connectOrCreate?:
     | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-}
+    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[];
+  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope;
+  connect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+};
 
 export type interaccion_mapaUpdateManyWithoutSesion_mapaNestedInput = {
   create?:
@@ -694,26 +811,36 @@ export type interaccion_mapaUpdateManyWithoutSesion_mapaNestedInput = {
         Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput
       >
     | Prisma.interaccion_mapaCreateWithoutSesion_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[];
   connectOrCreate?:
     | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[];
   upsert?:
     | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope
-  set?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  disconnect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  delete?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
+    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput[];
+  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope;
+  set?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  delete?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  connect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
   update?:
     | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput[];
   updateMany?:
     | Prisma.interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput[]
-  deleteMany?: Prisma.interaccion_mapaScalarWhereInput | Prisma.interaccion_mapaScalarWhereInput[]
-}
+    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput[];
+  deleteMany?:
+    | Prisma.interaccion_mapaScalarWhereInput
+    | Prisma.interaccion_mapaScalarWhereInput[];
+};
 
 export type interaccion_mapaUncheckedUpdateManyWithoutSesion_mapaNestedInput = {
   create?:
@@ -722,466 +849,601 @@ export type interaccion_mapaUncheckedUpdateManyWithoutSesion_mapaNestedInput = {
         Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput
       >
     | Prisma.interaccion_mapaCreateWithoutSesion_mapaInput[]
-    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput[];
   connectOrCreate?:
     | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaCreateOrConnectWithoutSesion_mapaInput[];
   upsert?:
     | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput[]
-  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope
-  set?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  disconnect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  delete?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
-  connect?: Prisma.interaccion_mapaWhereUniqueInput | Prisma.interaccion_mapaWhereUniqueInput[]
+    | Prisma.interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput[];
+  createMany?: Prisma.interaccion_mapaCreateManySesion_mapaInputEnvelope;
+  set?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  delete?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
+  connect?:
+    | Prisma.interaccion_mapaWhereUniqueInput
+    | Prisma.interaccion_mapaWhereUniqueInput[];
   update?:
     | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput[]
+    | Prisma.interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput[];
   updateMany?:
     | Prisma.interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput
-    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput[]
-  deleteMany?: Prisma.interaccion_mapaScalarWhereInput | Prisma.interaccion_mapaScalarWhereInput[]
-}
+    | Prisma.interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput[];
+  deleteMany?:
+    | Prisma.interaccion_mapaScalarWhereInput
+    | Prisma.interaccion_mapaScalarWhereInput[];
+};
 
 export type interaccion_mapaCreateWithoutMarcador_mapaInput = {
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  sesion_mapa?: Prisma.sesion_mapaCreateNestedOneWithoutInteraccion_mapaInput
-}
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  sesion_mapa?: Prisma.sesion_mapaCreateNestedOneWithoutInteraccion_mapaInput;
+};
 
 export type interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput = {
-  id?: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  sesion_id?: number | null
-}
+  id?: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  sesion_id?: number | null;
+};
 
 export type interaccion_mapaCreateOrConnectWithoutMarcador_mapaInput = {
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput,
     Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaCreateManyMarcador_mapaInputEnvelope = {
   data:
     | Prisma.interaccion_mapaCreateManyMarcador_mapaInput
-    | Prisma.interaccion_mapaCreateManyMarcador_mapaInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.interaccion_mapaCreateManyMarcador_mapaInput[];
+  skipDuplicates?: boolean;
+};
 
 export type interaccion_mapaUpsertWithWhereUniqueWithoutMarcador_mapaInput = {
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.interaccion_mapaUpdateWithoutMarcador_mapaInput,
     Prisma.interaccion_mapaUncheckedUpdateWithoutMarcador_mapaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.interaccion_mapaCreateWithoutMarcador_mapaInput,
     Prisma.interaccion_mapaUncheckedCreateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaUpdateWithWhereUniqueWithoutMarcador_mapaInput = {
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.interaccion_mapaUpdateWithoutMarcador_mapaInput,
     Prisma.interaccion_mapaUncheckedUpdateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaUpdateManyWithWhereWithoutMarcador_mapaInput = {
-  where: Prisma.interaccion_mapaScalarWhereInput
+  where: Prisma.interaccion_mapaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.interaccion_mapaUpdateManyMutationInput,
     Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaScalarWhereInput = {
-  AND?: Prisma.interaccion_mapaScalarWhereInput | Prisma.interaccion_mapaScalarWhereInput[]
-  OR?: Prisma.interaccion_mapaScalarWhereInput[]
-  NOT?: Prisma.interaccion_mapaScalarWhereInput | Prisma.interaccion_mapaScalarWhereInput[]
-  id?: Prisma.IntFilter<'interaccion_mapa'> | number
-  tipo?: Prisma.Enumtipo_interaccionFilter<'interaccion_mapa'> | $Enums.tipo_interaccion
+  AND?:
+    | Prisma.interaccion_mapaScalarWhereInput
+    | Prisma.interaccion_mapaScalarWhereInput[];
+  OR?: Prisma.interaccion_mapaScalarWhereInput[];
+  NOT?:
+    | Prisma.interaccion_mapaScalarWhereInput
+    | Prisma.interaccion_mapaScalarWhereInput[];
+  id?: Prisma.IntFilter<"interaccion_mapa"> | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFilter<"interaccion_mapa">
+    | $Enums.tipo_interaccion;
   latitud_momento?:
-    | Prisma.DecimalNullableFilter<'interaccion_mapa'>
+    | Prisma.DecimalNullableFilter<"interaccion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
-    | Prisma.DecimalNullableFilter<'interaccion_mapa'>
+    | Prisma.DecimalNullableFilter<"interaccion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-  ocurrio_en?: Prisma.DateTimeNullableFilter<'interaccion_mapa'> | Date | string | null
-  sesion_id?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-  marcador_id?: Prisma.IntNullableFilter<'interaccion_mapa'> | number | null
-}
+    | null;
+  zoom_momento?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+  ocurrio_en?:
+    | Prisma.DateTimeNullableFilter<"interaccion_mapa">
+    | Date
+    | string
+    | null;
+  sesion_id?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+  marcador_id?: Prisma.IntNullableFilter<"interaccion_mapa"> | number | null;
+};
 
 export type interaccion_mapaCreateWithoutSesion_mapaInput = {
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedOneWithoutInteraccion_mapaInput
-}
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedOneWithoutInteraccion_mapaInput;
+};
 
 export type interaccion_mapaUncheckedCreateWithoutSesion_mapaInput = {
-  id?: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  marcador_id?: number | null
-}
+  id?: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  marcador_id?: number | null;
+};
 
 export type interaccion_mapaCreateOrConnectWithoutSesion_mapaInput = {
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.interaccion_mapaCreateWithoutSesion_mapaInput,
     Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaCreateManySesion_mapaInputEnvelope = {
   data:
     | Prisma.interaccion_mapaCreateManySesion_mapaInput
-    | Prisma.interaccion_mapaCreateManySesion_mapaInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.interaccion_mapaCreateManySesion_mapaInput[];
+  skipDuplicates?: boolean;
+};
 
 export type interaccion_mapaUpsertWithWhereUniqueWithoutSesion_mapaInput = {
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.interaccion_mapaUpdateWithoutSesion_mapaInput,
     Prisma.interaccion_mapaUncheckedUpdateWithoutSesion_mapaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.interaccion_mapaCreateWithoutSesion_mapaInput,
     Prisma.interaccion_mapaUncheckedCreateWithoutSesion_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaUpdateWithWhereUniqueWithoutSesion_mapaInput = {
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.interaccion_mapaUpdateWithoutSesion_mapaInput,
     Prisma.interaccion_mapaUncheckedUpdateWithoutSesion_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaUpdateManyWithWhereWithoutSesion_mapaInput = {
-  where: Prisma.interaccion_mapaScalarWhereInput
+  where: Prisma.interaccion_mapaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.interaccion_mapaUpdateManyMutationInput,
     Prisma.interaccion_mapaUncheckedUpdateManyWithoutSesion_mapaInput
-  >
-}
+  >;
+};
 
 export type interaccion_mapaCreateManyMarcador_mapaInput = {
-  id?: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  sesion_id?: number | null
-}
+  id?: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  sesion_id?: number | null;
+};
 
 export type interaccion_mapaUpdateWithoutMarcador_mapaInput = {
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sesion_mapa?: Prisma.sesion_mapaUpdateOneWithoutInteraccion_mapaNestedInput
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  sesion_mapa?: Prisma.sesion_mapaUpdateOneWithoutInteraccion_mapaNestedInput;
+};
 
 export type interaccion_mapaUncheckedUpdateWithoutMarcador_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  sesion_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type interaccion_mapaCreateManySesion_mapaInput = {
-  id?: number
-  tipo: $Enums.tipo_interaccion
-  latitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_momento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  zoom_momento?: number | null
-  ocurrio_en?: Date | string | null
-  marcador_id?: number | null
-}
+  id?: number;
+  tipo: $Enums.tipo_interaccion;
+  latitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_momento?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  zoom_momento?: number | null;
+  ocurrio_en?: Date | string | null;
+  marcador_id?: number | null;
+};
 
 export type interaccion_mapaUpdateWithoutSesion_mapaInput = {
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  marcador_mapa?: Prisma.marcador_mapaUpdateOneWithoutInteraccion_mapaNestedInput
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  marcador_mapa?: Prisma.marcador_mapaUpdateOneWithoutInteraccion_mapaNestedInput;
+};
 
 export type interaccion_mapaUncheckedUpdateWithoutSesion_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type interaccion_mapaUncheckedUpdateManyWithoutSesion_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_interaccionFieldUpdateOperationsInput | $Enums.tipo_interaccion
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_interaccionFieldUpdateOperationsInput
+    | $Enums.tipo_interaccion;
   latitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_momento?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ocurrio_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | null;
+  zoom_momento?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ocurrio_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  marcador_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type interaccion_mapaSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    tipo?: boolean
-    latitud_momento?: boolean
-    longitud_momento?: boolean
-    zoom_momento?: boolean
-    ocurrio_en?: boolean
-    sesion_id?: boolean
-    marcador_id?: boolean
-    marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>
-    sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>
+    id?: boolean;
+    tipo?: boolean;
+    latitud_momento?: boolean;
+    longitud_momento?: boolean;
+    zoom_momento?: boolean;
+    ocurrio_en?: boolean;
+    sesion_id?: boolean;
+    marcador_id?: boolean;
+    marcador_mapa?:
+      | boolean
+      | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>;
+    sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>;
   },
-  ExtArgs['result']['interaccion_mapa']
->
+  ExtArgs["result"]["interaccion_mapa"]
+>;
 
 export type interaccion_mapaSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    tipo?: boolean
-    latitud_momento?: boolean
-    longitud_momento?: boolean
-    zoom_momento?: boolean
-    ocurrio_en?: boolean
-    sesion_id?: boolean
-    marcador_id?: boolean
-    marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>
-    sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>
+    id?: boolean;
+    tipo?: boolean;
+    latitud_momento?: boolean;
+    longitud_momento?: boolean;
+    zoom_momento?: boolean;
+    ocurrio_en?: boolean;
+    sesion_id?: boolean;
+    marcador_id?: boolean;
+    marcador_mapa?:
+      | boolean
+      | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>;
+    sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>;
   },
-  ExtArgs['result']['interaccion_mapa']
->
+  ExtArgs["result"]["interaccion_mapa"]
+>;
 
 export type interaccion_mapaSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    tipo?: boolean
-    latitud_momento?: boolean
-    longitud_momento?: boolean
-    zoom_momento?: boolean
-    ocurrio_en?: boolean
-    sesion_id?: boolean
-    marcador_id?: boolean
-    marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>
-    sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>
+    id?: boolean;
+    tipo?: boolean;
+    latitud_momento?: boolean;
+    longitud_momento?: boolean;
+    zoom_momento?: boolean;
+    ocurrio_en?: boolean;
+    sesion_id?: boolean;
+    marcador_id?: boolean;
+    marcador_mapa?:
+      | boolean
+      | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>;
+    sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>;
   },
-  ExtArgs['result']['interaccion_mapa']
->
+  ExtArgs["result"]["interaccion_mapa"]
+>;
 
 export type interaccion_mapaSelectScalar = {
-  id?: boolean
-  tipo?: boolean
-  latitud_momento?: boolean
-  longitud_momento?: boolean
-  zoom_momento?: boolean
-  ocurrio_en?: boolean
-  sesion_id?: boolean
-  marcador_id?: boolean
-}
+  id?: boolean;
+  tipo?: boolean;
+  latitud_momento?: boolean;
+  longitud_momento?: boolean;
+  zoom_momento?: boolean;
+  ocurrio_en?: boolean;
+  sesion_id?: boolean;
+  marcador_id?: boolean;
+};
 
 export type interaccion_mapaOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'tipo'
-  | 'latitud_momento'
-  | 'longitud_momento'
-  | 'zoom_momento'
-  | 'ocurrio_en'
-  | 'sesion_id'
-  | 'marcador_id',
-  ExtArgs['result']['interaccion_mapa']
->
+  | "id"
+  | "tipo"
+  | "latitud_momento"
+  | "longitud_momento"
+  | "zoom_momento"
+  | "ocurrio_en"
+  | "sesion_id"
+  | "marcador_id",
+  ExtArgs["result"]["interaccion_mapa"]
+>;
 export type interaccion_mapaInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>
-  sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>
-}
+  marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>;
+  sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>;
+};
 export type interaccion_mapaIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>
-  sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>
-}
+  marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>;
+  sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>;
+};
 export type interaccion_mapaIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>
-  sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>
-}
+  marcador_mapa?: boolean | Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>;
+  sesion_mapa?: boolean | Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>;
+};
 
 export type $interaccion_mapaPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'interaccion_mapa'
+  name: "interaccion_mapa";
   objects: {
-    marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs> | null
-    sesion_mapa: Prisma.$sesion_mapaPayload<ExtArgs> | null
-  }
+    marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs> | null;
+    sesion_mapa: Prisma.$sesion_mapaPayload<ExtArgs> | null;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      tipo: $Enums.tipo_interaccion
-      latitud_momento: runtime.Decimal | null
-      longitud_momento: runtime.Decimal | null
-      zoom_momento: number | null
-      ocurrio_en: Date | null
-      sesion_id: number | null
-      marcador_id: number | null
+      id: number;
+      tipo: $Enums.tipo_interaccion;
+      latitud_momento: runtime.Decimal | null;
+      longitud_momento: runtime.Decimal | null;
+      zoom_momento: number | null;
+      ocurrio_en: Date | null;
+      sesion_id: number | null;
+      marcador_id: number | null;
     },
-    ExtArgs['result']['interaccion_mapa']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["interaccion_mapa"]
+  >;
+  composites: {};
+};
 
 export type interaccion_mapaGetPayload<
-  S extends boolean | null | undefined | interaccion_mapaDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$interaccion_mapaPayload, S>
+  S extends boolean | null | undefined | interaccion_mapaDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$interaccion_mapaPayload, S>;
 
 export type interaccion_mapaCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<interaccion_mapaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Interaccion_mapaCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  interaccion_mapaFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Interaccion_mapaCountAggregateInputType | true;
+};
 
 export interface interaccion_mapaDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['interaccion_mapa']
-    meta: { name: 'interaccion_mapa' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["interaccion_mapa"];
+    meta: { name: "interaccion_mapa" };
+  };
   /**
    * Find zero or one Interaccion_mapa that matches the filter.
    * @param {interaccion_mapaFindUniqueArgs} args - Arguments to find a Interaccion_mapa
@@ -1194,18 +1456,18 @@ export interface interaccion_mapaDelegate<
    * })
    */
   findUnique<T extends interaccion_mapaFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, interaccion_mapaFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Interaccion_mapa that matches the filter or throw an error with `error.code='P2025'`
@@ -1220,18 +1482,21 @@ export interface interaccion_mapaDelegate<
    * })
    */
   findUniqueOrThrow<T extends interaccion_mapaFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      interaccion_mapaFindUniqueOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Interaccion_mapa that matches the filter.
@@ -1247,18 +1512,18 @@ export interface interaccion_mapaDelegate<
    * })
    */
   findFirst<T extends interaccion_mapaFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, interaccion_mapaFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, interaccion_mapaFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Interaccion_mapa that matches the filter or
@@ -1275,18 +1540,21 @@ export interface interaccion_mapaDelegate<
    * })
    */
   findFirstOrThrow<T extends interaccion_mapaFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, interaccion_mapaFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      interaccion_mapaFindFirstOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Interaccion_mapas that matches the filter.
@@ -1305,15 +1573,15 @@ export interface interaccion_mapaDelegate<
    *
    */
   findMany<T extends interaccion_mapaFindManyArgs>(
-    args?: Prisma.SelectSubset<T, interaccion_mapaFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, interaccion_mapaFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Interaccion_mapa.
@@ -1328,18 +1596,18 @@ export interface interaccion_mapaDelegate<
    *
    */
   create<T extends interaccion_mapaCreateArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, interaccion_mapaCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Interaccion_mapas.
@@ -1354,8 +1622,8 @@ export interface interaccion_mapaDelegate<
    *
    */
   createMany<T extends interaccion_mapaCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, interaccion_mapaCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, interaccion_mapaCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Interaccion_mapas and returns the data saved in the database.
@@ -1380,15 +1648,18 @@ export interface interaccion_mapaDelegate<
    *
    */
   createManyAndReturn<T extends interaccion_mapaCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, interaccion_mapaCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      interaccion_mapaCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Interaccion_mapa.
@@ -1403,18 +1674,18 @@ export interface interaccion_mapaDelegate<
    *
    */
   delete<T extends interaccion_mapaDeleteArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, interaccion_mapaDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Interaccion_mapa.
@@ -1432,18 +1703,18 @@ export interface interaccion_mapaDelegate<
    *
    */
   update<T extends interaccion_mapaUpdateArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, interaccion_mapaUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Interaccion_mapas.
@@ -1458,8 +1729,8 @@ export interface interaccion_mapaDelegate<
    *
    */
   deleteMany<T extends interaccion_mapaDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, interaccion_mapaDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, interaccion_mapaDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Interaccion_mapas.
@@ -1479,8 +1750,8 @@ export interface interaccion_mapaDelegate<
    *
    */
   updateMany<T extends interaccion_mapaUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, interaccion_mapaUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Interaccion_mapas and returns the data updated in the database.
@@ -1511,15 +1782,18 @@ export interface interaccion_mapaDelegate<
    *
    */
   updateManyAndReturn<T extends interaccion_mapaUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      interaccion_mapaUpdateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Interaccion_mapa.
@@ -1539,18 +1813,18 @@ export interface interaccion_mapaDelegate<
    * })
    */
   upsert<T extends interaccion_mapaUpsertArgs>(
-    args: Prisma.SelectSubset<T, interaccion_mapaUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, interaccion_mapaUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__interaccion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$interaccion_mapaPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Interaccion_mapas.
@@ -1566,14 +1840,17 @@ export interface interaccion_mapaDelegate<
    * })
    **/
   count<T extends interaccion_mapaCountArgs>(
-    args?: Prisma.Subset<T, interaccion_mapaCountArgs>
+    args?: Prisma.Subset<T, interaccion_mapaCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Interaccion_mapaCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Interaccion_mapaCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Interaccion_mapa.
@@ -1600,8 +1877,8 @@ export interface interaccion_mapaDelegate<
    * })
    **/
   aggregate<T extends Interaccion_mapaAggregateArgs>(
-    args: Prisma.Subset<T, Interaccion_mapaAggregateArgs>
-  ): Prisma.PrismaPromise<GetInteraccion_mapaAggregateType<T>>
+    args: Prisma.Subset<T, Interaccion_mapaAggregateArgs>,
+  ): Prisma.PrismaPromise<GetInteraccion_mapaAggregateType<T>>;
 
   /**
    * Group by Interaccion_mapa.
@@ -1624,20 +1901,20 @@ export interface interaccion_mapaDelegate<
   groupBy<
     T extends interaccion_mapaGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: interaccion_mapaGroupByArgs['orderBy'] }
-      : { orderBy?: interaccion_mapaGroupByArgs['orderBy'] },
+      ? { orderBy: interaccion_mapaGroupByArgs["orderBy"] }
+      : { orderBy?: interaccion_mapaGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1646,26 +1923,31 @@ export interface interaccion_mapaDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1673,17 +1955,22 @@ export interface interaccion_mapaDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, interaccion_mapaGroupByArgs, OrderByArg> & InputErrors
+    args: Prisma.SubsetIntersection<
+      T,
+      interaccion_mapaGroupByArgs,
+      OrderByArg
+    > &
+      InputErrors,
   ): {} extends InputErrors
     ? GetInteraccion_mapaGroupByPayload<T>
-    : Prisma.PrismaPromise<InputErrors>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the interaccion_mapa model
    */
-  readonly fields: interaccion_mapaFieldRefs
+  readonly fields: interaccion_mapaFieldRefs;
 }
 
 /**
@@ -1695,36 +1982,39 @@ export interface interaccion_mapaDelegate<
 export interface Prisma__interaccion_mapaClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  marcador_mapa<T extends Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  marcador_mapa<
+    T extends Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.interaccion_mapa$marcador_mapaArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   sesion_mapa<T extends Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.interaccion_mapa$sesion_mapaArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1732,38 +2022,49 @@ export interface Prisma__interaccion_mapaClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the interaccion_mapa model
  */
 export interface interaccion_mapaFieldRefs {
-  readonly id: Prisma.FieldRef<'interaccion_mapa', 'Int'>
-  readonly tipo: Prisma.FieldRef<'interaccion_mapa', 'tipo_interaccion'>
-  readonly latitud_momento: Prisma.FieldRef<'interaccion_mapa', 'Decimal'>
-  readonly longitud_momento: Prisma.FieldRef<'interaccion_mapa', 'Decimal'>
-  readonly zoom_momento: Prisma.FieldRef<'interaccion_mapa', 'Int'>
-  readonly ocurrio_en: Prisma.FieldRef<'interaccion_mapa', 'DateTime'>
-  readonly sesion_id: Prisma.FieldRef<'interaccion_mapa', 'Int'>
-  readonly marcador_id: Prisma.FieldRef<'interaccion_mapa', 'Int'>
+  readonly id: Prisma.FieldRef<"interaccion_mapa", "Int">;
+  readonly tipo: Prisma.FieldRef<"interaccion_mapa", "tipo_interaccion">;
+  readonly latitud_momento: Prisma.FieldRef<"interaccion_mapa", "Decimal">;
+  readonly longitud_momento: Prisma.FieldRef<"interaccion_mapa", "Decimal">;
+  readonly zoom_momento: Prisma.FieldRef<"interaccion_mapa", "Int">;
+  readonly ocurrio_en: Prisma.FieldRef<"interaccion_mapa", "DateTime">;
+  readonly sesion_id: Prisma.FieldRef<"interaccion_mapa", "Int">;
+  readonly marcador_id: Prisma.FieldRef<"interaccion_mapa", "Int">;
 }
 
 // Custom InputTypes
@@ -1771,72 +2072,75 @@ export interface interaccion_mapaFieldRefs {
  * interaccion_mapa findUnique
  */
 export type interaccion_mapaFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which interaccion_mapa to fetch.
    */
-  where: Prisma.interaccion_mapaWhereUniqueInput
-}
+  where: Prisma.interaccion_mapaWhereUniqueInput;
+};
 
 /**
  * interaccion_mapa findUniqueOrThrow
  */
 export type interaccion_mapaFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which interaccion_mapa to fetch.
    */
-  where: Prisma.interaccion_mapaWhereUniqueInput
-}
+  where: Prisma.interaccion_mapaWhereUniqueInput;
+};
 
 /**
  * interaccion_mapa findFirst
  */
 export type interaccion_mapaFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which interaccion_mapa to fetch.
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1844,55 +2148,58 @@ export type interaccion_mapaFindFirstArgs<
    */
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithRelationInput
-    | Prisma.interaccion_mapaOrderByWithRelationInput[]
+    | Prisma.interaccion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for interaccion_mapas.
    */
-  cursor?: Prisma.interaccion_mapaWhereUniqueInput
+  cursor?: Prisma.interaccion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` interaccion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` interaccion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of interaccion_mapas.
    */
-  distinct?: Prisma.Interaccion_mapaScalarFieldEnum | Prisma.Interaccion_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Interaccion_mapaScalarFieldEnum
+    | Prisma.Interaccion_mapaScalarFieldEnum[];
+};
 
 /**
  * interaccion_mapa findFirstOrThrow
  */
 export type interaccion_mapaFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which interaccion_mapa to fetch.
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1900,55 +2207,58 @@ export type interaccion_mapaFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithRelationInput
-    | Prisma.interaccion_mapaOrderByWithRelationInput[]
+    | Prisma.interaccion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for interaccion_mapas.
    */
-  cursor?: Prisma.interaccion_mapaWhereUniqueInput
+  cursor?: Prisma.interaccion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` interaccion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` interaccion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of interaccion_mapas.
    */
-  distinct?: Prisma.Interaccion_mapaScalarFieldEnum | Prisma.Interaccion_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Interaccion_mapaScalarFieldEnum
+    | Prisma.Interaccion_mapaScalarFieldEnum[];
+};
 
 /**
  * interaccion_mapa findMany
  */
 export type interaccion_mapaFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which interaccion_mapas to fetch.
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1956,128 +2266,145 @@ export type interaccion_mapaFindManyArgs<
    */
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithRelationInput
-    | Prisma.interaccion_mapaOrderByWithRelationInput[]
+    | Prisma.interaccion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing interaccion_mapas.
    */
-  cursor?: Prisma.interaccion_mapaWhereUniqueInput
+  cursor?: Prisma.interaccion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` interaccion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` interaccion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of interaccion_mapas.
    */
-  distinct?: Prisma.Interaccion_mapaScalarFieldEnum | Prisma.Interaccion_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Interaccion_mapaScalarFieldEnum
+    | Prisma.Interaccion_mapaScalarFieldEnum[];
+};
 
 /**
  * interaccion_mapa create
  */
 export type interaccion_mapaCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * The data needed to create a interaccion_mapa.
    */
-  data: Prisma.XOR<Prisma.interaccion_mapaCreateInput, Prisma.interaccion_mapaUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.interaccion_mapaCreateInput,
+    Prisma.interaccion_mapaUncheckedCreateInput
+  >;
+};
 
 /**
  * interaccion_mapa createMany
  */
 export type interaccion_mapaCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many interaccion_mapas.
    */
-  data: Prisma.interaccion_mapaCreateManyInput | Prisma.interaccion_mapaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.interaccion_mapaCreateManyInput
+    | Prisma.interaccion_mapaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * interaccion_mapa createManyAndReturn
  */
 export type interaccion_mapaCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * The data used to create many interaccion_mapas.
    */
-  data: Prisma.interaccion_mapaCreateManyInput | Prisma.interaccion_mapaCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.interaccion_mapaCreateManyInput
+    | Prisma.interaccion_mapaCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.interaccion_mapaIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * interaccion_mapa update
  */
 export type interaccion_mapaUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * The data needed to update a interaccion_mapa.
    */
-  data: Prisma.XOR<Prisma.interaccion_mapaUpdateInput, Prisma.interaccion_mapaUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.interaccion_mapaUpdateInput,
+    Prisma.interaccion_mapaUncheckedUpdateInput
+  >;
   /**
    * Choose, which interaccion_mapa to update.
    */
-  where: Prisma.interaccion_mapaWhereUniqueInput
-}
+  where: Prisma.interaccion_mapaWhereUniqueInput;
+};
 
 /**
  * interaccion_mapa updateMany
  */
 export type interaccion_mapaUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update interaccion_mapas.
@@ -2085,188 +2412,195 @@ export type interaccion_mapaUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.interaccion_mapaUpdateManyMutationInput,
     Prisma.interaccion_mapaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which interaccion_mapas to update
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * Limit how many interaccion_mapas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * interaccion_mapa updateManyAndReturn
  */
 export type interaccion_mapaUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * The data used to update interaccion_mapas.
    */
   data: Prisma.XOR<
     Prisma.interaccion_mapaUpdateManyMutationInput,
     Prisma.interaccion_mapaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which interaccion_mapas to update
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * Limit how many interaccion_mapas to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.interaccion_mapaIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * interaccion_mapa upsert
  */
 export type interaccion_mapaUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * The filter to search for the interaccion_mapa to update in case it exists.
    */
-  where: Prisma.interaccion_mapaWhereUniqueInput
+  where: Prisma.interaccion_mapaWhereUniqueInput;
   /**
    * In case the interaccion_mapa found by the `where` argument doesn't exist, create a new interaccion_mapa with this data.
    */
   create: Prisma.XOR<
     Prisma.interaccion_mapaCreateInput,
     Prisma.interaccion_mapaUncheckedCreateInput
-  >
+  >;
   /**
    * In case the interaccion_mapa was found with the provided `where` argument, update it with this data.
    */
   update: Prisma.XOR<
     Prisma.interaccion_mapaUpdateInput,
     Prisma.interaccion_mapaUncheckedUpdateInput
-  >
-}
+  >;
+};
 
 /**
  * interaccion_mapa delete
  */
 export type interaccion_mapaDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
   /**
    * Filter which interaccion_mapa to delete.
    */
-  where: Prisma.interaccion_mapaWhereUniqueInput
-}
+  where: Prisma.interaccion_mapaWhereUniqueInput;
+};
 
 /**
  * interaccion_mapa deleteMany
  */
 export type interaccion_mapaDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which interaccion_mapas to delete
    */
-  where?: Prisma.interaccion_mapaWhereInput
+  where?: Prisma.interaccion_mapaWhereInput;
   /**
    * Limit how many interaccion_mapas to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * interaccion_mapa.marcador_mapa
  */
 export type interaccion_mapa$marcador_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
-  where?: Prisma.marcador_mapaWhereInput
-}
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
+  where?: Prisma.marcador_mapaWhereInput;
+};
 
 /**
  * interaccion_mapa.sesion_mapa
  */
 export type interaccion_mapa$sesion_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
-  where?: Prisma.sesion_mapaWhereInput
-}
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
+  where?: Prisma.sesion_mapaWhereInput;
+};
 
 /**
  * interaccion_mapa without action
  */
 export type interaccion_mapaDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
-}
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
+};

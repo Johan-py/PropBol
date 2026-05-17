@@ -1,27 +1,27 @@
-import { Router } from 'express'
+import { Router } from "express";
 import {
   getZonasUsuario,
   getZonaById,
   createZona,
   updateZona,
   deleteZona,
-  getPropiedadesEnZona
-} from './zonaUsuario.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'
+  getPropiedadesEnZona,
+} from "./zonaUsuario.controller.js";
+import { validarJWT } from "../../middleware/validarJWT.js";
 
-const router = Router()
+const router = Router();
 
 // 🔐 Todas protegidas
-router.use(validarJWT)
+router.use(validarJWT);
 
 // 📌 CRUD
-router.get('/', getZonasUsuario)
-router.get('/:id', getZonaById)
-router.post('/', createZona)
-router.put('/:id', updateZona)
-router.delete('/:id', deleteZona)
+router.get("/", getZonasUsuario);
+router.get("/:id", getZonaById);
+router.post("/", createZona);
+router.put("/:id", updateZona);
+router.delete("/:id", deleteZona);
 
 // 📌 Endpoint adicional para HU-08
-router.get('/:id/propiedades', getPropiedadesEnZona)
+router.get("/:id/propiedades", getPropiedadesEnZona);
 
-export default router
+export default router;

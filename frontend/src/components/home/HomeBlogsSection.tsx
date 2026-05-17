@@ -32,12 +32,13 @@ export default async function HomeBlogsSection() {
             ))
           ) : (
             <div className="col-span-full py-12 text-center border-2 border-dashed border-stone-100 rounded-[32px]">
-              <p className="text-stone-400 font-['Inter']">Aún no hay blogs publicados.</p>
+              <p className="text-stone-400 font-['Inter']">
+                Aún no hay blogs publicados.
+              </p>
             </div>
           )}
         </div>
       </div>
-      
     </section>
   );
 }

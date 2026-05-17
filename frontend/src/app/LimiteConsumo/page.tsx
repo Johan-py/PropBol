@@ -34,7 +34,7 @@ export default function LimiteConsumoPage() {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -106,7 +106,6 @@ export default function LimiteConsumoPage() {
   return (
     <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
@@ -164,7 +163,9 @@ export default function LimiteConsumoPage() {
 
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold opacity-90">{mensaje}</p>
-            <p className="text-sm opacity-70">{Math.round(porcentaje)}% utilizado</p>
+            <p className="text-sm opacity-70">
+              {Math.round(porcentaje)}% utilizado
+            </p>
           </div>
         </div>
 
@@ -205,7 +206,6 @@ export default function LimiteConsumoPage() {
             </Link>
           </div>
         )}
-
       </div>
     </main>
   );

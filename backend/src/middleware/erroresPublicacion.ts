@@ -12,16 +12,14 @@ export const reglasValidacionHU5 = [
   body("direccion")
     .isLength({ min: 5 })
     .withMessage("La dirección debe tener al menos 5 caracteres"),
-  body("precio")
-    .isNumeric()
-    .withMessage("El precio debe ser un número válido"),
+  body("precio").isNumeric().withMessage("El precio debe ser un número válido"),
 ];
 
 // Manejo de errores de validación HU‑5
 export const manejarErroresPublicacion = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -54,11 +52,11 @@ export const manejarErroresPublicacion = (
   next();
 };
 
-//  Validar etapa final 
+//  Validar etapa final
 export const validarEtapaFinal = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (req.body.step !== "final") {
     return res.status(400).json({
@@ -70,11 +68,11 @@ export const validarEtapaFinal = (
   next();
 };
 
-// Cancelación explícita 
+// Cancelación explícita
 export const validarCancelacion = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (req.body.cancelado === true) {
     return res.status(400).json({

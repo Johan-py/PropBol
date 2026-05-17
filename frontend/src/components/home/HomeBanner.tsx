@@ -1,9 +1,9 @@
-import Image from 'next/image'
+import Image from "next/image";
 
 interface BannerProps {
-  url: string
-  title?: string
-  subtitle?: string
+  url: string;
+  title?: string;
+  subtitle?: string;
 }
 
 // Se mantuvo la version anterior del banner desktop, pero la responsive del actual
@@ -65,5 +65,5 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
       </div>
       <div className="md:hidden absolute bottom-0 translate-y-1/2 w-full px-4 z-20"></div>
     </div>
-  )
-}
+  );
+};

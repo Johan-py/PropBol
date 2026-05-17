@@ -1,17 +1,19 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import type { PublicBlogCard } from '@/types/publicBlog'
+import Image from "next/image";
+import Link from "next/link";
+import type { PublicBlogCard } from "@/types/publicBlog";
 
 type BlogDetailSidebarProps = {
-  recommendations: PublicBlogCard[]
-}
+  recommendations: PublicBlogCard[];
+};
 
-const recommendedImageFallback = '/placeholder-blog.jpg'
+const recommendedImageFallback = "/placeholder-blog.jpg";
 
 const truncateTitle = (title: string) => {
-  const cleanTitle = title.replace(/\s+/g, ' ').trim()
-  return cleanTitle.length > 78 ? `${cleanTitle.slice(0, 78).trimEnd()}...` : cleanTitle
-}
+  const cleanTitle = title.replace(/\s+/g, " ").trim();
+  return cleanTitle.length > 78
+    ? `${cleanTitle.slice(0, 78).trimEnd()}...`
+    : cleanTitle;
+};
 
 function RecommendedBlogCard({ blog }: { blog: PublicBlogCard }) {
   return (
@@ -33,10 +35,12 @@ function RecommendedBlogCard({ blog }: { blog: PublicBlogCard }) {
         </h3>
       </article>
     </Link>
-  )
+  );
 }
 
-export default function BlogDetailSidebar({ recommendations }: BlogDetailSidebarProps) {
+export default function BlogDetailSidebar({
+  recommendations,
+}: BlogDetailSidebarProps) {
   return (
     <aside className="mx-auto w-full max-w-[380px]">
       <div className="min-h-[840px] rounded-[32px] bg-white px-6 py-7 shadow-[0_24px_60px_-48px_rgba(41,37,36,0.5)] sm:min-h-[880px] sm:px-8 sm:py-8">
@@ -57,5 +61,5 @@ export default function BlogDetailSidebar({ recommendations }: BlogDetailSidebar
         )}
       </div>
     </aside>
-  )
+  );
 }

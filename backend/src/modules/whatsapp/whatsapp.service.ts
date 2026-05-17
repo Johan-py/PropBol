@@ -1,7 +1,7 @@
 import { env } from "../../config/env.js";
 
 interface EnviarMensajeParams {
-  telefono: string;   // Número con código de país, ej: "59171234567"
+  telefono: string; // Número con código de país, ej: "59171234567"
   mensaje: string;
 }
 
@@ -16,7 +16,10 @@ interface WhatsappSendResult {
  * Evolution espera el formato: codigoPais + numero, sin '+', sin espacios.
  * Ej: codigoPais="591", numero="71234567" → "59171234567"
  */
-export const formatearTelefono = (codigoPais: string, numero: string): string => {
+export const formatearTelefono = (
+  codigoPais: string,
+  numero: string,
+): string => {
   // Limpiar cualquier '+', espacios o guiones
   const codigoLimpio = codigoPais.replace(/[^0-9]/g, "");
   const numeroLimpio = numero.replace(/[^0-9]/g, "");
@@ -51,9 +54,12 @@ export const enviarMensajeWhatsapp = async ({
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
-        console.error('❌ Error al enviar WhatsApp:', JSON.stringify(errorData, null, 2));
-        return { success: false, error: errorData };
+      const errorData = await response.json();
+      console.error(
+        "❌ Error al enviar WhatsApp:",
+        JSON.stringify(errorData, null, 2),
+      );
+      return { success: false, error: errorData };
     }
 
     const data = (await response.json()) as { key?: { id?: string } };

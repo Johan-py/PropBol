@@ -12,7 +12,7 @@ import {
   eliminarVideosDePublicacionRepository,
   crearMultimediaRepository,
   buscarMultimediaPublicacionRepository,
-   // ==================== NUEVAS IMPORTACIONES HU-11 ====================
+  // ==================== NUEVAS IMPORTACIONES HU-11 ====================
   activarPublicidadRepository,
   cancelarPublicidadRepository,
   buscarPublicacionPorIdSimpleRepository,
@@ -883,7 +883,7 @@ export const editarMultimediaPublicacionService = async (
 
 export const iniciarPublicidadService = async (
   publicacionId: number,
-  usuarioId: number
+  usuarioId: number,
 ): Promise<{ checkoutUrl: string }> => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
     throw new Error("ID_INVALIDO");
@@ -908,9 +908,8 @@ export const iniciarPublicidadService = async (
   }
 
   // Verificar si ya tiene publicidad activa
-  const yaPublicitada = await verificarPublicidadActivaRepository(
-    publicacionId
-  );
+  const yaPublicitada =
+    await verificarPublicidadActivaRepository(publicacionId);
   if (yaPublicitada) {
     throw new Error("PUBLICACION_YA_PUBLICITADA");
   }
@@ -927,7 +926,7 @@ export const confirmarPublicidadService = async (
   publicacionId: number,
   usuarioId: number,
   paymentIntentId: string,
-  planId?: number
+  planId?: number,
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
     throw new Error("ID_INVALIDO");
@@ -965,7 +964,7 @@ export const confirmarPublicidadService = async (
     publicacionId,
     usuarioId,
     paymentIntentId,
-    duracionDias
+    duracionDias,
   );
 
   return {
@@ -979,7 +978,7 @@ export const confirmarPublicidadService = async (
 
 export const cancelarPublicidadService = async (
   publicacionId: number,
-  usuarioId: number
+  usuarioId: number,
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
     throw new Error("ID_INVALIDO");
@@ -1009,7 +1008,7 @@ export const cancelarPublicidadService = async (
 
   const publicacionActualizada = await cancelarPublicidadRepository(
     publicacionId,
-    usuarioId
+    usuarioId,
   );
 
   return {
@@ -1024,9 +1023,8 @@ export const obtenerEstadoPublicidadService = async (publicacionId: number) => {
     throw new Error("ID_INVALIDO");
   }
 
-  const publicacion = await buscarPublicacionPorIdSimpleRepository(
-    publicacionId
-  );
+  const publicacion =
+    await buscarPublicacionPorIdSimpleRepository(publicacionId);
 
   if (!publicacion) {
     throw new Error("PUBLICACION_NO_EXISTE");

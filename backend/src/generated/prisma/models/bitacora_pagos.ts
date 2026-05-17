@@ -7,122 +7,123 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model bitacora_pagos
  *
  */
 export type bitacora_pagosModel =
-  runtime.Types.Result.DefaultSelection<Prisma.$bitacora_pagosPayload>
+  runtime.Types.Result.DefaultSelection<Prisma.$bitacora_pagosPayload>;
 
 export type AggregateBitacora_pagos = {
-  _count: Bitacora_pagosCountAggregateOutputType | null
-  _avg: Bitacora_pagosAvgAggregateOutputType | null
-  _sum: Bitacora_pagosSumAggregateOutputType | null
-  _min: Bitacora_pagosMinAggregateOutputType | null
-  _max: Bitacora_pagosMaxAggregateOutputType | null
-}
+  _count: Bitacora_pagosCountAggregateOutputType | null;
+  _avg: Bitacora_pagosAvgAggregateOutputType | null;
+  _sum: Bitacora_pagosSumAggregateOutputType | null;
+  _min: Bitacora_pagosMinAggregateOutputType | null;
+  _max: Bitacora_pagosMaxAggregateOutputType | null;
+};
 
 export type Bitacora_pagosAvgAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  id_transaccion: number | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  id_transaccion: number | null;
+};
 
 export type Bitacora_pagosSumAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  id_transaccion: number | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  id_transaccion: number | null;
+};
 
 export type Bitacora_pagosMinAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  id_transaccion: number | null
-  evento: string | null
-  mensaje: string | null
-  fecha_evento: Date | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  id_transaccion: number | null;
+  evento: string | null;
+  mensaje: string | null;
+  fecha_evento: Date | null;
+};
 
 export type Bitacora_pagosMaxAggregateOutputType = {
-  id: number | null
-  id_usuario: number | null
-  id_suscripcion: number | null
-  id_transaccion: number | null
-  evento: string | null
-  mensaje: string | null
-  fecha_evento: Date | null
-}
+  id: number | null;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  id_transaccion: number | null;
+  evento: string | null;
+  mensaje: string | null;
+  fecha_evento: Date | null;
+};
 
 export type Bitacora_pagosCountAggregateOutputType = {
-  id: number
-  id_usuario: number
-  id_suscripcion: number
-  id_transaccion: number
-  evento: number
-  mensaje: number
-  fecha_evento: number
-  _all: number
-}
+  id: number;
+  id_usuario: number;
+  id_suscripcion: number;
+  id_transaccion: number;
+  evento: number;
+  mensaje: number;
+  fecha_evento: number;
+  _all: number;
+};
 
 export type Bitacora_pagosAvgAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  id_transaccion?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  id_transaccion?: true;
+};
 
 export type Bitacora_pagosSumAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  id_transaccion?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  id_transaccion?: true;
+};
 
 export type Bitacora_pagosMinAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  id_transaccion?: true
-  evento?: true
-  mensaje?: true
-  fecha_evento?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  id_transaccion?: true;
+  evento?: true;
+  mensaje?: true;
+  fecha_evento?: true;
+};
 
 export type Bitacora_pagosMaxAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  id_transaccion?: true
-  evento?: true
-  mensaje?: true
-  fecha_evento?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  id_transaccion?: true;
+  evento?: true;
+  mensaje?: true;
+  fecha_evento?: true;
+};
 
 export type Bitacora_pagosCountAggregateInputType = {
-  id?: true
-  id_usuario?: true
-  id_suscripcion?: true
-  id_transaccion?: true
-  evento?: true
-  mensaje?: true
-  fecha_evento?: true
-  _all?: true
-}
+  id?: true;
+  id_usuario?: true;
+  id_suscripcion?: true;
+  id_transaccion?: true;
+  evento?: true;
+  mensaje?: true;
+  fecha_evento?: true;
+  _all?: true;
+};
 
 export type Bitacora_pagosAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which bitacora_pagos to aggregate.
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -130,335 +131,380 @@ export type Bitacora_pagosAggregateArgs<
    */
   orderBy?:
     | Prisma.bitacora_pagosOrderByWithRelationInput
-    | Prisma.bitacora_pagosOrderByWithRelationInput[]
+    | Prisma.bitacora_pagosOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.bitacora_pagosWhereUniqueInput
+  cursor?: Prisma.bitacora_pagosWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` bitacora_pagos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` bitacora_pagos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned bitacora_pagos
    **/
-  _count?: true | Bitacora_pagosCountAggregateInputType
+  _count?: true | Bitacora_pagosCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Bitacora_pagosAvgAggregateInputType
+  _avg?: Bitacora_pagosAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Bitacora_pagosSumAggregateInputType
+  _sum?: Bitacora_pagosSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Bitacora_pagosMinAggregateInputType
+  _min?: Bitacora_pagosMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Bitacora_pagosMaxAggregateInputType
-}
+  _max?: Bitacora_pagosMaxAggregateInputType;
+};
 
-export type GetBitacora_pagosAggregateType<T extends Bitacora_pagosAggregateArgs> = {
-  [P in keyof T & keyof AggregateBitacora_pagos]: P extends '_count' | 'count'
+export type GetBitacora_pagosAggregateType<
+  T extends Bitacora_pagosAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateBitacora_pagos]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateBitacora_pagos[P]>
-    : Prisma.GetScalarType<T[P], AggregateBitacora_pagos[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateBitacora_pagos[P]>;
+};
 
 export type bitacora_pagosGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   orderBy?:
     | Prisma.bitacora_pagosOrderByWithAggregationInput
-    | Prisma.bitacora_pagosOrderByWithAggregationInput[]
-  by: Prisma.Bitacora_pagosScalarFieldEnum[] | Prisma.Bitacora_pagosScalarFieldEnum
-  having?: Prisma.bitacora_pagosScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Bitacora_pagosCountAggregateInputType | true
-  _avg?: Bitacora_pagosAvgAggregateInputType
-  _sum?: Bitacora_pagosSumAggregateInputType
-  _min?: Bitacora_pagosMinAggregateInputType
-  _max?: Bitacora_pagosMaxAggregateInputType
-}
+    | Prisma.bitacora_pagosOrderByWithAggregationInput[];
+  by:
+    | Prisma.Bitacora_pagosScalarFieldEnum[]
+    | Prisma.Bitacora_pagosScalarFieldEnum;
+  having?: Prisma.bitacora_pagosScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Bitacora_pagosCountAggregateInputType | true;
+  _avg?: Bitacora_pagosAvgAggregateInputType;
+  _sum?: Bitacora_pagosSumAggregateInputType;
+  _min?: Bitacora_pagosMinAggregateInputType;
+  _max?: Bitacora_pagosMaxAggregateInputType;
+};
 
 export type Bitacora_pagosGroupByOutputType = {
-  id: number
-  id_usuario: number | null
-  id_suscripcion: number | null
-  id_transaccion: number | null
-  evento: string
-  mensaje: string | null
-  fecha_evento: Date | null
-  _count: Bitacora_pagosCountAggregateOutputType | null
-  _avg: Bitacora_pagosAvgAggregateOutputType | null
-  _sum: Bitacora_pagosSumAggregateOutputType | null
-  _min: Bitacora_pagosMinAggregateOutputType | null
-  _max: Bitacora_pagosMaxAggregateOutputType | null
-}
+  id: number;
+  id_usuario: number | null;
+  id_suscripcion: number | null;
+  id_transaccion: number | null;
+  evento: string;
+  mensaje: string | null;
+  fecha_evento: Date | null;
+  _count: Bitacora_pagosCountAggregateOutputType | null;
+  _avg: Bitacora_pagosAvgAggregateOutputType | null;
+  _sum: Bitacora_pagosSumAggregateOutputType | null;
+  _min: Bitacora_pagosMinAggregateOutputType | null;
+  _max: Bitacora_pagosMaxAggregateOutputType | null;
+};
 
-export type GetBitacora_pagosGroupByPayload<T extends bitacora_pagosGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<Bitacora_pagosGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Bitacora_pagosGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], Bitacora_pagosGroupByOutputType[P]>
+export type GetBitacora_pagosGroupByPayload<
+  T extends bitacora_pagosGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<Bitacora_pagosGroupByOutputType, T["by"]> & {
+      [P in keyof T & keyof Bitacora_pagosGroupByOutputType]: P extends "_count"
+        ? T[P] extends boolean
+          ? number
           : Prisma.GetScalarType<T[P], Bitacora_pagosGroupByOutputType[P]>
-      }
-    >
+        : Prisma.GetScalarType<T[P], Bitacora_pagosGroupByOutputType[P]>;
+    }
   >
+>;
 
 export type bitacora_pagosWhereInput = {
-  AND?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[]
-  OR?: Prisma.bitacora_pagosWhereInput[]
-  NOT?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[]
-  id?: Prisma.IntFilter<'bitacora_pagos'> | number
-  id_usuario?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-  id_suscripcion?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-  id_transaccion?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-  evento?: Prisma.StringFilter<'bitacora_pagos'> | string
-  mensaje?: Prisma.StringNullableFilter<'bitacora_pagos'> | string | null
-  fecha_evento?: Prisma.DateTimeNullableFilter<'bitacora_pagos'> | Date | string | null
+  AND?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[];
+  OR?: Prisma.bitacora_pagosWhereInput[];
+  NOT?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[];
+  id?: Prisma.IntFilter<"bitacora_pagos"> | number;
+  id_usuario?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+  id_suscripcion?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+  id_transaccion?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+  evento?: Prisma.StringFilter<"bitacora_pagos"> | string;
+  mensaje?: Prisma.StringNullableFilter<"bitacora_pagos"> | string | null;
+  fecha_evento?:
+    | Prisma.DateTimeNullableFilter<"bitacora_pagos">
+    | Date
+    | string
+    | null;
   plan_suscripcion?: Prisma.XOR<
     Prisma.Plan_suscripcionNullableScalarRelationFilter,
     Prisma.plan_suscripcionWhereInput
-  > | null
+  > | null;
   transacciones?: Prisma.XOR<
     Prisma.TransaccionesNullableScalarRelationFilter,
     Prisma.transaccionesWhereInput
-  > | null
-  usuario?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.usuarioWhereInput> | null
-}
+  > | null;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioNullableScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  > | null;
+};
 
 export type bitacora_pagosOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrderInput | Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrderInput | Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrderInput | Prisma.SortOrder
-  evento?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_evento?: Prisma.SortOrderInput | Prisma.SortOrder
-  plan_suscripcion?: Prisma.plan_suscripcionOrderByWithRelationInput
-  transacciones?: Prisma.transaccionesOrderByWithRelationInput
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrderInput | Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  evento?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_evento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  plan_suscripcion?: Prisma.plan_suscripcionOrderByWithRelationInput;
+  transacciones?: Prisma.transaccionesOrderByWithRelationInput;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+};
 
 export type bitacora_pagosWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[]
-    OR?: Prisma.bitacora_pagosWhereInput[]
-    NOT?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[]
-    id_usuario?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-    id_suscripcion?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-    id_transaccion?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-    evento?: Prisma.StringFilter<'bitacora_pagos'> | string
-    mensaje?: Prisma.StringNullableFilter<'bitacora_pagos'> | string | null
-    fecha_evento?: Prisma.DateTimeNullableFilter<'bitacora_pagos'> | Date | string | null
+    id?: number;
+    AND?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[];
+    OR?: Prisma.bitacora_pagosWhereInput[];
+    NOT?: Prisma.bitacora_pagosWhereInput | Prisma.bitacora_pagosWhereInput[];
+    id_usuario?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+    id_suscripcion?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+    id_transaccion?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+    evento?: Prisma.StringFilter<"bitacora_pagos"> | string;
+    mensaje?: Prisma.StringNullableFilter<"bitacora_pagos"> | string | null;
+    fecha_evento?:
+      | Prisma.DateTimeNullableFilter<"bitacora_pagos">
+      | Date
+      | string
+      | null;
     plan_suscripcion?: Prisma.XOR<
       Prisma.Plan_suscripcionNullableScalarRelationFilter,
       Prisma.plan_suscripcionWhereInput
-    > | null
+    > | null;
     transacciones?: Prisma.XOR<
       Prisma.TransaccionesNullableScalarRelationFilter,
       Prisma.transaccionesWhereInput
-    > | null
+    > | null;
     usuario?: Prisma.XOR<
       Prisma.UsuarioNullableScalarRelationFilter,
       Prisma.usuarioWhereInput
-    > | null
+    > | null;
   },
-  'id'
->
+  "id"
+>;
 
 export type bitacora_pagosOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrderInput | Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrderInput | Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrderInput | Prisma.SortOrder
-  evento?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_evento?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.bitacora_pagosCountOrderByAggregateInput
-  _avg?: Prisma.bitacora_pagosAvgOrderByAggregateInput
-  _max?: Prisma.bitacora_pagosMaxOrderByAggregateInput
-  _min?: Prisma.bitacora_pagosMinOrderByAggregateInput
-  _sum?: Prisma.bitacora_pagosSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrderInput | Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  evento?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_evento?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.bitacora_pagosCountOrderByAggregateInput;
+  _avg?: Prisma.bitacora_pagosAvgOrderByAggregateInput;
+  _max?: Prisma.bitacora_pagosMaxOrderByAggregateInput;
+  _min?: Prisma.bitacora_pagosMinOrderByAggregateInput;
+  _sum?: Prisma.bitacora_pagosSumOrderByAggregateInput;
+};
 
 export type bitacora_pagosScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.bitacora_pagosScalarWhereWithAggregatesInput
-    | Prisma.bitacora_pagosScalarWhereWithAggregatesInput[]
-  OR?: Prisma.bitacora_pagosScalarWhereWithAggregatesInput[]
+    | Prisma.bitacora_pagosScalarWhereWithAggregatesInput[];
+  OR?: Prisma.bitacora_pagosScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.bitacora_pagosScalarWhereWithAggregatesInput
-    | Prisma.bitacora_pagosScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'bitacora_pagos'> | number
-  id_usuario?: Prisma.IntNullableWithAggregatesFilter<'bitacora_pagos'> | number | null
-  id_suscripcion?: Prisma.IntNullableWithAggregatesFilter<'bitacora_pagos'> | number | null
-  id_transaccion?: Prisma.IntNullableWithAggregatesFilter<'bitacora_pagos'> | number | null
-  evento?: Prisma.StringWithAggregatesFilter<'bitacora_pagos'> | string
-  mensaje?: Prisma.StringNullableWithAggregatesFilter<'bitacora_pagos'> | string | null
+    | Prisma.bitacora_pagosScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"bitacora_pagos"> | number;
+  id_usuario?:
+    | Prisma.IntNullableWithAggregatesFilter<"bitacora_pagos">
+    | number
+    | null;
+  id_suscripcion?:
+    | Prisma.IntNullableWithAggregatesFilter<"bitacora_pagos">
+    | number
+    | null;
+  id_transaccion?:
+    | Prisma.IntNullableWithAggregatesFilter<"bitacora_pagos">
+    | number
+    | null;
+  evento?: Prisma.StringWithAggregatesFilter<"bitacora_pagos"> | string;
+  mensaje?:
+    | Prisma.StringNullableWithAggregatesFilter<"bitacora_pagos">
+    | string
+    | null;
   fecha_evento?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'bitacora_pagos'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"bitacora_pagos">
     | Date
     | string
-    | null
-}
+    | null;
+};
 
 export type bitacora_pagosCreateInput = {
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-  plan_suscripcion?: Prisma.plan_suscripcionCreateNestedOneWithoutBitacora_pagosInput
-  transacciones?: Prisma.transaccionesCreateNestedOneWithoutBitacora_pagosInput
-  usuario?: Prisma.usuarioCreateNestedOneWithoutBitacora_pagosInput
-}
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+  plan_suscripcion?: Prisma.plan_suscripcionCreateNestedOneWithoutBitacora_pagosInput;
+  transacciones?: Prisma.transaccionesCreateNestedOneWithoutBitacora_pagosInput;
+  usuario?: Prisma.usuarioCreateNestedOneWithoutBitacora_pagosInput;
+};
 
 export type bitacora_pagosUncheckedCreateInput = {
-  id?: number
-  id_usuario?: number | null
-  id_suscripcion?: number | null
-  id_transaccion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_usuario?: number | null;
+  id_suscripcion?: number | null;
+  id_transaccion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosUpdateInput = {
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneWithoutBitacora_pagosNestedInput
-  transacciones?: Prisma.transaccionesUpdateOneWithoutBitacora_pagosNestedInput
-  usuario?: Prisma.usuarioUpdateOneWithoutBitacora_pagosNestedInput
-}
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneWithoutBitacora_pagosNestedInput;
+  transacciones?: Prisma.transaccionesUpdateOneWithoutBitacora_pagosNestedInput;
+  usuario?: Prisma.usuarioUpdateOneWithoutBitacora_pagosNestedInput;
+};
 
 export type bitacora_pagosUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosCreateManyInput = {
-  id?: number
-  id_usuario?: number | null
-  id_suscripcion?: number | null
-  id_transaccion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_usuario?: number | null;
+  id_suscripcion?: number | null;
+  id_transaccion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosUpdateManyMutationInput = {
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrder
-  evento?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  fecha_evento?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrder;
+  evento?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  fecha_evento?: Prisma.SortOrder;
+};
 
 export type bitacora_pagosAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrder;
+};
 
 export type bitacora_pagosMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrder
-  evento?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  fecha_evento?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrder;
+  evento?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  fecha_evento?: Prisma.SortOrder;
+};
 
 export type bitacora_pagosMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrder
-  evento?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  fecha_evento?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrder;
+  evento?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  fecha_evento?: Prisma.SortOrder;
+};
 
 export type bitacora_pagosSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  id_usuario?: Prisma.SortOrder
-  id_suscripcion?: Prisma.SortOrder
-  id_transaccion?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  id_usuario?: Prisma.SortOrder;
+  id_suscripcion?: Prisma.SortOrder;
+  id_transaccion?: Prisma.SortOrder;
+};
 
 export type Bitacora_pagosListRelationFilter = {
-  every?: Prisma.bitacora_pagosWhereInput
-  some?: Prisma.bitacora_pagosWhereInput
-  none?: Prisma.bitacora_pagosWhereInput
-}
+  every?: Prisma.bitacora_pagosWhereInput;
+  some?: Prisma.bitacora_pagosWhereInput;
+  none?: Prisma.bitacora_pagosWhereInput;
+};
 
 export type bitacora_pagosOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
+  set?: number | null;
+  increment?: number;
+  decrement?: number;
+  multiply?: number;
+  divide?: number;
+};
 
 export type bitacora_pagosCreateNestedManyWithoutPlan_suscripcionInput = {
   create?:
@@ -467,28 +513,33 @@ export type bitacora_pagosCreateNestedManyWithoutPlan_suscripcionInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
       >
     | Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-}
+    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope;
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+};
 
-export type bitacora_pagosUncheckedCreateNestedManyWithoutPlan_suscripcionInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput,
-        Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
-      >
-    | Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[]
-  connectOrCreate?:
-    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-}
+export type bitacora_pagosUncheckedCreateNestedManyWithoutPlan_suscripcionInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput,
+          Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
+        >
+      | Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput[]
+      | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[];
+    connectOrCreate?:
+      | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput
+      | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[];
+    createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope;
+    connect?:
+      | Prisma.bitacora_pagosWhereUniqueInput
+      | Prisma.bitacora_pagosWhereUniqueInput[];
+  };
 
 export type bitacora_pagosUpdateManyWithoutPlan_suscripcionNestedInput = {
   create?:
@@ -497,54 +548,75 @@ export type bitacora_pagosUpdateManyWithoutPlan_suscripcionNestedInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
       >
     | Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[]
+    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[];
   upsert?:
     | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope
-  set?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  disconnect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  delete?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
+    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope;
+  set?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  disconnect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  delete?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
   update?:
     | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput[]
+    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput[];
   updateMany?:
     | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput[]
-  deleteMany?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-}
+    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput[];
+  deleteMany?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+};
 
-export type bitacora_pagosUncheckedUpdateManyWithoutPlan_suscripcionNestedInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput,
-        Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
-      >
-    | Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[]
-  connectOrCreate?:
-    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[]
-  upsert?:
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope
-  set?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  disconnect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  delete?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  update?:
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput[]
-  updateMany?:
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput[]
-  deleteMany?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-}
+export type bitacora_pagosUncheckedUpdateManyWithoutPlan_suscripcionNestedInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput,
+          Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
+        >
+      | Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput[]
+      | Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput[];
+    connectOrCreate?:
+      | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput
+      | Prisma.bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput[];
+    upsert?:
+      | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput
+      | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput[];
+    createMany?: Prisma.bitacora_pagosCreateManyPlan_suscripcionInputEnvelope;
+    set?:
+      | Prisma.bitacora_pagosWhereUniqueInput
+      | Prisma.bitacora_pagosWhereUniqueInput[];
+    disconnect?:
+      | Prisma.bitacora_pagosWhereUniqueInput
+      | Prisma.bitacora_pagosWhereUniqueInput[];
+    delete?:
+      | Prisma.bitacora_pagosWhereUniqueInput
+      | Prisma.bitacora_pagosWhereUniqueInput[];
+    connect?:
+      | Prisma.bitacora_pagosWhereUniqueInput
+      | Prisma.bitacora_pagosWhereUniqueInput[];
+    update?:
+      | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput
+      | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput[];
+    updateMany?:
+      | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput
+      | Prisma.bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput[];
+    deleteMany?:
+      | Prisma.bitacora_pagosScalarWhereInput
+      | Prisma.bitacora_pagosScalarWhereInput[];
+  };
 
 export type bitacora_pagosCreateNestedManyWithoutTransaccionesInput = {
   create?:
@@ -553,13 +625,15 @@ export type bitacora_pagosCreateNestedManyWithoutTransaccionesInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput
       >
     | Prisma.bitacora_pagosCreateWithoutTransaccionesInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-}
+    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope;
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+};
 
 export type bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput = {
   create?:
@@ -568,13 +642,15 @@ export type bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput
       >
     | Prisma.bitacora_pagosCreateWithoutTransaccionesInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-}
+    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope;
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+};
 
 export type bitacora_pagosUpdateManyWithoutTransaccionesNestedInput = {
   create?:
@@ -583,26 +659,36 @@ export type bitacora_pagosUpdateManyWithoutTransaccionesNestedInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput
       >
     | Prisma.bitacora_pagosCreateWithoutTransaccionesInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[];
   upsert?:
     | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope
-  set?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  disconnect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  delete?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
+    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope;
+  set?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  disconnect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  delete?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
   update?:
     | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput[];
   updateMany?:
     | Prisma.bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput[]
-  deleteMany?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-}
+    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput[];
+  deleteMany?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+};
 
 export type bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput = {
   create?:
@@ -611,26 +697,36 @@ export type bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput
       >
     | Prisma.bitacora_pagosCreateWithoutTransaccionesInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosCreateOrConnectWithoutTransaccionesInput[];
   upsert?:
     | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope
-  set?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  disconnect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  delete?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
+    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyTransaccionesInputEnvelope;
+  set?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  disconnect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  delete?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
   update?:
     | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput[]
+    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput[];
   updateMany?:
     | Prisma.bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput[]
-  deleteMany?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-}
+    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput[];
+  deleteMany?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+};
 
 export type bitacora_pagosCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -639,13 +735,15 @@ export type bitacora_pagosCreateNestedManyWithoutUsuarioInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.bitacora_pagosCreateWithoutUsuarioInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-}
+    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+};
 
 export type bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -654,13 +752,15 @@ export type bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.bitacora_pagosCreateWithoutUsuarioInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-}
+    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+};
 
 export type bitacora_pagosUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -669,26 +769,36 @@ export type bitacora_pagosUpdateManyWithoutUsuarioNestedInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.bitacora_pagosCreateWithoutUsuarioInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope
-  set?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  disconnect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  delete?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
+    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  disconnect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  delete?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
   update?:
     | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-}
+    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+};
 
 export type bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -697,457 +807,544 @@ export type bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.bitacora_pagosCreateWithoutUsuarioInput[]
-    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput
-    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope
-  set?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  disconnect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  delete?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
-  connect?: Prisma.bitacora_pagosWhereUniqueInput | Prisma.bitacora_pagosWhereUniqueInput[]
+    | Prisma.bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.bitacora_pagosCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  disconnect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  delete?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
+  connect?:
+    | Prisma.bitacora_pagosWhereUniqueInput
+    | Prisma.bitacora_pagosWhereUniqueInput[];
   update?:
     | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-}
+    | Prisma.bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+};
 
 export type bitacora_pagosCreateWithoutPlan_suscripcionInput = {
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-  transacciones?: Prisma.transaccionesCreateNestedOneWithoutBitacora_pagosInput
-  usuario?: Prisma.usuarioCreateNestedOneWithoutBitacora_pagosInput
-}
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+  transacciones?: Prisma.transaccionesCreateNestedOneWithoutBitacora_pagosInput;
+  usuario?: Prisma.usuarioCreateNestedOneWithoutBitacora_pagosInput;
+};
 
 export type bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput = {
-  id?: number
-  id_usuario?: number | null
-  id_transaccion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_usuario?: number | null;
+  id_transaccion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosCreateOrConnectWithoutPlan_suscripcionInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput,
     Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosCreateManyPlan_suscripcionInputEnvelope = {
   data:
     | Prisma.bitacora_pagosCreateManyPlan_suscripcionInput
-    | Prisma.bitacora_pagosCreateManyPlan_suscripcionInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.bitacora_pagosCreateManyPlan_suscripcionInput[];
+  skipDuplicates?: boolean;
+};
 
 export type bitacora_pagosUpsertWithWhereUniqueWithoutPlan_suscripcionInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.bitacora_pagosUpdateWithoutPlan_suscripcionInput,
     Prisma.bitacora_pagosUncheckedUpdateWithoutPlan_suscripcionInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.bitacora_pagosCreateWithoutPlan_suscripcionInput,
     Prisma.bitacora_pagosUncheckedCreateWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosUpdateWithWhereUniqueWithoutPlan_suscripcionInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateWithoutPlan_suscripcionInput,
     Prisma.bitacora_pagosUncheckedUpdateWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosUpdateManyWithWhereWithoutPlan_suscripcionInput = {
-  where: Prisma.bitacora_pagosScalarWhereInput
+  where: Prisma.bitacora_pagosScalarWhereInput;
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateManyMutationInput,
     Prisma.bitacora_pagosUncheckedUpdateManyWithoutPlan_suscripcionInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosScalarWhereInput = {
-  AND?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-  OR?: Prisma.bitacora_pagosScalarWhereInput[]
-  NOT?: Prisma.bitacora_pagosScalarWhereInput | Prisma.bitacora_pagosScalarWhereInput[]
-  id?: Prisma.IntFilter<'bitacora_pagos'> | number
-  id_usuario?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-  id_suscripcion?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-  id_transaccion?: Prisma.IntNullableFilter<'bitacora_pagos'> | number | null
-  evento?: Prisma.StringFilter<'bitacora_pagos'> | string
-  mensaje?: Prisma.StringNullableFilter<'bitacora_pagos'> | string | null
-  fecha_evento?: Prisma.DateTimeNullableFilter<'bitacora_pagos'> | Date | string | null
-}
+  AND?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+  OR?: Prisma.bitacora_pagosScalarWhereInput[];
+  NOT?:
+    | Prisma.bitacora_pagosScalarWhereInput
+    | Prisma.bitacora_pagosScalarWhereInput[];
+  id?: Prisma.IntFilter<"bitacora_pagos"> | number;
+  id_usuario?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+  id_suscripcion?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+  id_transaccion?: Prisma.IntNullableFilter<"bitacora_pagos"> | number | null;
+  evento?: Prisma.StringFilter<"bitacora_pagos"> | string;
+  mensaje?: Prisma.StringNullableFilter<"bitacora_pagos"> | string | null;
+  fecha_evento?:
+    | Prisma.DateTimeNullableFilter<"bitacora_pagos">
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosCreateWithoutTransaccionesInput = {
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-  plan_suscripcion?: Prisma.plan_suscripcionCreateNestedOneWithoutBitacora_pagosInput
-  usuario?: Prisma.usuarioCreateNestedOneWithoutBitacora_pagosInput
-}
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+  plan_suscripcion?: Prisma.plan_suscripcionCreateNestedOneWithoutBitacora_pagosInput;
+  usuario?: Prisma.usuarioCreateNestedOneWithoutBitacora_pagosInput;
+};
 
 export type bitacora_pagosUncheckedCreateWithoutTransaccionesInput = {
-  id?: number
-  id_usuario?: number | null
-  id_suscripcion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_usuario?: number | null;
+  id_suscripcion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosCreateOrConnectWithoutTransaccionesInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.bitacora_pagosCreateWithoutTransaccionesInput,
     Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosCreateManyTransaccionesInputEnvelope = {
   data:
     | Prisma.bitacora_pagosCreateManyTransaccionesInput
-    | Prisma.bitacora_pagosCreateManyTransaccionesInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.bitacora_pagosCreateManyTransaccionesInput[];
+  skipDuplicates?: boolean;
+};
 
 export type bitacora_pagosUpsertWithWhereUniqueWithoutTransaccionesInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.bitacora_pagosUpdateWithoutTransaccionesInput,
     Prisma.bitacora_pagosUncheckedUpdateWithoutTransaccionesInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.bitacora_pagosCreateWithoutTransaccionesInput,
     Prisma.bitacora_pagosUncheckedCreateWithoutTransaccionesInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosUpdateWithWhereUniqueWithoutTransaccionesInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateWithoutTransaccionesInput,
     Prisma.bitacora_pagosUncheckedUpdateWithoutTransaccionesInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosUpdateManyWithWhereWithoutTransaccionesInput = {
-  where: Prisma.bitacora_pagosScalarWhereInput
+  where: Prisma.bitacora_pagosScalarWhereInput;
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateManyMutationInput,
     Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosCreateWithoutUsuarioInput = {
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-  plan_suscripcion?: Prisma.plan_suscripcionCreateNestedOneWithoutBitacora_pagosInput
-  transacciones?: Prisma.transaccionesCreateNestedOneWithoutBitacora_pagosInput
-}
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+  plan_suscripcion?: Prisma.plan_suscripcionCreateNestedOneWithoutBitacora_pagosInput;
+  transacciones?: Prisma.transaccionesCreateNestedOneWithoutBitacora_pagosInput;
+};
 
 export type bitacora_pagosUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  id_suscripcion?: number | null
-  id_transaccion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_suscripcion?: number | null;
+  id_transaccion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.bitacora_pagosCreateWithoutUsuarioInput,
     Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosCreateManyUsuarioInputEnvelope = {
-  data: Prisma.bitacora_pagosCreateManyUsuarioInput | Prisma.bitacora_pagosCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.bitacora_pagosCreateManyUsuarioInput
+    | Prisma.bitacora_pagosCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type bitacora_pagosUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.bitacora_pagosUpdateWithoutUsuarioInput,
     Prisma.bitacora_pagosUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.bitacora_pagosCreateWithoutUsuarioInput,
     Prisma.bitacora_pagosUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateWithoutUsuarioInput,
     Prisma.bitacora_pagosUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.bitacora_pagosScalarWhereInput
+  where: Prisma.bitacora_pagosScalarWhereInput;
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateManyMutationInput,
     Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type bitacora_pagosCreateManyPlan_suscripcionInput = {
-  id?: number
-  id_usuario?: number | null
-  id_transaccion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_usuario?: number | null;
+  id_transaccion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosUpdateWithoutPlan_suscripcionInput = {
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transacciones?: Prisma.transaccionesUpdateOneWithoutBitacora_pagosNestedInput
-  usuario?: Prisma.usuarioUpdateOneWithoutBitacora_pagosNestedInput
-}
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  transacciones?: Prisma.transaccionesUpdateOneWithoutBitacora_pagosNestedInput;
+  usuario?: Prisma.usuarioUpdateOneWithoutBitacora_pagosNestedInput;
+};
 
 export type bitacora_pagosUncheckedUpdateWithoutPlan_suscripcionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosUncheckedUpdateManyWithoutPlan_suscripcionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosCreateManyTransaccionesInput = {
-  id?: number
-  id_usuario?: number | null
-  id_suscripcion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_usuario?: number | null;
+  id_suscripcion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosUpdateWithoutTransaccionesInput = {
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneWithoutBitacora_pagosNestedInput
-  usuario?: Prisma.usuarioUpdateOneWithoutBitacora_pagosNestedInput
-}
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneWithoutBitacora_pagosNestedInput;
+  usuario?: Prisma.usuarioUpdateOneWithoutBitacora_pagosNestedInput;
+};
 
 export type bitacora_pagosUncheckedUpdateWithoutTransaccionesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosUncheckedUpdateManyWithoutTransaccionesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_usuario?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosCreateManyUsuarioInput = {
-  id?: number
-  id_suscripcion?: number | null
-  id_transaccion?: number | null
-  evento: string
-  mensaje?: string | null
-  fecha_evento?: Date | string | null
-}
+  id?: number;
+  id_suscripcion?: number | null;
+  id_transaccion?: number | null;
+  evento: string;
+  mensaje?: string | null;
+  fecha_evento?: Date | string | null;
+};
 
 export type bitacora_pagosUpdateWithoutUsuarioInput = {
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneWithoutBitacora_pagosNestedInput
-  transacciones?: Prisma.transaccionesUpdateOneWithoutBitacora_pagosNestedInput
-}
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneWithoutBitacora_pagosNestedInput;
+  transacciones?: Prisma.transaccionesUpdateOneWithoutBitacora_pagosNestedInput;
+};
 
 export type bitacora_pagosUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  evento?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fecha_evento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  id_suscripcion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  id_transaccion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  evento?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fecha_evento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type bitacora_pagosSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    id_usuario?: boolean
-    id_suscripcion?: boolean
-    id_transaccion?: boolean
-    evento?: boolean
-    mensaje?: boolean
-    fecha_evento?: boolean
-    plan_suscripcion?: boolean | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
-    transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>
-    usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>
+    id?: boolean;
+    id_usuario?: boolean;
+    id_suscripcion?: boolean;
+    id_transaccion?: boolean;
+    evento?: boolean;
+    mensaje?: boolean;
+    fecha_evento?: boolean;
+    plan_suscripcion?:
+      | boolean
+      | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>;
+    transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>;
+    usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>;
   },
-  ExtArgs['result']['bitacora_pagos']
->
+  ExtArgs["result"]["bitacora_pagos"]
+>;
 
 export type bitacora_pagosSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    id_usuario?: boolean
-    id_suscripcion?: boolean
-    id_transaccion?: boolean
-    evento?: boolean
-    mensaje?: boolean
-    fecha_evento?: boolean
-    plan_suscripcion?: boolean | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
-    transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>
-    usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>
+    id?: boolean;
+    id_usuario?: boolean;
+    id_suscripcion?: boolean;
+    id_transaccion?: boolean;
+    evento?: boolean;
+    mensaje?: boolean;
+    fecha_evento?: boolean;
+    plan_suscripcion?:
+      | boolean
+      | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>;
+    transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>;
+    usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>;
   },
-  ExtArgs['result']['bitacora_pagos']
->
+  ExtArgs["result"]["bitacora_pagos"]
+>;
 
 export type bitacora_pagosSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    id_usuario?: boolean
-    id_suscripcion?: boolean
-    id_transaccion?: boolean
-    evento?: boolean
-    mensaje?: boolean
-    fecha_evento?: boolean
-    plan_suscripcion?: boolean | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
-    transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>
-    usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>
+    id?: boolean;
+    id_usuario?: boolean;
+    id_suscripcion?: boolean;
+    id_transaccion?: boolean;
+    evento?: boolean;
+    mensaje?: boolean;
+    fecha_evento?: boolean;
+    plan_suscripcion?:
+      | boolean
+      | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>;
+    transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>;
+    usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>;
   },
-  ExtArgs['result']['bitacora_pagos']
->
+  ExtArgs["result"]["bitacora_pagos"]
+>;
 
 export type bitacora_pagosSelectScalar = {
-  id?: boolean
-  id_usuario?: boolean
-  id_suscripcion?: boolean
-  id_transaccion?: boolean
-  evento?: boolean
-  mensaje?: boolean
-  fecha_evento?: boolean
-}
+  id?: boolean;
+  id_usuario?: boolean;
+  id_suscripcion?: boolean;
+  id_transaccion?: boolean;
+  evento?: boolean;
+  mensaje?: boolean;
+  fecha_evento?: boolean;
+};
 
 export type bitacora_pagosOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'id_usuario' | 'id_suscripcion' | 'id_transaccion' | 'evento' | 'mensaje' | 'fecha_evento',
-  ExtArgs['result']['bitacora_pagos']
->
+  | "id"
+  | "id_usuario"
+  | "id_suscripcion"
+  | "id_transaccion"
+  | "evento"
+  | "mensaje"
+  | "fecha_evento",
+  ExtArgs["result"]["bitacora_pagos"]
+>;
 export type bitacora_pagosInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  plan_suscripcion?: boolean | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
-  transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>
-  usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>
-}
+  plan_suscripcion?:
+    | boolean
+    | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>;
+  transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>;
+  usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>;
+};
 export type bitacora_pagosIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  plan_suscripcion?: boolean | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
-  transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>
-  usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>
-}
+  plan_suscripcion?:
+    | boolean
+    | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>;
+  transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>;
+  usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>;
+};
 export type bitacora_pagosIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  plan_suscripcion?: boolean | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
-  transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>
-  usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>
-}
+  plan_suscripcion?:
+    | boolean
+    | Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>;
+  transacciones?: boolean | Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>;
+  usuario?: boolean | Prisma.bitacora_pagos$usuarioArgs<ExtArgs>;
+};
 
 export type $bitacora_pagosPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'bitacora_pagos'
+  name: "bitacora_pagos";
   objects: {
-    plan_suscripcion: Prisma.$plan_suscripcionPayload<ExtArgs> | null
-    transacciones: Prisma.$transaccionesPayload<ExtArgs> | null
-    usuario: Prisma.$usuarioPayload<ExtArgs> | null
-  }
+    plan_suscripcion: Prisma.$plan_suscripcionPayload<ExtArgs> | null;
+    transacciones: Prisma.$transaccionesPayload<ExtArgs> | null;
+    usuario: Prisma.$usuarioPayload<ExtArgs> | null;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      id_usuario: number | null
-      id_suscripcion: number | null
-      id_transaccion: number | null
-      evento: string
-      mensaje: string | null
-      fecha_evento: Date | null
+      id: number;
+      id_usuario: number | null;
+      id_suscripcion: number | null;
+      id_transaccion: number | null;
+      evento: string;
+      mensaje: string | null;
+      fecha_evento: Date | null;
     },
-    ExtArgs['result']['bitacora_pagos']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["bitacora_pagos"]
+  >;
+  composites: {};
+};
 
 export type bitacora_pagosGetPayload<
-  S extends boolean | null | undefined | bitacora_pagosDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$bitacora_pagosPayload, S>
+  S extends boolean | null | undefined | bitacora_pagosDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$bitacora_pagosPayload, S>;
 
 export type bitacora_pagosCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<bitacora_pagosFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Bitacora_pagosCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  bitacora_pagosFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Bitacora_pagosCountAggregateInputType | true;
+};
 
 export interface bitacora_pagosDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['bitacora_pagos']
-    meta: { name: 'bitacora_pagos' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["bitacora_pagos"];
+    meta: { name: "bitacora_pagos" };
+  };
   /**
    * Find zero or one Bitacora_pagos that matches the filter.
    * @param {bitacora_pagosFindUniqueArgs} args - Arguments to find a Bitacora_pagos
@@ -1160,18 +1357,18 @@ export interface bitacora_pagosDelegate<
    * })
    */
   findUnique<T extends bitacora_pagosFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, bitacora_pagosFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Bitacora_pagos that matches the filter or throw an error with `error.code='P2025'`
@@ -1186,18 +1383,18 @@ export interface bitacora_pagosDelegate<
    * })
    */
   findUniqueOrThrow<T extends bitacora_pagosFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, bitacora_pagosFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Bitacora_pagos that matches the filter.
@@ -1213,18 +1410,18 @@ export interface bitacora_pagosDelegate<
    * })
    */
   findFirst<T extends bitacora_pagosFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, bitacora_pagosFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, bitacora_pagosFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Bitacora_pagos that matches the filter or
@@ -1241,18 +1438,18 @@ export interface bitacora_pagosDelegate<
    * })
    */
   findFirstOrThrow<T extends bitacora_pagosFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, bitacora_pagosFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, bitacora_pagosFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Bitacora_pagos that matches the filter.
@@ -1271,15 +1468,15 @@ export interface bitacora_pagosDelegate<
    *
    */
   findMany<T extends bitacora_pagosFindManyArgs>(
-    args?: Prisma.SelectSubset<T, bitacora_pagosFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, bitacora_pagosFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Bitacora_pagos.
@@ -1294,18 +1491,18 @@ export interface bitacora_pagosDelegate<
    *
    */
   create<T extends bitacora_pagosCreateArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, bitacora_pagosCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Bitacora_pagos.
@@ -1320,8 +1517,8 @@ export interface bitacora_pagosDelegate<
    *
    */
   createMany<T extends bitacora_pagosCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, bitacora_pagosCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, bitacora_pagosCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Bitacora_pagos and returns the data saved in the database.
@@ -1346,15 +1543,18 @@ export interface bitacora_pagosDelegate<
    *
    */
   createManyAndReturn<T extends bitacora_pagosCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, bitacora_pagosCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      bitacora_pagosCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Bitacora_pagos.
@@ -1369,18 +1569,18 @@ export interface bitacora_pagosDelegate<
    *
    */
   delete<T extends bitacora_pagosDeleteArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, bitacora_pagosDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Bitacora_pagos.
@@ -1398,18 +1598,18 @@ export interface bitacora_pagosDelegate<
    *
    */
   update<T extends bitacora_pagosUpdateArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, bitacora_pagosUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Bitacora_pagos.
@@ -1424,8 +1624,8 @@ export interface bitacora_pagosDelegate<
    *
    */
   deleteMany<T extends bitacora_pagosDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, bitacora_pagosDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, bitacora_pagosDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Bitacora_pagos.
@@ -1445,8 +1645,8 @@ export interface bitacora_pagosDelegate<
    *
    */
   updateMany<T extends bitacora_pagosUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, bitacora_pagosUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Bitacora_pagos and returns the data updated in the database.
@@ -1477,15 +1677,18 @@ export interface bitacora_pagosDelegate<
    *
    */
   updateManyAndReturn<T extends bitacora_pagosUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      bitacora_pagosUpdateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Bitacora_pagos.
@@ -1505,18 +1708,18 @@ export interface bitacora_pagosDelegate<
    * })
    */
   upsert<T extends bitacora_pagosUpsertArgs>(
-    args: Prisma.SelectSubset<T, bitacora_pagosUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, bitacora_pagosUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__bitacora_pagosClient<
     runtime.Types.Result.GetResult<
       Prisma.$bitacora_pagosPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Bitacora_pagos.
@@ -1532,14 +1735,17 @@ export interface bitacora_pagosDelegate<
    * })
    **/
   count<T extends bitacora_pagosCountArgs>(
-    args?: Prisma.Subset<T, bitacora_pagosCountArgs>
+    args?: Prisma.Subset<T, bitacora_pagosCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Bitacora_pagosCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Bitacora_pagosCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Bitacora_pagos.
@@ -1566,8 +1772,8 @@ export interface bitacora_pagosDelegate<
    * })
    **/
   aggregate<T extends Bitacora_pagosAggregateArgs>(
-    args: Prisma.Subset<T, Bitacora_pagosAggregateArgs>
-  ): Prisma.PrismaPromise<GetBitacora_pagosAggregateType<T>>
+    args: Prisma.Subset<T, Bitacora_pagosAggregateArgs>,
+  ): Prisma.PrismaPromise<GetBitacora_pagosAggregateType<T>>;
 
   /**
    * Group by Bitacora_pagos.
@@ -1590,20 +1796,20 @@ export interface bitacora_pagosDelegate<
   groupBy<
     T extends bitacora_pagosGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: bitacora_pagosGroupByArgs['orderBy'] }
-      : { orderBy?: bitacora_pagosGroupByArgs['orderBy'] },
+      ? { orderBy: bitacora_pagosGroupByArgs["orderBy"] }
+      : { orderBy?: bitacora_pagosGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1612,26 +1818,31 @@ export interface bitacora_pagosDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1639,15 +1850,18 @@ export interface bitacora_pagosDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, bitacora_pagosGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetBitacora_pagosGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, bitacora_pagosGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetBitacora_pagosGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the bitacora_pagos model
    */
-  readonly fields: bitacora_pagosFieldRefs
+  readonly fields: bitacora_pagosFieldRefs;
 }
 
 /**
@@ -1659,49 +1873,57 @@ export interface bitacora_pagosDelegate<
 export interface Prisma__bitacora_pagosClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  plan_suscripcion<T extends Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  plan_suscripcion<
+    T extends Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<
+      T,
+      Prisma.bitacora_pagos$plan_suscripcionArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__plan_suscripcionClient<
     runtime.Types.Result.GetResult<
       Prisma.$plan_suscripcionPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
-  transacciones<T extends Prisma.bitacora_pagos$transaccionesArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>>
+  >;
+  transacciones<
+    T extends Prisma.bitacora_pagos$transaccionesArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.bitacora_pagos$transaccionesArgs<ExtArgs>>,
   ): Prisma.Prisma__transaccionesClient<
     runtime.Types.Result.GetResult<
       Prisma.$transaccionesPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   usuario<T extends Prisma.bitacora_pagos$usuarioArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.bitacora_pagos$usuarioArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.bitacora_pagos$usuarioArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     runtime.Types.Result.GetResult<
       Prisma.$usuarioPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1709,37 +1931,48 @@ export interface Prisma__bitacora_pagosClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the bitacora_pagos model
  */
 export interface bitacora_pagosFieldRefs {
-  readonly id: Prisma.FieldRef<'bitacora_pagos', 'Int'>
-  readonly id_usuario: Prisma.FieldRef<'bitacora_pagos', 'Int'>
-  readonly id_suscripcion: Prisma.FieldRef<'bitacora_pagos', 'Int'>
-  readonly id_transaccion: Prisma.FieldRef<'bitacora_pagos', 'Int'>
-  readonly evento: Prisma.FieldRef<'bitacora_pagos', 'String'>
-  readonly mensaje: Prisma.FieldRef<'bitacora_pagos', 'String'>
-  readonly fecha_evento: Prisma.FieldRef<'bitacora_pagos', 'DateTime'>
+  readonly id: Prisma.FieldRef<"bitacora_pagos", "Int">;
+  readonly id_usuario: Prisma.FieldRef<"bitacora_pagos", "Int">;
+  readonly id_suscripcion: Prisma.FieldRef<"bitacora_pagos", "Int">;
+  readonly id_transaccion: Prisma.FieldRef<"bitacora_pagos", "Int">;
+  readonly evento: Prisma.FieldRef<"bitacora_pagos", "String">;
+  readonly mensaje: Prisma.FieldRef<"bitacora_pagos", "String">;
+  readonly fecha_evento: Prisma.FieldRef<"bitacora_pagos", "DateTime">;
 }
 
 // Custom InputTypes
@@ -1747,72 +1980,75 @@ export interface bitacora_pagosFieldRefs {
  * bitacora_pagos findUnique
  */
 export type bitacora_pagosFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * Filter, which bitacora_pagos to fetch.
    */
-  where: Prisma.bitacora_pagosWhereUniqueInput
-}
+  where: Prisma.bitacora_pagosWhereUniqueInput;
+};
 
 /**
  * bitacora_pagos findUniqueOrThrow
  */
 export type bitacora_pagosFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * Filter, which bitacora_pagos to fetch.
    */
-  where: Prisma.bitacora_pagosWhereUniqueInput
-}
+  where: Prisma.bitacora_pagosWhereUniqueInput;
+};
 
 /**
  * bitacora_pagos findFirst
  */
 export type bitacora_pagosFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * Filter, which bitacora_pagos to fetch.
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1820,55 +2056,58 @@ export type bitacora_pagosFindFirstArgs<
    */
   orderBy?:
     | Prisma.bitacora_pagosOrderByWithRelationInput
-    | Prisma.bitacora_pagosOrderByWithRelationInput[]
+    | Prisma.bitacora_pagosOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for bitacora_pagos.
    */
-  cursor?: Prisma.bitacora_pagosWhereUniqueInput
+  cursor?: Prisma.bitacora_pagosWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` bitacora_pagos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` bitacora_pagos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of bitacora_pagos.
    */
-  distinct?: Prisma.Bitacora_pagosScalarFieldEnum | Prisma.Bitacora_pagosScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Bitacora_pagosScalarFieldEnum
+    | Prisma.Bitacora_pagosScalarFieldEnum[];
+};
 
 /**
  * bitacora_pagos findFirstOrThrow
  */
 export type bitacora_pagosFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * Filter, which bitacora_pagos to fetch.
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1876,55 +2115,58 @@ export type bitacora_pagosFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.bitacora_pagosOrderByWithRelationInput
-    | Prisma.bitacora_pagosOrderByWithRelationInput[]
+    | Prisma.bitacora_pagosOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for bitacora_pagos.
    */
-  cursor?: Prisma.bitacora_pagosWhereUniqueInput
+  cursor?: Prisma.bitacora_pagosWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` bitacora_pagos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` bitacora_pagos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of bitacora_pagos.
    */
-  distinct?: Prisma.Bitacora_pagosScalarFieldEnum | Prisma.Bitacora_pagosScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Bitacora_pagosScalarFieldEnum
+    | Prisma.Bitacora_pagosScalarFieldEnum[];
+};
 
 /**
  * bitacora_pagos findMany
  */
 export type bitacora_pagosFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * Filter, which bitacora_pagos to fetch.
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1932,128 +2174,145 @@ export type bitacora_pagosFindManyArgs<
    */
   orderBy?:
     | Prisma.bitacora_pagosOrderByWithRelationInput
-    | Prisma.bitacora_pagosOrderByWithRelationInput[]
+    | Prisma.bitacora_pagosOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing bitacora_pagos.
    */
-  cursor?: Prisma.bitacora_pagosWhereUniqueInput
+  cursor?: Prisma.bitacora_pagosWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` bitacora_pagos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` bitacora_pagos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of bitacora_pagos.
    */
-  distinct?: Prisma.Bitacora_pagosScalarFieldEnum | Prisma.Bitacora_pagosScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Bitacora_pagosScalarFieldEnum
+    | Prisma.Bitacora_pagosScalarFieldEnum[];
+};
 
 /**
  * bitacora_pagos create
  */
 export type bitacora_pagosCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * The data needed to create a bitacora_pagos.
    */
-  data: Prisma.XOR<Prisma.bitacora_pagosCreateInput, Prisma.bitacora_pagosUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.bitacora_pagosCreateInput,
+    Prisma.bitacora_pagosUncheckedCreateInput
+  >;
+};
 
 /**
  * bitacora_pagos createMany
  */
 export type bitacora_pagosCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many bitacora_pagos.
    */
-  data: Prisma.bitacora_pagosCreateManyInput | Prisma.bitacora_pagosCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.bitacora_pagosCreateManyInput
+    | Prisma.bitacora_pagosCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * bitacora_pagos createManyAndReturn
  */
 export type bitacora_pagosCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * The data used to create many bitacora_pagos.
    */
-  data: Prisma.bitacora_pagosCreateManyInput | Prisma.bitacora_pagosCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.bitacora_pagosCreateManyInput
+    | Prisma.bitacora_pagosCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.bitacora_pagosIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * bitacora_pagos update
  */
 export type bitacora_pagosUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * The data needed to update a bitacora_pagos.
    */
-  data: Prisma.XOR<Prisma.bitacora_pagosUpdateInput, Prisma.bitacora_pagosUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.bitacora_pagosUpdateInput,
+    Prisma.bitacora_pagosUncheckedUpdateInput
+  >;
   /**
    * Choose, which bitacora_pagos to update.
    */
-  where: Prisma.bitacora_pagosWhereUniqueInput
-}
+  where: Prisma.bitacora_pagosWhereUniqueInput;
+};
 
 /**
  * bitacora_pagos updateMany
  */
 export type bitacora_pagosUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update bitacora_pagos.
@@ -2061,203 +2320,217 @@ export type bitacora_pagosUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateManyMutationInput,
     Prisma.bitacora_pagosUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which bitacora_pagos to update
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * Limit how many bitacora_pagos to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * bitacora_pagos updateManyAndReturn
  */
 export type bitacora_pagosUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * The data used to update bitacora_pagos.
    */
   data: Prisma.XOR<
     Prisma.bitacora_pagosUpdateManyMutationInput,
     Prisma.bitacora_pagosUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which bitacora_pagos to update
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * Limit how many bitacora_pagos to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.bitacora_pagosIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * bitacora_pagos upsert
  */
 export type bitacora_pagosUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * The filter to search for the bitacora_pagos to update in case it exists.
    */
-  where: Prisma.bitacora_pagosWhereUniqueInput
+  where: Prisma.bitacora_pagosWhereUniqueInput;
   /**
    * In case the bitacora_pagos found by the `where` argument doesn't exist, create a new bitacora_pagos with this data.
    */
-  create: Prisma.XOR<Prisma.bitacora_pagosCreateInput, Prisma.bitacora_pagosUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.bitacora_pagosCreateInput,
+    Prisma.bitacora_pagosUncheckedCreateInput
+  >;
   /**
    * In case the bitacora_pagos was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.bitacora_pagosUpdateInput, Prisma.bitacora_pagosUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.bitacora_pagosUpdateInput,
+    Prisma.bitacora_pagosUncheckedUpdateInput
+  >;
+};
 
 /**
  * bitacora_pagos delete
  */
 export type bitacora_pagosDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
   /**
    * Filter which bitacora_pagos to delete.
    */
-  where: Prisma.bitacora_pagosWhereUniqueInput
-}
+  where: Prisma.bitacora_pagosWhereUniqueInput;
+};
 
 /**
  * bitacora_pagos deleteMany
  */
 export type bitacora_pagosDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which bitacora_pagos to delete
    */
-  where?: Prisma.bitacora_pagosWhereInput
+  where?: Prisma.bitacora_pagosWhereInput;
   /**
    * Limit how many bitacora_pagos to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * bitacora_pagos.plan_suscripcion
  */
 export type bitacora_pagos$plan_suscripcionArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the plan_suscripcion
    */
-  select?: Prisma.plan_suscripcionSelect<ExtArgs> | null
+  select?: Prisma.plan_suscripcionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the plan_suscripcion
    */
-  omit?: Prisma.plan_suscripcionOmit<ExtArgs> | null
+  omit?: Prisma.plan_suscripcionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.plan_suscripcionInclude<ExtArgs> | null
-  where?: Prisma.plan_suscripcionWhereInput
-}
+  include?: Prisma.plan_suscripcionInclude<ExtArgs> | null;
+  where?: Prisma.plan_suscripcionWhereInput;
+};
 
 /**
  * bitacora_pagos.transacciones
  */
 export type bitacora_pagos$transaccionesArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the transacciones
    */
-  select?: Prisma.transaccionesSelect<ExtArgs> | null
+  select?: Prisma.transaccionesSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the transacciones
    */
-  omit?: Prisma.transaccionesOmit<ExtArgs> | null
+  omit?: Prisma.transaccionesOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.transaccionesInclude<ExtArgs> | null
-  where?: Prisma.transaccionesWhereInput
-}
+  include?: Prisma.transaccionesInclude<ExtArgs> | null;
+  where?: Prisma.transaccionesWhereInput;
+};
 
 /**
  * bitacora_pagos.usuario
  */
 export type bitacora_pagos$usuarioArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the usuario
    */
-  select?: Prisma.usuarioSelect<ExtArgs> | null
+  select?: Prisma.usuarioSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the usuario
    */
-  omit?: Prisma.usuarioOmit<ExtArgs> | null
+  omit?: Prisma.usuarioOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.usuarioInclude<ExtArgs> | null
-  where?: Prisma.usuarioWhereInput
-}
+  include?: Prisma.usuarioInclude<ExtArgs> | null;
+  where?: Prisma.usuarioWhereInput;
+};
 
 /**
  * bitacora_pagos without action
  */
 export type bitacora_pagosDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the bitacora_pagos
    */
-  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null
+  select?: Prisma.bitacora_pagosSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the bitacora_pagos
    */
-  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null
+  omit?: Prisma.bitacora_pagosOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null
-}
+  include?: Prisma.bitacora_pagosInclude<ExtArgs> | null;
+};

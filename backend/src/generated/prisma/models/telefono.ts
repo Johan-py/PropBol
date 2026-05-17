@@ -7,367 +7,382 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model telefono
  *
  */
-export type telefonoModel = runtime.Types.Result.DefaultSelection<Prisma.$telefonoPayload>
+export type telefonoModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$telefonoPayload>;
 
 export type AggregateTelefono = {
-  _count: TelefonoCountAggregateOutputType | null
-  _avg: TelefonoAvgAggregateOutputType | null
-  _sum: TelefonoSumAggregateOutputType | null
-  _min: TelefonoMinAggregateOutputType | null
-  _max: TelefonoMaxAggregateOutputType | null
-}
+  _count: TelefonoCountAggregateOutputType | null;
+  _avg: TelefonoAvgAggregateOutputType | null;
+  _sum: TelefonoSumAggregateOutputType | null;
+  _min: TelefonoMinAggregateOutputType | null;
+  _max: TelefonoMaxAggregateOutputType | null;
+};
 
 export type TelefonoAvgAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type TelefonoSumAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type TelefonoMinAggregateOutputType = {
-  id: number | null
-  codigo_pais: string | null
-  numero: string | null
-  principal: boolean | null
-  usuario_id: number | null
-}
+  id: number | null;
+  codigo_pais: string | null;
+  numero: string | null;
+  principal: boolean | null;
+  usuario_id: number | null;
+};
 
 export type TelefonoMaxAggregateOutputType = {
-  id: number | null
-  codigo_pais: string | null
-  numero: string | null
-  principal: boolean | null
-  usuario_id: number | null
-}
+  id: number | null;
+  codigo_pais: string | null;
+  numero: string | null;
+  principal: boolean | null;
+  usuario_id: number | null;
+};
 
 export type TelefonoCountAggregateOutputType = {
-  id: number
-  codigo_pais: number
-  numero: number
-  principal: number
-  usuario_id: number
-  _all: number
-}
+  id: number;
+  codigo_pais: number;
+  numero: number;
+  principal: number;
+  usuario_id: number;
+  _all: number;
+};
 
 export type TelefonoAvgAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type TelefonoSumAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type TelefonoMinAggregateInputType = {
-  id?: true
-  codigo_pais?: true
-  numero?: true
-  principal?: true
-  usuario_id?: true
-}
+  id?: true;
+  codigo_pais?: true;
+  numero?: true;
+  principal?: true;
+  usuario_id?: true;
+};
 
 export type TelefonoMaxAggregateInputType = {
-  id?: true
-  codigo_pais?: true
-  numero?: true
-  principal?: true
-  usuario_id?: true
-}
+  id?: true;
+  codigo_pais?: true;
+  numero?: true;
+  principal?: true;
+  usuario_id?: true;
+};
 
 export type TelefonoCountAggregateInputType = {
-  id?: true
-  codigo_pais?: true
-  numero?: true
-  principal?: true
-  usuario_id?: true
-  _all?: true
-}
+  id?: true;
+  codigo_pais?: true;
+  numero?: true;
+  principal?: true;
+  usuario_id?: true;
+  _all?: true;
+};
 
 export type TelefonoAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which telefono to aggregate.
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of telefonos to fetch.
    */
-  orderBy?: Prisma.telefonoOrderByWithRelationInput | Prisma.telefonoOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.telefonoOrderByWithRelationInput
+    | Prisma.telefonoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.telefonoWhereUniqueInput
+  cursor?: Prisma.telefonoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` telefonos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` telefonos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned telefonos
    **/
-  _count?: true | TelefonoCountAggregateInputType
+  _count?: true | TelefonoCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: TelefonoAvgAggregateInputType
+  _avg?: TelefonoAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: TelefonoSumAggregateInputType
+  _sum?: TelefonoSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: TelefonoMinAggregateInputType
+  _min?: TelefonoMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: TelefonoMaxAggregateInputType
-}
+  _max?: TelefonoMaxAggregateInputType;
+};
 
 export type GetTelefonoAggregateType<T extends TelefonoAggregateArgs> = {
-  [P in keyof T & keyof AggregateTelefono]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateTelefono]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateTelefono[P]>
-    : Prisma.GetScalarType<T[P], AggregateTelefono[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateTelefono[P]>;
+};
 
 export type telefonoGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   orderBy?:
     | Prisma.telefonoOrderByWithAggregationInput
-    | Prisma.telefonoOrderByWithAggregationInput[]
-  by: Prisma.TelefonoScalarFieldEnum[] | Prisma.TelefonoScalarFieldEnum
-  having?: Prisma.telefonoScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: TelefonoCountAggregateInputType | true
-  _avg?: TelefonoAvgAggregateInputType
-  _sum?: TelefonoSumAggregateInputType
-  _min?: TelefonoMinAggregateInputType
-  _max?: TelefonoMaxAggregateInputType
-}
+    | Prisma.telefonoOrderByWithAggregationInput[];
+  by: Prisma.TelefonoScalarFieldEnum[] | Prisma.TelefonoScalarFieldEnum;
+  having?: Prisma.telefonoScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: TelefonoCountAggregateInputType | true;
+  _avg?: TelefonoAvgAggregateInputType;
+  _sum?: TelefonoSumAggregateInputType;
+  _min?: TelefonoMinAggregateInputType;
+  _max?: TelefonoMaxAggregateInputType;
+};
 
 export type TelefonoGroupByOutputType = {
-  id: number
-  codigo_pais: string
-  numero: string
-  principal: boolean | null
-  usuario_id: number
-  _count: TelefonoCountAggregateOutputType | null
-  _avg: TelefonoAvgAggregateOutputType | null
-  _sum: TelefonoSumAggregateOutputType | null
-  _min: TelefonoMinAggregateOutputType | null
-  _max: TelefonoMaxAggregateOutputType | null
-}
+  id: number;
+  codigo_pais: string;
+  numero: string;
+  principal: boolean | null;
+  usuario_id: number;
+  _count: TelefonoCountAggregateOutputType | null;
+  _avg: TelefonoAvgAggregateOutputType | null;
+  _sum: TelefonoSumAggregateOutputType | null;
+  _min: TelefonoMinAggregateOutputType | null;
+  _max: TelefonoMaxAggregateOutputType | null;
+};
 
-export type GetTelefonoGroupByPayload<T extends telefonoGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<TelefonoGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof TelefonoGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], TelefonoGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], TelefonoGroupByOutputType[P]>
-    }
-  >
->
+export type GetTelefonoGroupByPayload<T extends telefonoGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<TelefonoGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof TelefonoGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], TelefonoGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], TelefonoGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type telefonoWhereInput = {
-  AND?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[]
-  OR?: Prisma.telefonoWhereInput[]
-  NOT?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[]
-  id?: Prisma.IntFilter<'telefono'> | number
-  codigo_pais?: Prisma.StringFilter<'telefono'> | string
-  numero?: Prisma.StringFilter<'telefono'> | string
-  principal?: Prisma.BoolNullableFilter<'telefono'> | boolean | null
-  usuario_id?: Prisma.IntFilter<'telefono'> | number
-  usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-}
+  AND?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[];
+  OR?: Prisma.telefonoWhereInput[];
+  NOT?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[];
+  id?: Prisma.IntFilter<"telefono"> | number;
+  codigo_pais?: Prisma.StringFilter<"telefono"> | string;
+  numero?: Prisma.StringFilter<"telefono"> | string;
+  principal?: Prisma.BoolNullableFilter<"telefono"> | boolean | null;
+  usuario_id?: Prisma.IntFilter<"telefono"> | number;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  >;
+};
 
 export type telefonoOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  codigo_pais?: Prisma.SortOrder
-  numero?: Prisma.SortOrder
-  principal?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  codigo_pais?: Prisma.SortOrder;
+  numero?: Prisma.SortOrder;
+  principal?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+};
 
 export type telefonoWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[]
-    OR?: Prisma.telefonoWhereInput[]
-    NOT?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[]
-    codigo_pais?: Prisma.StringFilter<'telefono'> | string
-    numero?: Prisma.StringFilter<'telefono'> | string
-    principal?: Prisma.BoolNullableFilter<'telefono'> | boolean | null
-    usuario_id?: Prisma.IntFilter<'telefono'> | number
-    usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
+    id?: number;
+    AND?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[];
+    OR?: Prisma.telefonoWhereInput[];
+    NOT?: Prisma.telefonoWhereInput | Prisma.telefonoWhereInput[];
+    codigo_pais?: Prisma.StringFilter<"telefono"> | string;
+    numero?: Prisma.StringFilter<"telefono"> | string;
+    principal?: Prisma.BoolNullableFilter<"telefono"> | boolean | null;
+    usuario_id?: Prisma.IntFilter<"telefono"> | number;
+    usuario?: Prisma.XOR<
+      Prisma.UsuarioScalarRelationFilter,
+      Prisma.usuarioWhereInput
+    >;
   },
-  'id'
->
+  "id"
+>;
 
 export type telefonoOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  codigo_pais?: Prisma.SortOrder
-  numero?: Prisma.SortOrder
-  principal?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  _count?: Prisma.telefonoCountOrderByAggregateInput
-  _avg?: Prisma.telefonoAvgOrderByAggregateInput
-  _max?: Prisma.telefonoMaxOrderByAggregateInput
-  _min?: Prisma.telefonoMinOrderByAggregateInput
-  _sum?: Prisma.telefonoSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  codigo_pais?: Prisma.SortOrder;
+  numero?: Prisma.SortOrder;
+  principal?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  _count?: Prisma.telefonoCountOrderByAggregateInput;
+  _avg?: Prisma.telefonoAvgOrderByAggregateInput;
+  _max?: Prisma.telefonoMaxOrderByAggregateInput;
+  _min?: Prisma.telefonoMinOrderByAggregateInput;
+  _sum?: Prisma.telefonoSumOrderByAggregateInput;
+};
 
 export type telefonoScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.telefonoScalarWhereWithAggregatesInput
-    | Prisma.telefonoScalarWhereWithAggregatesInput[]
-  OR?: Prisma.telefonoScalarWhereWithAggregatesInput[]
+    | Prisma.telefonoScalarWhereWithAggregatesInput[];
+  OR?: Prisma.telefonoScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.telefonoScalarWhereWithAggregatesInput
-    | Prisma.telefonoScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'telefono'> | number
-  codigo_pais?: Prisma.StringWithAggregatesFilter<'telefono'> | string
-  numero?: Prisma.StringWithAggregatesFilter<'telefono'> | string
-  principal?: Prisma.BoolNullableWithAggregatesFilter<'telefono'> | boolean | null
-  usuario_id?: Prisma.IntWithAggregatesFilter<'telefono'> | number
-}
+    | Prisma.telefonoScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"telefono"> | number;
+  codigo_pais?: Prisma.StringWithAggregatesFilter<"telefono"> | string;
+  numero?: Prisma.StringWithAggregatesFilter<"telefono"> | string;
+  principal?:
+    | Prisma.BoolNullableWithAggregatesFilter<"telefono">
+    | boolean
+    | null;
+  usuario_id?: Prisma.IntWithAggregatesFilter<"telefono"> | number;
+};
 
 export type telefonoCreateInput = {
-  codigo_pais: string
-  numero: string
-  principal?: boolean | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutTelefonoInput
-}
+  codigo_pais: string;
+  numero: string;
+  principal?: boolean | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutTelefonoInput;
+};
 
 export type telefonoUncheckedCreateInput = {
-  id?: number
-  codigo_pais: string
-  numero: string
-  principal?: boolean | null
-  usuario_id: number
-}
+  id?: number;
+  codigo_pais: string;
+  numero: string;
+  principal?: boolean | null;
+  usuario_id: number;
+};
 
 export type telefonoUpdateInput = {
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTelefonoNestedInput
-}
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTelefonoNestedInput;
+};
 
 export type telefonoUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type telefonoCreateManyInput = {
-  id?: number
-  codigo_pais: string
-  numero: string
-  principal?: boolean | null
-  usuario_id: number
-}
+  id?: number;
+  codigo_pais: string;
+  numero: string;
+  principal?: boolean | null;
+  usuario_id: number;
+};
 
 export type telefonoUpdateManyMutationInput = {
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type telefonoUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type telefonoCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  codigo_pais?: Prisma.SortOrder
-  numero?: Prisma.SortOrder
-  principal?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  codigo_pais?: Prisma.SortOrder;
+  numero?: Prisma.SortOrder;
+  principal?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type telefonoAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type telefonoMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  codigo_pais?: Prisma.SortOrder
-  numero?: Prisma.SortOrder
-  principal?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  codigo_pais?: Prisma.SortOrder;
+  numero?: Prisma.SortOrder;
+  principal?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type telefonoMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  codigo_pais?: Prisma.SortOrder
-  numero?: Prisma.SortOrder
-  principal?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  codigo_pais?: Prisma.SortOrder;
+  numero?: Prisma.SortOrder;
+  principal?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type telefonoSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type TelefonoListRelationFilter = {
-  every?: Prisma.telefonoWhereInput
-  some?: Prisma.telefonoWhereInput
-  none?: Prisma.telefonoWhereInput
-}
+  every?: Prisma.telefonoWhereInput;
+  some?: Prisma.telefonoWhereInput;
+  none?: Prisma.telefonoWhereInput;
+};
 
 export type telefonoOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type telefonoCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -376,13 +391,13 @@ export type telefonoCreateNestedManyWithoutUsuarioInput = {
         Prisma.telefonoUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.telefonoCreateWithoutUsuarioInput[]
-    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.telefonoCreateOrConnectWithoutUsuarioInput
-    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope
-  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-}
+    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope;
+  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
+};
 
 export type telefonoUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -391,13 +406,13 @@ export type telefonoUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.telefonoUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.telefonoCreateWithoutUsuarioInput[]
-    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.telefonoCreateOrConnectWithoutUsuarioInput
-    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope
-  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-}
+    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope;
+  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
+};
 
 export type telefonoUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -406,26 +421,30 @@ export type telefonoUpdateManyWithoutUsuarioNestedInput = {
         Prisma.telefonoUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.telefonoCreateWithoutUsuarioInput[]
-    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.telefonoCreateOrConnectWithoutUsuarioInput
-    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.telefonoUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.telefonoUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope
-  set?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-  disconnect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-  delete?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
+    | Prisma.telefonoUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope;
+  set?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
+  disconnect?:
+    | Prisma.telefonoWhereUniqueInput
+    | Prisma.telefonoWhereUniqueInput[];
+  delete?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
+  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
   update?:
     | Prisma.telefonoUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.telefonoUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.telefonoUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.telefonoUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.telefonoUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.telefonoScalarWhereInput | Prisma.telefonoScalarWhereInput[]
-}
+    | Prisma.telefonoUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.telefonoScalarWhereInput
+    | Prisma.telefonoScalarWhereInput[];
+};
 
 export type telefonoUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -434,225 +453,245 @@ export type telefonoUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.telefonoUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.telefonoCreateWithoutUsuarioInput[]
-    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.telefonoUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.telefonoCreateOrConnectWithoutUsuarioInput
-    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.telefonoCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.telefonoUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.telefonoUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope
-  set?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-  disconnect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-  delete?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
-  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[]
+    | Prisma.telefonoUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.telefonoCreateManyUsuarioInputEnvelope;
+  set?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
+  disconnect?:
+    | Prisma.telefonoWhereUniqueInput
+    | Prisma.telefonoWhereUniqueInput[];
+  delete?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
+  connect?: Prisma.telefonoWhereUniqueInput | Prisma.telefonoWhereUniqueInput[];
   update?:
     | Prisma.telefonoUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.telefonoUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.telefonoUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.telefonoUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.telefonoUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.telefonoScalarWhereInput | Prisma.telefonoScalarWhereInput[]
-}
+    | Prisma.telefonoUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.telefonoScalarWhereInput
+    | Prisma.telefonoScalarWhereInput[];
+};
 
 export type telefonoCreateWithoutUsuarioInput = {
-  codigo_pais: string
-  numero: string
-  principal?: boolean | null
-}
+  codigo_pais: string;
+  numero: string;
+  principal?: boolean | null;
+};
 
 export type telefonoUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  codigo_pais: string
-  numero: string
-  principal?: boolean | null
-}
+  id?: number;
+  codigo_pais: string;
+  numero: string;
+  principal?: boolean | null;
+};
 
 export type telefonoCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.telefonoWhereUniqueInput
+  where: Prisma.telefonoWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.telefonoCreateWithoutUsuarioInput,
     Prisma.telefonoUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type telefonoCreateManyUsuarioInputEnvelope = {
-  data: Prisma.telefonoCreateManyUsuarioInput | Prisma.telefonoCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.telefonoCreateManyUsuarioInput
+    | Prisma.telefonoCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type telefonoUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.telefonoWhereUniqueInput
+  where: Prisma.telefonoWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.telefonoUpdateWithoutUsuarioInput,
     Prisma.telefonoUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.telefonoCreateWithoutUsuarioInput,
     Prisma.telefonoUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type telefonoUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.telefonoWhereUniqueInput
+  where: Prisma.telefonoWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.telefonoUpdateWithoutUsuarioInput,
     Prisma.telefonoUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type telefonoUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.telefonoScalarWhereInput
+  where: Prisma.telefonoScalarWhereInput;
   data: Prisma.XOR<
     Prisma.telefonoUpdateManyMutationInput,
     Prisma.telefonoUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type telefonoScalarWhereInput = {
-  AND?: Prisma.telefonoScalarWhereInput | Prisma.telefonoScalarWhereInput[]
-  OR?: Prisma.telefonoScalarWhereInput[]
-  NOT?: Prisma.telefonoScalarWhereInput | Prisma.telefonoScalarWhereInput[]
-  id?: Prisma.IntFilter<'telefono'> | number
-  codigo_pais?: Prisma.StringFilter<'telefono'> | string
-  numero?: Prisma.StringFilter<'telefono'> | string
-  principal?: Prisma.BoolNullableFilter<'telefono'> | boolean | null
-  usuario_id?: Prisma.IntFilter<'telefono'> | number
-}
+  AND?: Prisma.telefonoScalarWhereInput | Prisma.telefonoScalarWhereInput[];
+  OR?: Prisma.telefonoScalarWhereInput[];
+  NOT?: Prisma.telefonoScalarWhereInput | Prisma.telefonoScalarWhereInput[];
+  id?: Prisma.IntFilter<"telefono"> | number;
+  codigo_pais?: Prisma.StringFilter<"telefono"> | string;
+  numero?: Prisma.StringFilter<"telefono"> | string;
+  principal?: Prisma.BoolNullableFilter<"telefono"> | boolean | null;
+  usuario_id?: Prisma.IntFilter<"telefono"> | number;
+};
 
 export type telefonoCreateManyUsuarioInput = {
-  id?: number
-  codigo_pais: string
-  numero: string
-  principal?: boolean | null
-}
+  id?: number;
+  codigo_pais: string;
+  numero: string;
+  principal?: boolean | null;
+};
 
 export type telefonoUpdateWithoutUsuarioInput = {
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type telefonoUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type telefonoUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string
-  numero?: Prisma.StringFieldUpdateOperationsInput | string
-  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  codigo_pais?: Prisma.StringFieldUpdateOperationsInput | string;
+  numero?: Prisma.StringFieldUpdateOperationsInput | string;
+  principal?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type telefonoSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    codigo_pais?: boolean
-    numero?: boolean
-    principal?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    codigo_pais?: boolean;
+    numero?: boolean;
+    principal?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['telefono']
->
+  ExtArgs["result"]["telefono"]
+>;
 
 export type telefonoSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    codigo_pais?: boolean
-    numero?: boolean
-    principal?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    codigo_pais?: boolean;
+    numero?: boolean;
+    principal?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['telefono']
->
+  ExtArgs["result"]["telefono"]
+>;
 
 export type telefonoSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    codigo_pais?: boolean
-    numero?: boolean
-    principal?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    codigo_pais?: boolean;
+    numero?: boolean;
+    principal?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['telefono']
->
+  ExtArgs["result"]["telefono"]
+>;
 
 export type telefonoSelectScalar = {
-  id?: boolean
-  codigo_pais?: boolean
-  numero?: boolean
-  principal?: boolean
-  usuario_id?: boolean
-}
+  id?: boolean;
+  codigo_pais?: boolean;
+  numero?: boolean;
+  principal?: boolean;
+  usuario_id?: boolean;
+};
 
 export type telefonoOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'codigo_pais' | 'numero' | 'principal' | 'usuario_id',
-  ExtArgs['result']['telefono']
->
+  "id" | "codigo_pais" | "numero" | "principal" | "usuario_id",
+  ExtArgs["result"]["telefono"]
+>;
 export type telefonoInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type telefonoIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type telefonoIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 
 export type $telefonoPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'telefono'
+  name: "telefono";
   objects: {
-    usuario: Prisma.$usuarioPayload<ExtArgs>
-  }
+    usuario: Prisma.$usuarioPayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      codigo_pais: string
-      numero: string
-      principal: boolean | null
-      usuario_id: number
+      id: number;
+      codigo_pais: string;
+      numero: string;
+      principal: boolean | null;
+      usuario_id: number;
     },
-    ExtArgs['result']['telefono']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["telefono"]
+  >;
+  composites: {};
+};
 
-export type telefonoGetPayload<S extends boolean | null | undefined | telefonoDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$telefonoPayload, S>
+export type telefonoGetPayload<
+  S extends boolean | null | undefined | telefonoDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$telefonoPayload, S>;
 
 export type telefonoCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<telefonoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: TelefonoCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<telefonoFindManyArgs, "select" | "include" | "distinct" | "omit"> & {
+  select?: TelefonoCountAggregateInputType | true;
+};
 
 export interface telefonoDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['telefono']; meta: { name: 'telefono' } }
+  [K: symbol]: {
+    types: Prisma.TypeMap<ExtArgs>["model"]["telefono"];
+    meta: { name: "telefono" };
+  };
   /**
    * Find zero or one Telefono that matches the filter.
    * @param {telefonoFindUniqueArgs} args - Arguments to find a Telefono
@@ -665,18 +704,18 @@ export interface telefonoDelegate<
    * })
    */
   findUnique<T extends telefonoFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, telefonoFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Telefono that matches the filter or throw an error with `error.code='P2025'`
@@ -691,18 +730,18 @@ export interface telefonoDelegate<
    * })
    */
   findUniqueOrThrow<T extends telefonoFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, telefonoFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Telefono that matches the filter.
@@ -718,18 +757,18 @@ export interface telefonoDelegate<
    * })
    */
   findFirst<T extends telefonoFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, telefonoFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, telefonoFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Telefono that matches the filter or
@@ -746,18 +785,18 @@ export interface telefonoDelegate<
    * })
    */
   findFirstOrThrow<T extends telefonoFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, telefonoFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, telefonoFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Telefonos that matches the filter.
@@ -776,15 +815,15 @@ export interface telefonoDelegate<
    *
    */
   findMany<T extends telefonoFindManyArgs>(
-    args?: Prisma.SelectSubset<T, telefonoFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, telefonoFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Telefono.
@@ -799,18 +838,18 @@ export interface telefonoDelegate<
    *
    */
   create<T extends telefonoCreateArgs>(
-    args: Prisma.SelectSubset<T, telefonoCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Telefonos.
@@ -825,8 +864,8 @@ export interface telefonoDelegate<
    *
    */
   createMany<T extends telefonoCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, telefonoCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, telefonoCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Telefonos and returns the data saved in the database.
@@ -851,15 +890,15 @@ export interface telefonoDelegate<
    *
    */
   createManyAndReturn<T extends telefonoCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, telefonoCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, telefonoCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Telefono.
@@ -874,18 +913,18 @@ export interface telefonoDelegate<
    *
    */
   delete<T extends telefonoDeleteArgs>(
-    args: Prisma.SelectSubset<T, telefonoDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Telefono.
@@ -903,18 +942,18 @@ export interface telefonoDelegate<
    *
    */
   update<T extends telefonoUpdateArgs>(
-    args: Prisma.SelectSubset<T, telefonoUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Telefonos.
@@ -929,8 +968,8 @@ export interface telefonoDelegate<
    *
    */
   deleteMany<T extends telefonoDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, telefonoDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, telefonoDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Telefonos.
@@ -950,8 +989,8 @@ export interface telefonoDelegate<
    *
    */
   updateMany<T extends telefonoUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, telefonoUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, telefonoUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Telefonos and returns the data updated in the database.
@@ -982,15 +1021,15 @@ export interface telefonoDelegate<
    *
    */
   updateManyAndReturn<T extends telefonoUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, telefonoUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Telefono.
@@ -1010,18 +1049,18 @@ export interface telefonoDelegate<
    * })
    */
   upsert<T extends telefonoUpsertArgs>(
-    args: Prisma.SelectSubset<T, telefonoUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, telefonoUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__telefonoClient<
     runtime.Types.Result.GetResult<
       Prisma.$telefonoPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Telefonos.
@@ -1037,14 +1076,14 @@ export interface telefonoDelegate<
    * })
    **/
   count<T extends telefonoCountArgs>(
-    args?: Prisma.Subset<T, telefonoCountArgs>
+    args?: Prisma.Subset<T, telefonoCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], TelefonoCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], TelefonoCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Telefono.
@@ -1071,8 +1110,8 @@ export interface telefonoDelegate<
    * })
    **/
   aggregate<T extends TelefonoAggregateArgs>(
-    args: Prisma.Subset<T, TelefonoAggregateArgs>
-  ): Prisma.PrismaPromise<GetTelefonoAggregateType<T>>
+    args: Prisma.Subset<T, TelefonoAggregateArgs>,
+  ): Prisma.PrismaPromise<GetTelefonoAggregateType<T>>;
 
   /**
    * Group by Telefono.
@@ -1095,20 +1134,20 @@ export interface telefonoDelegate<
   groupBy<
     T extends telefonoGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: telefonoGroupByArgs['orderBy'] }
-      : { orderBy?: telefonoGroupByArgs['orderBy'] },
+      ? { orderBy: telefonoGroupByArgs["orderBy"] }
+      : { orderBy?: telefonoGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1117,26 +1156,31 @@ export interface telefonoDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1144,15 +1188,18 @@ export interface telefonoDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, telefonoGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetTelefonoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, telefonoGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetTelefonoGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the telefono model
    */
-  readonly fields: telefonoFieldRefs
+  readonly fields: telefonoFieldRefs;
 }
 
 /**
@@ -1164,24 +1211,25 @@ export interface telefonoDelegate<
 export interface Prisma__telefonoClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     | runtime.Types.Result.GetResult<
         Prisma.$usuarioPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1189,35 +1237,46 @@ export interface Prisma__telefonoClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the telefono model
  */
 export interface telefonoFieldRefs {
-  readonly id: Prisma.FieldRef<'telefono', 'Int'>
-  readonly codigo_pais: Prisma.FieldRef<'telefono', 'String'>
-  readonly numero: Prisma.FieldRef<'telefono', 'String'>
-  readonly principal: Prisma.FieldRef<'telefono', 'Boolean'>
-  readonly usuario_id: Prisma.FieldRef<'telefono', 'Int'>
+  readonly id: Prisma.FieldRef<"telefono", "Int">;
+  readonly codigo_pais: Prisma.FieldRef<"telefono", "String">;
+  readonly numero: Prisma.FieldRef<"telefono", "String">;
+  readonly principal: Prisma.FieldRef<"telefono", "Boolean">;
+  readonly usuario_id: Prisma.FieldRef<"telefono", "Int">;
 }
 
 // Custom InputTypes
@@ -1225,442 +1284,481 @@ export interface telefonoFieldRefs {
  * telefono findUnique
  */
 export type telefonoFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * Filter, which telefono to fetch.
    */
-  where: Prisma.telefonoWhereUniqueInput
-}
+  where: Prisma.telefonoWhereUniqueInput;
+};
 
 /**
  * telefono findUniqueOrThrow
  */
 export type telefonoFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * Filter, which telefono to fetch.
    */
-  where: Prisma.telefonoWhereUniqueInput
-}
+  where: Prisma.telefonoWhereUniqueInput;
+};
 
 /**
  * telefono findFirst
  */
 export type telefonoFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * Filter, which telefono to fetch.
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of telefonos to fetch.
    */
-  orderBy?: Prisma.telefonoOrderByWithRelationInput | Prisma.telefonoOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.telefonoOrderByWithRelationInput
+    | Prisma.telefonoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for telefonos.
    */
-  cursor?: Prisma.telefonoWhereUniqueInput
+  cursor?: Prisma.telefonoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` telefonos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` telefonos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of telefonos.
    */
-  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[]
-}
+  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[];
+};
 
 /**
  * telefono findFirstOrThrow
  */
 export type telefonoFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * Filter, which telefono to fetch.
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of telefonos to fetch.
    */
-  orderBy?: Prisma.telefonoOrderByWithRelationInput | Prisma.telefonoOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.telefonoOrderByWithRelationInput
+    | Prisma.telefonoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for telefonos.
    */
-  cursor?: Prisma.telefonoWhereUniqueInput
+  cursor?: Prisma.telefonoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` telefonos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` telefonos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of telefonos.
    */
-  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[]
-}
+  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[];
+};
 
 /**
  * telefono findMany
  */
 export type telefonoFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * Filter, which telefonos to fetch.
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of telefonos to fetch.
    */
-  orderBy?: Prisma.telefonoOrderByWithRelationInput | Prisma.telefonoOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.telefonoOrderByWithRelationInput
+    | Prisma.telefonoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing telefonos.
    */
-  cursor?: Prisma.telefonoWhereUniqueInput
+  cursor?: Prisma.telefonoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` telefonos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` telefonos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of telefonos.
    */
-  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[]
-}
+  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[];
+};
 
 /**
  * telefono create
  */
 export type telefonoCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * The data needed to create a telefono.
    */
-  data: Prisma.XOR<Prisma.telefonoCreateInput, Prisma.telefonoUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.telefonoCreateInput,
+    Prisma.telefonoUncheckedCreateInput
+  >;
+};
 
 /**
  * telefono createMany
  */
 export type telefonoCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many telefonos.
    */
-  data: Prisma.telefonoCreateManyInput | Prisma.telefonoCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.telefonoCreateManyInput | Prisma.telefonoCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * telefono createManyAndReturn
  */
 export type telefonoCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.telefonoSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * The data used to create many telefonos.
    */
-  data: Prisma.telefonoCreateManyInput | Prisma.telefonoCreateManyInput[]
-  skipDuplicates?: boolean
+  data: Prisma.telefonoCreateManyInput | Prisma.telefonoCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.telefonoIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * telefono update
  */
 export type telefonoUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * The data needed to update a telefono.
    */
-  data: Prisma.XOR<Prisma.telefonoUpdateInput, Prisma.telefonoUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.telefonoUpdateInput,
+    Prisma.telefonoUncheckedUpdateInput
+  >;
   /**
    * Choose, which telefono to update.
    */
-  where: Prisma.telefonoWhereUniqueInput
-}
+  where: Prisma.telefonoWhereUniqueInput;
+};
 
 /**
  * telefono updateMany
  */
 export type telefonoUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update telefonos.
    */
-  data: Prisma.XOR<Prisma.telefonoUpdateManyMutationInput, Prisma.telefonoUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.telefonoUpdateManyMutationInput,
+    Prisma.telefonoUncheckedUpdateManyInput
+  >;
   /**
    * Filter which telefonos to update
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * Limit how many telefonos to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * telefono updateManyAndReturn
  */
 export type telefonoUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.telefonoSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * The data used to update telefonos.
    */
-  data: Prisma.XOR<Prisma.telefonoUpdateManyMutationInput, Prisma.telefonoUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.telefonoUpdateManyMutationInput,
+    Prisma.telefonoUncheckedUpdateManyInput
+  >;
   /**
    * Filter which telefonos to update
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * Limit how many telefonos to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.telefonoIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * telefono upsert
  */
 export type telefonoUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * The filter to search for the telefono to update in case it exists.
    */
-  where: Prisma.telefonoWhereUniqueInput
+  where: Prisma.telefonoWhereUniqueInput;
   /**
    * In case the telefono found by the `where` argument doesn't exist, create a new telefono with this data.
    */
-  create: Prisma.XOR<Prisma.telefonoCreateInput, Prisma.telefonoUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.telefonoCreateInput,
+    Prisma.telefonoUncheckedCreateInput
+  >;
   /**
    * In case the telefono was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.telefonoUpdateInput, Prisma.telefonoUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.telefonoUpdateInput,
+    Prisma.telefonoUncheckedUpdateInput
+  >;
+};
 
 /**
  * telefono delete
  */
 export type telefonoDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
   /**
    * Filter which telefono to delete.
    */
-  where: Prisma.telefonoWhereUniqueInput
-}
+  where: Prisma.telefonoWhereUniqueInput;
+};
 
 /**
  * telefono deleteMany
  */
 export type telefonoDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which telefonos to delete
    */
-  where?: Prisma.telefonoWhereInput
+  where?: Prisma.telefonoWhereInput;
   /**
    * Limit how many telefonos to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * telefono without action
  */
 export type telefonoDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the telefono
    */
-  select?: Prisma.telefonoSelect<ExtArgs> | null
+  select?: Prisma.telefonoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the telefono
    */
-  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  omit?: Prisma.telefonoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.telefonoInclude<ExtArgs> | null
-}
+  include?: Prisma.telefonoInclude<ExtArgs> | null;
+};

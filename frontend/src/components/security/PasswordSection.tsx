@@ -96,16 +96,16 @@ export default function PasswordSection() {
 
   const claveIntentos = useMemo(
     () => `cambio_password_intentos_${usuarioKey}`,
-    [usuarioKey]
+    [usuarioKey],
   );
 
   const claveBloqueo = useMemo(
     () => `cambio_password_bloqueado_hasta_${usuarioKey}`,
-    [usuarioKey]
+    [usuarioKey],
   );
 
   const bloqueado =
-  bloqueadoHasta !== null && tiempoActual < Number(bloqueadoHasta);
+    bloqueadoHasta !== null && tiempoActual < Number(bloqueadoHasta);
 
   const tiempoRestanteBloqueo = useMemo(() => {
     if (!bloqueadoHasta) return null;
@@ -154,24 +154,24 @@ export default function PasswordSection() {
   }, [claveIntentos, claveBloqueo]);
 
   useEffect(() => {
-  if (!bloqueadoHasta) return;
+    if (!bloqueadoHasta) return;
 
-  const intervalo = setInterval(() => {
-    const ahora = Date.now();
+    const intervalo = setInterval(() => {
+      const ahora = Date.now();
 
-    setTiempoActual(ahora);
+      setTiempoActual(ahora);
 
-    if (ahora >= bloqueadoHasta) {
-      setBloqueadoHasta(null);
-      setIntentosFallidos(0);
-      localStorage.removeItem(claveIntentos);
-      localStorage.removeItem(claveBloqueo);
-      clearInterval(intervalo);
-    }
-  }, 1000);
+      if (ahora >= bloqueadoHasta) {
+        setBloqueadoHasta(null);
+        setIntentosFallidos(0);
+        localStorage.removeItem(claveIntentos);
+        localStorage.removeItem(claveBloqueo);
+        clearInterval(intervalo);
+      }
+    }, 1000);
 
-  return () => clearInterval(intervalo);
-}, [bloqueadoHasta, claveIntentos, claveBloqueo]);
+    return () => clearInterval(intervalo);
+  }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -196,14 +196,14 @@ export default function PasswordSection() {
       if (!target) return;
 
       const estaDentroDelFormulario = target.closest(
-        "[data-password-form='true']"
+        "[data-password-form='true']",
       );
 
       if (estaDentroDelFormulario) return;
 
       const enlace = target.closest("a[href]") as HTMLAnchorElement | null;
       const botonConNavegacion = target.closest(
-        "[data-confirm-exit='true']"
+        "[data-confirm-exit='true']",
       ) as HTMLElement | null;
 
       if (!enlace && !botonConNavegacion) return;
@@ -240,7 +240,7 @@ export default function PasswordSection() {
       window.history.pushState(
         { bloqueoFormularioPassword: true },
         "",
-        window.location.href
+        window.location.href,
       );
       bloqueoHistorialActivado.current = true;
     }
@@ -252,7 +252,7 @@ export default function PasswordSection() {
         window.history.pushState(
           { bloqueoFormularioPassword: true },
           "",
-          window.location.href
+          window.location.href,
         );
         return;
       }
@@ -278,13 +278,13 @@ export default function PasswordSection() {
     setSuccess("");
 
     if (bloqueado) {
-  setError(
-    tiempoRestanteBloqueo
-      ? `La acción está bloqueada. Intenta nuevamente en ${tiempoRestanteBloqueo}.`
-      : "La acción está bloqueada temporalmente. Intenta más tarde."
-  );
-  return;
-}
+      setError(
+        tiempoRestanteBloqueo
+          ? `La acción está bloqueada. Intenta nuevamente en ${tiempoRestanteBloqueo}.`
+          : "La acción está bloqueada temporalmente. Intenta más tarde.",
+      );
+      return;
+    }
 
     const token = localStorage.getItem("token");
 
@@ -444,7 +444,7 @@ export default function PasswordSection() {
             }`}
           >
             {isLoading ? (
-  <>
+              <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Guardando...
               </>

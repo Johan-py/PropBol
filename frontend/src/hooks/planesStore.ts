@@ -18,7 +18,10 @@ export type Plan = {
 type PlanesStore = {
   plans: Plan[];
   createPlan: (plan: Omit<Plan, "id" | "deleted" | "subscribers">) => void;
-  updatePlan: (id: number, updates: Partial<Omit<Plan, "id" | "deleted">>) => void;
+  updatePlan: (
+    id: number,
+    updates: Partial<Omit<Plan, "id" | "deleted">>,
+  ) => void;
   deletePlan: (id: number) => void;
   restorePlan: (id: number) => void;
 };
@@ -31,7 +34,12 @@ const initialPlans: Plan[] = [
     description: "Ideal para comenzar",
     comment:
       "Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.",
-    benefits: ["2 publicaciones activas", "Acceso limitado", "Soporte básico", "1 usuario"],
+    benefits: [
+      "2 publicaciones activas",
+      "Acceso limitado",
+      "Soporte básico",
+      "1 usuario",
+    ],
     subscribers: 25,
     deleted: false,
   },
@@ -89,11 +97,15 @@ export const usePlanesStore = create<PlanesStore>((set) => ({
 
   deletePlan: (id) =>
     set((state) => ({
-      plans: state.plans.map((p) => (p.id === id ? { ...p, deleted: true } : p)),
+      plans: state.plans.map((p) =>
+        p.id === id ? { ...p, deleted: true } : p,
+      ),
     })),
 
   restorePlan: (id) =>
     set((state) => ({
-      plans: state.plans.map((p) => (p.id === id ? { ...p, deleted: false } : p)),
+      plans: state.plans.map((p) =>
+        p.id === id ? { ...p, deleted: false } : p,
+      ),
     })),
 }));

@@ -7,161 +7,163 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model sesion_mapa
  *
  */
-export type sesion_mapaModel = runtime.Types.Result.DefaultSelection<Prisma.$sesion_mapaPayload>
+export type sesion_mapaModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$sesion_mapaPayload>;
 
 export type AggregateSesion_mapa = {
-  _count: Sesion_mapaCountAggregateOutputType | null
-  _avg: Sesion_mapaAvgAggregateOutputType | null
-  _sum: Sesion_mapaSumAggregateOutputType | null
-  _min: Sesion_mapaMinAggregateOutputType | null
-  _max: Sesion_mapaMaxAggregateOutputType | null
-}
+  _count: Sesion_mapaCountAggregateOutputType | null;
+  _avg: Sesion_mapaAvgAggregateOutputType | null;
+  _sum: Sesion_mapaSumAggregateOutputType | null;
+  _min: Sesion_mapaMinAggregateOutputType | null;
+  _max: Sesion_mapaMaxAggregateOutputType | null;
+};
 
 export type Sesion_mapaAvgAggregateOutputType = {
-  id: number | null
-  limite_norte: runtime.Decimal | null
-  limite_sur: runtime.Decimal | null
-  limite_este: runtime.Decimal | null
-  limite_oeste: runtime.Decimal | null
-  nivel_zoom: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-}
+  id: number | null;
+  limite_norte: runtime.Decimal | null;
+  limite_sur: runtime.Decimal | null;
+  limite_este: runtime.Decimal | null;
+  limite_oeste: runtime.Decimal | null;
+  nivel_zoom: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+};
 
 export type Sesion_mapaSumAggregateOutputType = {
-  id: number | null
-  limite_norte: runtime.Decimal | null
-  limite_sur: runtime.Decimal | null
-  limite_este: runtime.Decimal | null
-  limite_oeste: runtime.Decimal | null
-  nivel_zoom: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-}
+  id: number | null;
+  limite_norte: runtime.Decimal | null;
+  limite_sur: runtime.Decimal | null;
+  limite_este: runtime.Decimal | null;
+  limite_oeste: runtime.Decimal | null;
+  nivel_zoom: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+};
 
 export type Sesion_mapaMinAggregateOutputType = {
-  id: number | null
-  token: string | null
-  limite_norte: runtime.Decimal | null
-  limite_sur: runtime.Decimal | null
-  limite_este: runtime.Decimal | null
-  limite_oeste: runtime.Decimal | null
-  nivel_zoom: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  iniciado_en: Date | null
-  ultima_actividad: Date | null
-}
+  id: number | null;
+  token: string | null;
+  limite_norte: runtime.Decimal | null;
+  limite_sur: runtime.Decimal | null;
+  limite_este: runtime.Decimal | null;
+  limite_oeste: runtime.Decimal | null;
+  nivel_zoom: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  iniciado_en: Date | null;
+  ultima_actividad: Date | null;
+};
 
 export type Sesion_mapaMaxAggregateOutputType = {
-  id: number | null
-  token: string | null
-  limite_norte: runtime.Decimal | null
-  limite_sur: runtime.Decimal | null
-  limite_este: runtime.Decimal | null
-  limite_oeste: runtime.Decimal | null
-  nivel_zoom: number | null
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  iniciado_en: Date | null
-  ultima_actividad: Date | null
-}
+  id: number | null;
+  token: string | null;
+  limite_norte: runtime.Decimal | null;
+  limite_sur: runtime.Decimal | null;
+  limite_este: runtime.Decimal | null;
+  limite_oeste: runtime.Decimal | null;
+  nivel_zoom: number | null;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  iniciado_en: Date | null;
+  ultima_actividad: Date | null;
+};
 
 export type Sesion_mapaCountAggregateOutputType = {
-  id: number
-  token: number
-  limite_norte: number
-  limite_sur: number
-  limite_este: number
-  limite_oeste: number
-  nivel_zoom: number
-  latitud_centro: number
-  longitud_centro: number
-  iniciado_en: number
-  ultima_actividad: number
-  _all: number
-}
+  id: number;
+  token: number;
+  limite_norte: number;
+  limite_sur: number;
+  limite_este: number;
+  limite_oeste: number;
+  nivel_zoom: number;
+  latitud_centro: number;
+  longitud_centro: number;
+  iniciado_en: number;
+  ultima_actividad: number;
+  _all: number;
+};
 
 export type Sesion_mapaAvgAggregateInputType = {
-  id?: true
-  limite_norte?: true
-  limite_sur?: true
-  limite_este?: true
-  limite_oeste?: true
-  nivel_zoom?: true
-  latitud_centro?: true
-  longitud_centro?: true
-}
+  id?: true;
+  limite_norte?: true;
+  limite_sur?: true;
+  limite_este?: true;
+  limite_oeste?: true;
+  nivel_zoom?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+};
 
 export type Sesion_mapaSumAggregateInputType = {
-  id?: true
-  limite_norte?: true
-  limite_sur?: true
-  limite_este?: true
-  limite_oeste?: true
-  nivel_zoom?: true
-  latitud_centro?: true
-  longitud_centro?: true
-}
+  id?: true;
+  limite_norte?: true;
+  limite_sur?: true;
+  limite_este?: true;
+  limite_oeste?: true;
+  nivel_zoom?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+};
 
 export type Sesion_mapaMinAggregateInputType = {
-  id?: true
-  token?: true
-  limite_norte?: true
-  limite_sur?: true
-  limite_este?: true
-  limite_oeste?: true
-  nivel_zoom?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  iniciado_en?: true
-  ultima_actividad?: true
-}
+  id?: true;
+  token?: true;
+  limite_norte?: true;
+  limite_sur?: true;
+  limite_este?: true;
+  limite_oeste?: true;
+  nivel_zoom?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  iniciado_en?: true;
+  ultima_actividad?: true;
+};
 
 export type Sesion_mapaMaxAggregateInputType = {
-  id?: true
-  token?: true
-  limite_norte?: true
-  limite_sur?: true
-  limite_este?: true
-  limite_oeste?: true
-  nivel_zoom?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  iniciado_en?: true
-  ultima_actividad?: true
-}
+  id?: true;
+  token?: true;
+  limite_norte?: true;
+  limite_sur?: true;
+  limite_este?: true;
+  limite_oeste?: true;
+  nivel_zoom?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  iniciado_en?: true;
+  ultima_actividad?: true;
+};
 
 export type Sesion_mapaCountAggregateInputType = {
-  id?: true
-  token?: true
-  limite_norte?: true
-  limite_sur?: true
-  limite_este?: true
-  limite_oeste?: true
-  nivel_zoom?: true
-  latitud_centro?: true
-  longitud_centro?: true
-  iniciado_en?: true
-  ultima_actividad?: true
-  _all?: true
-}
+  id?: true;
+  token?: true;
+  limite_norte?: true;
+  limite_sur?: true;
+  limite_este?: true;
+  limite_oeste?: true;
+  nivel_zoom?: true;
+  latitud_centro?: true;
+  longitud_centro?: true;
+  iniciado_en?: true;
+  ultima_actividad?: true;
+  _all?: true;
+};
 
 export type Sesion_mapaAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which sesion_mapa to aggregate.
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -169,994 +171,1210 @@ export type Sesion_mapaAggregateArgs<
    */
   orderBy?:
     | Prisma.sesion_mapaOrderByWithRelationInput
-    | Prisma.sesion_mapaOrderByWithRelationInput[]
+    | Prisma.sesion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.sesion_mapaWhereUniqueInput
+  cursor?: Prisma.sesion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` sesion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` sesion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned sesion_mapas
    **/
-  _count?: true | Sesion_mapaCountAggregateInputType
+  _count?: true | Sesion_mapaCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Sesion_mapaAvgAggregateInputType
+  _avg?: Sesion_mapaAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Sesion_mapaSumAggregateInputType
+  _sum?: Sesion_mapaSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Sesion_mapaMinAggregateInputType
+  _min?: Sesion_mapaMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Sesion_mapaMaxAggregateInputType
-}
+  _max?: Sesion_mapaMaxAggregateInputType;
+};
 
 export type GetSesion_mapaAggregateType<T extends Sesion_mapaAggregateArgs> = {
-  [P in keyof T & keyof AggregateSesion_mapa]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateSesion_mapa]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateSesion_mapa[P]>
-    : Prisma.GetScalarType<T[P], AggregateSesion_mapa[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateSesion_mapa[P]>;
+};
 
 export type sesion_mapaGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   orderBy?:
     | Prisma.sesion_mapaOrderByWithAggregationInput
-    | Prisma.sesion_mapaOrderByWithAggregationInput[]
-  by: Prisma.Sesion_mapaScalarFieldEnum[] | Prisma.Sesion_mapaScalarFieldEnum
-  having?: Prisma.sesion_mapaScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Sesion_mapaCountAggregateInputType | true
-  _avg?: Sesion_mapaAvgAggregateInputType
-  _sum?: Sesion_mapaSumAggregateInputType
-  _min?: Sesion_mapaMinAggregateInputType
-  _max?: Sesion_mapaMaxAggregateInputType
-}
+    | Prisma.sesion_mapaOrderByWithAggregationInput[];
+  by: Prisma.Sesion_mapaScalarFieldEnum[] | Prisma.Sesion_mapaScalarFieldEnum;
+  having?: Prisma.sesion_mapaScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Sesion_mapaCountAggregateInputType | true;
+  _avg?: Sesion_mapaAvgAggregateInputType;
+  _sum?: Sesion_mapaSumAggregateInputType;
+  _min?: Sesion_mapaMinAggregateInputType;
+  _max?: Sesion_mapaMaxAggregateInputType;
+};
 
 export type Sesion_mapaGroupByOutputType = {
-  id: number
-  token: string
-  limite_norte: runtime.Decimal | null
-  limite_sur: runtime.Decimal | null
-  limite_este: runtime.Decimal | null
-  limite_oeste: runtime.Decimal | null
-  nivel_zoom: number
-  latitud_centro: runtime.Decimal | null
-  longitud_centro: runtime.Decimal | null
-  iniciado_en: Date | null
-  ultima_actividad: Date | null
-  _count: Sesion_mapaCountAggregateOutputType | null
-  _avg: Sesion_mapaAvgAggregateOutputType | null
-  _sum: Sesion_mapaSumAggregateOutputType | null
-  _min: Sesion_mapaMinAggregateOutputType | null
-  _max: Sesion_mapaMaxAggregateOutputType | null
-}
+  id: number;
+  token: string;
+  limite_norte: runtime.Decimal | null;
+  limite_sur: runtime.Decimal | null;
+  limite_este: runtime.Decimal | null;
+  limite_oeste: runtime.Decimal | null;
+  nivel_zoom: number;
+  latitud_centro: runtime.Decimal | null;
+  longitud_centro: runtime.Decimal | null;
+  iniciado_en: Date | null;
+  ultima_actividad: Date | null;
+  _count: Sesion_mapaCountAggregateOutputType | null;
+  _avg: Sesion_mapaAvgAggregateOutputType | null;
+  _sum: Sesion_mapaSumAggregateOutputType | null;
+  _min: Sesion_mapaMinAggregateOutputType | null;
+  _max: Sesion_mapaMaxAggregateOutputType | null;
+};
 
-export type GetSesion_mapaGroupByPayload<T extends sesion_mapaGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<Sesion_mapaGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof Sesion_mapaGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], Sesion_mapaGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], Sesion_mapaGroupByOutputType[P]>
-    }
-  >
->
+export type GetSesion_mapaGroupByPayload<T extends sesion_mapaGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<Sesion_mapaGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof Sesion_mapaGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Sesion_mapaGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], Sesion_mapaGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type sesion_mapaWhereInput = {
-  AND?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[]
-  OR?: Prisma.sesion_mapaWhereInput[]
-  NOT?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[]
-  id?: Prisma.IntFilter<'sesion_mapa'> | number
-  token?: Prisma.StringFilter<'sesion_mapa'> | string
+  AND?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[];
+  OR?: Prisma.sesion_mapaWhereInput[];
+  NOT?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[];
+  id?: Prisma.IntFilter<"sesion_mapa"> | number;
+  token?: Prisma.StringFilter<"sesion_mapa"> | string;
   limite_norte?:
-    | Prisma.DecimalNullableFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
-    | Prisma.DecimalNullableFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
-    | Prisma.DecimalNullableFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
-    | Prisma.DecimalNullableFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFilter<'sesion_mapa'> | number
+    | null;
+  nivel_zoom?: Prisma.IntFilter<"sesion_mapa"> | number;
   latitud_centro?:
-    | Prisma.DecimalNullableFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
-    | Prisma.DecimalNullableFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.DateTimeNullableFilter<'sesion_mapa'> | Date | string | null
-  ultima_actividad?: Prisma.DateTimeNullableFilter<'sesion_mapa'> | Date | string | null
-  interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter
-}
+    | null;
+  iniciado_en?:
+    | Prisma.DateTimeNullableFilter<"sesion_mapa">
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.DateTimeNullableFilter<"sesion_mapa">
+    | Date
+    | string
+    | null;
+  interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter;
+};
 
 export type sesion_mapaOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrderInput | Prisma.SortOrder
-  limite_sur?: Prisma.SortOrderInput | Prisma.SortOrder
-  limite_este?: Prisma.SortOrderInput | Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrderInput | Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder
-  iniciado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  ultima_actividad?: Prisma.SortOrderInput | Prisma.SortOrder
-  interaccion_mapa?: Prisma.interaccion_mapaOrderByRelationAggregateInput
-}
+  id?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrderInput | Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrderInput | Prisma.SortOrder;
+  limite_este?: Prisma.SortOrderInput | Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder;
+  iniciado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  ultima_actividad?: Prisma.SortOrderInput | Prisma.SortOrder;
+  interaccion_mapa?: Prisma.interaccion_mapaOrderByRelationAggregateInput;
+};
 
 export type sesion_mapaWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    token?: string
-    AND?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[]
-    OR?: Prisma.sesion_mapaWhereInput[]
-    NOT?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[]
+    id?: number;
+    token?: string;
+    AND?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[];
+    OR?: Prisma.sesion_mapaWhereInput[];
+    NOT?: Prisma.sesion_mapaWhereInput | Prisma.sesion_mapaWhereInput[];
     limite_norte?:
-      | Prisma.DecimalNullableFilter<'sesion_mapa'>
+      | Prisma.DecimalNullableFilter<"sesion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
+      | null;
     limite_sur?:
-      | Prisma.DecimalNullableFilter<'sesion_mapa'>
+      | Prisma.DecimalNullableFilter<"sesion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
+      | null;
     limite_este?:
-      | Prisma.DecimalNullableFilter<'sesion_mapa'>
+      | Prisma.DecimalNullableFilter<"sesion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
+      | null;
     limite_oeste?:
-      | Prisma.DecimalNullableFilter<'sesion_mapa'>
+      | Prisma.DecimalNullableFilter<"sesion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
-    nivel_zoom?: Prisma.IntFilter<'sesion_mapa'> | number
+      | null;
+    nivel_zoom?: Prisma.IntFilter<"sesion_mapa"> | number;
     latitud_centro?:
-      | Prisma.DecimalNullableFilter<'sesion_mapa'>
+      | Prisma.DecimalNullableFilter<"sesion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
+      | null;
     longitud_centro?:
-      | Prisma.DecimalNullableFilter<'sesion_mapa'>
+      | Prisma.DecimalNullableFilter<"sesion_mapa">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
-    iniciado_en?: Prisma.DateTimeNullableFilter<'sesion_mapa'> | Date | string | null
-    ultima_actividad?: Prisma.DateTimeNullableFilter<'sesion_mapa'> | Date | string | null
-    interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter
+      | null;
+    iniciado_en?:
+      | Prisma.DateTimeNullableFilter<"sesion_mapa">
+      | Date
+      | string
+      | null;
+    ultima_actividad?:
+      | Prisma.DateTimeNullableFilter<"sesion_mapa">
+      | Date
+      | string
+      | null;
+    interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter;
   },
-  'id' | 'token'
->
+  "id" | "token"
+>;
 
 export type sesion_mapaOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrderInput | Prisma.SortOrder
-  limite_sur?: Prisma.SortOrderInput | Prisma.SortOrder
-  limite_este?: Prisma.SortOrderInput | Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrderInput | Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder
-  iniciado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  ultima_actividad?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.sesion_mapaCountOrderByAggregateInput
-  _avg?: Prisma.sesion_mapaAvgOrderByAggregateInput
-  _max?: Prisma.sesion_mapaMaxOrderByAggregateInput
-  _min?: Prisma.sesion_mapaMinOrderByAggregateInput
-  _sum?: Prisma.sesion_mapaSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrderInput | Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrderInput | Prisma.SortOrder;
+  limite_este?: Prisma.SortOrderInput | Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrderInput | Prisma.SortOrder;
+  iniciado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  ultima_actividad?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.sesion_mapaCountOrderByAggregateInput;
+  _avg?: Prisma.sesion_mapaAvgOrderByAggregateInput;
+  _max?: Prisma.sesion_mapaMaxOrderByAggregateInput;
+  _min?: Prisma.sesion_mapaMinOrderByAggregateInput;
+  _sum?: Prisma.sesion_mapaSumOrderByAggregateInput;
+};
 
 export type sesion_mapaScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.sesion_mapaScalarWhereWithAggregatesInput
-    | Prisma.sesion_mapaScalarWhereWithAggregatesInput[]
-  OR?: Prisma.sesion_mapaScalarWhereWithAggregatesInput[]
+    | Prisma.sesion_mapaScalarWhereWithAggregatesInput[];
+  OR?: Prisma.sesion_mapaScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.sesion_mapaScalarWhereWithAggregatesInput
-    | Prisma.sesion_mapaScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'sesion_mapa'> | number
-  token?: Prisma.StringWithAggregatesFilter<'sesion_mapa'> | string
+    | Prisma.sesion_mapaScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"sesion_mapa"> | number;
+  token?: Prisma.StringWithAggregatesFilter<"sesion_mapa"> | string;
   limite_norte?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntWithAggregatesFilter<'sesion_mapa'> | number
+    | null;
+  nivel_zoom?: Prisma.IntWithAggregatesFilter<"sesion_mapa"> | number;
   latitud_centro?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'sesion_mapa'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"sesion_mapa">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.DateTimeNullableWithAggregatesFilter<'sesion_mapa'> | Date | string | null
-  ultima_actividad?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'sesion_mapa'>
+    | null;
+  iniciado_en?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"sesion_mapa">
     | Date
     | string
-    | null
-}
+    | null;
+  ultima_actividad?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"sesion_mapa">
+    | Date
+    | string
+    | null;
+};
 
 export type sesion_mapaCreateInput = {
-  token: string
-  limite_norte?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_este?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_oeste?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nivel_zoom: number
-  latitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  iniciado_en?: Date | string | null
-  ultima_actividad?: Date | string | null
-  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutSesion_mapaInput
-}
+  token: string;
+  limite_norte?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  limite_este?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_oeste?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nivel_zoom: number;
+  latitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  iniciado_en?: Date | string | null;
+  ultima_actividad?: Date | string | null;
+  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutSesion_mapaInput;
+};
 
 export type sesion_mapaUncheckedCreateInput = {
-  id?: number
-  token: string
-  limite_norte?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_este?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_oeste?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nivel_zoom: number
-  latitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  iniciado_en?: Date | string | null
-  ultima_actividad?: Date | string | null
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutSesion_mapaInput
-}
+  id?: number;
+  token: string;
+  limite_norte?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  limite_este?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_oeste?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nivel_zoom: number;
+  latitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  iniciado_en?: Date | string | null;
+  ultima_actividad?: Date | string | null;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutSesion_mapaInput;
+};
 
 export type sesion_mapaUpdateInput = {
-  token?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
   limite_norte?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  ultima_actividad?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutSesion_mapaNestedInput
-}
+    | null;
+  iniciado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutSesion_mapaNestedInput;
+};
 
 export type sesion_mapaUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  token?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
   limite_norte?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  ultima_actividad?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutSesion_mapaNestedInput
-}
+    | null;
+  iniciado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutSesion_mapaNestedInput;
+};
 
 export type sesion_mapaCreateManyInput = {
-  id?: number
-  token: string
-  limite_norte?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_este?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_oeste?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nivel_zoom: number
-  latitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  iniciado_en?: Date | string | null
-  ultima_actividad?: Date | string | null
-}
+  id?: number;
+  token: string;
+  limite_norte?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  limite_este?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_oeste?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nivel_zoom: number;
+  latitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  iniciado_en?: Date | string | null;
+  ultima_actividad?: Date | string | null;
+};
 
 export type sesion_mapaUpdateManyMutationInput = {
-  token?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
   limite_norte?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  ultima_actividad?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  iniciado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type sesion_mapaUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  token?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
   limite_norte?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  ultima_actividad?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  iniciado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type Sesion_mapaNullableScalarRelationFilter = {
-  is?: Prisma.sesion_mapaWhereInput | null
-  isNot?: Prisma.sesion_mapaWhereInput | null
-}
+  is?: Prisma.sesion_mapaWhereInput | null;
+  isNot?: Prisma.sesion_mapaWhereInput | null;
+};
 
 export type sesion_mapaCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrder
-  limite_sur?: Prisma.SortOrder
-  limite_este?: Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  iniciado_en?: Prisma.SortOrder
-  ultima_actividad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrder;
+  limite_este?: Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  iniciado_en?: Prisma.SortOrder;
+  ultima_actividad?: Prisma.SortOrder;
+};
 
 export type sesion_mapaAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrder
-  limite_sur?: Prisma.SortOrder
-  limite_este?: Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrder;
+  limite_este?: Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+};
 
 export type sesion_mapaMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrder
-  limite_sur?: Prisma.SortOrder
-  limite_este?: Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  iniciado_en?: Prisma.SortOrder
-  ultima_actividad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrder;
+  limite_este?: Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  iniciado_en?: Prisma.SortOrder;
+  ultima_actividad?: Prisma.SortOrder;
+};
 
 export type sesion_mapaMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrder
-  limite_sur?: Prisma.SortOrder
-  limite_este?: Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-  iniciado_en?: Prisma.SortOrder
-  ultima_actividad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrder;
+  limite_este?: Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+  iniciado_en?: Prisma.SortOrder;
+  ultima_actividad?: Prisma.SortOrder;
+};
 
 export type sesion_mapaSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  limite_norte?: Prisma.SortOrder
-  limite_sur?: Prisma.SortOrder
-  limite_este?: Prisma.SortOrder
-  limite_oeste?: Prisma.SortOrder
-  nivel_zoom?: Prisma.SortOrder
-  latitud_centro?: Prisma.SortOrder
-  longitud_centro?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  limite_norte?: Prisma.SortOrder;
+  limite_sur?: Prisma.SortOrder;
+  limite_este?: Prisma.SortOrder;
+  limite_oeste?: Prisma.SortOrder;
+  nivel_zoom?: Prisma.SortOrder;
+  latitud_centro?: Prisma.SortOrder;
+  longitud_centro?: Prisma.SortOrder;
+};
 
 export type sesion_mapaCreateNestedOneWithoutInteraccion_mapaInput = {
   create?: Prisma.XOR<
     Prisma.sesion_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.sesion_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-  connectOrCreate?: Prisma.sesion_mapaCreateOrConnectWithoutInteraccion_mapaInput
-  connect?: Prisma.sesion_mapaWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.sesion_mapaCreateOrConnectWithoutInteraccion_mapaInput;
+  connect?: Prisma.sesion_mapaWhereUniqueInput;
+};
 
 export type sesion_mapaUpdateOneWithoutInteraccion_mapaNestedInput = {
   create?: Prisma.XOR<
     Prisma.sesion_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.sesion_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-  connectOrCreate?: Prisma.sesion_mapaCreateOrConnectWithoutInteraccion_mapaInput
-  upsert?: Prisma.sesion_mapaUpsertWithoutInteraccion_mapaInput
-  disconnect?: Prisma.sesion_mapaWhereInput | boolean
-  delete?: Prisma.sesion_mapaWhereInput | boolean
-  connect?: Prisma.sesion_mapaWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.sesion_mapaCreateOrConnectWithoutInteraccion_mapaInput;
+  upsert?: Prisma.sesion_mapaUpsertWithoutInteraccion_mapaInput;
+  disconnect?: Prisma.sesion_mapaWhereInput | boolean;
+  delete?: Prisma.sesion_mapaWhereInput | boolean;
+  connect?: Prisma.sesion_mapaWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.sesion_mapaUpdateToOneWithWhereWithoutInteraccion_mapaInput,
       Prisma.sesion_mapaUpdateWithoutInteraccion_mapaInput
     >,
     Prisma.sesion_mapaUncheckedUpdateWithoutInteraccion_mapaInput
-  >
-}
+  >;
+};
 
 export type sesion_mapaCreateWithoutInteraccion_mapaInput = {
-  token: string
-  limite_norte?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_este?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_oeste?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nivel_zoom: number
-  latitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  iniciado_en?: Date | string | null
-  ultima_actividad?: Date | string | null
-}
+  token: string;
+  limite_norte?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  limite_este?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_oeste?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nivel_zoom: number;
+  latitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  iniciado_en?: Date | string | null;
+  ultima_actividad?: Date | string | null;
+};
 
 export type sesion_mapaUncheckedCreateWithoutInteraccion_mapaInput = {
-  id?: number
-  token: string
-  limite_norte?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_este?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  limite_oeste?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nivel_zoom: number
-  latitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitud_centro?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  iniciado_en?: Date | string | null
-  ultima_actividad?: Date | string | null
-}
+  id?: number;
+  token: string;
+  limite_norte?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_sur?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  limite_este?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  limite_oeste?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nivel_zoom: number;
+  latitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  longitud_centro?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  iniciado_en?: Date | string | null;
+  ultima_actividad?: Date | string | null;
+};
 
 export type sesion_mapaCreateOrConnectWithoutInteraccion_mapaInput = {
-  where: Prisma.sesion_mapaWhereUniqueInput
+  where: Prisma.sesion_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.sesion_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.sesion_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-}
+  >;
+};
 
 export type sesion_mapaUpsertWithoutInteraccion_mapaInput = {
   update: Prisma.XOR<
     Prisma.sesion_mapaUpdateWithoutInteraccion_mapaInput,
     Prisma.sesion_mapaUncheckedUpdateWithoutInteraccion_mapaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.sesion_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.sesion_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-  where?: Prisma.sesion_mapaWhereInput
-}
+  >;
+  where?: Prisma.sesion_mapaWhereInput;
+};
 
 export type sesion_mapaUpdateToOneWithWhereWithoutInteraccion_mapaInput = {
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   data: Prisma.XOR<
     Prisma.sesion_mapaUpdateWithoutInteraccion_mapaInput,
     Prisma.sesion_mapaUncheckedUpdateWithoutInteraccion_mapaInput
-  >
-}
+  >;
+};
 
 export type sesion_mapaUpdateWithoutInteraccion_mapaInput = {
-  token?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
   limite_norte?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  ultima_actividad?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  iniciado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type sesion_mapaUncheckedUpdateWithoutInteraccion_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  token?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
   limite_norte?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_sur?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_este?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   limite_oeste?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number
+    | null;
+  nivel_zoom?: Prisma.IntFieldUpdateOperationsInput | number;
   latitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
+    | null;
   longitud_centro?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  iniciado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  ultima_actividad?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  iniciado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  ultima_actividad?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 /**
  * Count Type Sesion_mapaCountOutputType
  */
 
 export type Sesion_mapaCountOutputType = {
-  interaccion_mapa: number
-}
+  interaccion_mapa: number;
+};
 
 export type Sesion_mapaCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  interaccion_mapa?: boolean | Sesion_mapaCountOutputTypeCountInteraccion_mapaArgs
-}
+  interaccion_mapa?:
+    | boolean
+    | Sesion_mapaCountOutputTypeCountInteraccion_mapaArgs;
+};
 
 /**
  * Sesion_mapaCountOutputType without action
  */
 export type Sesion_mapaCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the Sesion_mapaCountOutputType
    */
-  select?: Prisma.Sesion_mapaCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.Sesion_mapaCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * Sesion_mapaCountOutputType without action
  */
 export type Sesion_mapaCountOutputTypeCountInteraccion_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.interaccion_mapaWhereInput
-}
+  where?: Prisma.interaccion_mapaWhereInput;
+};
 
 export type sesion_mapaSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    token?: boolean
-    limite_norte?: boolean
-    limite_sur?: boolean
-    limite_este?: boolean
-    limite_oeste?: boolean
-    nivel_zoom?: boolean
-    latitud_centro?: boolean
-    longitud_centro?: boolean
-    iniciado_en?: boolean
-    ultima_actividad?: boolean
-    interaccion_mapa?: boolean | Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs>
-    _count?: boolean | Prisma.Sesion_mapaCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    token?: boolean;
+    limite_norte?: boolean;
+    limite_sur?: boolean;
+    limite_este?: boolean;
+    limite_oeste?: boolean;
+    nivel_zoom?: boolean;
+    latitud_centro?: boolean;
+    longitud_centro?: boolean;
+    iniciado_en?: boolean;
+    ultima_actividad?: boolean;
+    interaccion_mapa?:
+      | boolean
+      | Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs>;
+    _count?: boolean | Prisma.Sesion_mapaCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['sesion_mapa']
->
+  ExtArgs["result"]["sesion_mapa"]
+>;
 
 export type sesion_mapaSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    token?: boolean
-    limite_norte?: boolean
-    limite_sur?: boolean
-    limite_este?: boolean
-    limite_oeste?: boolean
-    nivel_zoom?: boolean
-    latitud_centro?: boolean
-    longitud_centro?: boolean
-    iniciado_en?: boolean
-    ultima_actividad?: boolean
+    id?: boolean;
+    token?: boolean;
+    limite_norte?: boolean;
+    limite_sur?: boolean;
+    limite_este?: boolean;
+    limite_oeste?: boolean;
+    nivel_zoom?: boolean;
+    latitud_centro?: boolean;
+    longitud_centro?: boolean;
+    iniciado_en?: boolean;
+    ultima_actividad?: boolean;
   },
-  ExtArgs['result']['sesion_mapa']
->
+  ExtArgs["result"]["sesion_mapa"]
+>;
 
 export type sesion_mapaSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    token?: boolean
-    limite_norte?: boolean
-    limite_sur?: boolean
-    limite_este?: boolean
-    limite_oeste?: boolean
-    nivel_zoom?: boolean
-    latitud_centro?: boolean
-    longitud_centro?: boolean
-    iniciado_en?: boolean
-    ultima_actividad?: boolean
+    id?: boolean;
+    token?: boolean;
+    limite_norte?: boolean;
+    limite_sur?: boolean;
+    limite_este?: boolean;
+    limite_oeste?: boolean;
+    nivel_zoom?: boolean;
+    latitud_centro?: boolean;
+    longitud_centro?: boolean;
+    iniciado_en?: boolean;
+    ultima_actividad?: boolean;
   },
-  ExtArgs['result']['sesion_mapa']
->
+  ExtArgs["result"]["sesion_mapa"]
+>;
 
 export type sesion_mapaSelectScalar = {
-  id?: boolean
-  token?: boolean
-  limite_norte?: boolean
-  limite_sur?: boolean
-  limite_este?: boolean
-  limite_oeste?: boolean
-  nivel_zoom?: boolean
-  latitud_centro?: boolean
-  longitud_centro?: boolean
-  iniciado_en?: boolean
-  ultima_actividad?: boolean
-}
+  id?: boolean;
+  token?: boolean;
+  limite_norte?: boolean;
+  limite_sur?: boolean;
+  limite_este?: boolean;
+  limite_oeste?: boolean;
+  nivel_zoom?: boolean;
+  latitud_centro?: boolean;
+  longitud_centro?: boolean;
+  iniciado_en?: boolean;
+  ultima_actividad?: boolean;
+};
 
 export type sesion_mapaOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'token'
-  | 'limite_norte'
-  | 'limite_sur'
-  | 'limite_este'
-  | 'limite_oeste'
-  | 'nivel_zoom'
-  | 'latitud_centro'
-  | 'longitud_centro'
-  | 'iniciado_en'
-  | 'ultima_actividad',
-  ExtArgs['result']['sesion_mapa']
->
+  | "id"
+  | "token"
+  | "limite_norte"
+  | "limite_sur"
+  | "limite_este"
+  | "limite_oeste"
+  | "nivel_zoom"
+  | "latitud_centro"
+  | "longitud_centro"
+  | "iniciado_en"
+  | "ultima_actividad",
+  ExtArgs["result"]["sesion_mapa"]
+>;
 export type sesion_mapaInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  interaccion_mapa?: boolean | Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs>
-  _count?: boolean | Prisma.Sesion_mapaCountOutputTypeDefaultArgs<ExtArgs>
-}
+  interaccion_mapa?: boolean | Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs>;
+  _count?: boolean | Prisma.Sesion_mapaCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type sesion_mapaIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 export type sesion_mapaIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 
 export type $sesion_mapaPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'sesion_mapa'
+  name: "sesion_mapa";
   objects: {
-    interaccion_mapa: Prisma.$interaccion_mapaPayload<ExtArgs>[]
-  }
+    interaccion_mapa: Prisma.$interaccion_mapaPayload<ExtArgs>[];
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      token: string
-      limite_norte: runtime.Decimal | null
-      limite_sur: runtime.Decimal | null
-      limite_este: runtime.Decimal | null
-      limite_oeste: runtime.Decimal | null
-      nivel_zoom: number
-      latitud_centro: runtime.Decimal | null
-      longitud_centro: runtime.Decimal | null
-      iniciado_en: Date | null
-      ultima_actividad: Date | null
+      id: number;
+      token: string;
+      limite_norte: runtime.Decimal | null;
+      limite_sur: runtime.Decimal | null;
+      limite_este: runtime.Decimal | null;
+      limite_oeste: runtime.Decimal | null;
+      nivel_zoom: number;
+      latitud_centro: runtime.Decimal | null;
+      longitud_centro: runtime.Decimal | null;
+      iniciado_en: Date | null;
+      ultima_actividad: Date | null;
     },
-    ExtArgs['result']['sesion_mapa']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["sesion_mapa"]
+  >;
+  composites: {};
+};
 
-export type sesion_mapaGetPayload<S extends boolean | null | undefined | sesion_mapaDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$sesion_mapaPayload, S>
+export type sesion_mapaGetPayload<
+  S extends boolean | null | undefined | sesion_mapaDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$sesion_mapaPayload, S>;
 
 export type sesion_mapaCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<sesion_mapaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Sesion_mapaCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  sesion_mapaFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Sesion_mapaCountAggregateInputType | true;
+};
 
 export interface sesion_mapaDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['sesion_mapa']
-    meta: { name: 'sesion_mapa' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["sesion_mapa"];
+    meta: { name: "sesion_mapa" };
+  };
   /**
    * Find zero or one Sesion_mapa that matches the filter.
    * @param {sesion_mapaFindUniqueArgs} args - Arguments to find a Sesion_mapa
@@ -1169,18 +1387,18 @@ export interface sesion_mapaDelegate<
    * })
    */
   findUnique<T extends sesion_mapaFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Sesion_mapa that matches the filter or throw an error with `error.code='P2025'`
@@ -1195,18 +1413,18 @@ export interface sesion_mapaDelegate<
    * })
    */
   findUniqueOrThrow<T extends sesion_mapaFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Sesion_mapa that matches the filter.
@@ -1222,18 +1440,18 @@ export interface sesion_mapaDelegate<
    * })
    */
   findFirst<T extends sesion_mapaFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, sesion_mapaFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, sesion_mapaFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Sesion_mapa that matches the filter or
@@ -1250,18 +1468,18 @@ export interface sesion_mapaDelegate<
    * })
    */
   findFirstOrThrow<T extends sesion_mapaFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, sesion_mapaFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, sesion_mapaFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Sesion_mapas that matches the filter.
@@ -1280,15 +1498,15 @@ export interface sesion_mapaDelegate<
    *
    */
   findMany<T extends sesion_mapaFindManyArgs>(
-    args?: Prisma.SelectSubset<T, sesion_mapaFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, sesion_mapaFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Sesion_mapa.
@@ -1303,18 +1521,18 @@ export interface sesion_mapaDelegate<
    *
    */
   create<T extends sesion_mapaCreateArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Sesion_mapas.
@@ -1329,8 +1547,8 @@ export interface sesion_mapaDelegate<
    *
    */
   createMany<T extends sesion_mapaCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, sesion_mapaCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, sesion_mapaCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Sesion_mapas and returns the data saved in the database.
@@ -1355,15 +1573,15 @@ export interface sesion_mapaDelegate<
    *
    */
   createManyAndReturn<T extends sesion_mapaCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, sesion_mapaCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, sesion_mapaCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Sesion_mapa.
@@ -1378,18 +1596,18 @@ export interface sesion_mapaDelegate<
    *
    */
   delete<T extends sesion_mapaDeleteArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Sesion_mapa.
@@ -1407,18 +1625,18 @@ export interface sesion_mapaDelegate<
    *
    */
   update<T extends sesion_mapaUpdateArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Sesion_mapas.
@@ -1433,8 +1651,8 @@ export interface sesion_mapaDelegate<
    *
    */
   deleteMany<T extends sesion_mapaDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, sesion_mapaDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, sesion_mapaDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Sesion_mapas.
@@ -1454,8 +1672,8 @@ export interface sesion_mapaDelegate<
    *
    */
   updateMany<T extends sesion_mapaUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, sesion_mapaUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Sesion_mapas and returns the data updated in the database.
@@ -1486,15 +1704,15 @@ export interface sesion_mapaDelegate<
    *
    */
   updateManyAndReturn<T extends sesion_mapaUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Sesion_mapa.
@@ -1514,18 +1732,18 @@ export interface sesion_mapaDelegate<
    * })
    */
   upsert<T extends sesion_mapaUpsertArgs>(
-    args: Prisma.SelectSubset<T, sesion_mapaUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, sesion_mapaUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__sesion_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$sesion_mapaPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Sesion_mapas.
@@ -1541,14 +1759,14 @@ export interface sesion_mapaDelegate<
    * })
    **/
   count<T extends sesion_mapaCountArgs>(
-    args?: Prisma.Subset<T, sesion_mapaCountArgs>
+    args?: Prisma.Subset<T, sesion_mapaCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Sesion_mapaCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], Sesion_mapaCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Sesion_mapa.
@@ -1575,8 +1793,8 @@ export interface sesion_mapaDelegate<
    * })
    **/
   aggregate<T extends Sesion_mapaAggregateArgs>(
-    args: Prisma.Subset<T, Sesion_mapaAggregateArgs>
-  ): Prisma.PrismaPromise<GetSesion_mapaAggregateType<T>>
+    args: Prisma.Subset<T, Sesion_mapaAggregateArgs>,
+  ): Prisma.PrismaPromise<GetSesion_mapaAggregateType<T>>;
 
   /**
    * Group by Sesion_mapa.
@@ -1599,20 +1817,20 @@ export interface sesion_mapaDelegate<
   groupBy<
     T extends sesion_mapaGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: sesion_mapaGroupByArgs['orderBy'] }
-      : { orderBy?: sesion_mapaGroupByArgs['orderBy'] },
+      ? { orderBy: sesion_mapaGroupByArgs["orderBy"] }
+      : { orderBy?: sesion_mapaGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1621,26 +1839,31 @@ export interface sesion_mapaDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1648,15 +1871,18 @@ export interface sesion_mapaDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, sesion_mapaGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetSesion_mapaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, sesion_mapaGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetSesion_mapaGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the sesion_mapa model
    */
-  readonly fields: sesion_mapaFieldRefs
+  readonly fields: sesion_mapaFieldRefs;
 }
 
 /**
@@ -1668,21 +1894,24 @@ export interface sesion_mapaDelegate<
 export interface Prisma__sesion_mapaClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  interaccion_mapa<T extends Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  interaccion_mapa<
+    T extends Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.sesion_mapa$interaccion_mapaArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$interaccion_mapaPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1690,41 +1919,52 @@ export interface Prisma__sesion_mapaClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the sesion_mapa model
  */
 export interface sesion_mapaFieldRefs {
-  readonly id: Prisma.FieldRef<'sesion_mapa', 'Int'>
-  readonly token: Prisma.FieldRef<'sesion_mapa', 'String'>
-  readonly limite_norte: Prisma.FieldRef<'sesion_mapa', 'Decimal'>
-  readonly limite_sur: Prisma.FieldRef<'sesion_mapa', 'Decimal'>
-  readonly limite_este: Prisma.FieldRef<'sesion_mapa', 'Decimal'>
-  readonly limite_oeste: Prisma.FieldRef<'sesion_mapa', 'Decimal'>
-  readonly nivel_zoom: Prisma.FieldRef<'sesion_mapa', 'Int'>
-  readonly latitud_centro: Prisma.FieldRef<'sesion_mapa', 'Decimal'>
-  readonly longitud_centro: Prisma.FieldRef<'sesion_mapa', 'Decimal'>
-  readonly iniciado_en: Prisma.FieldRef<'sesion_mapa', 'DateTime'>
-  readonly ultima_actividad: Prisma.FieldRef<'sesion_mapa', 'DateTime'>
+  readonly id: Prisma.FieldRef<"sesion_mapa", "Int">;
+  readonly token: Prisma.FieldRef<"sesion_mapa", "String">;
+  readonly limite_norte: Prisma.FieldRef<"sesion_mapa", "Decimal">;
+  readonly limite_sur: Prisma.FieldRef<"sesion_mapa", "Decimal">;
+  readonly limite_este: Prisma.FieldRef<"sesion_mapa", "Decimal">;
+  readonly limite_oeste: Prisma.FieldRef<"sesion_mapa", "Decimal">;
+  readonly nivel_zoom: Prisma.FieldRef<"sesion_mapa", "Int">;
+  readonly latitud_centro: Prisma.FieldRef<"sesion_mapa", "Decimal">;
+  readonly longitud_centro: Prisma.FieldRef<"sesion_mapa", "Decimal">;
+  readonly iniciado_en: Prisma.FieldRef<"sesion_mapa", "DateTime">;
+  readonly ultima_actividad: Prisma.FieldRef<"sesion_mapa", "DateTime">;
 }
 
 // Custom InputTypes
@@ -1732,72 +1972,75 @@ export interface sesion_mapaFieldRefs {
  * sesion_mapa findUnique
  */
 export type sesion_mapaFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which sesion_mapa to fetch.
    */
-  where: Prisma.sesion_mapaWhereUniqueInput
-}
+  where: Prisma.sesion_mapaWhereUniqueInput;
+};
 
 /**
  * sesion_mapa findUniqueOrThrow
  */
 export type sesion_mapaFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which sesion_mapa to fetch.
    */
-  where: Prisma.sesion_mapaWhereUniqueInput
-}
+  where: Prisma.sesion_mapaWhereUniqueInput;
+};
 
 /**
  * sesion_mapa findFirst
  */
 export type sesion_mapaFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which sesion_mapa to fetch.
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1805,55 +2048,58 @@ export type sesion_mapaFindFirstArgs<
    */
   orderBy?:
     | Prisma.sesion_mapaOrderByWithRelationInput
-    | Prisma.sesion_mapaOrderByWithRelationInput[]
+    | Prisma.sesion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for sesion_mapas.
    */
-  cursor?: Prisma.sesion_mapaWhereUniqueInput
+  cursor?: Prisma.sesion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` sesion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` sesion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of sesion_mapas.
    */
-  distinct?: Prisma.Sesion_mapaScalarFieldEnum | Prisma.Sesion_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Sesion_mapaScalarFieldEnum
+    | Prisma.Sesion_mapaScalarFieldEnum[];
+};
 
 /**
  * sesion_mapa findFirstOrThrow
  */
 export type sesion_mapaFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which sesion_mapa to fetch.
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1861,55 +2107,58 @@ export type sesion_mapaFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.sesion_mapaOrderByWithRelationInput
-    | Prisma.sesion_mapaOrderByWithRelationInput[]
+    | Prisma.sesion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for sesion_mapas.
    */
-  cursor?: Prisma.sesion_mapaWhereUniqueInput
+  cursor?: Prisma.sesion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` sesion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` sesion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of sesion_mapas.
    */
-  distinct?: Prisma.Sesion_mapaScalarFieldEnum | Prisma.Sesion_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Sesion_mapaScalarFieldEnum
+    | Prisma.Sesion_mapaScalarFieldEnum[];
+};
 
 /**
  * sesion_mapa findMany
  */
 export type sesion_mapaFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which sesion_mapas to fetch.
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1917,124 +2166,137 @@ export type sesion_mapaFindManyArgs<
    */
   orderBy?:
     | Prisma.sesion_mapaOrderByWithRelationInput
-    | Prisma.sesion_mapaOrderByWithRelationInput[]
+    | Prisma.sesion_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing sesion_mapas.
    */
-  cursor?: Prisma.sesion_mapaWhereUniqueInput
+  cursor?: Prisma.sesion_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` sesion_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` sesion_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of sesion_mapas.
    */
-  distinct?: Prisma.Sesion_mapaScalarFieldEnum | Prisma.Sesion_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Sesion_mapaScalarFieldEnum
+    | Prisma.Sesion_mapaScalarFieldEnum[];
+};
 
 /**
  * sesion_mapa create
  */
 export type sesion_mapaCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * The data needed to create a sesion_mapa.
    */
-  data: Prisma.XOR<Prisma.sesion_mapaCreateInput, Prisma.sesion_mapaUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.sesion_mapaCreateInput,
+    Prisma.sesion_mapaUncheckedCreateInput
+  >;
+};
 
 /**
  * sesion_mapa createMany
  */
 export type sesion_mapaCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many sesion_mapas.
    */
-  data: Prisma.sesion_mapaCreateManyInput | Prisma.sesion_mapaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.sesion_mapaCreateManyInput | Prisma.sesion_mapaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * sesion_mapa createManyAndReturn
  */
 export type sesion_mapaCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * The data used to create many sesion_mapas.
    */
-  data: Prisma.sesion_mapaCreateManyInput | Prisma.sesion_mapaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.sesion_mapaCreateManyInput | Prisma.sesion_mapaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * sesion_mapa update
  */
 export type sesion_mapaUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * The data needed to update a sesion_mapa.
    */
-  data: Prisma.XOR<Prisma.sesion_mapaUpdateInput, Prisma.sesion_mapaUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.sesion_mapaUpdateInput,
+    Prisma.sesion_mapaUncheckedUpdateInput
+  >;
   /**
    * Choose, which sesion_mapa to update.
    */
-  where: Prisma.sesion_mapaWhereUniqueInput
-}
+  where: Prisma.sesion_mapaWhereUniqueInput;
+};
 
 /**
  * sesion_mapa updateMany
  */
 export type sesion_mapaUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update sesion_mapas.
@@ -2042,164 +2304,178 @@ export type sesion_mapaUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.sesion_mapaUpdateManyMutationInput,
     Prisma.sesion_mapaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which sesion_mapas to update
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * Limit how many sesion_mapas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * sesion_mapa updateManyAndReturn
  */
 export type sesion_mapaUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * The data used to update sesion_mapas.
    */
   data: Prisma.XOR<
     Prisma.sesion_mapaUpdateManyMutationInput,
     Prisma.sesion_mapaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which sesion_mapas to update
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * Limit how many sesion_mapas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * sesion_mapa upsert
  */
 export type sesion_mapaUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * The filter to search for the sesion_mapa to update in case it exists.
    */
-  where: Prisma.sesion_mapaWhereUniqueInput
+  where: Prisma.sesion_mapaWhereUniqueInput;
   /**
    * In case the sesion_mapa found by the `where` argument doesn't exist, create a new sesion_mapa with this data.
    */
-  create: Prisma.XOR<Prisma.sesion_mapaCreateInput, Prisma.sesion_mapaUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.sesion_mapaCreateInput,
+    Prisma.sesion_mapaUncheckedCreateInput
+  >;
   /**
    * In case the sesion_mapa was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.sesion_mapaUpdateInput, Prisma.sesion_mapaUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.sesion_mapaUpdateInput,
+    Prisma.sesion_mapaUncheckedUpdateInput
+  >;
+};
 
 /**
  * sesion_mapa delete
  */
 export type sesion_mapaDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
   /**
    * Filter which sesion_mapa to delete.
    */
-  where: Prisma.sesion_mapaWhereUniqueInput
-}
+  where: Prisma.sesion_mapaWhereUniqueInput;
+};
 
 /**
  * sesion_mapa deleteMany
  */
 export type sesion_mapaDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which sesion_mapas to delete
    */
-  where?: Prisma.sesion_mapaWhereInput
+  where?: Prisma.sesion_mapaWhereInput;
   /**
    * Limit how many sesion_mapas to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * sesion_mapa.interaccion_mapa
  */
 export type sesion_mapa$interaccion_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
-  where?: Prisma.interaccion_mapaWhereInput
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
+  where?: Prisma.interaccion_mapaWhereInput;
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithRelationInput
-    | Prisma.interaccion_mapaOrderByWithRelationInput[]
-  cursor?: Prisma.interaccion_mapaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Interaccion_mapaScalarFieldEnum | Prisma.Interaccion_mapaScalarFieldEnum[]
-}
+    | Prisma.interaccion_mapaOrderByWithRelationInput[];
+  cursor?: Prisma.interaccion_mapaWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Interaccion_mapaScalarFieldEnum
+    | Prisma.Interaccion_mapaScalarFieldEnum[];
+};
 
 /**
  * sesion_mapa without action
  */
 export type sesion_mapaDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the sesion_mapa
    */
-  select?: Prisma.sesion_mapaSelect<ExtArgs> | null
+  select?: Prisma.sesion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the sesion_mapa
    */
-  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.sesion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.sesion_mapaInclude<ExtArgs> | null
-}
+  include?: Prisma.sesion_mapaInclude<ExtArgs> | null;
+};

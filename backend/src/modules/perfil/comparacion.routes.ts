@@ -1,12 +1,12 @@
 // routes/comparacionRoutes.ts
-import { Router } from 'express'
-import { comparacionController } from './comparacion.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'
+import { Router } from "express";
+import { comparacionController } from "./comparacion.controller.js";
+import { validarJWT } from "../../middleware/validarJWT.js";
 
-const router = Router()
+const router = Router();
 
 // Rutas que requieren autenticación obligatoria
-router.use(validarJWT)
+router.use(validarJWT);
 
 // ============================================
 // RUTAS PRINCIPALES
@@ -49,7 +49,7 @@ router.use(validarJWT)
  *   "error": "Error interno del servidor"
  * }
  */
-router.get('/', comparacionController.getComparaciones)
+router.get("/", comparacionController.getComparaciones);
 
 /**
  * GET /resumen
@@ -106,7 +106,7 @@ router.get('/', comparacionController.getComparaciones)
  *   "error": "Error interno del servidor"
  * }
  */
-router.get('/resumen', comparacionController.getResumenComparaciones)
+router.get("/resumen", comparacionController.getResumenComparaciones);
 
 /**
  * GET /:id
@@ -163,7 +163,7 @@ router.get('/resumen', comparacionController.getResumenComparaciones)
  *   "error": "Error interno del servidor"
  * }
  */
-router.get('/:id', comparacionController.getComparacionById)
+router.get("/:id", comparacionController.getComparacionById);
 
 /**
  * POST /
@@ -232,7 +232,7 @@ router.get('/:id', comparacionController.getComparacionById)
  *   "error": "Error interno del servidor"
  * }
  */
-router.post('/', comparacionController.crearComparacion)
+router.post("/", comparacionController.crearComparacion);
 
 /**
  * DELETE /:id
@@ -264,7 +264,7 @@ router.post('/', comparacionController.crearComparacion)
  *   "error": "Error interno del servidor"
  * }
  */
-router.delete('/:id', comparacionController.eliminarComparacion)
+router.delete("/:id", comparacionController.eliminarComparacion);
 
 // ============================================
 // RUTAS PARA MANEJAR PROPIEDADES
@@ -321,7 +321,7 @@ router.delete('/:id', comparacionController.eliminarComparacion)
  *   "error": "Error interno del servidor"
  * }
  */
-router.post('/:id/propiedades', comparacionController.agregarPropiedad)
+router.post("/:id/propiedades", comparacionController.agregarPropiedad);
 
 /**
  * DELETE /:id/propiedades/:propiedadId
@@ -354,7 +354,10 @@ router.post('/:id/propiedades', comparacionController.agregarPropiedad)
  *   "error": "Error interno del servidor"
  * }
  */
-router.delete('/:id/propiedades/:propiedadId', comparacionController.eliminarPropiedad)
+router.delete(
+  "/:id/propiedades/:propiedadId",
+  comparacionController.eliminarPropiedad,
+);
 
 // ============================================
 // RUTAS DE FILTRADO
@@ -408,6 +411,9 @@ router.delete('/:id/propiedades/:propiedadId', comparacionController.eliminarPro
  * GET /api/comparaciones/categoria/CASA
  * GET /api/comparaciones/categoria/TERRENO
  */
-router.get('/categoria/:categoria', comparacionController.getComparacionesPorCategoria)
+router.get(
+  "/categoria/:categoria",
+  comparacionController.getComparacionesPorCategoria,
+);
 
-export default router
+export default router;

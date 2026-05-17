@@ -1,9 +1,13 @@
 const getApiUrl = () =>
-  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/$/, "");
+  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
+    /\/$/,
+    "",
+  );
 
 const getToken = () => {
   const token = localStorage.getItem("token");
-  if (!token) throw new Error("No hay sesión activa. Inicia sesión nuevamente.");
+  if (!token)
+    throw new Error("No hay sesión activa. Inicia sesión nuevamente.");
   return token;
 };
 
@@ -32,7 +36,7 @@ export type TestimoniosResponse = {
 
 // GET /api/testimonios?ciudad=Cochabamba
 export const getTestimonios = async (
-  ciudad?: string
+  ciudad?: string,
 ): Promise<Testimonio[]> => {
   const apiUrl = getApiUrl();
   const params = new URLSearchParams();
@@ -48,7 +52,7 @@ export const getTestimonios = async (
       {
         cache: "no-store",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
-      }
+      },
     );
 
     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
@@ -63,7 +67,7 @@ export const getTestimonios = async (
 
 // POST /api/testimonios/:id/like  (toggle)
 export const toggleLikeTestimonio = async (
-  id: number
+  id: number,
 ): Promise<{ meGusta: boolean; totalLikes: number }> => {
   const apiUrl = getApiUrl();
 

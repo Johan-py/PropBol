@@ -16,7 +16,7 @@ export const crearPublicacion = async (req: Request, res: Response) => {
         return res.status(403).json({
           estado: "Pendiente de revisión",
           error: "LIMIT_REACHED",
-          message: "Has alcanzado el límite de 2 publicaciones gratuitas."
+          message: "Has alcanzado el límite de 2 publicaciones gratuitas.",
         });
       }
       return res.status(400).json({

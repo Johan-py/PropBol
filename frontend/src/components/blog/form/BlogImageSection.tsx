@@ -39,33 +39,39 @@ const compressToWebp = (file: File): Promise<File> => {
       canvas.toBlob(
         (blob) => {
           if (blob) {
-            const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
-              type: "image/webp",
-              lastModified: Date.now(),
-            });
+            const newFile = new File(
+              [blob],
+              file.name.replace(/\.[^/.]+$/, "") + ".webp",
+              {
+                type: "image/webp",
+                lastModified: Date.now(),
+              },
+            );
             resolve(newFile);
           } else {
             resolve(file);
           }
         },
         "image/webp",
-        0.8
+        0.8,
       );
     };
     img.onerror = () => resolve(file);
   });
 };
 
-export default function BlogImageSection({ 
-  imagePreviewUrl, 
-  onImageChange, 
-  error 
+export default function BlogImageSection({
+  imagePreviewUrl,
+  onImageChange,
+  error,
 }: BlogImageSectionProps) {
   const [isCompressing, setIsCompressing] = useState(false);
 
   return (
     <div className="space-y-2">
-      <label className={`relative flex min-h-[300px] cursor-pointer flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#E7E5E4] bg-[#FAFAFA] px-10 py-12 text-center transition hover:border-[#F59E0B] hover:bg-white group ${isCompressing ? "opacity-50 pointer-events-none" : ""}`}>
+      <label
+        className={`relative flex min-h-[300px] cursor-pointer flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#E7E5E4] bg-[#FAFAFA] px-10 py-12 text-center transition hover:border-[#F59E0B] hover:bg-white group ${isCompressing ? "opacity-50 pointer-events-none" : ""}`}
+      >
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp"
@@ -86,7 +92,9 @@ export default function BlogImageSection({
         {isCompressing ? (
           <div className="flex flex-col items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#F59E0B] border-t-transparent mb-4"></div>
-            <p className="text-sm font-semibold text-[#1C1917]">Comprimiendo imagen...</p>
+            <p className="text-sm font-semibold text-[#1C1917]">
+              Comprimiendo imagen...
+            </p>
           </div>
         ) : imagePreviewUrl ? (
           <div className="absolute inset-0 overflow-hidden rounded-[32px]">

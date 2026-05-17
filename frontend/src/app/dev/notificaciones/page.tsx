@@ -1,98 +1,104 @@
-'use client'
+"use client";
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState } from "react";
 
 type SubmitState = {
-  type: 'idle' | 'success' | 'error'
-  message: string
-}
+  type: "idle" | "success" | "error";
+  message: string;
+};
 
-const getApiBaseUrl = () => process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const getApiBaseUrl = () =>
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 export default function DevNotificacionesPage() {
-  const [correo, setCorreo] = useState('')
-  const [titulo, setTitulo] = useState('')
-  const [mensaje, setMensaje] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [correo, setCorreo] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>({
-    type: 'idle',
-    message: ''
-  })
+    type: "idle",
+    message: "",
+  });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
 
     if (!token) {
       setSubmitState({
-        type: 'error',
-        message: 'No se encontró token. Primero inicia sesión.'
-      })
-      return
+        type: "error",
+        message: "No se encontró token. Primero inicia sesión.",
+      });
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     setSubmitState({
-      type: 'idle',
-      message: ''
-    })
+      type: "idle",
+      message: "",
+    });
 
     try {
       const response = await fetch(`${getApiBaseUrl()}/notificaciones`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           correo,
           titulo,
-          mensaje
-        })
-      })
+          mensaje,
+        }),
+      });
 
       const data = (await response.json().catch(() => null)) as {
-        message?: string
-      } | null
+        message?: string;
+      } | null;
 
       if (!response.ok) {
-        throw new Error(data?.message || 'No se pudo crear la notificación.')
+        throw new Error(data?.message || "No se pudo crear la notificación.");
       }
 
       setSubmitState({
-        type: 'success',
-        message: data?.message || 'Notificación creada correctamente.'
-      })
+        type: "success",
+        message: data?.message || "Notificación creada correctamente.",
+      });
 
-      setCorreo('')
-      setTitulo('')
-      setMensaje('')
+      setCorreo("");
+      setTitulo("");
+      setMensaje("");
     } catch (error) {
       setSubmitState({
-        type: 'error',
-        message: error instanceof Error ? error.message : 'No se pudo crear la notificación.'
-      })
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "No se pudo crear la notificación.",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <main className="min-h-screen bg-stone-100 px-4 py-10">
       <section className="mx-auto max-w-xl rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-stone-900">Enviar notificación de prueba</h1>
+        <h1 className="text-2xl font-bold text-stone-900">
+          Enviar notificación de prueba
+        </h1>
 
         <p className="mt-2 text-sm text-stone-600">
           Inserta una notificación usando el correo del destinatario.
         </p>
 
-        {submitState.type !== 'idle' ? (
+        {submitState.type !== "idle" ? (
           <div
             className={`mt-4 rounded-xl px-4 py-3 text-sm ${
-              submitState.type === 'success'
-                ? 'border border-green-200 bg-green-50 text-green-700'
-                : 'border border-red-200 bg-red-50 text-red-700'
+              submitState.type === "success"
+                ? "border border-green-200 bg-green-50 text-green-700"
+                : "border border-red-200 bg-red-50 text-red-700"
             }`}
           >
             {submitState.message}
@@ -101,7 +107,10 @@ export default function DevNotificacionesPage() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
-            <label htmlFor="correo" className="mb-1 block text-sm font-medium text-stone-700">
+            <label
+              htmlFor="correo"
+              className="mb-1 block text-sm font-medium text-stone-700"
+            >
               Correo del destinatario
             </label>
             <input
@@ -116,7 +125,10 @@ export default function DevNotificacionesPage() {
           </div>
 
           <div>
-            <label htmlFor="titulo" className="mb-1 block text-sm font-medium text-stone-700">
+            <label
+              htmlFor="titulo"
+              className="mb-1 block text-sm font-medium text-stone-700"
+            >
               Título
             </label>
             <input
@@ -131,7 +143,10 @@ export default function DevNotificacionesPage() {
           </div>
 
           <div>
-            <label htmlFor="mensaje" className="mb-1 block text-sm font-medium text-stone-700">
+            <label
+              htmlFor="mensaje"
+              className="mb-1 block text-sm font-medium text-stone-700"
+            >
               Mensaje
             </label>
             <textarea
@@ -149,10 +164,10 @@ export default function DevNotificacionesPage() {
             disabled={isSubmitting}
             className="w-full rounded-xl bg-amber-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? 'Enviando...' : 'Crear notificación'}
+            {isSubmitting ? "Enviando..." : "Crear notificación"}
           </button>
         </form>
       </section>
     </main>
-  )
+  );
 }

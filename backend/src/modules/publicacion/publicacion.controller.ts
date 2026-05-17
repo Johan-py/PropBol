@@ -526,7 +526,7 @@ export const editarMultimediaPublicacionController = async (
 
 export const iniciarPublicidadController = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ) => {
   const publicacionId = Number(req.params.id);
   const usuarioId = req.user?.id;
@@ -534,7 +534,7 @@ export const iniciarPublicidadController = async (
   try {
     const resultado = await iniciarPublicidadService(
       publicacionId,
-      Number(usuarioId)
+      Number(usuarioId),
     );
 
     return res.status(200).json({
@@ -589,7 +589,7 @@ export const iniciarPublicidadController = async (
 
 export const confirmarPublicidadController = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ) => {
   const publicacionId = Number(req.params.id);
   const usuarioId = req.user?.id;
@@ -600,7 +600,7 @@ export const confirmarPublicidadController = async (
       publicacionId,
       Number(usuarioId),
       paymentIntentId,
-      planId
+      planId,
     );
 
     return res.status(200).json({
@@ -655,7 +655,7 @@ export const confirmarPublicidadController = async (
 
 export const cancelarPublicidadController = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ) => {
   const publicacionId = Number(req.params.id);
   const usuarioId = req.user?.id;
@@ -663,7 +663,7 @@ export const cancelarPublicidadController = async (
   try {
     const resultado = await cancelarPublicidadService(
       publicacionId,
-      Number(usuarioId)
+      Number(usuarioId),
     );
 
     return res.status(200).json({
@@ -713,7 +713,7 @@ export const cancelarPublicidadController = async (
 
 export const obtenerEstadoPublicidadController = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   const publicacionId = Number(req.params.id);
 

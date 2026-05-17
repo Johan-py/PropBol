@@ -1,18 +1,24 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Image from 'next/image'
-import { QRCodeSVG } from 'qrcode.react'
+import React from "react";
+import Image from "next/image";
+import { QRCodeSVG } from "qrcode.react";
 
 interface QRDisplayProps {
-  value: string
-  imageSrc?: string
-  size?: number
-  id?: string
-  className?: string
+  value: string;
+  imageSrc?: string;
+  size?: number;
+  id?: string;
+  className?: string;
 }
 
-export function QRDisplay({ value, imageSrc, size = 250, id, className = '' }: QRDisplayProps) {
+export function QRDisplay({
+  value,
+  imageSrc,
+  size = 250,
+  id,
+  className = "",
+}: QRDisplayProps) {
   if (!value && !imageSrc) {
     return (
       <div className="flex justify-center">
@@ -20,7 +26,7 @@ export function QRDisplay({ value, imageSrc, size = 250, id, className = '' }: Q
           Error: QR sin contenido
         </div>
       </div>
-    )
+    );
   }
 
   const qrElement = imageSrc ? (
@@ -42,7 +48,7 @@ export function QRDisplay({ value, imageSrc, size = 250, id, className = '' }: Q
       level="L"
       includeMargin={false}
     />
-  )
+  );
 
   return (
     <div className={`flex flex-col items-center w-full ${className}`}>
@@ -55,5 +61,5 @@ export function QRDisplay({ value, imageSrc, size = 250, id, className = '' }: Q
         </p>
       )}
     </div>
-  )
+  );
 }

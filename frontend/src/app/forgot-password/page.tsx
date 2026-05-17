@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
 
       setSuccessMessage(
         data.message ||
-          "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña."
+          "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.",
       );
       setCorreo("");
     } catch (err) {

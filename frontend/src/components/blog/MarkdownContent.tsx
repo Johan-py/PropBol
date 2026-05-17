@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import ReactMarkdown from "react-markdown"
-import remarkBreaks from "remark-breaks"
-import remarkGfm from "remark-gfm"
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 
 type MarkdownContentProps = {
-  content: string
-  className?: string
-}
+  content: string;
+  className?: string;
+};
 
 export default function MarkdownContent({
   content,
@@ -33,17 +33,24 @@ export default function MarkdownContent({
             <h3 className="mb-2 text-xl font-bold text-[#1C1917]" {...props} />
           ),
           p: ({ ...props }) => (
-            <p className="mb-4 text-base leading-relaxed text-[#44403C]" {...props} />
+            <p
+              className="mb-4 text-base leading-relaxed text-[#44403C]"
+              {...props}
+            />
           ),
           ul: ({ ...props }) => (
-            <ul className="mb-4 list-disc space-y-2 pl-5 text-[#44403C]" {...props} />
+            <ul
+              className="mb-4 list-disc space-y-2 pl-5 text-[#44403C]"
+              {...props}
+            />
           ),
           ol: ({ ...props }) => (
-            <ol className="mb-4 list-decimal space-y-2 pl-5 text-[#44403C]" {...props} />
+            <ol
+              className="mb-4 list-decimal space-y-2 pl-5 text-[#44403C]"
+              {...props}
+            />
           ),
-          li: ({ ...props }) => (
-            <li className="text-[#44403C]" {...props} />
-          ),
+          li: ({ ...props }) => <li className="text-[#44403C]" {...props} />,
           blockquote: ({ ...props }) => (
             <blockquote
               className="my-4 border-l-4 border-[#B45309] pl-4 italic text-[#78716C]"
@@ -63,5 +70,5 @@ export default function MarkdownContent({
         {content}
       </ReactMarkdown>
     </div>
-  )
+  );
 }

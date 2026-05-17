@@ -7,836 +7,985 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model inmueble
  *
  */
-export type inmuebleModel = runtime.Types.Result.DefaultSelection<Prisma.$inmueblePayload>
+export type inmuebleModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$inmueblePayload>;
 
 export type AggregateInmueble = {
-  _count: InmuebleCountAggregateOutputType | null
-  _avg: InmuebleAvgAggregateOutputType | null
-  _sum: InmuebleSumAggregateOutputType | null
-  _min: InmuebleMinAggregateOutputType | null
-  _max: InmuebleMaxAggregateOutputType | null
-}
+  _count: InmuebleCountAggregateOutputType | null;
+  _avg: InmuebleAvgAggregateOutputType | null;
+  _sum: InmuebleSumAggregateOutputType | null;
+  _min: InmuebleMinAggregateOutputType | null;
+  _max: InmuebleMaxAggregateOutputType | null;
+};
 
 export type InmuebleAvgAggregateOutputType = {
-  id: number | null
-  precio: runtime.Decimal | null
-  superficie_m2: runtime.Decimal | null
-  nro_cuartos: number | null
-  nro_banos: number | null
-  propietario_id: number | null
-}
+  id: number | null;
+  precio: runtime.Decimal | null;
+  superficie_m2: runtime.Decimal | null;
+  nro_cuartos: number | null;
+  nro_banos: number | null;
+  propietario_id: number | null;
+};
 
 export type InmuebleSumAggregateOutputType = {
-  id: number | null
-  precio: runtime.Decimal | null
-  superficie_m2: runtime.Decimal | null
-  nro_cuartos: number | null
-  nro_banos: number | null
-  propietario_id: number | null
-}
+  id: number | null;
+  precio: runtime.Decimal | null;
+  superficie_m2: runtime.Decimal | null;
+  nro_cuartos: number | null;
+  nro_banos: number | null;
+  propietario_id: number | null;
+};
 
 export type InmuebleMinAggregateOutputType = {
-  id: number | null
-  titulo: string | null
-  tipo_accion: $Enums.tipo_accion | null
-  categoria: $Enums.categoria | null
-  precio: runtime.Decimal | null
-  superficie_m2: runtime.Decimal | null
-  nro_cuartos: number | null
-  nro_banos: number | null
-  descripcion: string | null
-  estado: $Enums.estado_inmueble | null
-  fecha_publicacion: Date | null
-  created_at: Date | null
-  updated_at: Date | null
-  propietario_id: number | null
-}
+  id: number | null;
+  titulo: string | null;
+  tipo_accion: $Enums.tipo_accion | null;
+  categoria: $Enums.categoria | null;
+  precio: runtime.Decimal | null;
+  superficie_m2: runtime.Decimal | null;
+  nro_cuartos: number | null;
+  nro_banos: number | null;
+  descripcion: string | null;
+  estado: $Enums.estado_inmueble | null;
+  fecha_publicacion: Date | null;
+  created_at: Date | null;
+  updated_at: Date | null;
+  propietario_id: number | null;
+};
 
 export type InmuebleMaxAggregateOutputType = {
-  id: number | null
-  titulo: string | null
-  tipo_accion: $Enums.tipo_accion | null
-  categoria: $Enums.categoria | null
-  precio: runtime.Decimal | null
-  superficie_m2: runtime.Decimal | null
-  nro_cuartos: number | null
-  nro_banos: number | null
-  descripcion: string | null
-  estado: $Enums.estado_inmueble | null
-  fecha_publicacion: Date | null
-  created_at: Date | null
-  updated_at: Date | null
-  propietario_id: number | null
-}
+  id: number | null;
+  titulo: string | null;
+  tipo_accion: $Enums.tipo_accion | null;
+  categoria: $Enums.categoria | null;
+  precio: runtime.Decimal | null;
+  superficie_m2: runtime.Decimal | null;
+  nro_cuartos: number | null;
+  nro_banos: number | null;
+  descripcion: string | null;
+  estado: $Enums.estado_inmueble | null;
+  fecha_publicacion: Date | null;
+  created_at: Date | null;
+  updated_at: Date | null;
+  propietario_id: number | null;
+};
 
 export type InmuebleCountAggregateOutputType = {
-  id: number
-  titulo: number
-  tipo_accion: number
-  categoria: number
-  precio: number
-  superficie_m2: number
-  nro_cuartos: number
-  nro_banos: number
-  descripcion: number
-  estado: number
-  fecha_publicacion: number
-  created_at: number
-  updated_at: number
-  propietario_id: number
-  _all: number
-}
+  id: number;
+  titulo: number;
+  tipo_accion: number;
+  categoria: number;
+  precio: number;
+  superficie_m2: number;
+  nro_cuartos: number;
+  nro_banos: number;
+  descripcion: number;
+  estado: number;
+  fecha_publicacion: number;
+  created_at: number;
+  updated_at: number;
+  propietario_id: number;
+  _all: number;
+};
 
 export type InmuebleAvgAggregateInputType = {
-  id?: true
-  precio?: true
-  superficie_m2?: true
-  nro_cuartos?: true
-  nro_banos?: true
-  propietario_id?: true
-}
+  id?: true;
+  precio?: true;
+  superficie_m2?: true;
+  nro_cuartos?: true;
+  nro_banos?: true;
+  propietario_id?: true;
+};
 
 export type InmuebleSumAggregateInputType = {
-  id?: true
-  precio?: true
-  superficie_m2?: true
-  nro_cuartos?: true
-  nro_banos?: true
-  propietario_id?: true
-}
+  id?: true;
+  precio?: true;
+  superficie_m2?: true;
+  nro_cuartos?: true;
+  nro_banos?: true;
+  propietario_id?: true;
+};
 
 export type InmuebleMinAggregateInputType = {
-  id?: true
-  titulo?: true
-  tipo_accion?: true
-  categoria?: true
-  precio?: true
-  superficie_m2?: true
-  nro_cuartos?: true
-  nro_banos?: true
-  descripcion?: true
-  estado?: true
-  fecha_publicacion?: true
-  created_at?: true
-  updated_at?: true
-  propietario_id?: true
-}
+  id?: true;
+  titulo?: true;
+  tipo_accion?: true;
+  categoria?: true;
+  precio?: true;
+  superficie_m2?: true;
+  nro_cuartos?: true;
+  nro_banos?: true;
+  descripcion?: true;
+  estado?: true;
+  fecha_publicacion?: true;
+  created_at?: true;
+  updated_at?: true;
+  propietario_id?: true;
+};
 
 export type InmuebleMaxAggregateInputType = {
-  id?: true
-  titulo?: true
-  tipo_accion?: true
-  categoria?: true
-  precio?: true
-  superficie_m2?: true
-  nro_cuartos?: true
-  nro_banos?: true
-  descripcion?: true
-  estado?: true
-  fecha_publicacion?: true
-  created_at?: true
-  updated_at?: true
-  propietario_id?: true
-}
+  id?: true;
+  titulo?: true;
+  tipo_accion?: true;
+  categoria?: true;
+  precio?: true;
+  superficie_m2?: true;
+  nro_cuartos?: true;
+  nro_banos?: true;
+  descripcion?: true;
+  estado?: true;
+  fecha_publicacion?: true;
+  created_at?: true;
+  updated_at?: true;
+  propietario_id?: true;
+};
 
 export type InmuebleCountAggregateInputType = {
-  id?: true
-  titulo?: true
-  tipo_accion?: true
-  categoria?: true
-  precio?: true
-  superficie_m2?: true
-  nro_cuartos?: true
-  nro_banos?: true
-  descripcion?: true
-  estado?: true
-  fecha_publicacion?: true
-  created_at?: true
-  updated_at?: true
-  propietario_id?: true
-  _all?: true
-}
+  id?: true;
+  titulo?: true;
+  tipo_accion?: true;
+  categoria?: true;
+  precio?: true;
+  superficie_m2?: true;
+  nro_cuartos?: true;
+  nro_banos?: true;
+  descripcion?: true;
+  estado?: true;
+  fecha_publicacion?: true;
+  created_at?: true;
+  updated_at?: true;
+  propietario_id?: true;
+  _all?: true;
+};
 
 export type InmuebleAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which inmueble to aggregate.
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of inmuebles to fetch.
    */
-  orderBy?: Prisma.inmuebleOrderByWithRelationInput | Prisma.inmuebleOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.inmuebleOrderByWithRelationInput
+    | Prisma.inmuebleOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.inmuebleWhereUniqueInput
+  cursor?: Prisma.inmuebleWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmuebles from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmuebles.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned inmuebles
    **/
-  _count?: true | InmuebleCountAggregateInputType
+  _count?: true | InmuebleCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: InmuebleAvgAggregateInputType
+  _avg?: InmuebleAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: InmuebleSumAggregateInputType
+  _sum?: InmuebleSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: InmuebleMinAggregateInputType
+  _min?: InmuebleMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: InmuebleMaxAggregateInputType
-}
+  _max?: InmuebleMaxAggregateInputType;
+};
 
 export type GetInmuebleAggregateType<T extends InmuebleAggregateArgs> = {
-  [P in keyof T & keyof AggregateInmueble]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateInmueble]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateInmueble[P]>
-    : Prisma.GetScalarType<T[P], AggregateInmueble[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateInmueble[P]>;
+};
 
 export type inmuebleGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   orderBy?:
     | Prisma.inmuebleOrderByWithAggregationInput
-    | Prisma.inmuebleOrderByWithAggregationInput[]
-  by: Prisma.InmuebleScalarFieldEnum[] | Prisma.InmuebleScalarFieldEnum
-  having?: Prisma.inmuebleScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: InmuebleCountAggregateInputType | true
-  _avg?: InmuebleAvgAggregateInputType
-  _sum?: InmuebleSumAggregateInputType
-  _min?: InmuebleMinAggregateInputType
-  _max?: InmuebleMaxAggregateInputType
-}
+    | Prisma.inmuebleOrderByWithAggregationInput[];
+  by: Prisma.InmuebleScalarFieldEnum[] | Prisma.InmuebleScalarFieldEnum;
+  having?: Prisma.inmuebleScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: InmuebleCountAggregateInputType | true;
+  _avg?: InmuebleAvgAggregateInputType;
+  _sum?: InmuebleSumAggregateInputType;
+  _min?: InmuebleMinAggregateInputType;
+  _max?: InmuebleMaxAggregateInputType;
+};
 
 export type InmuebleGroupByOutputType = {
-  id: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria: $Enums.categoria | null
-  precio: runtime.Decimal
-  superficie_m2: runtime.Decimal | null
-  nro_cuartos: number | null
-  nro_banos: number | null
-  descripcion: string | null
-  estado: $Enums.estado_inmueble | null
-  fecha_publicacion: Date | null
-  created_at: Date | null
-  updated_at: Date | null
-  propietario_id: number
-  _count: InmuebleCountAggregateOutputType | null
-  _avg: InmuebleAvgAggregateOutputType | null
-  _sum: InmuebleSumAggregateOutputType | null
-  _min: InmuebleMinAggregateOutputType | null
-  _max: InmuebleMaxAggregateOutputType | null
-}
+  id: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria: $Enums.categoria | null;
+  precio: runtime.Decimal;
+  superficie_m2: runtime.Decimal | null;
+  nro_cuartos: number | null;
+  nro_banos: number | null;
+  descripcion: string | null;
+  estado: $Enums.estado_inmueble | null;
+  fecha_publicacion: Date | null;
+  created_at: Date | null;
+  updated_at: Date | null;
+  propietario_id: number;
+  _count: InmuebleCountAggregateOutputType | null;
+  _avg: InmuebleAvgAggregateOutputType | null;
+  _sum: InmuebleSumAggregateOutputType | null;
+  _min: InmuebleMinAggregateOutputType | null;
+  _max: InmuebleMaxAggregateOutputType | null;
+};
 
-export type GetInmuebleGroupByPayload<T extends inmuebleGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<InmuebleGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof InmuebleGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], InmuebleGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], InmuebleGroupByOutputType[P]>
-    }
-  >
->
+export type GetInmuebleGroupByPayload<T extends inmuebleGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<InmuebleGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof InmuebleGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], InmuebleGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], InmuebleGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type inmuebleWhereInput = {
-  AND?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[]
-  OR?: Prisma.inmuebleWhereInput[]
-  NOT?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[]
-  id?: Prisma.IntFilter<'inmueble'> | number
-  titulo?: Prisma.StringFilter<'inmueble'> | string
-  tipo_accion?: Prisma.Enumtipo_accionFilter<'inmueble'> | $Enums.tipo_accion
-  categoria?: Prisma.EnumcategoriaNullableFilter<'inmueble'> | $Enums.categoria | null
+  AND?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[];
+  OR?: Prisma.inmuebleWhereInput[];
+  NOT?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[];
+  id?: Prisma.IntFilter<"inmueble"> | number;
+  titulo?: Prisma.StringFilter<"inmueble"> | string;
+  tipo_accion?: Prisma.Enumtipo_accionFilter<"inmueble"> | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.EnumcategoriaNullableFilter<"inmueble">
+    | $Enums.categoria
+    | null;
   precio?:
-    | Prisma.DecimalFilter<'inmueble'>
+    | Prisma.DecimalFilter<"inmueble">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
-    | Prisma.DecimalNullableFilter<'inmueble'>
+    | Prisma.DecimalNullableFilter<"inmueble">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.IntNullableFilter<'inmueble'> | number | null
-  nro_banos?: Prisma.IntNullableFilter<'inmueble'> | number | null
-  descripcion?: Prisma.StringNullableFilter<'inmueble'> | string | null
-  estado?: Prisma.Enumestado_inmuebleNullableFilter<'inmueble'> | $Enums.estado_inmueble | null
-  fecha_publicacion?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-  created_at?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-  updated_at?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-  propietario_id?: Prisma.IntFilter<'inmueble'> | number
-  usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-  inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter
-  marcador_mapa?: Prisma.Marcador_mapaListRelationFilter
-  publicacion?: Prisma.PublicacionListRelationFilter
+    | null;
+  nro_cuartos?: Prisma.IntNullableFilter<"inmueble"> | number | null;
+  nro_banos?: Prisma.IntNullableFilter<"inmueble"> | number | null;
+  descripcion?: Prisma.StringNullableFilter<"inmueble"> | string | null;
+  estado?:
+    | Prisma.Enumestado_inmuebleNullableFilter<"inmueble">
+    | $Enums.estado_inmueble
+    | null;
+  fecha_publicacion?:
+    | Prisma.DateTimeNullableFilter<"inmueble">
+    | Date
+    | string
+    | null;
+  created_at?: Prisma.DateTimeNullableFilter<"inmueble"> | Date | string | null;
+  updated_at?: Prisma.DateTimeNullableFilter<"inmueble"> | Date | string | null;
+  propietario_id?: Prisma.IntFilter<"inmueble"> | number;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  >;
+  inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter;
+  marcador_mapa?: Prisma.Marcador_mapaListRelationFilter;
+  publicacion?: Prisma.PublicacionListRelationFilter;
   ubicacion_inmueble?: Prisma.XOR<
     Prisma.Ubicacion_inmuebleNullableScalarRelationFilter,
     Prisma.ubicacion_inmuebleWhereInput
-  > | null
-}
+  > | null;
+};
 
 export type inmuebleOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  tipo_accion?: Prisma.SortOrder
-  categoria?: Prisma.SortOrderInput | Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrderInput | Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrderInput | Prisma.SortOrder
-  nro_banos?: Prisma.SortOrderInput | Prisma.SortOrder
-  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder
-  estado?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  created_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaOrderByRelationAggregateInput
-  marcador_mapa?: Prisma.marcador_mapaOrderByRelationAggregateInput
-  publicacion?: Prisma.publicacionOrderByRelationAggregateInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  tipo_accion?: Prisma.SortOrder;
+  categoria?: Prisma.SortOrderInput | Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrderInput | Prisma.SortOrder;
+  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  created_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaOrderByRelationAggregateInput;
+  marcador_mapa?: Prisma.marcador_mapaOrderByRelationAggregateInput;
+  publicacion?: Prisma.publicacionOrderByRelationAggregateInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleOrderByWithRelationInput;
+};
 
 export type inmuebleWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[]
-    OR?: Prisma.inmuebleWhereInput[]
-    NOT?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[]
-    titulo?: Prisma.StringFilter<'inmueble'> | string
-    tipo_accion?: Prisma.Enumtipo_accionFilter<'inmueble'> | $Enums.tipo_accion
-    categoria?: Prisma.EnumcategoriaNullableFilter<'inmueble'> | $Enums.categoria | null
+    id?: number;
+    AND?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[];
+    OR?: Prisma.inmuebleWhereInput[];
+    NOT?: Prisma.inmuebleWhereInput | Prisma.inmuebleWhereInput[];
+    titulo?: Prisma.StringFilter<"inmueble"> | string;
+    tipo_accion?: Prisma.Enumtipo_accionFilter<"inmueble"> | $Enums.tipo_accion;
+    categoria?:
+      | Prisma.EnumcategoriaNullableFilter<"inmueble">
+      | $Enums.categoria
+      | null;
     precio?:
-      | Prisma.DecimalFilter<'inmueble'>
+      | Prisma.DecimalFilter<"inmueble">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
+      | string;
     superficie_m2?:
-      | Prisma.DecimalNullableFilter<'inmueble'>
+      | Prisma.DecimalNullableFilter<"inmueble">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
-    nro_cuartos?: Prisma.IntNullableFilter<'inmueble'> | number | null
-    nro_banos?: Prisma.IntNullableFilter<'inmueble'> | number | null
-    descripcion?: Prisma.StringNullableFilter<'inmueble'> | string | null
-    estado?: Prisma.Enumestado_inmuebleNullableFilter<'inmueble'> | $Enums.estado_inmueble | null
-    fecha_publicacion?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-    created_at?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-    updated_at?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-    propietario_id?: Prisma.IntFilter<'inmueble'> | number
-    usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-    inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter
-    marcador_mapa?: Prisma.Marcador_mapaListRelationFilter
-    publicacion?: Prisma.PublicacionListRelationFilter
+      | null;
+    nro_cuartos?: Prisma.IntNullableFilter<"inmueble"> | number | null;
+    nro_banos?: Prisma.IntNullableFilter<"inmueble"> | number | null;
+    descripcion?: Prisma.StringNullableFilter<"inmueble"> | string | null;
+    estado?:
+      | Prisma.Enumestado_inmuebleNullableFilter<"inmueble">
+      | $Enums.estado_inmueble
+      | null;
+    fecha_publicacion?:
+      | Prisma.DateTimeNullableFilter<"inmueble">
+      | Date
+      | string
+      | null;
+    created_at?:
+      | Prisma.DateTimeNullableFilter<"inmueble">
+      | Date
+      | string
+      | null;
+    updated_at?:
+      | Prisma.DateTimeNullableFilter<"inmueble">
+      | Date
+      | string
+      | null;
+    propietario_id?: Prisma.IntFilter<"inmueble"> | number;
+    usuario?: Prisma.XOR<
+      Prisma.UsuarioScalarRelationFilter,
+      Prisma.usuarioWhereInput
+    >;
+    inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter;
+    marcador_mapa?: Prisma.Marcador_mapaListRelationFilter;
+    publicacion?: Prisma.PublicacionListRelationFilter;
     ubicacion_inmueble?: Prisma.XOR<
       Prisma.Ubicacion_inmuebleNullableScalarRelationFilter,
       Prisma.ubicacion_inmuebleWhereInput
-    > | null
+    > | null;
   },
-  'id'
->
+  "id"
+>;
 
 export type inmuebleOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  tipo_accion?: Prisma.SortOrder
-  categoria?: Prisma.SortOrderInput | Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrderInput | Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrderInput | Prisma.SortOrder
-  nro_banos?: Prisma.SortOrderInput | Prisma.SortOrder
-  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder
-  estado?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  created_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-  _count?: Prisma.inmuebleCountOrderByAggregateInput
-  _avg?: Prisma.inmuebleAvgOrderByAggregateInput
-  _max?: Prisma.inmuebleMaxOrderByAggregateInput
-  _min?: Prisma.inmuebleMinOrderByAggregateInput
-  _sum?: Prisma.inmuebleSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  tipo_accion?: Prisma.SortOrder;
+  categoria?: Prisma.SortOrderInput | Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrderInput | Prisma.SortOrder;
+  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  created_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+  _count?: Prisma.inmuebleCountOrderByAggregateInput;
+  _avg?: Prisma.inmuebleAvgOrderByAggregateInput;
+  _max?: Prisma.inmuebleMaxOrderByAggregateInput;
+  _min?: Prisma.inmuebleMinOrderByAggregateInput;
+  _sum?: Prisma.inmuebleSumOrderByAggregateInput;
+};
 
 export type inmuebleScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.inmuebleScalarWhereWithAggregatesInput
-    | Prisma.inmuebleScalarWhereWithAggregatesInput[]
-  OR?: Prisma.inmuebleScalarWhereWithAggregatesInput[]
+    | Prisma.inmuebleScalarWhereWithAggregatesInput[];
+  OR?: Prisma.inmuebleScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.inmuebleScalarWhereWithAggregatesInput
-    | Prisma.inmuebleScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'inmueble'> | number
-  titulo?: Prisma.StringWithAggregatesFilter<'inmueble'> | string
-  tipo_accion?: Prisma.Enumtipo_accionWithAggregatesFilter<'inmueble'> | $Enums.tipo_accion
-  categoria?: Prisma.EnumcategoriaNullableWithAggregatesFilter<'inmueble'> | $Enums.categoria | null
+    | Prisma.inmuebleScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"inmueble"> | number;
+  titulo?: Prisma.StringWithAggregatesFilter<"inmueble"> | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionWithAggregatesFilter<"inmueble">
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.EnumcategoriaNullableWithAggregatesFilter<"inmueble">
+    | $Enums.categoria
+    | null;
   precio?:
-    | Prisma.DecimalWithAggregatesFilter<'inmueble'>
+    | Prisma.DecimalWithAggregatesFilter<"inmueble">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'inmueble'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"inmueble">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.IntNullableWithAggregatesFilter<'inmueble'> | number | null
-  nro_banos?: Prisma.IntNullableWithAggregatesFilter<'inmueble'> | number | null
-  descripcion?: Prisma.StringNullableWithAggregatesFilter<'inmueble'> | string | null
+    | null;
+  nro_cuartos?:
+    | Prisma.IntNullableWithAggregatesFilter<"inmueble">
+    | number
+    | null;
+  nro_banos?:
+    | Prisma.IntNullableWithAggregatesFilter<"inmueble">
+    | number
+    | null;
+  descripcion?:
+    | Prisma.StringNullableWithAggregatesFilter<"inmueble">
+    | string
+    | null;
   estado?:
-    | Prisma.Enumestado_inmuebleNullableWithAggregatesFilter<'inmueble'>
+    | Prisma.Enumestado_inmuebleNullableWithAggregatesFilter<"inmueble">
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.DateTimeNullableWithAggregatesFilter<'inmueble'> | Date | string | null
-  created_at?: Prisma.DateTimeNullableWithAggregatesFilter<'inmueble'> | Date | string | null
-  updated_at?: Prisma.DateTimeNullableWithAggregatesFilter<'inmueble'> | Date | string | null
-  propietario_id?: Prisma.IntWithAggregatesFilter<'inmueble'> | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"inmueble">
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"inmueble">
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"inmueble">
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntWithAggregatesFilter<"inmueble"> | number;
+};
 
 export type inmuebleCreateInput = {
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput
-}
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleUncheckedCreateInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  propietario_id: number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  propietario_id: number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleUpdateInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleCreateManyInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  propietario_id: number
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  propietario_id: number;
+};
 
 export type inmuebleUpdateManyMutationInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type inmuebleUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type inmuebleCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  tipo_accion?: Prisma.SortOrder
-  categoria?: Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrder
-  nro_banos?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  tipo_accion?: Prisma.SortOrder;
+  categoria?: Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrder;
+  created_at?: Prisma.SortOrder;
+  updated_at?: Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+};
 
 export type inmuebleAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrder
-  nro_banos?: Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+};
 
 export type inmuebleMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  tipo_accion?: Prisma.SortOrder
-  categoria?: Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrder
-  nro_banos?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  tipo_accion?: Prisma.SortOrder;
+  categoria?: Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrder;
+  created_at?: Prisma.SortOrder;
+  updated_at?: Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+};
 
 export type inmuebleMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  tipo_accion?: Prisma.SortOrder
-  categoria?: Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrder
-  nro_banos?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  tipo_accion?: Prisma.SortOrder;
+  categoria?: Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrder;
+  created_at?: Prisma.SortOrder;
+  updated_at?: Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+};
 
 export type inmuebleSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  precio?: Prisma.SortOrder
-  superficie_m2?: Prisma.SortOrder
-  nro_cuartos?: Prisma.SortOrder
-  nro_banos?: Prisma.SortOrder
-  propietario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  precio?: Prisma.SortOrder;
+  superficie_m2?: Prisma.SortOrder;
+  nro_cuartos?: Prisma.SortOrder;
+  nro_banos?: Prisma.SortOrder;
+  propietario_id?: Prisma.SortOrder;
+};
 
 export type InmuebleScalarRelationFilter = {
-  is?: Prisma.inmuebleWhereInput
-  isNot?: Prisma.inmuebleWhereInput
-}
+  is?: Prisma.inmuebleWhereInput;
+  isNot?: Prisma.inmuebleWhereInput;
+};
 
 export type InmuebleListRelationFilter = {
-  every?: Prisma.inmuebleWhereInput
-  some?: Prisma.inmuebleWhereInput
-  none?: Prisma.inmuebleWhereInput
-}
+  every?: Prisma.inmuebleWhereInput;
+  some?: Prisma.inmuebleWhereInput;
+  none?: Prisma.inmuebleWhereInput;
+};
 
 export type inmuebleOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type Enumtipo_accionFieldUpdateOperationsInput = {
-  set?: $Enums.tipo_accion
-}
+  set?: $Enums.tipo_accion;
+};
 
 export type NullableEnumcategoriaFieldUpdateOperationsInput = {
-  set?: $Enums.categoria | null
-}
+  set?: $Enums.categoria | null;
+};
 
 export type NullableEnumestado_inmuebleFieldUpdateOperationsInput = {
-  set?: $Enums.estado_inmueble | null
-}
+  set?: $Enums.estado_inmueble | null;
+};
 
 export type inmuebleCreateNestedOneWithoutInmueble_etiquetaInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutInmueble_etiquetaInput,
     Prisma.inmuebleUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutInmueble_etiquetaInput
-  connect?: Prisma.inmuebleWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutInmueble_etiquetaInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
+};
 
 export type inmuebleUpdateOneRequiredWithoutInmueble_etiquetaNestedInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutInmueble_etiquetaInput,
     Prisma.inmuebleUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutInmueble_etiquetaInput
-  upsert?: Prisma.inmuebleUpsertWithoutInmueble_etiquetaInput
-  connect?: Prisma.inmuebleWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutInmueble_etiquetaInput;
+  upsert?: Prisma.inmuebleUpsertWithoutInmueble_etiquetaInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.inmuebleUpdateToOneWithWhereWithoutInmueble_etiquetaInput,
       Prisma.inmuebleUpdateWithoutInmueble_etiquetaInput
     >,
     Prisma.inmuebleUncheckedUpdateWithoutInmueble_etiquetaInput
-  >
-}
+  >;
+};
 
 export type inmuebleCreateNestedOneWithoutMarcador_mapaInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutMarcador_mapaInput,
     Prisma.inmuebleUncheckedCreateWithoutMarcador_mapaInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutMarcador_mapaInput
-  connect?: Prisma.inmuebleWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutMarcador_mapaInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
+};
 
 export type inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutMarcador_mapaInput,
     Prisma.inmuebleUncheckedCreateWithoutMarcador_mapaInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutMarcador_mapaInput
-  upsert?: Prisma.inmuebleUpsertWithoutMarcador_mapaInput
-  connect?: Prisma.inmuebleWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutMarcador_mapaInput;
+  upsert?: Prisma.inmuebleUpsertWithoutMarcador_mapaInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.inmuebleUpdateToOneWithWhereWithoutMarcador_mapaInput,
       Prisma.inmuebleUpdateWithoutMarcador_mapaInput
     >,
     Prisma.inmuebleUncheckedUpdateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type inmuebleCreateNestedOneWithoutPublicacionInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutPublicacionInput,
     Prisma.inmuebleUncheckedCreateWithoutPublicacionInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutPublicacionInput
-  connect?: Prisma.inmuebleWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutPublicacionInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
+};
 
 export type inmuebleUpdateOneRequiredWithoutPublicacionNestedInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutPublicacionInput,
     Prisma.inmuebleUncheckedCreateWithoutPublicacionInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutPublicacionInput
-  upsert?: Prisma.inmuebleUpsertWithoutPublicacionInput
-  connect?: Prisma.inmuebleWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutPublicacionInput;
+  upsert?: Prisma.inmuebleUpsertWithoutPublicacionInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.inmuebleUpdateToOneWithWhereWithoutPublicacionInput,
       Prisma.inmuebleUpdateWithoutPublicacionInput
     >,
     Prisma.inmuebleUncheckedUpdateWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type inmuebleCreateNestedOneWithoutUbicacion_inmuebleInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutUbicacion_inmuebleInput,
     Prisma.inmuebleUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutUbicacion_inmuebleInput
-  connect?: Prisma.inmuebleWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutUbicacion_inmuebleInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
+};
 
 export type inmuebleUpdateOneRequiredWithoutUbicacion_inmuebleNestedInput = {
   create?: Prisma.XOR<
     Prisma.inmuebleCreateWithoutUbicacion_inmuebleInput,
     Prisma.inmuebleUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutUbicacion_inmuebleInput
-  upsert?: Prisma.inmuebleUpsertWithoutUbicacion_inmuebleInput
-  connect?: Prisma.inmuebleWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.inmuebleCreateOrConnectWithoutUbicacion_inmuebleInput;
+  upsert?: Prisma.inmuebleUpsertWithoutUbicacion_inmuebleInput;
+  connect?: Prisma.inmuebleWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.inmuebleUpdateToOneWithWhereWithoutUbicacion_inmuebleInput,
       Prisma.inmuebleUpdateWithoutUbicacion_inmuebleInput
     >,
     Prisma.inmuebleUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type inmuebleCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -845,13 +994,13 @@ export type inmuebleCreateNestedManyWithoutUsuarioInput = {
         Prisma.inmuebleUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.inmuebleCreateWithoutUsuarioInput[]
-    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput
-    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope
-  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-}
+    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope;
+  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
+};
 
 export type inmuebleUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -860,13 +1009,13 @@ export type inmuebleUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.inmuebleUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.inmuebleCreateWithoutUsuarioInput[]
-    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput
-    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope
-  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-}
+    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope;
+  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
+};
 
 export type inmuebleUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -875,26 +1024,30 @@ export type inmuebleUpdateManyWithoutUsuarioNestedInput = {
         Prisma.inmuebleUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.inmuebleCreateWithoutUsuarioInput[]
-    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput
-    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.inmuebleUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.inmuebleUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope
-  set?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-  disconnect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-  delete?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
+    | Prisma.inmuebleUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope;
+  set?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
+  disconnect?:
+    | Prisma.inmuebleWhereUniqueInput
+    | Prisma.inmuebleWhereUniqueInput[];
+  delete?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
+  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
   update?:
     | Prisma.inmuebleUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.inmuebleUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.inmuebleUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.inmuebleUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.inmuebleUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.inmuebleScalarWhereInput | Prisma.inmuebleScalarWhereInput[]
-}
+    | Prisma.inmuebleUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.inmuebleScalarWhereInput
+    | Prisma.inmuebleScalarWhereInput[];
+};
 
 export type inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -903,1022 +1056,1307 @@ export type inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.inmuebleUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.inmuebleCreateWithoutUsuarioInput[]
-    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.inmuebleUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput
-    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.inmuebleCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.inmuebleUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.inmuebleUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope
-  set?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-  disconnect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-  delete?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
-  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[]
+    | Prisma.inmuebleUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.inmuebleCreateManyUsuarioInputEnvelope;
+  set?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
+  disconnect?:
+    | Prisma.inmuebleWhereUniqueInput
+    | Prisma.inmuebleWhereUniqueInput[];
+  delete?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
+  connect?: Prisma.inmuebleWhereUniqueInput | Prisma.inmuebleWhereUniqueInput[];
   update?:
     | Prisma.inmuebleUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.inmuebleUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.inmuebleUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.inmuebleUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.inmuebleUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.inmuebleScalarWhereInput | Prisma.inmuebleScalarWhereInput[]
-}
+    | Prisma.inmuebleUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.inmuebleScalarWhereInput
+    | Prisma.inmuebleScalarWhereInput[];
+};
 
 export type inmuebleCreateWithoutInmueble_etiquetaInput = {
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput
-}
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleUncheckedCreateWithoutInmueble_etiquetaInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  propietario_id: number
-  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  propietario_id: number;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleCreateOrConnectWithoutInmueble_etiquetaInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutInmueble_etiquetaInput,
     Prisma.inmuebleUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpsertWithoutInmueble_etiquetaInput = {
   update: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutInmueble_etiquetaInput,
     Prisma.inmuebleUncheckedUpdateWithoutInmueble_etiquetaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutInmueble_etiquetaInput,
     Prisma.inmuebleUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-  where?: Prisma.inmuebleWhereInput
-}
+  >;
+  where?: Prisma.inmuebleWhereInput;
+};
 
 export type inmuebleUpdateToOneWithWhereWithoutInmueble_etiquetaInput = {
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   data: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutInmueble_etiquetaInput,
     Prisma.inmuebleUncheckedUpdateWithoutInmueble_etiquetaInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpdateWithoutInmueble_etiquetaInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateWithoutInmueble_etiquetaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleCreateWithoutMarcador_mapaInput = {
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput
-}
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleUncheckedCreateWithoutMarcador_mapaInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  propietario_id: number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  propietario_id: number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleCreateOrConnectWithoutMarcador_mapaInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutMarcador_mapaInput,
     Prisma.inmuebleUncheckedCreateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpsertWithoutMarcador_mapaInput = {
   update: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutMarcador_mapaInput,
     Prisma.inmuebleUncheckedUpdateWithoutMarcador_mapaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutMarcador_mapaInput,
     Prisma.inmuebleUncheckedCreateWithoutMarcador_mapaInput
-  >
-  where?: Prisma.inmuebleWhereInput
-}
+  >;
+  where?: Prisma.inmuebleWhereInput;
+};
 
 export type inmuebleUpdateToOneWithWhereWithoutMarcador_mapaInput = {
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   data: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutMarcador_mapaInput,
     Prisma.inmuebleUncheckedUpdateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpdateWithoutMarcador_mapaInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateWithoutMarcador_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleCreateWithoutPublicacionInput = {
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput
-}
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleUncheckedCreateWithoutPublicacionInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  propietario_id: number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  propietario_id: number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleCreateOrConnectWithoutPublicacionInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutPublicacionInput,
     Prisma.inmuebleUncheckedCreateWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpsertWithoutPublicacionInput = {
   update: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutPublicacionInput,
     Prisma.inmuebleUncheckedUpdateWithoutPublicacionInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutPublicacionInput,
     Prisma.inmuebleUncheckedCreateWithoutPublicacionInput
-  >
-  where?: Prisma.inmuebleWhereInput
-}
+  >;
+  where?: Prisma.inmuebleWhereInput;
+};
 
 export type inmuebleUpdateToOneWithWhereWithoutPublicacionInput = {
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   data: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutPublicacionInput,
     Prisma.inmuebleUncheckedUpdateWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpdateWithoutPublicacionInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateWithoutPublicacionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleCreateWithoutUbicacion_inmuebleInput = {
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput
-}
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutInmuebleInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput;
+};
 
 export type inmuebleUncheckedCreateWithoutUbicacion_inmuebleInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  propietario_id: number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  propietario_id: number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput;
+};
 
 export type inmuebleCreateOrConnectWithoutUbicacion_inmuebleInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutUbicacion_inmuebleInput,
     Prisma.inmuebleUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpsertWithoutUbicacion_inmuebleInput = {
   update: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutUbicacion_inmuebleInput,
     Prisma.inmuebleUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutUbicacion_inmuebleInput,
     Prisma.inmuebleUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-  where?: Prisma.inmuebleWhereInput
-}
+  >;
+  where?: Prisma.inmuebleWhereInput;
+};
 
 export type inmuebleUpdateToOneWithWhereWithoutUbicacion_inmuebleInput = {
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   data: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutUbicacion_inmuebleInput,
     Prisma.inmuebleUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpdateWithoutUbicacion_inmuebleInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutInmuebleNestedInput;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateWithoutUbicacion_inmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  propietario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput;
+};
 
 export type inmuebleCreateWithoutUsuarioInput = {
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput
-}
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput
-  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput;
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutInmuebleInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedOneWithoutInmuebleInput;
+};
 
 export type inmuebleCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutUsuarioInput,
     Prisma.inmuebleUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type inmuebleCreateManyUsuarioInputEnvelope = {
-  data: Prisma.inmuebleCreateManyUsuarioInput | Prisma.inmuebleCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.inmuebleCreateManyUsuarioInput
+    | Prisma.inmuebleCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type inmuebleUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutUsuarioInput,
     Prisma.inmuebleUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmuebleCreateWithoutUsuarioInput,
     Prisma.inmuebleUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.inmuebleUpdateWithoutUsuarioInput,
     Prisma.inmuebleUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type inmuebleUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.inmuebleScalarWhereInput
+  where: Prisma.inmuebleScalarWhereInput;
   data: Prisma.XOR<
     Prisma.inmuebleUpdateManyMutationInput,
     Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type inmuebleScalarWhereInput = {
-  AND?: Prisma.inmuebleScalarWhereInput | Prisma.inmuebleScalarWhereInput[]
-  OR?: Prisma.inmuebleScalarWhereInput[]
-  NOT?: Prisma.inmuebleScalarWhereInput | Prisma.inmuebleScalarWhereInput[]
-  id?: Prisma.IntFilter<'inmueble'> | number
-  titulo?: Prisma.StringFilter<'inmueble'> | string
-  tipo_accion?: Prisma.Enumtipo_accionFilter<'inmueble'> | $Enums.tipo_accion
-  categoria?: Prisma.EnumcategoriaNullableFilter<'inmueble'> | $Enums.categoria | null
+  AND?: Prisma.inmuebleScalarWhereInput | Prisma.inmuebleScalarWhereInput[];
+  OR?: Prisma.inmuebleScalarWhereInput[];
+  NOT?: Prisma.inmuebleScalarWhereInput | Prisma.inmuebleScalarWhereInput[];
+  id?: Prisma.IntFilter<"inmueble"> | number;
+  titulo?: Prisma.StringFilter<"inmueble"> | string;
+  tipo_accion?: Prisma.Enumtipo_accionFilter<"inmueble"> | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.EnumcategoriaNullableFilter<"inmueble">
+    | $Enums.categoria
+    | null;
   precio?:
-    | Prisma.DecimalFilter<'inmueble'>
+    | Prisma.DecimalFilter<"inmueble">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
-    | Prisma.DecimalNullableFilter<'inmueble'>
+    | Prisma.DecimalNullableFilter<"inmueble">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.IntNullableFilter<'inmueble'> | number | null
-  nro_banos?: Prisma.IntNullableFilter<'inmueble'> | number | null
-  descripcion?: Prisma.StringNullableFilter<'inmueble'> | string | null
-  estado?: Prisma.Enumestado_inmuebleNullableFilter<'inmueble'> | $Enums.estado_inmueble | null
-  fecha_publicacion?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-  created_at?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-  updated_at?: Prisma.DateTimeNullableFilter<'inmueble'> | Date | string | null
-  propietario_id?: Prisma.IntFilter<'inmueble'> | number
-}
+    | null;
+  nro_cuartos?: Prisma.IntNullableFilter<"inmueble"> | number | null;
+  nro_banos?: Prisma.IntNullableFilter<"inmueble"> | number | null;
+  descripcion?: Prisma.StringNullableFilter<"inmueble"> | string | null;
+  estado?:
+    | Prisma.Enumestado_inmuebleNullableFilter<"inmueble">
+    | $Enums.estado_inmueble
+    | null;
+  fecha_publicacion?:
+    | Prisma.DateTimeNullableFilter<"inmueble">
+    | Date
+    | string
+    | null;
+  created_at?: Prisma.DateTimeNullableFilter<"inmueble"> | Date | string | null;
+  updated_at?: Prisma.DateTimeNullableFilter<"inmueble"> | Date | string | null;
+  propietario_id?: Prisma.IntFilter<"inmueble"> | number;
+};
 
 export type inmuebleCreateManyUsuarioInput = {
-  id?: number
-  titulo: string
-  tipo_accion: $Enums.tipo_accion
-  categoria?: $Enums.categoria | null
-  precio: runtime.Decimal | runtime.DecimalJsLike | number | string
-  superficie_m2?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nro_cuartos?: number | null
-  nro_banos?: number | null
-  descripcion?: string | null
-  estado?: $Enums.estado_inmueble | null
-  fecha_publicacion?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-}
+  id?: number;
+  titulo: string;
+  tipo_accion: $Enums.tipo_accion;
+  categoria?: $Enums.categoria | null;
+  precio: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  superficie_m2?:
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null;
+  nro_cuartos?: number | null;
+  nro_banos?: number | null;
+  descripcion?: string | null;
+  estado?: $Enums.estado_inmueble | null;
+  fecha_publicacion?: Date | string | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
+};
 
 export type inmuebleUpdateWithoutUsuarioInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput
-  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput;
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutInmuebleNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateOneWithoutInmuebleNestedInput;
+};
 
 export type inmuebleUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo_accion?: Prisma.Enumtipo_accionFieldUpdateOperationsInput | $Enums.tipo_accion
-  categoria?: Prisma.NullableEnumcategoriaFieldUpdateOperationsInput | $Enums.categoria | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo_accion?:
+    | Prisma.Enumtipo_accionFieldUpdateOperationsInput
+    | $Enums.tipo_accion;
+  categoria?:
+    | Prisma.NullableEnumcategoriaFieldUpdateOperationsInput
+    | $Enums.categoria
+    | null;
   precio?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   superficie_m2?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    | null;
+  nro_cuartos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  nro_banos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_inmuebleFieldUpdateOperationsInput
     | $Enums.estado_inmueble
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  created_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updated_at?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 /**
  * Count Type InmuebleCountOutputType
  */
 
 export type InmuebleCountOutputType = {
-  inmueble_etiqueta: number
-  marcador_mapa: number
-  publicacion: number
-}
+  inmueble_etiqueta: number;
+  marcador_mapa: number;
+  publicacion: number;
+};
 
 export type InmuebleCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble_etiqueta?: boolean | InmuebleCountOutputTypeCountInmueble_etiquetaArgs
-  marcador_mapa?: boolean | InmuebleCountOutputTypeCountMarcador_mapaArgs
-  publicacion?: boolean | InmuebleCountOutputTypeCountPublicacionArgs
-}
+  inmueble_etiqueta?:
+    | boolean
+    | InmuebleCountOutputTypeCountInmueble_etiquetaArgs;
+  marcador_mapa?: boolean | InmuebleCountOutputTypeCountMarcador_mapaArgs;
+  publicacion?: boolean | InmuebleCountOutputTypeCountPublicacionArgs;
+};
 
 /**
  * InmuebleCountOutputType without action
  */
 export type InmuebleCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the InmuebleCountOutputType
    */
-  select?: Prisma.InmuebleCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.InmuebleCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * InmuebleCountOutputType without action
  */
 export type InmuebleCountOutputTypeCountInmueble_etiquetaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.inmueble_etiquetaWhereInput
-}
+  where?: Prisma.inmueble_etiquetaWhereInput;
+};
 
 /**
  * InmuebleCountOutputType without action
  */
 export type InmuebleCountOutputTypeCountMarcador_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.marcador_mapaWhereInput
-}
+  where?: Prisma.marcador_mapaWhereInput;
+};
 
 /**
  * InmuebleCountOutputType without action
  */
 export type InmuebleCountOutputTypeCountPublicacionArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.publicacionWhereInput
-}
+  where?: Prisma.publicacionWhereInput;
+};
 
 export type inmuebleSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    tipo_accion?: boolean
-    categoria?: boolean
-    precio?: boolean
-    superficie_m2?: boolean
-    nro_cuartos?: boolean
-    nro_banos?: boolean
-    descripcion?: boolean
-    estado?: boolean
-    fecha_publicacion?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    propietario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-    inmueble_etiqueta?: boolean | Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs>
-    marcador_mapa?: boolean | Prisma.inmueble$marcador_mapaArgs<ExtArgs>
-    publicacion?: boolean | Prisma.inmueble$publicacionArgs<ExtArgs>
-    ubicacion_inmueble?: boolean | Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs>
-    _count?: boolean | Prisma.InmuebleCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    tipo_accion?: boolean;
+    categoria?: boolean;
+    precio?: boolean;
+    superficie_m2?: boolean;
+    nro_cuartos?: boolean;
+    nro_banos?: boolean;
+    descripcion?: boolean;
+    estado?: boolean;
+    fecha_publicacion?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+    propietario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+    inmueble_etiqueta?:
+      | boolean
+      | Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs>;
+    marcador_mapa?: boolean | Prisma.inmueble$marcador_mapaArgs<ExtArgs>;
+    publicacion?: boolean | Prisma.inmueble$publicacionArgs<ExtArgs>;
+    ubicacion_inmueble?:
+      | boolean
+      | Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs>;
+    _count?: boolean | Prisma.InmuebleCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['inmueble']
->
+  ExtArgs["result"]["inmueble"]
+>;
 
 export type inmuebleSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    tipo_accion?: boolean
-    categoria?: boolean
-    precio?: boolean
-    superficie_m2?: boolean
-    nro_cuartos?: boolean
-    nro_banos?: boolean
-    descripcion?: boolean
-    estado?: boolean
-    fecha_publicacion?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    propietario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    tipo_accion?: boolean;
+    categoria?: boolean;
+    precio?: boolean;
+    superficie_m2?: boolean;
+    nro_cuartos?: boolean;
+    nro_banos?: boolean;
+    descripcion?: boolean;
+    estado?: boolean;
+    fecha_publicacion?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+    propietario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['inmueble']
->
+  ExtArgs["result"]["inmueble"]
+>;
 
 export type inmuebleSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    tipo_accion?: boolean
-    categoria?: boolean
-    precio?: boolean
-    superficie_m2?: boolean
-    nro_cuartos?: boolean
-    nro_banos?: boolean
-    descripcion?: boolean
-    estado?: boolean
-    fecha_publicacion?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    propietario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    tipo_accion?: boolean;
+    categoria?: boolean;
+    precio?: boolean;
+    superficie_m2?: boolean;
+    nro_cuartos?: boolean;
+    nro_banos?: boolean;
+    descripcion?: boolean;
+    estado?: boolean;
+    fecha_publicacion?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+    propietario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['inmueble']
->
+  ExtArgs["result"]["inmueble"]
+>;
 
 export type inmuebleSelectScalar = {
-  id?: boolean
-  titulo?: boolean
-  tipo_accion?: boolean
-  categoria?: boolean
-  precio?: boolean
-  superficie_m2?: boolean
-  nro_cuartos?: boolean
-  nro_banos?: boolean
-  descripcion?: boolean
-  estado?: boolean
-  fecha_publicacion?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  propietario_id?: boolean
-}
+  id?: boolean;
+  titulo?: boolean;
+  tipo_accion?: boolean;
+  categoria?: boolean;
+  precio?: boolean;
+  superficie_m2?: boolean;
+  nro_cuartos?: boolean;
+  nro_banos?: boolean;
+  descripcion?: boolean;
+  estado?: boolean;
+  fecha_publicacion?: boolean;
+  created_at?: boolean;
+  updated_at?: boolean;
+  propietario_id?: boolean;
+};
 
 export type inmuebleOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'titulo'
-  | 'tipo_accion'
-  | 'categoria'
-  | 'precio'
-  | 'superficie_m2'
-  | 'nro_cuartos'
-  | 'nro_banos'
-  | 'descripcion'
-  | 'estado'
-  | 'fecha_publicacion'
-  | 'created_at'
-  | 'updated_at'
-  | 'propietario_id',
-  ExtArgs['result']['inmueble']
->
+  | "id"
+  | "titulo"
+  | "tipo_accion"
+  | "categoria"
+  | "precio"
+  | "superficie_m2"
+  | "nro_cuartos"
+  | "nro_banos"
+  | "descripcion"
+  | "estado"
+  | "fecha_publicacion"
+  | "created_at"
+  | "updated_at"
+  | "propietario_id",
+  ExtArgs["result"]["inmueble"]
+>;
 export type inmuebleInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-  inmueble_etiqueta?: boolean | Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs>
-  marcador_mapa?: boolean | Prisma.inmueble$marcador_mapaArgs<ExtArgs>
-  publicacion?: boolean | Prisma.inmueble$publicacionArgs<ExtArgs>
-  ubicacion_inmueble?: boolean | Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs>
-  _count?: boolean | Prisma.InmuebleCountOutputTypeDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+  inmueble_etiqueta?: boolean | Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs>;
+  marcador_mapa?: boolean | Prisma.inmueble$marcador_mapaArgs<ExtArgs>;
+  publicacion?: boolean | Prisma.inmueble$publicacionArgs<ExtArgs>;
+  ubicacion_inmueble?:
+    | boolean
+    | Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs>;
+  _count?: boolean | Prisma.InmuebleCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type inmuebleIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type inmuebleIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 
 export type $inmueblePayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'inmueble'
+  name: "inmueble";
   objects: {
-    usuario: Prisma.$usuarioPayload<ExtArgs>
-    inmueble_etiqueta: Prisma.$inmueble_etiquetaPayload<ExtArgs>[]
-    marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs>[]
-    publicacion: Prisma.$publicacionPayload<ExtArgs>[]
-    ubicacion_inmueble: Prisma.$ubicacion_inmueblePayload<ExtArgs> | null
-  }
+    usuario: Prisma.$usuarioPayload<ExtArgs>;
+    inmueble_etiqueta: Prisma.$inmueble_etiquetaPayload<ExtArgs>[];
+    marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs>[];
+    publicacion: Prisma.$publicacionPayload<ExtArgs>[];
+    ubicacion_inmueble: Prisma.$ubicacion_inmueblePayload<ExtArgs> | null;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      titulo: string
-      tipo_accion: $Enums.tipo_accion
-      categoria: $Enums.categoria | null
-      precio: runtime.Decimal
-      superficie_m2: runtime.Decimal | null
-      nro_cuartos: number | null
-      nro_banos: number | null
-      descripcion: string | null
-      estado: $Enums.estado_inmueble | null
-      fecha_publicacion: Date | null
-      created_at: Date | null
-      updated_at: Date | null
-      propietario_id: number
+      id: number;
+      titulo: string;
+      tipo_accion: $Enums.tipo_accion;
+      categoria: $Enums.categoria | null;
+      precio: runtime.Decimal;
+      superficie_m2: runtime.Decimal | null;
+      nro_cuartos: number | null;
+      nro_banos: number | null;
+      descripcion: string | null;
+      estado: $Enums.estado_inmueble | null;
+      fecha_publicacion: Date | null;
+      created_at: Date | null;
+      updated_at: Date | null;
+      propietario_id: number;
     },
-    ExtArgs['result']['inmueble']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["inmueble"]
+  >;
+  composites: {};
+};
 
-export type inmuebleGetPayload<S extends boolean | null | undefined | inmuebleDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$inmueblePayload, S>
+export type inmuebleGetPayload<
+  S extends boolean | null | undefined | inmuebleDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$inmueblePayload, S>;
 
 export type inmuebleCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<inmuebleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: InmuebleCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<inmuebleFindManyArgs, "select" | "include" | "distinct" | "omit"> & {
+  select?: InmuebleCountAggregateInputType | true;
+};
 
 export interface inmuebleDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['inmueble']; meta: { name: 'inmueble' } }
+  [K: symbol]: {
+    types: Prisma.TypeMap<ExtArgs>["model"]["inmueble"];
+    meta: { name: "inmueble" };
+  };
   /**
    * Find zero or one Inmueble that matches the filter.
    * @param {inmuebleFindUniqueArgs} args - Arguments to find a Inmueble
@@ -1931,18 +2369,18 @@ export interface inmuebleDelegate<
    * })
    */
   findUnique<T extends inmuebleFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, inmuebleFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Inmueble that matches the filter or throw an error with `error.code='P2025'`
@@ -1957,18 +2395,18 @@ export interface inmuebleDelegate<
    * })
    */
   findUniqueOrThrow<T extends inmuebleFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, inmuebleFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Inmueble that matches the filter.
@@ -1984,18 +2422,18 @@ export interface inmuebleDelegate<
    * })
    */
   findFirst<T extends inmuebleFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, inmuebleFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, inmuebleFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Inmueble that matches the filter or
@@ -2012,18 +2450,18 @@ export interface inmuebleDelegate<
    * })
    */
   findFirstOrThrow<T extends inmuebleFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, inmuebleFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, inmuebleFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Inmuebles that matches the filter.
@@ -2042,15 +2480,15 @@ export interface inmuebleDelegate<
    *
    */
   findMany<T extends inmuebleFindManyArgs>(
-    args?: Prisma.SelectSubset<T, inmuebleFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, inmuebleFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Inmueble.
@@ -2065,18 +2503,18 @@ export interface inmuebleDelegate<
    *
    */
   create<T extends inmuebleCreateArgs>(
-    args: Prisma.SelectSubset<T, inmuebleCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Inmuebles.
@@ -2091,8 +2529,8 @@ export interface inmuebleDelegate<
    *
    */
   createMany<T extends inmuebleCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, inmuebleCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, inmuebleCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Inmuebles and returns the data saved in the database.
@@ -2117,15 +2555,15 @@ export interface inmuebleDelegate<
    *
    */
   createManyAndReturn<T extends inmuebleCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, inmuebleCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, inmuebleCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Inmueble.
@@ -2140,18 +2578,18 @@ export interface inmuebleDelegate<
    *
    */
   delete<T extends inmuebleDeleteArgs>(
-    args: Prisma.SelectSubset<T, inmuebleDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Inmueble.
@@ -2169,18 +2607,18 @@ export interface inmuebleDelegate<
    *
    */
   update<T extends inmuebleUpdateArgs>(
-    args: Prisma.SelectSubset<T, inmuebleUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Inmuebles.
@@ -2195,8 +2633,8 @@ export interface inmuebleDelegate<
    *
    */
   deleteMany<T extends inmuebleDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, inmuebleDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, inmuebleDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Inmuebles.
@@ -2216,8 +2654,8 @@ export interface inmuebleDelegate<
    *
    */
   updateMany<T extends inmuebleUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, inmuebleUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, inmuebleUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Inmuebles and returns the data updated in the database.
@@ -2248,15 +2686,15 @@ export interface inmuebleDelegate<
    *
    */
   updateManyAndReturn<T extends inmuebleUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, inmuebleUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Inmueble.
@@ -2276,18 +2714,18 @@ export interface inmuebleDelegate<
    * })
    */
   upsert<T extends inmuebleUpsertArgs>(
-    args: Prisma.SelectSubset<T, inmuebleUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmuebleUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueblePayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Inmuebles.
@@ -2303,14 +2741,14 @@ export interface inmuebleDelegate<
    * })
    **/
   count<T extends inmuebleCountArgs>(
-    args?: Prisma.Subset<T, inmuebleCountArgs>
+    args?: Prisma.Subset<T, inmuebleCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], InmuebleCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], InmuebleCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Inmueble.
@@ -2337,8 +2775,8 @@ export interface inmuebleDelegate<
    * })
    **/
   aggregate<T extends InmuebleAggregateArgs>(
-    args: Prisma.Subset<T, InmuebleAggregateArgs>
-  ): Prisma.PrismaPromise<GetInmuebleAggregateType<T>>
+    args: Prisma.Subset<T, InmuebleAggregateArgs>,
+  ): Prisma.PrismaPromise<GetInmuebleAggregateType<T>>;
 
   /**
    * Group by Inmueble.
@@ -2361,20 +2799,20 @@ export interface inmuebleDelegate<
   groupBy<
     T extends inmuebleGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: inmuebleGroupByArgs['orderBy'] }
-      : { orderBy?: inmuebleGroupByArgs['orderBy'] },
+      ? { orderBy: inmuebleGroupByArgs["orderBy"] }
+      : { orderBy?: inmuebleGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -2383,26 +2821,31 @@ export interface inmuebleDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -2410,15 +2853,18 @@ export interface inmuebleDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, inmuebleGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetInmuebleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, inmuebleGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetInmuebleGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the inmueble model
    */
-  readonly fields: inmuebleFieldRefs
+  readonly fields: inmuebleFieldRefs;
 }
 
 /**
@@ -2430,70 +2876,75 @@ export interface inmuebleDelegate<
 export interface Prisma__inmuebleClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     | runtime.Types.Result.GetResult<
         Prisma.$usuarioPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
-  inmueble_etiqueta<T extends Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs>>
+  >;
+  inmueble_etiqueta<
+    T extends Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.inmueble$inmueble_etiquetaArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$inmueble_etiquetaPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   marcador_mapa<T extends Prisma.inmueble$marcador_mapaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmueble$marcador_mapaArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.inmueble$marcador_mapaArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$marcador_mapaPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   publicacion<T extends Prisma.inmueble$publicacionArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmueble$publicacionArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.inmueble$publicacionArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$publicacionPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
-  ubicacion_inmueble<T extends Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs>>
+  >;
+  ubicacion_inmueble<
+    T extends Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.inmueble$ubicacion_inmuebleArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_inmuebleClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_inmueblePayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2501,44 +2952,55 @@ export interface Prisma__inmuebleClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the inmueble model
  */
 export interface inmuebleFieldRefs {
-  readonly id: Prisma.FieldRef<'inmueble', 'Int'>
-  readonly titulo: Prisma.FieldRef<'inmueble', 'String'>
-  readonly tipo_accion: Prisma.FieldRef<'inmueble', 'tipo_accion'>
-  readonly categoria: Prisma.FieldRef<'inmueble', 'categoria'>
-  readonly precio: Prisma.FieldRef<'inmueble', 'Decimal'>
-  readonly superficie_m2: Prisma.FieldRef<'inmueble', 'Decimal'>
-  readonly nro_cuartos: Prisma.FieldRef<'inmueble', 'Int'>
-  readonly nro_banos: Prisma.FieldRef<'inmueble', 'Int'>
-  readonly descripcion: Prisma.FieldRef<'inmueble', 'String'>
-  readonly estado: Prisma.FieldRef<'inmueble', 'estado_inmueble'>
-  readonly fecha_publicacion: Prisma.FieldRef<'inmueble', 'DateTime'>
-  readonly created_at: Prisma.FieldRef<'inmueble', 'DateTime'>
-  readonly updated_at: Prisma.FieldRef<'inmueble', 'DateTime'>
-  readonly propietario_id: Prisma.FieldRef<'inmueble', 'Int'>
+  readonly id: Prisma.FieldRef<"inmueble", "Int">;
+  readonly titulo: Prisma.FieldRef<"inmueble", "String">;
+  readonly tipo_accion: Prisma.FieldRef<"inmueble", "tipo_accion">;
+  readonly categoria: Prisma.FieldRef<"inmueble", "categoria">;
+  readonly precio: Prisma.FieldRef<"inmueble", "Decimal">;
+  readonly superficie_m2: Prisma.FieldRef<"inmueble", "Decimal">;
+  readonly nro_cuartos: Prisma.FieldRef<"inmueble", "Int">;
+  readonly nro_banos: Prisma.FieldRef<"inmueble", "Int">;
+  readonly descripcion: Prisma.FieldRef<"inmueble", "String">;
+  readonly estado: Prisma.FieldRef<"inmueble", "estado_inmueble">;
+  readonly fecha_publicacion: Prisma.FieldRef<"inmueble", "DateTime">;
+  readonly created_at: Prisma.FieldRef<"inmueble", "DateTime">;
+  readonly updated_at: Prisma.FieldRef<"inmueble", "DateTime">;
+  readonly propietario_id: Prisma.FieldRef<"inmueble", "Int">;
 }
 
 // Custom InputTypes
@@ -2546,547 +3008,596 @@ export interface inmuebleFieldRefs {
  * inmueble findUnique
  */
 export type inmuebleFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble to fetch.
    */
-  where: Prisma.inmuebleWhereUniqueInput
-}
+  where: Prisma.inmuebleWhereUniqueInput;
+};
 
 /**
  * inmueble findUniqueOrThrow
  */
 export type inmuebleFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble to fetch.
    */
-  where: Prisma.inmuebleWhereUniqueInput
-}
+  where: Prisma.inmuebleWhereUniqueInput;
+};
 
 /**
  * inmueble findFirst
  */
 export type inmuebleFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble to fetch.
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of inmuebles to fetch.
    */
-  orderBy?: Prisma.inmuebleOrderByWithRelationInput | Prisma.inmuebleOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.inmuebleOrderByWithRelationInput
+    | Prisma.inmuebleOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for inmuebles.
    */
-  cursor?: Prisma.inmuebleWhereUniqueInput
+  cursor?: Prisma.inmuebleWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmuebles from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmuebles.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of inmuebles.
    */
-  distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[]
-}
+  distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[];
+};
 
 /**
  * inmueble findFirstOrThrow
  */
 export type inmuebleFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble to fetch.
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of inmuebles to fetch.
    */
-  orderBy?: Prisma.inmuebleOrderByWithRelationInput | Prisma.inmuebleOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.inmuebleOrderByWithRelationInput
+    | Prisma.inmuebleOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for inmuebles.
    */
-  cursor?: Prisma.inmuebleWhereUniqueInput
+  cursor?: Prisma.inmuebleWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmuebles from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmuebles.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of inmuebles.
    */
-  distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[]
-}
+  distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[];
+};
 
 /**
  * inmueble findMany
  */
 export type inmuebleFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * Filter, which inmuebles to fetch.
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of inmuebles to fetch.
    */
-  orderBy?: Prisma.inmuebleOrderByWithRelationInput | Prisma.inmuebleOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.inmuebleOrderByWithRelationInput
+    | Prisma.inmuebleOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing inmuebles.
    */
-  cursor?: Prisma.inmuebleWhereUniqueInput
+  cursor?: Prisma.inmuebleWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmuebles from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmuebles.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of inmuebles.
    */
-  distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[]
-}
+  distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[];
+};
 
 /**
  * inmueble create
  */
 export type inmuebleCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * The data needed to create a inmueble.
    */
-  data: Prisma.XOR<Prisma.inmuebleCreateInput, Prisma.inmuebleUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.inmuebleCreateInput,
+    Prisma.inmuebleUncheckedCreateInput
+  >;
+};
 
 /**
  * inmueble createMany
  */
 export type inmuebleCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many inmuebles.
    */
-  data: Prisma.inmuebleCreateManyInput | Prisma.inmuebleCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.inmuebleCreateManyInput | Prisma.inmuebleCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * inmueble createManyAndReturn
  */
 export type inmuebleCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.inmuebleSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * The data used to create many inmuebles.
    */
-  data: Prisma.inmuebleCreateManyInput | Prisma.inmuebleCreateManyInput[]
-  skipDuplicates?: boolean
+  data: Prisma.inmuebleCreateManyInput | Prisma.inmuebleCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.inmuebleIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * inmueble update
  */
 export type inmuebleUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * The data needed to update a inmueble.
    */
-  data: Prisma.XOR<Prisma.inmuebleUpdateInput, Prisma.inmuebleUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.inmuebleUpdateInput,
+    Prisma.inmuebleUncheckedUpdateInput
+  >;
   /**
    * Choose, which inmueble to update.
    */
-  where: Prisma.inmuebleWhereUniqueInput
-}
+  where: Prisma.inmuebleWhereUniqueInput;
+};
 
 /**
  * inmueble updateMany
  */
 export type inmuebleUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update inmuebles.
    */
-  data: Prisma.XOR<Prisma.inmuebleUpdateManyMutationInput, Prisma.inmuebleUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.inmuebleUpdateManyMutationInput,
+    Prisma.inmuebleUncheckedUpdateManyInput
+  >;
   /**
    * Filter which inmuebles to update
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * Limit how many inmuebles to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * inmueble updateManyAndReturn
  */
 export type inmuebleUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.inmuebleSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * The data used to update inmuebles.
    */
-  data: Prisma.XOR<Prisma.inmuebleUpdateManyMutationInput, Prisma.inmuebleUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.inmuebleUpdateManyMutationInput,
+    Prisma.inmuebleUncheckedUpdateManyInput
+  >;
   /**
    * Filter which inmuebles to update
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * Limit how many inmuebles to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.inmuebleIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * inmueble upsert
  */
 export type inmuebleUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * The filter to search for the inmueble to update in case it exists.
    */
-  where: Prisma.inmuebleWhereUniqueInput
+  where: Prisma.inmuebleWhereUniqueInput;
   /**
    * In case the inmueble found by the `where` argument doesn't exist, create a new inmueble with this data.
    */
-  create: Prisma.XOR<Prisma.inmuebleCreateInput, Prisma.inmuebleUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.inmuebleCreateInput,
+    Prisma.inmuebleUncheckedCreateInput
+  >;
   /**
    * In case the inmueble was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.inmuebleUpdateInput, Prisma.inmuebleUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.inmuebleUpdateInput,
+    Prisma.inmuebleUncheckedUpdateInput
+  >;
+};
 
 /**
  * inmueble delete
  */
 export type inmuebleDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
   /**
    * Filter which inmueble to delete.
    */
-  where: Prisma.inmuebleWhereUniqueInput
-}
+  where: Prisma.inmuebleWhereUniqueInput;
+};
 
 /**
  * inmueble deleteMany
  */
 export type inmuebleDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which inmuebles to delete
    */
-  where?: Prisma.inmuebleWhereInput
+  where?: Prisma.inmuebleWhereInput;
   /**
    * Limit how many inmuebles to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * inmueble.inmueble_etiqueta
  */
 export type inmueble$inmueble_etiquetaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
-  where?: Prisma.inmueble_etiquetaWhereInput
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
+  where?: Prisma.inmueble_etiquetaWhereInput;
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithRelationInput
-    | Prisma.inmueble_etiquetaOrderByWithRelationInput[]
-  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Inmueble_etiquetaScalarFieldEnum | Prisma.Inmueble_etiquetaScalarFieldEnum[]
-}
+    | Prisma.inmueble_etiquetaOrderByWithRelationInput[];
+  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Inmueble_etiquetaScalarFieldEnum
+    | Prisma.Inmueble_etiquetaScalarFieldEnum[];
+};
 
 /**
  * inmueble.marcador_mapa
  */
 export type inmueble$marcador_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
-  where?: Prisma.marcador_mapaWhereInput
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
+  where?: Prisma.marcador_mapaWhereInput;
   orderBy?:
     | Prisma.marcador_mapaOrderByWithRelationInput
-    | Prisma.marcador_mapaOrderByWithRelationInput[]
-  cursor?: Prisma.marcador_mapaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Marcador_mapaScalarFieldEnum | Prisma.Marcador_mapaScalarFieldEnum[]
-}
+    | Prisma.marcador_mapaOrderByWithRelationInput[];
+  cursor?: Prisma.marcador_mapaWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Marcador_mapaScalarFieldEnum
+    | Prisma.Marcador_mapaScalarFieldEnum[];
+};
 
 /**
  * inmueble.publicacion
  */
 export type inmueble$publicacionArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
-  where?: Prisma.publicacionWhereInput
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
+  where?: Prisma.publicacionWhereInput;
   orderBy?:
     | Prisma.publicacionOrderByWithRelationInput
-    | Prisma.publicacionOrderByWithRelationInput[]
-  cursor?: Prisma.publicacionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PublicacionScalarFieldEnum | Prisma.PublicacionScalarFieldEnum[]
-}
+    | Prisma.publicacionOrderByWithRelationInput[];
+  cursor?: Prisma.publicacionWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.PublicacionScalarFieldEnum
+    | Prisma.PublicacionScalarFieldEnum[];
+};
 
 /**
  * inmueble.ubicacion_inmueble
  */
 export type inmueble$ubicacion_inmuebleArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_inmueble
    */
-  select?: Prisma.ubicacion_inmuebleSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_inmueble
    */
-  omit?: Prisma.ubicacion_inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_inmuebleInclude<ExtArgs> | null
-  where?: Prisma.ubicacion_inmuebleWhereInput
-}
+  include?: Prisma.ubicacion_inmuebleInclude<ExtArgs> | null;
+  where?: Prisma.ubicacion_inmuebleWhereInput;
+};
 
 /**
  * inmueble without action
  */
 export type inmuebleDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble
    */
-  select?: Prisma.inmuebleSelect<ExtArgs> | null
+  select?: Prisma.inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble
    */
-  omit?: Prisma.inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmuebleInclude<ExtArgs> | null
-}
+  include?: Prisma.inmuebleInclude<ExtArgs> | null;
+};

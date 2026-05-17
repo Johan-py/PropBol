@@ -7,115 +7,117 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model marcador_mapa
  *
  */
-export type marcador_mapaModel = runtime.Types.Result.DefaultSelection<Prisma.$marcador_mapaPayload>
+export type marcador_mapaModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$marcador_mapaPayload>;
 
 export type AggregateMarcador_mapa = {
-  _count: Marcador_mapaCountAggregateOutputType | null
-  _avg: Marcador_mapaAvgAggregateOutputType | null
-  _sum: Marcador_mapaSumAggregateOutputType | null
-  _min: Marcador_mapaMinAggregateOutputType | null
-  _max: Marcador_mapaMaxAggregateOutputType | null
-}
+  _count: Marcador_mapaCountAggregateOutputType | null;
+  _avg: Marcador_mapaAvgAggregateOutputType | null;
+  _sum: Marcador_mapaSumAggregateOutputType | null;
+  _min: Marcador_mapaMinAggregateOutputType | null;
+  _max: Marcador_mapaMaxAggregateOutputType | null;
+};
 
 export type Marcador_mapaAvgAggregateOutputType = {
-  id: number | null
-  nivel_z: number | null
-  inmueble_id: number | null
-  ubicacion_id: number | null
-}
+  id: number | null;
+  nivel_z: number | null;
+  inmueble_id: number | null;
+  ubicacion_id: number | null;
+};
 
 export type Marcador_mapaSumAggregateOutputType = {
-  id: number | null
-  nivel_z: number | null
-  inmueble_id: number | null
-  ubicacion_id: number | null
-}
+  id: number | null;
+  nivel_z: number | null;
+  inmueble_id: number | null;
+  ubicacion_id: number | null;
+};
 
 export type Marcador_mapaMinAggregateOutputType = {
-  id: number | null
-  tipo: $Enums.tipo_marcador | null
-  es_visible: boolean | null
-  nivel_z: number | null
-  inmueble_id: number | null
-  ubicacion_id: number | null
-}
+  id: number | null;
+  tipo: $Enums.tipo_marcador | null;
+  es_visible: boolean | null;
+  nivel_z: number | null;
+  inmueble_id: number | null;
+  ubicacion_id: number | null;
+};
 
 export type Marcador_mapaMaxAggregateOutputType = {
-  id: number | null
-  tipo: $Enums.tipo_marcador | null
-  es_visible: boolean | null
-  nivel_z: number | null
-  inmueble_id: number | null
-  ubicacion_id: number | null
-}
+  id: number | null;
+  tipo: $Enums.tipo_marcador | null;
+  es_visible: boolean | null;
+  nivel_z: number | null;
+  inmueble_id: number | null;
+  ubicacion_id: number | null;
+};
 
 export type Marcador_mapaCountAggregateOutputType = {
-  id: number
-  tipo: number
-  es_visible: number
-  nivel_z: number
-  inmueble_id: number
-  ubicacion_id: number
-  _all: number
-}
+  id: number;
+  tipo: number;
+  es_visible: number;
+  nivel_z: number;
+  inmueble_id: number;
+  ubicacion_id: number;
+  _all: number;
+};
 
 export type Marcador_mapaAvgAggregateInputType = {
-  id?: true
-  nivel_z?: true
-  inmueble_id?: true
-  ubicacion_id?: true
-}
+  id?: true;
+  nivel_z?: true;
+  inmueble_id?: true;
+  ubicacion_id?: true;
+};
 
 export type Marcador_mapaSumAggregateInputType = {
-  id?: true
-  nivel_z?: true
-  inmueble_id?: true
-  ubicacion_id?: true
-}
+  id?: true;
+  nivel_z?: true;
+  inmueble_id?: true;
+  ubicacion_id?: true;
+};
 
 export type Marcador_mapaMinAggregateInputType = {
-  id?: true
-  tipo?: true
-  es_visible?: true
-  nivel_z?: true
-  inmueble_id?: true
-  ubicacion_id?: true
-}
+  id?: true;
+  tipo?: true;
+  es_visible?: true;
+  nivel_z?: true;
+  inmueble_id?: true;
+  ubicacion_id?: true;
+};
 
 export type Marcador_mapaMaxAggregateInputType = {
-  id?: true
-  tipo?: true
-  es_visible?: true
-  nivel_z?: true
-  inmueble_id?: true
-  ubicacion_id?: true
-}
+  id?: true;
+  tipo?: true;
+  es_visible?: true;
+  nivel_z?: true;
+  inmueble_id?: true;
+  ubicacion_id?: true;
+};
 
 export type Marcador_mapaCountAggregateInputType = {
-  id?: true
-  tipo?: true
-  es_visible?: true
-  nivel_z?: true
-  inmueble_id?: true
-  ubicacion_id?: true
-  _all?: true
-}
+  id?: true;
+  tipo?: true;
+  es_visible?: true;
+  nivel_z?: true;
+  inmueble_id?: true;
+  ubicacion_id?: true;
+  _all?: true;
+};
 
 export type Marcador_mapaAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which marcador_mapa to aggregate.
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -123,346 +125,376 @@ export type Marcador_mapaAggregateArgs<
    */
   orderBy?:
     | Prisma.marcador_mapaOrderByWithRelationInput
-    | Prisma.marcador_mapaOrderByWithRelationInput[]
+    | Prisma.marcador_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.marcador_mapaWhereUniqueInput
+  cursor?: Prisma.marcador_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` marcador_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` marcador_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned marcador_mapas
    **/
-  _count?: true | Marcador_mapaCountAggregateInputType
+  _count?: true | Marcador_mapaCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Marcador_mapaAvgAggregateInputType
+  _avg?: Marcador_mapaAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Marcador_mapaSumAggregateInputType
+  _sum?: Marcador_mapaSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Marcador_mapaMinAggregateInputType
+  _min?: Marcador_mapaMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Marcador_mapaMaxAggregateInputType
-}
+  _max?: Marcador_mapaMaxAggregateInputType;
+};
 
-export type GetMarcador_mapaAggregateType<T extends Marcador_mapaAggregateArgs> = {
-  [P in keyof T & keyof AggregateMarcador_mapa]: P extends '_count' | 'count'
+export type GetMarcador_mapaAggregateType<
+  T extends Marcador_mapaAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateMarcador_mapa]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateMarcador_mapa[P]>
-    : Prisma.GetScalarType<T[P], AggregateMarcador_mapa[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateMarcador_mapa[P]>;
+};
 
 export type marcador_mapaGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   orderBy?:
     | Prisma.marcador_mapaOrderByWithAggregationInput
-    | Prisma.marcador_mapaOrderByWithAggregationInput[]
-  by: Prisma.Marcador_mapaScalarFieldEnum[] | Prisma.Marcador_mapaScalarFieldEnum
-  having?: Prisma.marcador_mapaScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Marcador_mapaCountAggregateInputType | true
-  _avg?: Marcador_mapaAvgAggregateInputType
-  _sum?: Marcador_mapaSumAggregateInputType
-  _min?: Marcador_mapaMinAggregateInputType
-  _max?: Marcador_mapaMaxAggregateInputType
-}
+    | Prisma.marcador_mapaOrderByWithAggregationInput[];
+  by:
+    | Prisma.Marcador_mapaScalarFieldEnum[]
+    | Prisma.Marcador_mapaScalarFieldEnum;
+  having?: Prisma.marcador_mapaScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Marcador_mapaCountAggregateInputType | true;
+  _avg?: Marcador_mapaAvgAggregateInputType;
+  _sum?: Marcador_mapaSumAggregateInputType;
+  _min?: Marcador_mapaMinAggregateInputType;
+  _max?: Marcador_mapaMaxAggregateInputType;
+};
 
 export type Marcador_mapaGroupByOutputType = {
-  id: number
-  tipo: $Enums.tipo_marcador
-  es_visible: boolean | null
-  nivel_z: number | null
-  inmueble_id: number
-  ubicacion_id: number
-  _count: Marcador_mapaCountAggregateOutputType | null
-  _avg: Marcador_mapaAvgAggregateOutputType | null
-  _sum: Marcador_mapaSumAggregateOutputType | null
-  _min: Marcador_mapaMinAggregateOutputType | null
-  _max: Marcador_mapaMaxAggregateOutputType | null
-}
+  id: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible: boolean | null;
+  nivel_z: number | null;
+  inmueble_id: number;
+  ubicacion_id: number;
+  _count: Marcador_mapaCountAggregateOutputType | null;
+  _avg: Marcador_mapaAvgAggregateOutputType | null;
+  _sum: Marcador_mapaSumAggregateOutputType | null;
+  _min: Marcador_mapaMinAggregateOutputType | null;
+  _max: Marcador_mapaMaxAggregateOutputType | null;
+};
 
 export type GetMarcador_mapaGroupByPayload<T extends marcador_mapaGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
-      Prisma.PickEnumerable<Marcador_mapaGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Marcador_mapaGroupByOutputType]: P extends '_count'
+      Prisma.PickEnumerable<Marcador_mapaGroupByOutputType, T["by"]> & {
+        [P in keyof T &
+          keyof Marcador_mapaGroupByOutputType]: P extends "_count"
           ? T[P] extends boolean
             ? number
             : Prisma.GetScalarType<T[P], Marcador_mapaGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], Marcador_mapaGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], Marcador_mapaGroupByOutputType[P]>;
       }
     >
-  >
+  >;
 
 export type marcador_mapaWhereInput = {
-  AND?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[]
-  OR?: Prisma.marcador_mapaWhereInput[]
-  NOT?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[]
-  id?: Prisma.IntFilter<'marcador_mapa'> | number
-  tipo?: Prisma.Enumtipo_marcadorFilter<'marcador_mapa'> | $Enums.tipo_marcador
-  es_visible?: Prisma.BoolNullableFilter<'marcador_mapa'> | boolean | null
-  nivel_z?: Prisma.IntNullableFilter<'marcador_mapa'> | number | null
-  inmueble_id?: Prisma.IntFilter<'marcador_mapa'> | number
-  ubicacion_id?: Prisma.IntFilter<'marcador_mapa'> | number
-  detalle_grupo?: Prisma.Detalle_grupoListRelationFilter
-  interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter
-  inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
+  AND?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[];
+  OR?: Prisma.marcador_mapaWhereInput[];
+  NOT?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[];
+  id?: Prisma.IntFilter<"marcador_mapa"> | number;
+  tipo?: Prisma.Enumtipo_marcadorFilter<"marcador_mapa"> | $Enums.tipo_marcador;
+  es_visible?: Prisma.BoolNullableFilter<"marcador_mapa"> | boolean | null;
+  nivel_z?: Prisma.IntNullableFilter<"marcador_mapa"> | number | null;
+  inmueble_id?: Prisma.IntFilter<"marcador_mapa"> | number;
+  ubicacion_id?: Prisma.IntFilter<"marcador_mapa"> | number;
+  detalle_grupo?: Prisma.Detalle_grupoListRelationFilter;
+  interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter;
+  inmueble?: Prisma.XOR<
+    Prisma.InmuebleScalarRelationFilter,
+    Prisma.inmuebleWhereInput
+  >;
   ubicacion_inmueble?: Prisma.XOR<
     Prisma.Ubicacion_inmuebleScalarRelationFilter,
     Prisma.ubicacion_inmuebleWhereInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  es_visible?: Prisma.SortOrderInput | Prisma.SortOrder
-  nivel_z?: Prisma.SortOrderInput | Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-  detalle_grupo?: Prisma.detalle_grupoOrderByRelationAggregateInput
-  interaccion_mapa?: Prisma.interaccion_mapaOrderByRelationAggregateInput
-  inmueble?: Prisma.inmuebleOrderByWithRelationInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  es_visible?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrderInput | Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+  detalle_grupo?: Prisma.detalle_grupoOrderByRelationAggregateInput;
+  interaccion_mapa?: Prisma.interaccion_mapaOrderByRelationAggregateInput;
+  inmueble?: Prisma.inmuebleOrderByWithRelationInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleOrderByWithRelationInput;
+};
 
 export type marcador_mapaWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[]
-    OR?: Prisma.marcador_mapaWhereInput[]
-    NOT?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[]
-    tipo?: Prisma.Enumtipo_marcadorFilter<'marcador_mapa'> | $Enums.tipo_marcador
-    es_visible?: Prisma.BoolNullableFilter<'marcador_mapa'> | boolean | null
-    nivel_z?: Prisma.IntNullableFilter<'marcador_mapa'> | number | null
-    inmueble_id?: Prisma.IntFilter<'marcador_mapa'> | number
-    ubicacion_id?: Prisma.IntFilter<'marcador_mapa'> | number
-    detalle_grupo?: Prisma.Detalle_grupoListRelationFilter
-    interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter
-    inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
+    id?: number;
+    AND?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[];
+    OR?: Prisma.marcador_mapaWhereInput[];
+    NOT?: Prisma.marcador_mapaWhereInput | Prisma.marcador_mapaWhereInput[];
+    tipo?:
+      | Prisma.Enumtipo_marcadorFilter<"marcador_mapa">
+      | $Enums.tipo_marcador;
+    es_visible?: Prisma.BoolNullableFilter<"marcador_mapa"> | boolean | null;
+    nivel_z?: Prisma.IntNullableFilter<"marcador_mapa"> | number | null;
+    inmueble_id?: Prisma.IntFilter<"marcador_mapa"> | number;
+    ubicacion_id?: Prisma.IntFilter<"marcador_mapa"> | number;
+    detalle_grupo?: Prisma.Detalle_grupoListRelationFilter;
+    interaccion_mapa?: Prisma.Interaccion_mapaListRelationFilter;
+    inmueble?: Prisma.XOR<
+      Prisma.InmuebleScalarRelationFilter,
+      Prisma.inmuebleWhereInput
+    >;
     ubicacion_inmueble?: Prisma.XOR<
       Prisma.Ubicacion_inmuebleScalarRelationFilter,
       Prisma.ubicacion_inmuebleWhereInput
-    >
+    >;
   },
-  'id'
->
+  "id"
+>;
 
 export type marcador_mapaOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  es_visible?: Prisma.SortOrderInput | Prisma.SortOrder
-  nivel_z?: Prisma.SortOrderInput | Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-  _count?: Prisma.marcador_mapaCountOrderByAggregateInput
-  _avg?: Prisma.marcador_mapaAvgOrderByAggregateInput
-  _max?: Prisma.marcador_mapaMaxOrderByAggregateInput
-  _min?: Prisma.marcador_mapaMinOrderByAggregateInput
-  _sum?: Prisma.marcador_mapaSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  es_visible?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrderInput | Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+  _count?: Prisma.marcador_mapaCountOrderByAggregateInput;
+  _avg?: Prisma.marcador_mapaAvgOrderByAggregateInput;
+  _max?: Prisma.marcador_mapaMaxOrderByAggregateInput;
+  _min?: Prisma.marcador_mapaMinOrderByAggregateInput;
+  _sum?: Prisma.marcador_mapaSumOrderByAggregateInput;
+};
 
 export type marcador_mapaScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.marcador_mapaScalarWhereWithAggregatesInput
-    | Prisma.marcador_mapaScalarWhereWithAggregatesInput[]
-  OR?: Prisma.marcador_mapaScalarWhereWithAggregatesInput[]
+    | Prisma.marcador_mapaScalarWhereWithAggregatesInput[];
+  OR?: Prisma.marcador_mapaScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.marcador_mapaScalarWhereWithAggregatesInput
-    | Prisma.marcador_mapaScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'marcador_mapa'> | number
-  tipo?: Prisma.Enumtipo_marcadorWithAggregatesFilter<'marcador_mapa'> | $Enums.tipo_marcador
-  es_visible?: Prisma.BoolNullableWithAggregatesFilter<'marcador_mapa'> | boolean | null
-  nivel_z?: Prisma.IntNullableWithAggregatesFilter<'marcador_mapa'> | number | null
-  inmueble_id?: Prisma.IntWithAggregatesFilter<'marcador_mapa'> | number
-  ubicacion_id?: Prisma.IntWithAggregatesFilter<'marcador_mapa'> | number
-}
+    | Prisma.marcador_mapaScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"marcador_mapa"> | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorWithAggregatesFilter<"marcador_mapa">
+    | $Enums.tipo_marcador;
+  es_visible?:
+    | Prisma.BoolNullableWithAggregatesFilter<"marcador_mapa">
+    | boolean
+    | null;
+  nivel_z?:
+    | Prisma.IntNullableWithAggregatesFilter<"marcador_mapa">
+    | number
+    | null;
+  inmueble_id?: Prisma.IntWithAggregatesFilter<"marcador_mapa"> | number;
+  ubicacion_id?: Prisma.IntWithAggregatesFilter<"marcador_mapa"> | number;
+};
 
 export type marcador_mapaCreateInput = {
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput
-  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput
-  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput
-}
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput;
+  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaUncheckedCreateInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  inmueble_id: number
-  ubicacion_id: number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  inmueble_id: number;
+  ubicacion_id: number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaUpdateInput = {
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput
-  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-}
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaCreateManyInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  inmueble_id: number
-  ubicacion_id: number
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  inmueble_id: number;
+  ubicacion_id: number;
+};
 
 export type marcador_mapaUpdateManyMutationInput = {
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type marcador_mapaUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type Marcador_mapaScalarRelationFilter = {
-  is?: Prisma.marcador_mapaWhereInput
-  isNot?: Prisma.marcador_mapaWhereInput
-}
+  is?: Prisma.marcador_mapaWhereInput;
+  isNot?: Prisma.marcador_mapaWhereInput;
+};
 
 export type Marcador_mapaListRelationFilter = {
-  every?: Prisma.marcador_mapaWhereInput
-  some?: Prisma.marcador_mapaWhereInput
-  none?: Prisma.marcador_mapaWhereInput
-}
+  every?: Prisma.marcador_mapaWhereInput;
+  some?: Prisma.marcador_mapaWhereInput;
+  none?: Prisma.marcador_mapaWhereInput;
+};
 
 export type marcador_mapaOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type Marcador_mapaNullableScalarRelationFilter = {
-  is?: Prisma.marcador_mapaWhereInput | null
-  isNot?: Prisma.marcador_mapaWhereInput | null
-}
+  is?: Prisma.marcador_mapaWhereInput | null;
+  isNot?: Prisma.marcador_mapaWhereInput | null;
+};
 
 export type marcador_mapaCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  es_visible?: Prisma.SortOrder
-  nivel_z?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  es_visible?: Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+};
 
 export type marcador_mapaAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  nivel_z?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+};
 
 export type marcador_mapaMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  es_visible?: Prisma.SortOrder
-  nivel_z?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  es_visible?: Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+};
 
 export type marcador_mapaMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  es_visible?: Prisma.SortOrder
-  nivel_z?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  es_visible?: Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+};
 
 export type marcador_mapaSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  nivel_z?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  ubicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  nivel_z?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  ubicacion_id?: Prisma.SortOrder;
+};
 
 export type marcador_mapaCreateNestedOneWithoutDetalle_grupoInput = {
   create?: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutDetalle_grupoInput,
     Prisma.marcador_mapaUncheckedCreateWithoutDetalle_grupoInput
-  >
-  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutDetalle_grupoInput
-  connect?: Prisma.marcador_mapaWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutDetalle_grupoInput;
+  connect?: Prisma.marcador_mapaWhereUniqueInput;
+};
 
 export type marcador_mapaUpdateOneRequiredWithoutDetalle_grupoNestedInput = {
   create?: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutDetalle_grupoInput,
     Prisma.marcador_mapaUncheckedCreateWithoutDetalle_grupoInput
-  >
-  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutDetalle_grupoInput
-  upsert?: Prisma.marcador_mapaUpsertWithoutDetalle_grupoInput
-  connect?: Prisma.marcador_mapaWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutDetalle_grupoInput;
+  upsert?: Prisma.marcador_mapaUpsertWithoutDetalle_grupoInput;
+  connect?: Prisma.marcador_mapaWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.marcador_mapaUpdateToOneWithWhereWithoutDetalle_grupoInput,
       Prisma.marcador_mapaUpdateWithoutDetalle_grupoInput
     >,
     Prisma.marcador_mapaUncheckedUpdateWithoutDetalle_grupoInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaCreateNestedManyWithoutInmuebleInput = {
   create?:
@@ -471,13 +503,15 @@ export type marcador_mapaCreateNestedManyWithoutInmuebleInput = {
         Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.marcador_mapaCreateWithoutInmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-}
+    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[];
+  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope;
+  connect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+};
 
 export type marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput = {
   create?:
@@ -486,13 +520,15 @@ export type marcador_mapaUncheckedCreateNestedManyWithoutInmuebleInput = {
         Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.marcador_mapaCreateWithoutInmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-}
+    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[];
+  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope;
+  connect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+};
 
 export type marcador_mapaUpdateManyWithoutInmuebleNestedInput = {
   create?:
@@ -501,26 +537,36 @@ export type marcador_mapaUpdateManyWithoutInmuebleNestedInput = {
         Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.marcador_mapaCreateWithoutInmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[]
+    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[];
   upsert?:
     | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput
-    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope
-  set?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  disconnect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  delete?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
+    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput[];
+  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope;
+  set?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  delete?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  connect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
   update?:
     | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput
-    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput[]
+    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput[];
   updateMany?:
     | Prisma.marcador_mapaUpdateManyWithWhereWithoutInmuebleInput
-    | Prisma.marcador_mapaUpdateManyWithWhereWithoutInmuebleInput[]
-  deleteMany?: Prisma.marcador_mapaScalarWhereInput | Prisma.marcador_mapaScalarWhereInput[]
-}
+    | Prisma.marcador_mapaUpdateManyWithWhereWithoutInmuebleInput[];
+  deleteMany?:
+    | Prisma.marcador_mapaScalarWhereInput
+    | Prisma.marcador_mapaScalarWhereInput[];
+};
 
 export type marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput = {
   create?:
@@ -529,58 +575,68 @@ export type marcador_mapaUncheckedUpdateManyWithoutInmuebleNestedInput = {
         Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.marcador_mapaCreateWithoutInmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[]
+    | Prisma.marcador_mapaCreateOrConnectWithoutInmuebleInput[];
   upsert?:
     | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput
-    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope
-  set?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  disconnect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  delete?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
+    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput[];
+  createMany?: Prisma.marcador_mapaCreateManyInmuebleInputEnvelope;
+  set?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  delete?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  connect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
   update?:
     | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput
-    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput[]
+    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput[];
   updateMany?:
     | Prisma.marcador_mapaUpdateManyWithWhereWithoutInmuebleInput
-    | Prisma.marcador_mapaUpdateManyWithWhereWithoutInmuebleInput[]
-  deleteMany?: Prisma.marcador_mapaScalarWhereInput | Prisma.marcador_mapaScalarWhereInput[]
-}
+    | Prisma.marcador_mapaUpdateManyWithWhereWithoutInmuebleInput[];
+  deleteMany?:
+    | Prisma.marcador_mapaScalarWhereInput
+    | Prisma.marcador_mapaScalarWhereInput[];
+};
 
 export type marcador_mapaCreateNestedOneWithoutInteraccion_mapaInput = {
   create?: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.marcador_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutInteraccion_mapaInput
-  connect?: Prisma.marcador_mapaWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutInteraccion_mapaInput;
+  connect?: Prisma.marcador_mapaWhereUniqueInput;
+};
 
 export type marcador_mapaUpdateOneWithoutInteraccion_mapaNestedInput = {
   create?: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.marcador_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutInteraccion_mapaInput
-  upsert?: Prisma.marcador_mapaUpsertWithoutInteraccion_mapaInput
-  disconnect?: Prisma.marcador_mapaWhereInput | boolean
-  delete?: Prisma.marcador_mapaWhereInput | boolean
-  connect?: Prisma.marcador_mapaWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.marcador_mapaCreateOrConnectWithoutInteraccion_mapaInput;
+  upsert?: Prisma.marcador_mapaUpsertWithoutInteraccion_mapaInput;
+  disconnect?: Prisma.marcador_mapaWhereInput | boolean;
+  delete?: Prisma.marcador_mapaWhereInput | boolean;
+  connect?: Prisma.marcador_mapaWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.marcador_mapaUpdateToOneWithWhereWithoutInteraccion_mapaInput,
       Prisma.marcador_mapaUpdateWithoutInteraccion_mapaInput
     >,
     Prisma.marcador_mapaUncheckedUpdateWithoutInteraccion_mapaInput
-  >
-}
+  >;
+};
 
 export type Enumtipo_marcadorFieldUpdateOperationsInput = {
-  set?: $Enums.tipo_marcador
-}
+  set?: $Enums.tipo_marcador;
+};
 
 export type marcador_mapaCreateNestedManyWithoutUbicacion_inmuebleInput = {
   create?:
@@ -589,28 +645,33 @@ export type marcador_mapaCreateNestedManyWithoutUbicacion_inmuebleInput = {
         Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
       >
     | Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[]
+    | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[];
   connectOrCreate?:
     | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-}
+    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[];
+  createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope;
+  connect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+};
 
-export type marcador_mapaUncheckedCreateNestedManyWithoutUbicacion_inmuebleInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput,
-        Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
-      >
-    | Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[]
-  connectOrCreate?:
-    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-}
+export type marcador_mapaUncheckedCreateNestedManyWithoutUbicacion_inmuebleInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput,
+          Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
+        >
+      | Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput[]
+      | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[];
+    connectOrCreate?:
+      | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput
+      | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[];
+    createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope;
+    connect?:
+      | Prisma.marcador_mapaWhereUniqueInput
+      | Prisma.marcador_mapaWhereUniqueInput[];
+  };
 
 export type marcador_mapaUpdateManyWithoutUbicacion_inmuebleNestedInput = {
   create?:
@@ -619,567 +680,643 @@ export type marcador_mapaUpdateManyWithoutUbicacion_inmuebleNestedInput = {
         Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
       >
     | Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[]
+    | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[];
   connectOrCreate?:
     | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[]
+    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[];
   upsert?:
     | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope
-  set?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  disconnect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  delete?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
+    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput[];
+  createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope;
+  set?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  delete?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
+  connect?:
+    | Prisma.marcador_mapaWhereUniqueInput
+    | Prisma.marcador_mapaWhereUniqueInput[];
   update?:
     | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput[]
+    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput[];
   updateMany?:
     | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput[]
-  deleteMany?: Prisma.marcador_mapaScalarWhereInput | Prisma.marcador_mapaScalarWhereInput[]
-}
+    | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput[];
+  deleteMany?:
+    | Prisma.marcador_mapaScalarWhereInput
+    | Prisma.marcador_mapaScalarWhereInput[];
+};
 
-export type marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleNestedInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput,
-        Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
-      >
-    | Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput[]
-    | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[]
-  connectOrCreate?:
-    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[]
-  upsert?:
-    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput[]
-  createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope
-  set?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  disconnect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  delete?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  connect?: Prisma.marcador_mapaWhereUniqueInput | Prisma.marcador_mapaWhereUniqueInput[]
-  update?:
-    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput[]
-  updateMany?:
-    | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput
-    | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput[]
-  deleteMany?: Prisma.marcador_mapaScalarWhereInput | Prisma.marcador_mapaScalarWhereInput[]
-}
+export type marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleNestedInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput,
+          Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
+        >
+      | Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput[]
+      | Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput[];
+    connectOrCreate?:
+      | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput
+      | Prisma.marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput[];
+    upsert?:
+      | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput
+      | Prisma.marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput[];
+    createMany?: Prisma.marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope;
+    set?:
+      | Prisma.marcador_mapaWhereUniqueInput
+      | Prisma.marcador_mapaWhereUniqueInput[];
+    disconnect?:
+      | Prisma.marcador_mapaWhereUniqueInput
+      | Prisma.marcador_mapaWhereUniqueInput[];
+    delete?:
+      | Prisma.marcador_mapaWhereUniqueInput
+      | Prisma.marcador_mapaWhereUniqueInput[];
+    connect?:
+      | Prisma.marcador_mapaWhereUniqueInput
+      | Prisma.marcador_mapaWhereUniqueInput[];
+    update?:
+      | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput
+      | Prisma.marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput[];
+    updateMany?:
+      | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput
+      | Prisma.marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput[];
+    deleteMany?:
+      | Prisma.marcador_mapaScalarWhereInput
+      | Prisma.marcador_mapaScalarWhereInput[];
+  };
 
 export type marcador_mapaCreateWithoutDetalle_grupoInput = {
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput
-  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput
-}
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaUncheckedCreateWithoutDetalle_grupoInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  inmueble_id: number
-  ubicacion_id: number
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  inmueble_id: number;
+  ubicacion_id: number;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaCreateOrConnectWithoutDetalle_grupoInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutDetalle_grupoInput,
     Prisma.marcador_mapaUncheckedCreateWithoutDetalle_grupoInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpsertWithoutDetalle_grupoInput = {
   update: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutDetalle_grupoInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutDetalle_grupoInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutDetalle_grupoInput,
     Prisma.marcador_mapaUncheckedCreateWithoutDetalle_grupoInput
-  >
-  where?: Prisma.marcador_mapaWhereInput
-}
+  >;
+  where?: Prisma.marcador_mapaWhereInput;
+};
 
 export type marcador_mapaUpdateToOneWithWhereWithoutDetalle_grupoInput = {
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutDetalle_grupoInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutDetalle_grupoInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpdateWithoutDetalle_grupoInput = {
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-}
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateWithoutDetalle_grupoInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaCreateWithoutInmuebleInput = {
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput
-  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput
-  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput
-}
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput;
+  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput;
+  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaUncheckedCreateWithoutInmuebleInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  ubicacion_id: number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  ubicacion_id: number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaCreateOrConnectWithoutInmuebleInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutInmuebleInput,
     Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaCreateManyInmuebleInputEnvelope = {
-  data: Prisma.marcador_mapaCreateManyInmuebleInput | Prisma.marcador_mapaCreateManyInmuebleInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.marcador_mapaCreateManyInmuebleInput
+    | Prisma.marcador_mapaCreateManyInmuebleInput[];
+  skipDuplicates?: boolean;
+};
 
 export type marcador_mapaUpsertWithWhereUniqueWithoutInmuebleInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutInmuebleInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutInmuebleInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutInmuebleInput,
     Prisma.marcador_mapaUncheckedCreateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpdateWithWhereUniqueWithoutInmuebleInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutInmuebleInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpdateManyWithWhereWithoutInmuebleInput = {
-  where: Prisma.marcador_mapaScalarWhereInput
+  where: Prisma.marcador_mapaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateManyMutationInput,
     Prisma.marcador_mapaUncheckedUpdateManyWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaScalarWhereInput = {
-  AND?: Prisma.marcador_mapaScalarWhereInput | Prisma.marcador_mapaScalarWhereInput[]
-  OR?: Prisma.marcador_mapaScalarWhereInput[]
-  NOT?: Prisma.marcador_mapaScalarWhereInput | Prisma.marcador_mapaScalarWhereInput[]
-  id?: Prisma.IntFilter<'marcador_mapa'> | number
-  tipo?: Prisma.Enumtipo_marcadorFilter<'marcador_mapa'> | $Enums.tipo_marcador
-  es_visible?: Prisma.BoolNullableFilter<'marcador_mapa'> | boolean | null
-  nivel_z?: Prisma.IntNullableFilter<'marcador_mapa'> | number | null
-  inmueble_id?: Prisma.IntFilter<'marcador_mapa'> | number
-  ubicacion_id?: Prisma.IntFilter<'marcador_mapa'> | number
-}
+  AND?:
+    | Prisma.marcador_mapaScalarWhereInput
+    | Prisma.marcador_mapaScalarWhereInput[];
+  OR?: Prisma.marcador_mapaScalarWhereInput[];
+  NOT?:
+    | Prisma.marcador_mapaScalarWhereInput
+    | Prisma.marcador_mapaScalarWhereInput[];
+  id?: Prisma.IntFilter<"marcador_mapa"> | number;
+  tipo?: Prisma.Enumtipo_marcadorFilter<"marcador_mapa"> | $Enums.tipo_marcador;
+  es_visible?: Prisma.BoolNullableFilter<"marcador_mapa"> | boolean | null;
+  nivel_z?: Prisma.IntNullableFilter<"marcador_mapa"> | number | null;
+  inmueble_id?: Prisma.IntFilter<"marcador_mapa"> | number;
+  ubicacion_id?: Prisma.IntFilter<"marcador_mapa"> | number;
+};
 
 export type marcador_mapaCreateWithoutInteraccion_mapaInput = {
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput
-  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput
-}
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+  ubicacion_inmueble: Prisma.ubicacion_inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaUncheckedCreateWithoutInteraccion_mapaInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  inmueble_id: number
-  ubicacion_id: number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  inmueble_id: number;
+  ubicacion_id: number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaCreateOrConnectWithoutInteraccion_mapaInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.marcador_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpsertWithoutInteraccion_mapaInput = {
   update: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutInteraccion_mapaInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutInteraccion_mapaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutInteraccion_mapaInput,
     Prisma.marcador_mapaUncheckedCreateWithoutInteraccion_mapaInput
-  >
-  where?: Prisma.marcador_mapaWhereInput
-}
+  >;
+  where?: Prisma.marcador_mapaWhereInput;
+};
 
 export type marcador_mapaUpdateToOneWithWhereWithoutInteraccion_mapaInput = {
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutInteraccion_mapaInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutInteraccion_mapaInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpdateWithoutInteraccion_mapaInput = {
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-}
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateWithoutInteraccion_mapaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaCreateWithoutUbicacion_inmuebleInput = {
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput
-  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput
-}
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  detalle_grupo?: Prisma.detalle_grupoCreateNestedManyWithoutMarcador_mapaInput;
+  interaccion_mapa?: Prisma.interaccion_mapaCreateNestedManyWithoutMarcador_mapaInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  inmueble_id: number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  inmueble_id: number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedCreateNestedManyWithoutMarcador_mapaInput;
+};
 
 export type marcador_mapaCreateOrConnectWithoutUbicacion_inmuebleInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput,
     Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaCreateManyUbicacion_inmuebleInputEnvelope = {
   data:
     | Prisma.marcador_mapaCreateManyUbicacion_inmuebleInput
-    | Prisma.marcador_mapaCreateManyUbicacion_inmuebleInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.marcador_mapaCreateManyUbicacion_inmuebleInput[];
+  skipDuplicates?: boolean;
+};
 
 export type marcador_mapaUpsertWithWhereUniqueWithoutUbicacion_inmuebleInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutUbicacion_inmuebleInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.marcador_mapaCreateWithoutUbicacion_inmuebleInput,
     Prisma.marcador_mapaUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpdateWithWhereUniqueWithoutUbicacion_inmuebleInput = {
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateWithoutUbicacion_inmuebleInput,
     Prisma.marcador_mapaUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaUpdateManyWithWhereWithoutUbicacion_inmuebleInput = {
-  where: Prisma.marcador_mapaScalarWhereInput
+  where: Prisma.marcador_mapaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateManyMutationInput,
     Prisma.marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type marcador_mapaCreateManyInmuebleInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  ubicacion_id: number
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  ubicacion_id: number;
+};
 
 export type marcador_mapaUpdateWithoutInmuebleInput = {
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput
-  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-}
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateWithoutInmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateManyWithoutInmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ubicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type marcador_mapaCreateManyUbicacion_inmuebleInput = {
-  id?: number
-  tipo: $Enums.tipo_marcador
-  es_visible?: boolean | null
-  nivel_z?: number | null
-  inmueble_id: number
-}
+  id?: number;
+  tipo: $Enums.tipo_marcador;
+  es_visible?: boolean | null;
+  nivel_z?: number | null;
+  inmueble_id: number;
+};
 
 export type marcador_mapaUpdateWithoutUbicacion_inmuebleInput = {
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput
-  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput
-}
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  detalle_grupo?: Prisma.detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUpdateManyWithoutMarcador_mapaNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateWithoutUbicacion_inmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  detalle_grupo?: Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+  interaccion_mapa?: Prisma.interaccion_mapaUncheckedUpdateManyWithoutMarcador_mapaNestedInput;
+};
 
 export type marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tipo?: Prisma.Enumtipo_marcadorFieldUpdateOperationsInput | $Enums.tipo_marcador
-  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  tipo?:
+    | Prisma.Enumtipo_marcadorFieldUpdateOperationsInput
+    | $Enums.tipo_marcador;
+  es_visible?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  nivel_z?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 /**
  * Count Type Marcador_mapaCountOutputType
  */
 
 export type Marcador_mapaCountOutputType = {
-  detalle_grupo: number
-  interaccion_mapa: number
-}
+  detalle_grupo: number;
+  interaccion_mapa: number;
+};
 
 export type Marcador_mapaCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  detalle_grupo?: boolean | Marcador_mapaCountOutputTypeCountDetalle_grupoArgs
-  interaccion_mapa?: boolean | Marcador_mapaCountOutputTypeCountInteraccion_mapaArgs
-}
+  detalle_grupo?: boolean | Marcador_mapaCountOutputTypeCountDetalle_grupoArgs;
+  interaccion_mapa?:
+    | boolean
+    | Marcador_mapaCountOutputTypeCountInteraccion_mapaArgs;
+};
 
 /**
  * Marcador_mapaCountOutputType without action
  */
 export type Marcador_mapaCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the Marcador_mapaCountOutputType
    */
-  select?: Prisma.Marcador_mapaCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.Marcador_mapaCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * Marcador_mapaCountOutputType without action
  */
 export type Marcador_mapaCountOutputTypeCountDetalle_grupoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.detalle_grupoWhereInput
-}
+  where?: Prisma.detalle_grupoWhereInput;
+};
 
 /**
  * Marcador_mapaCountOutputType without action
  */
 export type Marcador_mapaCountOutputTypeCountInteraccion_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.interaccion_mapaWhereInput
-}
+  where?: Prisma.interaccion_mapaWhereInput;
+};
 
 export type marcador_mapaSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    tipo?: boolean
-    es_visible?: boolean
-    nivel_z?: boolean
-    inmueble_id?: boolean
-    ubicacion_id?: boolean
-    detalle_grupo?: boolean | Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs>
-    interaccion_mapa?: boolean | Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs>
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-    ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>
-    _count?: boolean | Prisma.Marcador_mapaCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    tipo?: boolean;
+    es_visible?: boolean;
+    nivel_z?: boolean;
+    inmueble_id?: boolean;
+    ubicacion_id?: boolean;
+    detalle_grupo?: boolean | Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs>;
+    interaccion_mapa?:
+      | boolean
+      | Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs>;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+    ubicacion_inmueble?:
+      | boolean
+      | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>;
+    _count?: boolean | Prisma.Marcador_mapaCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['marcador_mapa']
->
+  ExtArgs["result"]["marcador_mapa"]
+>;
 
 export type marcador_mapaSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    tipo?: boolean
-    es_visible?: boolean
-    nivel_z?: boolean
-    inmueble_id?: boolean
-    ubicacion_id?: boolean
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-    ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>
+    id?: boolean;
+    tipo?: boolean;
+    es_visible?: boolean;
+    nivel_z?: boolean;
+    inmueble_id?: boolean;
+    ubicacion_id?: boolean;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+    ubicacion_inmueble?:
+      | boolean
+      | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['marcador_mapa']
->
+  ExtArgs["result"]["marcador_mapa"]
+>;
 
 export type marcador_mapaSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    tipo?: boolean
-    es_visible?: boolean
-    nivel_z?: boolean
-    inmueble_id?: boolean
-    ubicacion_id?: boolean
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-    ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>
+    id?: boolean;
+    tipo?: boolean;
+    es_visible?: boolean;
+    nivel_z?: boolean;
+    inmueble_id?: boolean;
+    ubicacion_id?: boolean;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+    ubicacion_inmueble?:
+      | boolean
+      | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['marcador_mapa']
->
+  ExtArgs["result"]["marcador_mapa"]
+>;
 
 export type marcador_mapaSelectScalar = {
-  id?: boolean
-  tipo?: boolean
-  es_visible?: boolean
-  nivel_z?: boolean
-  inmueble_id?: boolean
-  ubicacion_id?: boolean
-}
+  id?: boolean;
+  tipo?: boolean;
+  es_visible?: boolean;
+  nivel_z?: boolean;
+  inmueble_id?: boolean;
+  ubicacion_id?: boolean;
+};
 
 export type marcador_mapaOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'tipo' | 'es_visible' | 'nivel_z' | 'inmueble_id' | 'ubicacion_id',
-  ExtArgs['result']['marcador_mapa']
->
+  "id" | "tipo" | "es_visible" | "nivel_z" | "inmueble_id" | "ubicacion_id",
+  ExtArgs["result"]["marcador_mapa"]
+>;
 export type marcador_mapaInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  detalle_grupo?: boolean | Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs>
-  interaccion_mapa?: boolean | Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs>
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-  ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>
-  _count?: boolean | Prisma.Marcador_mapaCountOutputTypeDefaultArgs<ExtArgs>
-}
+  detalle_grupo?: boolean | Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs>;
+  interaccion_mapa?:
+    | boolean
+    | Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs>;
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+  ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>;
+  _count?: boolean | Prisma.Marcador_mapaCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type marcador_mapaIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-  ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>
-}
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+  ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>;
+};
 export type marcador_mapaIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-  ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>
-}
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+  ubicacion_inmueble?: boolean | Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>;
+};
 
 export type $marcador_mapaPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'marcador_mapa'
+  name: "marcador_mapa";
   objects: {
-    detalle_grupo: Prisma.$detalle_grupoPayload<ExtArgs>[]
-    interaccion_mapa: Prisma.$interaccion_mapaPayload<ExtArgs>[]
-    inmueble: Prisma.$inmueblePayload<ExtArgs>
-    ubicacion_inmueble: Prisma.$ubicacion_inmueblePayload<ExtArgs>
-  }
+    detalle_grupo: Prisma.$detalle_grupoPayload<ExtArgs>[];
+    interaccion_mapa: Prisma.$interaccion_mapaPayload<ExtArgs>[];
+    inmueble: Prisma.$inmueblePayload<ExtArgs>;
+    ubicacion_inmueble: Prisma.$ubicacion_inmueblePayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      tipo: $Enums.tipo_marcador
-      es_visible: boolean | null
-      nivel_z: number | null
-      inmueble_id: number
-      ubicacion_id: number
+      id: number;
+      tipo: $Enums.tipo_marcador;
+      es_visible: boolean | null;
+      nivel_z: number | null;
+      inmueble_id: number;
+      ubicacion_id: number;
     },
-    ExtArgs['result']['marcador_mapa']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["marcador_mapa"]
+  >;
+  composites: {};
+};
 
 export type marcador_mapaGetPayload<
-  S extends boolean | null | undefined | marcador_mapaDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$marcador_mapaPayload, S>
+  S extends boolean | null | undefined | marcador_mapaDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$marcador_mapaPayload, S>;
 
 export type marcador_mapaCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<marcador_mapaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Marcador_mapaCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  marcador_mapaFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Marcador_mapaCountAggregateInputType | true;
+};
 
 export interface marcador_mapaDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['marcador_mapa']
-    meta: { name: 'marcador_mapa' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["marcador_mapa"];
+    meta: { name: "marcador_mapa" };
+  };
   /**
    * Find zero or one Marcador_mapa that matches the filter.
    * @param {marcador_mapaFindUniqueArgs} args - Arguments to find a Marcador_mapa
@@ -1192,18 +1329,18 @@ export interface marcador_mapaDelegate<
    * })
    */
   findUnique<T extends marcador_mapaFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Marcador_mapa that matches the filter or throw an error with `error.code='P2025'`
@@ -1218,18 +1355,18 @@ export interface marcador_mapaDelegate<
    * })
    */
   findUniqueOrThrow<T extends marcador_mapaFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Marcador_mapa that matches the filter.
@@ -1245,18 +1382,18 @@ export interface marcador_mapaDelegate<
    * })
    */
   findFirst<T extends marcador_mapaFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, marcador_mapaFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, marcador_mapaFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Marcador_mapa that matches the filter or
@@ -1273,18 +1410,18 @@ export interface marcador_mapaDelegate<
    * })
    */
   findFirstOrThrow<T extends marcador_mapaFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, marcador_mapaFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, marcador_mapaFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Marcador_mapas that matches the filter.
@@ -1303,15 +1440,15 @@ export interface marcador_mapaDelegate<
    *
    */
   findMany<T extends marcador_mapaFindManyArgs>(
-    args?: Prisma.SelectSubset<T, marcador_mapaFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, marcador_mapaFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Marcador_mapa.
@@ -1326,18 +1463,18 @@ export interface marcador_mapaDelegate<
    *
    */
   create<T extends marcador_mapaCreateArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Marcador_mapas.
@@ -1352,8 +1489,8 @@ export interface marcador_mapaDelegate<
    *
    */
   createMany<T extends marcador_mapaCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, marcador_mapaCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, marcador_mapaCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Marcador_mapas and returns the data saved in the database.
@@ -1378,15 +1515,18 @@ export interface marcador_mapaDelegate<
    *
    */
   createManyAndReturn<T extends marcador_mapaCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, marcador_mapaCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      marcador_mapaCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Marcador_mapa.
@@ -1401,18 +1541,18 @@ export interface marcador_mapaDelegate<
    *
    */
   delete<T extends marcador_mapaDeleteArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Marcador_mapa.
@@ -1430,18 +1570,18 @@ export interface marcador_mapaDelegate<
    *
    */
   update<T extends marcador_mapaUpdateArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Marcador_mapas.
@@ -1456,8 +1596,8 @@ export interface marcador_mapaDelegate<
    *
    */
   deleteMany<T extends marcador_mapaDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, marcador_mapaDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, marcador_mapaDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Marcador_mapas.
@@ -1477,8 +1617,8 @@ export interface marcador_mapaDelegate<
    *
    */
   updateMany<T extends marcador_mapaUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, marcador_mapaUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Marcador_mapas and returns the data updated in the database.
@@ -1509,15 +1649,15 @@ export interface marcador_mapaDelegate<
    *
    */
   updateManyAndReturn<T extends marcador_mapaUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Marcador_mapa.
@@ -1537,18 +1677,18 @@ export interface marcador_mapaDelegate<
    * })
    */
   upsert<T extends marcador_mapaUpsertArgs>(
-    args: Prisma.SelectSubset<T, marcador_mapaUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, marcador_mapaUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     runtime.Types.Result.GetResult<
       Prisma.$marcador_mapaPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Marcador_mapas.
@@ -1564,14 +1704,17 @@ export interface marcador_mapaDelegate<
    * })
    **/
   count<T extends marcador_mapaCountArgs>(
-    args?: Prisma.Subset<T, marcador_mapaCountArgs>
+    args?: Prisma.Subset<T, marcador_mapaCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Marcador_mapaCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Marcador_mapaCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Marcador_mapa.
@@ -1598,8 +1741,8 @@ export interface marcador_mapaDelegate<
    * })
    **/
   aggregate<T extends Marcador_mapaAggregateArgs>(
-    args: Prisma.Subset<T, Marcador_mapaAggregateArgs>
-  ): Prisma.PrismaPromise<GetMarcador_mapaAggregateType<T>>
+    args: Prisma.Subset<T, Marcador_mapaAggregateArgs>,
+  ): Prisma.PrismaPromise<GetMarcador_mapaAggregateType<T>>;
 
   /**
    * Group by Marcador_mapa.
@@ -1622,20 +1765,20 @@ export interface marcador_mapaDelegate<
   groupBy<
     T extends marcador_mapaGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: marcador_mapaGroupByArgs['orderBy'] }
-      : { orderBy?: marcador_mapaGroupByArgs['orderBy'] },
+      ? { orderBy: marcador_mapaGroupByArgs["orderBy"] }
+      : { orderBy?: marcador_mapaGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1644,26 +1787,31 @@ export interface marcador_mapaDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1671,15 +1819,18 @@ export interface marcador_mapaDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, marcador_mapaGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetMarcador_mapaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, marcador_mapaGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetMarcador_mapaGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the marcador_mapa model
    */
-  readonly fields: marcador_mapaFieldRefs
+  readonly fields: marcador_mapaFieldRefs;
 }
 
 /**
@@ -1691,60 +1842,65 @@ export interface marcador_mapaDelegate<
 export interface Prisma__marcador_mapaClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   detalle_grupo<T extends Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.marcador_mapa$detalle_grupoArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$detalle_grupoPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
-  interaccion_mapa<T extends Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs>>
+  >;
+  interaccion_mapa<
+    T extends Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.marcador_mapa$interaccion_mapaArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$interaccion_mapaPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   inmueble<T extends Prisma.inmuebleDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     | runtime.Types.Result.GetResult<
         Prisma.$inmueblePayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
-  ubicacion_inmueble<T extends Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>>
+  >;
+  ubicacion_inmueble<
+    T extends Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.ubicacion_inmuebleDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_inmuebleClient<
     | runtime.Types.Result.GetResult<
         Prisma.$ubicacion_inmueblePayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1752,36 +1908,47 @@ export interface Prisma__marcador_mapaClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the marcador_mapa model
  */
 export interface marcador_mapaFieldRefs {
-  readonly id: Prisma.FieldRef<'marcador_mapa', 'Int'>
-  readonly tipo: Prisma.FieldRef<'marcador_mapa', 'tipo_marcador'>
-  readonly es_visible: Prisma.FieldRef<'marcador_mapa', 'Boolean'>
-  readonly nivel_z: Prisma.FieldRef<'marcador_mapa', 'Int'>
-  readonly inmueble_id: Prisma.FieldRef<'marcador_mapa', 'Int'>
-  readonly ubicacion_id: Prisma.FieldRef<'marcador_mapa', 'Int'>
+  readonly id: Prisma.FieldRef<"marcador_mapa", "Int">;
+  readonly tipo: Prisma.FieldRef<"marcador_mapa", "tipo_marcador">;
+  readonly es_visible: Prisma.FieldRef<"marcador_mapa", "Boolean">;
+  readonly nivel_z: Prisma.FieldRef<"marcador_mapa", "Int">;
+  readonly inmueble_id: Prisma.FieldRef<"marcador_mapa", "Int">;
+  readonly ubicacion_id: Prisma.FieldRef<"marcador_mapa", "Int">;
 }
 
 // Custom InputTypes
@@ -1789,72 +1956,75 @@ export interface marcador_mapaFieldRefs {
  * marcador_mapa findUnique
  */
 export type marcador_mapaFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which marcador_mapa to fetch.
    */
-  where: Prisma.marcador_mapaWhereUniqueInput
-}
+  where: Prisma.marcador_mapaWhereUniqueInput;
+};
 
 /**
  * marcador_mapa findUniqueOrThrow
  */
 export type marcador_mapaFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which marcador_mapa to fetch.
    */
-  where: Prisma.marcador_mapaWhereUniqueInput
-}
+  where: Prisma.marcador_mapaWhereUniqueInput;
+};
 
 /**
  * marcador_mapa findFirst
  */
 export type marcador_mapaFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which marcador_mapa to fetch.
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1862,55 +2032,58 @@ export type marcador_mapaFindFirstArgs<
    */
   orderBy?:
     | Prisma.marcador_mapaOrderByWithRelationInput
-    | Prisma.marcador_mapaOrderByWithRelationInput[]
+    | Prisma.marcador_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for marcador_mapas.
    */
-  cursor?: Prisma.marcador_mapaWhereUniqueInput
+  cursor?: Prisma.marcador_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` marcador_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` marcador_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of marcador_mapas.
    */
-  distinct?: Prisma.Marcador_mapaScalarFieldEnum | Prisma.Marcador_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Marcador_mapaScalarFieldEnum
+    | Prisma.Marcador_mapaScalarFieldEnum[];
+};
 
 /**
  * marcador_mapa findFirstOrThrow
  */
 export type marcador_mapaFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which marcador_mapa to fetch.
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1918,55 +2091,58 @@ export type marcador_mapaFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.marcador_mapaOrderByWithRelationInput
-    | Prisma.marcador_mapaOrderByWithRelationInput[]
+    | Prisma.marcador_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for marcador_mapas.
    */
-  cursor?: Prisma.marcador_mapaWhereUniqueInput
+  cursor?: Prisma.marcador_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` marcador_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` marcador_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of marcador_mapas.
    */
-  distinct?: Prisma.Marcador_mapaScalarFieldEnum | Prisma.Marcador_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Marcador_mapaScalarFieldEnum
+    | Prisma.Marcador_mapaScalarFieldEnum[];
+};
 
 /**
  * marcador_mapa findMany
  */
 export type marcador_mapaFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * Filter, which marcador_mapas to fetch.
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1974,128 +2150,145 @@ export type marcador_mapaFindManyArgs<
    */
   orderBy?:
     | Prisma.marcador_mapaOrderByWithRelationInput
-    | Prisma.marcador_mapaOrderByWithRelationInput[]
+    | Prisma.marcador_mapaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing marcador_mapas.
    */
-  cursor?: Prisma.marcador_mapaWhereUniqueInput
+  cursor?: Prisma.marcador_mapaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` marcador_mapas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` marcador_mapas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of marcador_mapas.
    */
-  distinct?: Prisma.Marcador_mapaScalarFieldEnum | Prisma.Marcador_mapaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Marcador_mapaScalarFieldEnum
+    | Prisma.Marcador_mapaScalarFieldEnum[];
+};
 
 /**
  * marcador_mapa create
  */
 export type marcador_mapaCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * The data needed to create a marcador_mapa.
    */
-  data: Prisma.XOR<Prisma.marcador_mapaCreateInput, Prisma.marcador_mapaUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.marcador_mapaCreateInput,
+    Prisma.marcador_mapaUncheckedCreateInput
+  >;
+};
 
 /**
  * marcador_mapa createMany
  */
 export type marcador_mapaCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many marcador_mapas.
    */
-  data: Prisma.marcador_mapaCreateManyInput | Prisma.marcador_mapaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.marcador_mapaCreateManyInput
+    | Prisma.marcador_mapaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * marcador_mapa createManyAndReturn
  */
 export type marcador_mapaCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * The data used to create many marcador_mapas.
    */
-  data: Prisma.marcador_mapaCreateManyInput | Prisma.marcador_mapaCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.marcador_mapaCreateManyInput
+    | Prisma.marcador_mapaCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.marcador_mapaIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * marcador_mapa update
  */
 export type marcador_mapaUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * The data needed to update a marcador_mapa.
    */
-  data: Prisma.XOR<Prisma.marcador_mapaUpdateInput, Prisma.marcador_mapaUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.marcador_mapaUpdateInput,
+    Prisma.marcador_mapaUncheckedUpdateInput
+  >;
   /**
    * Choose, which marcador_mapa to update.
    */
-  where: Prisma.marcador_mapaWhereUniqueInput
-}
+  where: Prisma.marcador_mapaWhereUniqueInput;
+};
 
 /**
  * marcador_mapa updateMany
  */
 export type marcador_mapaUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update marcador_mapas.
@@ -2103,196 +2296,213 @@ export type marcador_mapaUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateManyMutationInput,
     Prisma.marcador_mapaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which marcador_mapas to update
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * Limit how many marcador_mapas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * marcador_mapa updateManyAndReturn
  */
 export type marcador_mapaUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * The data used to update marcador_mapas.
    */
   data: Prisma.XOR<
     Prisma.marcador_mapaUpdateManyMutationInput,
     Prisma.marcador_mapaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which marcador_mapas to update
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * Limit how many marcador_mapas to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.marcador_mapaIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * marcador_mapa upsert
  */
 export type marcador_mapaUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * The filter to search for the marcador_mapa to update in case it exists.
    */
-  where: Prisma.marcador_mapaWhereUniqueInput
+  where: Prisma.marcador_mapaWhereUniqueInput;
   /**
    * In case the marcador_mapa found by the `where` argument doesn't exist, create a new marcador_mapa with this data.
    */
-  create: Prisma.XOR<Prisma.marcador_mapaCreateInput, Prisma.marcador_mapaUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.marcador_mapaCreateInput,
+    Prisma.marcador_mapaUncheckedCreateInput
+  >;
   /**
    * In case the marcador_mapa was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.marcador_mapaUpdateInput, Prisma.marcador_mapaUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.marcador_mapaUpdateInput,
+    Prisma.marcador_mapaUncheckedUpdateInput
+  >;
+};
 
 /**
  * marcador_mapa delete
  */
 export type marcador_mapaDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
   /**
    * Filter which marcador_mapa to delete.
    */
-  where: Prisma.marcador_mapaWhereUniqueInput
-}
+  where: Prisma.marcador_mapaWhereUniqueInput;
+};
 
 /**
  * marcador_mapa deleteMany
  */
 export type marcador_mapaDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which marcador_mapas to delete
    */
-  where?: Prisma.marcador_mapaWhereInput
+  where?: Prisma.marcador_mapaWhereInput;
   /**
    * Limit how many marcador_mapas to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * marcador_mapa.detalle_grupo
  */
 export type marcador_mapa$detalle_grupoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
-  where?: Prisma.detalle_grupoWhereInput
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
+  where?: Prisma.detalle_grupoWhereInput;
   orderBy?:
     | Prisma.detalle_grupoOrderByWithRelationInput
-    | Prisma.detalle_grupoOrderByWithRelationInput[]
-  cursor?: Prisma.detalle_grupoWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Detalle_grupoScalarFieldEnum | Prisma.Detalle_grupoScalarFieldEnum[]
-}
+    | Prisma.detalle_grupoOrderByWithRelationInput[];
+  cursor?: Prisma.detalle_grupoWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Detalle_grupoScalarFieldEnum
+    | Prisma.Detalle_grupoScalarFieldEnum[];
+};
 
 /**
  * marcador_mapa.interaccion_mapa
  */
 export type marcador_mapa$interaccion_mapaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the interaccion_mapa
    */
-  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null
+  select?: Prisma.interaccion_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the interaccion_mapa
    */
-  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null
+  omit?: Prisma.interaccion_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null
-  where?: Prisma.interaccion_mapaWhereInput
+  include?: Prisma.interaccion_mapaInclude<ExtArgs> | null;
+  where?: Prisma.interaccion_mapaWhereInput;
   orderBy?:
     | Prisma.interaccion_mapaOrderByWithRelationInput
-    | Prisma.interaccion_mapaOrderByWithRelationInput[]
-  cursor?: Prisma.interaccion_mapaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Interaccion_mapaScalarFieldEnum | Prisma.Interaccion_mapaScalarFieldEnum[]
-}
+    | Prisma.interaccion_mapaOrderByWithRelationInput[];
+  cursor?: Prisma.interaccion_mapaWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Interaccion_mapaScalarFieldEnum
+    | Prisma.Interaccion_mapaScalarFieldEnum[];
+};
 
 /**
  * marcador_mapa without action
  */
 export type marcador_mapaDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the marcador_mapa
    */
-  select?: Prisma.marcador_mapaSelect<ExtArgs> | null
+  select?: Prisma.marcador_mapaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the marcador_mapa
    */
-  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null
+  omit?: Prisma.marcador_mapaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.marcador_mapaInclude<ExtArgs> | null
-}
+  include?: Prisma.marcador_mapaInclude<ExtArgs> | null;
+};

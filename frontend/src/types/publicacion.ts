@@ -9,7 +9,7 @@ export interface MisPublicacionesItem {
   imagenUrl: string | null;
   tipoOperacion?: string;
   activa?: boolean;
-   promoted?: boolean;  
+  promoted?: boolean;
   // Estadísticas de la publicación
   totalVisualizaciones?: number;
   totalCompartidos?: number;

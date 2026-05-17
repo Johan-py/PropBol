@@ -1,47 +1,51 @@
-
-import type { DetallePropiedad } from '@/types/detallePropiedad'
+import type { DetallePropiedad } from "@/types/detallePropiedad";
 
 interface Props {
-  detalle: DetallePropiedad
-  esOferta?: boolean
-  porcentajeDescuento?: number
-  formatPrice?: (value?: number) => string
+  detalle: DetallePropiedad;
+  esOferta?: boolean;
+  porcentajeDescuento?: number;
+  formatPrice?: (value?: number) => string;
 }
 
 function traducirOperacion(value: string) {
   switch (value) {
-    case 'VENTA':
-      return 'venta'
-    case 'ALQUILER':
-      return 'alquiler'
-    case 'ANTICRETO':
-      return 'anticrético'
+    case "VENTA":
+      return "venta";
+    case "ALQUILER":
+      return "alquiler";
+    case "ANTICRETO":
+      return "anticrético";
     default:
-      return value.toLowerCase()
+      return value.toLowerCase();
   }
 }
 
 function traducirTipo(value: string | null) {
-  if (!value) return ''
+  if (!value) return "";
 
   switch (value) {
-    case 'DEPARTAMENTO':
-      return 'Departamento'
-    case 'CASA':
-      return 'Casa'
-    case 'TERRENO':
-      return 'Terreno'
-    case 'OFICINA':
-      return 'Oficina'
+    case "DEPARTAMENTO":
+      return "Departamento";
+    case "CASA":
+      return "Casa";
+    case "TERRENO":
+      return "Terreno";
+    case "OFICINA":
+      return "Oficina";
     default:
-      return value
+      return value;
   }
 }
 
-export default function ResumenPropiedad({ detalle, esOferta, porcentajeDescuento, formatPrice }: Props) {
-  const precioFormateado = `$${detalle.precio.toLocaleString()} USD`
-  const tipo = traducirTipo(detalle.tipoInmueble)
-  const operacion = traducirOperacion(detalle.tipoOperacion)
+export default function ResumenPropiedad({
+  detalle,
+  esOferta,
+  porcentajeDescuento,
+  formatPrice,
+}: Props) {
+  const precioFormateado = `$${detalle.precio.toLocaleString()} USD`;
+  const tipo = traducirTipo(detalle.tipoInmueble);
+  const operacion = traducirOperacion(detalle.tipoOperacion);
 
   return (
     <section className="max-w-[760px] space-y-2">
@@ -77,5 +81,5 @@ export default function ResumenPropiedad({ detalle, esOferta, porcentajeDescuent
         </span>
       </div>
     </section>
-  )
+  );
 }

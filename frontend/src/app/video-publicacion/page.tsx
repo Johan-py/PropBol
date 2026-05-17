@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { X, Play } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { X, Play } from "lucide-react";
 
 type TutorialContent = {
   titulo: string;
@@ -22,7 +22,7 @@ export default function VideoPublicacionPage() {
   const [aceptado, setAceptado] = useState(false);
   const [contenido, setContenido] = useState<TutorialContent | null>(null);
 
-  const getToken = () => localStorage.getItem('token');
+  const getToken = () => localStorage.getItem("token");
 
   useEffect(() => {
     const cargarTutorial = async () => {
@@ -46,19 +46,19 @@ export default function VideoPublicacionPage() {
         const estadoResult = await estadoResponse.json();
 
         if (!contenidoResponse.ok || !estadoResponse.ok) {
-          router.replace('/registro-inmueble');
+          router.replace("/registro-inmueble");
           return;
         }
 
         if (!estadoResult.data?.debeMostrarTutorial) {
-          router.replace('/registro-inmueble');
+          router.replace("/registro-inmueble");
           return;
         }
 
         setContenido(contenidoResult.data);
       } catch (error) {
-        console.error('Error al cargar tutorial:', error);
-        router.replace('/registro-inmueble');
+        console.error("Error al cargar tutorial:", error);
+        router.replace("/registro-inmueble");
       } finally {
         setLoading(false);
       }
@@ -72,15 +72,15 @@ export default function VideoPublicacionPage() {
       const token = getToken();
 
       await fetch(`${API_URL}/api/tutorial-publicacion/confirmar`, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
     } catch (error) {
-      console.error('Error al confirmar tutorial:', error);
+      console.error("Error al confirmar tutorial:", error);
     } finally {
-      router.replace('/registro-inmueble');
+      router.replace("/registro-inmueble");
     }
   };
 
@@ -102,7 +102,7 @@ export default function VideoPublicacionPage() {
         <section className="relative w-full max-w-[620px] rounded-2xl bg-white px-7 py-8 shadow-2xl">
           <button
             type="button"
-            onClick={() => router.replace('/registro-inmueble')}
+            onClick={() => router.replace("/registro-inmueble")}
             className="absolute right-5 top-5 text-gray-500 transition hover:text-gray-800"
             aria-label="Cerrar tutorial"
           >
@@ -146,7 +146,7 @@ export default function VideoPublicacionPage() {
                 <img
                   src={
                     contenido.thumbnailUrl ||
-                    '/images/video-publicacion/casa-publicacion.png'
+                    "/images/video-publicacion/casa-publicacion.png"
                   }
                   alt="Tutorial de publicación"
                   className="h-[185px] w-auto object-contain"
@@ -171,8 +171,8 @@ export default function VideoPublicacionPage() {
             onClick={continuar}
             className={`mt-5 w-full rounded-lg py-3 text-sm font-semibold text-white transition ${
               aceptado
-                ? 'bg-orange-400 hover:bg-orange-500'
-                : 'cursor-not-allowed bg-orange-300 opacity-70'
+                ? "bg-orange-400 hover:bg-orange-500"
+                : "cursor-not-allowed bg-orange-300 opacity-70"
             }`}
           >
             Continuar

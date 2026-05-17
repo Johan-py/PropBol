@@ -84,7 +84,8 @@ export default function BlogCreateForm({
 
   const handleEditorLinkConfirm = (url: string, text?: string) => {
     if (editor) {
-      editor.chain()
+      editor
+        .chain()
         .focus()
         .insertContent(`<a href="${url}">${text || url}</a> `)
         .run();
@@ -101,17 +102,30 @@ export default function BlogCreateForm({
 
           {statusLabel === "PENDIENTE" && (
             <div className="rounded-[24px] bg-amber-50 border border-amber-200 p-6 shadow-sm">
-              <h3 className="text-sm font-bold text-amber-700 uppercase tracking-wider mb-2">En revisión</h3>
-              <p className="text-amber-700 leading-relaxed">Tu blog está siendo revisado por el equipo de moderación.</p>
-              <p className="text-xs text-amber-600/80 mt-3 italic">No es posible editar ni reenviar mientras esté en revisión.</p>
+              <h3 className="text-sm font-bold text-amber-700 uppercase tracking-wider mb-2">
+                En revisión
+              </h3>
+              <p className="text-amber-700 leading-relaxed">
+                Tu blog está siendo revisado por el equipo de moderación.
+              </p>
+              <p className="text-xs text-amber-600/80 mt-3 italic">
+                No es posible editar ni reenviar mientras esté en revisión.
+              </p>
             </div>
           )}
 
           {statusLabel === "RECHAZADO" && rejectionReason && (
             <div className="rounded-[24px] bg-[#FDECEC] border border-[#F3BABA] p-6 shadow-sm">
-              <h3 className="text-sm font-bold text-[#D94848] uppercase tracking-wider mb-2">Motivo de rechazo</h3>
-              <p className="text-[#D94848] leading-relaxed">{rejectionReason}</p>
-              <p className="text-xs text-[#D94848]/80 mt-3 italic">Corrige los puntos mencionados y vuelve a enviarlo para revisión.</p>
+              <h3 className="text-sm font-bold text-[#D94848] uppercase tracking-wider mb-2">
+                Motivo de rechazo
+              </h3>
+              <p className="text-[#D94848] leading-relaxed">
+                {rejectionReason}
+              </p>
+              <p className="text-xs text-[#D94848]/80 mt-3 italic">
+                Corrige los puntos mencionados y vuelve a enviarlo para
+                revisión.
+              </p>
             </div>
           )}
 
@@ -154,8 +168,16 @@ export default function BlogCreateForm({
             />
 
             {/* Feedback Messages */}
-            {loadError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{loadError}</p>}
-            {autosaveMessage && <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-medium">{autosaveMessage}</p>}
+            {loadError && (
+              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">
+                {loadError}
+              </p>
+            )}
+            {autosaveMessage && (
+              <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-medium">
+                {autosaveMessage}
+              </p>
+            )}
             {submitError && (
               <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
                 {submitError}
@@ -189,7 +211,7 @@ export default function BlogCreateForm({
       <SuccessToast
         message={successMessage}
         isOpen={!!successMessage}
-        onClose={() => { }} // El hook redirige rápido, así que no es crítico el reset manual aquí
+        onClose={() => {}} // El hook redirige rápido, así que no es crítico el reset manual aquí
       />
     </div>
   );

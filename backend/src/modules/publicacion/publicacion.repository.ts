@@ -469,7 +469,7 @@ export const activarPublicidadRepository = async (
   publicacionId: number,
   usuarioId: number,
   paymentIntentId: string,
-  duracionDias: number = 30
+  duracionDias: number = 30,
 ) => {
   const fechaInicio = new Date();
   const fechaExpiracion = new Date();
@@ -491,7 +491,7 @@ export const activarPublicidadRepository = async (
 
 export const cancelarPublicidadRepository = async (
   publicacionId: number,
-  usuarioId: number
+  usuarioId: number,
 ) => {
   return prisma.publicacion.update({
     where: {
@@ -508,7 +508,7 @@ export const cancelarPublicidadRepository = async (
 };
 
 export const buscarPublicacionPorIdSimpleRepository = async (
-  publicacionId: number
+  publicacionId: number,
 ) => {
   return prisma.publicacion.findUnique({
     where: { id: publicacionId },
@@ -522,7 +522,7 @@ export const buscarPublicacionPorIdSimpleRepository = async (
 };
 
 export const verificarPublicidadActivaRepository = async (
-  publicacionId: number
+  publicacionId: number,
 ) => {
   const publicacion = await prisma.publicacion.findUnique({
     where: { id: publicacionId },

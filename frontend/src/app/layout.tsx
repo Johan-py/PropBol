@@ -6,7 +6,7 @@ import ThemeProvider from "@/components/theme/ThemeProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   ),
   title: {
     default: "PropBol",
@@ -50,7 +50,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <head> 
+      <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('propbol-theme');if(t==='dark')document.documentElement.classList.add('dark');var a=localStorage.getItem('propbol-accessibility');if(a&&a!=='none')document.documentElement.setAttribute('data-accessibility',a);}catch(e){}})();`,
@@ -61,12 +61,12 @@ export default function RootLayout({
         <ThemeProvider defaultTheme="light">
           {/* El AppShell envuelve el contenido principal */}
           <AppShell>{children}</AppShell>
-          
-        {/* Inyectamos el TelemetryTrigger fuera del AppShell 
+
+          {/* Inyectamos el TelemetryTrigger fuera del AppShell 
           para que controle el retraso de 4 segundos y la 
           captura automática de zona sin interferir con la UI 
         */}
-        <TelemetryTrigger />
+          <TelemetryTrigger />
         </ThemeProvider>
       </body>
     </html>

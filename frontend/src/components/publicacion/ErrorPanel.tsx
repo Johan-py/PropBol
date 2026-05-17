@@ -26,16 +26,18 @@ export default function ErrorPanel({ errores, onClickError }: Props) {
       </div>
       <div className="flex flex-col gap-1">
         {Object.entries(agrupados).map(([seccion, lista]) =>
-          (lista as ErrorValidacion[]).map((error: ErrorValidacion, i: number) => (
-            <button
-              key={`${seccion}-${i}`}
-              onClick={() => onClickError(error.campo as string)}
-              className="w-full rounded-md border border-red-100 bg-white px-3 py-2 text-left transition hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-300"
-            >
-              <p className="text-xs font-semibold text-gray-500">{seccion}</p>
-              <p className="text-sm text-gray-700">{error.mensaje}</p>
-            </button>
-          ))
+          (lista as ErrorValidacion[]).map(
+            (error: ErrorValidacion, i: number) => (
+              <button
+                key={`${seccion}-${i}`}
+                onClick={() => onClickError(error.campo as string)}
+                className="w-full rounded-md border border-red-100 bg-white px-3 py-2 text-left transition hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-300"
+              >
+                <p className="text-xs font-semibold text-gray-500">{seccion}</p>
+                <p className="text-sm text-gray-700">{error.mensaje}</p>
+              </button>
+            ),
+          ),
         )}
       </div>
     </div>

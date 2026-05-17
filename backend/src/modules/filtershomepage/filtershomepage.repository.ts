@@ -80,11 +80,12 @@ export class FiltersHomepageRepository {
 
       const entry = deptMap.get(dept)!;
       entry.ids.add(u.inmuebleId);
-      
+
       const inmueble = u.inmueble;
 
       // Aquí está el truco: Navegamos de forma segura por Inmueble -> Publicaciones -> Multimedia
-      const primeraImagen = inmueble?.publicaciones?.[0]?.multimedia?.[0]?.url ?? null;
+      const primeraImagen =
+        inmueble?.publicaciones?.[0]?.multimedia?.[0]?.url ?? null;
 
       if (entry.previews.length < 6 && primeraImagen && inmueble) {
         entry.previews.push({
@@ -94,11 +95,13 @@ export class FiltersHomepageRepository {
       }
     }
 
-    return Array.from(deptMap.entries()).map(([dept, data]) => ({
-      departamento: dept,
-      count: data.ids.size,
-      previews: data.previews,
-    })).sort((a, b) => b.count - a.count);
+    return Array.from(deptMap.entries())
+      .map(([dept, data]) => ({
+        departamento: dept,
+        count: data.ids.size,
+        previews: data.previews,
+      }))
+      .sort((a, b) => b.count - a.count);
   }
 
   async getCountsByCategoria() {
@@ -109,8 +112,8 @@ export class FiltersHomepageRepository {
         categoria: { not: null },
         ubicacion: {
           latitud: { not: 0 },
-          longitud: { not: 0 }
-        }
+          longitud: { not: 0 },
+        },
       },
       _count: {
         id: true,

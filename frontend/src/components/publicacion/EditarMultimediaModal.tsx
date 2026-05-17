@@ -1,84 +1,84 @@
-'use client'
+"use client";
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 
 type EditarMultimediaModalProps = {
-  open: boolean
-  publicacionId: number
-  imagenesActuales: string[]
-  videoActual?: string | null
-  onClose: () => void
-  onSaved: () => void | Promise<void>
-}
+  open: boolean;
+  publicacionId: number;
+  imagenesActuales: string[];
+  videoActual?: string | null;
+  onClose: () => void;
+  onSaved: () => void | Promise<void>;
+};
 
-const LIMITE_IMAGENES = 5
-const LIMITE_VIDEOS = 2
+const LIMITE_IMAGENES = 5;
+const LIMITE_VIDEOS = 2;
 
 const getApiUrl = () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   if (!apiUrl) {
-    throw new Error('Falta NEXT_PUBLIC_API_URL en el archivo .env.local')
+    throw new Error("Falta NEXT_PUBLIC_API_URL en el archivo .env.local");
   }
 
-  return apiUrl
-}
+  return apiUrl;
+};
 
 const getToken = () => {
-  if (typeof window === 'undefined') return ''
+  if (typeof window === "undefined") return "";
 
   return (
-    localStorage.getItem('token') ??
-    sessionStorage.getItem('token') ??
-    localStorage.getItem('jwt') ??
-    sessionStorage.getItem('jwt') ??
-    ''
-  )
-}
+    localStorage.getItem("token") ??
+    sessionStorage.getItem("token") ??
+    localStorage.getItem("jwt") ??
+    sessionStorage.getItem("jwt") ??
+    ""
+  );
+};
 
 const convertirArchivoABase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     reader.onload = () => {
-      resolve(String(reader.result))
-    }
+      resolve(String(reader.result));
+    };
 
     reader.onerror = () => {
-      reject(new Error('No se pudo leer la imagen'))
-    }
+      reject(new Error("No se pudo leer la imagen"));
+    };
 
-    reader.readAsDataURL(file)
-  })
-}
+    reader.readAsDataURL(file);
+  });
+};
 
 const esVideoPermitido = (url: string) => {
-  const video = url.trim().toLowerCase()
+  const video = url.trim().toLowerCase();
 
-  if (!video) return true
+  if (!video) return true;
 
   return (
-    video.includes('youtube.com') ||
-    video.includes('youtu.be') ||
-    video.includes('vimeo.com')
-  )
-}
+    video.includes("youtube.com") ||
+    video.includes("youtu.be") ||
+    video.includes("vimeo.com")
+  );
+};
 
 const leerRespuesta = async (response: Response) => {
-  const contentType = response.headers.get('content-type') ?? ''
+  const contentType = response.headers.get("content-type") ?? "";
 
-  if (contentType.includes('application/json')) {
-    return response.json()
+  if (contentType.includes("application/json")) {
+    return response.json();
   }
 
-  const texto = await response.text()
+  const texto = await response.text();
 
   throw new Error(
-    texto.includes('<!DOCTYPE')
+    texto.includes("<!DOCTYPE")
       ? `La ruta respondió HTML. Verifica que exista el endpoint. Status: ${response.status}`
-      : texto || `Error HTTP ${response.status}`
-  )
-}
+      : texto || `Error HTTP ${response.status}`,
+  );
+};
 
 export default function EditarMultimediaModal({
   open,
@@ -86,198 +86,206 @@ export default function EditarMultimediaModal({
   imagenesActuales,
   videoActual,
   onClose,
-  onSaved
+  onSaved,
 }: EditarMultimediaModalProps) {
-  const inputFileRef = useRef<HTMLInputElement | null>(null)
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
 
-  const [imagenes, setImagenes] = useState<string[]>([])
-  const [videosUrl, setVideosUrl] = useState<string[]>(['', ''])
-  const [imagenesNuevas, setImagenesNuevas] = useState<string[]>([])
-  const [guardando, setGuardando] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+  const [imagenes, setImagenes] = useState<string[]>([]);
+  const [videosUrl, setVideosUrl] = useState<string[]>(["", ""]);
+  const [imagenesNuevas, setImagenesNuevas] = useState<string[]>([]);
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const totalImagenes = imagenes.length + imagenesNuevas.length
-  const videosValidos = videosUrl.every((video) => esVideoPermitido(video))
-  const videosConTexto = videosUrl.filter((video) => video.trim()).length
+  const totalImagenes = imagenes.length + imagenesNuevas.length;
+  const videosValidos = videosUrl.every((video) => esVideoPermitido(video));
+  const videosConTexto = videosUrl.filter((video) => video.trim()).length;
 
   useEffect(() => {
     if (open) {
-      setImagenes(imagenesActuales ?? [])
-      setVideosUrl([videoActual ?? '', ''])
-      setImagenesNuevas([])
-      setError('')
-      setSuccess('')
+      setImagenes(imagenesActuales ?? []);
+      setVideosUrl([videoActual ?? "", ""]);
+      setImagenesNuevas([]);
+      setError("");
+      setSuccess("");
     }
-  }, [open, imagenesActuales, videoActual])
+  }, [open, imagenesActuales, videoActual]);
 
-  if (!open) return null
+  if (!open) return null;
 
   const handleAgregarImagen = () => {
     if (totalImagenes >= LIMITE_IMAGENES) {
-      setError(`Has alcanzado el límite máximo de ${LIMITE_IMAGENES} imágenes.`)
-      return
+      setError(
+        `Has alcanzado el límite máximo de ${LIMITE_IMAGENES} imágenes.`,
+      );
+      return;
     }
 
-    inputFileRef.current?.click()
-  }
+    inputFileRef.current?.click();
+  };
 
   const handleSeleccionarImagen = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
 
-    if (!file) return
+    if (!file) return;
 
-    setError('')
-    setSuccess('')
+    setError("");
+    setSuccess("");
 
-    const formatosPermitidos = ['image/jpeg', 'image/png', 'image/jpg']
+    const formatosPermitidos = ["image/jpeg", "image/png", "image/jpg"];
 
     if (!formatosPermitidos.includes(file.type)) {
-      setError('Formato no válido. Solo se permiten archivos JPG y PNG.')
-      event.target.value = ''
-      return
+      setError("Formato no válido. Solo se permiten archivos JPG y PNG.");
+      event.target.value = "";
+      return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setError('El archivo supera el tamaño máximo permitido de 5MB por imagen.')
-      event.target.value = ''
-      return
+      setError(
+        "El archivo supera el tamaño máximo permitido de 5MB por imagen.",
+      );
+      event.target.value = "";
+      return;
     }
 
     if (totalImagenes >= LIMITE_IMAGENES) {
-      setError(`Has alcanzado el límite máximo de ${LIMITE_IMAGENES} imágenes.`)
-      event.target.value = ''
-      return
+      setError(
+        `Has alcanzado el límite máximo de ${LIMITE_IMAGENES} imágenes.`,
+      );
+      event.target.value = "";
+      return;
     }
 
     try {
-      const base64 = await convertirArchivoABase64(file)
-      setImagenesNuevas((prev) => [...prev, base64])
+      const base64 = await convertirArchivoABase64(file);
+      setImagenesNuevas((prev) => [...prev, base64]);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'No se pudo cargar la imagen'
-      )
+        err instanceof Error ? err.message : "No se pudo cargar la imagen",
+      );
     } finally {
-      event.target.value = ''
+      event.target.value = "";
     }
-  }
+  };
 
   const handleEliminarImagenActual = (index: number) => {
-    setError('')
-    setSuccess('')
-    setImagenes((prev) => prev.filter((_, i) => i !== index))
-  }
+    setError("");
+    setSuccess("");
+    setImagenes((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleEliminarImagenNueva = (index: number) => {
-    setError('')
-    setSuccess('')
-    setImagenesNuevas((prev) => prev.filter((_, i) => i !== index))
-  }
+    setError("");
+    setSuccess("");
+    setImagenesNuevas((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleCambiarVideo = (index: number, value: string) => {
     setVideosUrl((prev) =>
-      prev.map((video, videoIndex) => (videoIndex === index ? value : video))
-    )
-    setError('')
-    setSuccess('')
-  }
+      prev.map((video, videoIndex) => (videoIndex === index ? value : video)),
+    );
+    setError("");
+    setSuccess("");
+  };
 
   const handleVistaPrevia = (index: number) => {
-    const videoUrl = videosUrl[index]
+    const videoUrl = videosUrl[index];
 
-    setError('')
-    setSuccess('')
+    setError("");
+    setSuccess("");
 
     if (!videoUrl.trim()) {
-      setError('Primero ingresa un enlace de video')
-      return
+      setError("Primero ingresa un enlace de video");
+      return;
     }
 
     if (!esVideoPermitido(videoUrl)) {
-      setError('Solo se permiten enlaces de YouTube o Plataformas permitidas.')
-      return
+      setError("Solo se permiten enlaces de YouTube o Plataformas permitidas.");
+      return;
     }
 
-    window.open(videoUrl.trim(), '_blank', 'noopener,noreferrer')
-  }
+    window.open(videoUrl.trim(), "_blank", "noopener,noreferrer");
+  };
 
   const handleEliminarVideo = (index: number) => {
-    setError('')
-    setSuccess('')
+    setError("");
+    setSuccess("");
     setVideosUrl((prev) =>
-      prev.map((video, videoIndex) => (videoIndex === index ? '' : video))
-    )
-  }
+      prev.map((video, videoIndex) => (videoIndex === index ? "" : video)),
+    );
+  };
 
   const handleGuardar = async () => {
     try {
-      setGuardando(true)
-      setError('')
-      setSuccess('')
+      setGuardando(true);
+      setError("");
+      setSuccess("");
 
       if (totalImagenes === 0) {
-        setError('La publicación debe tener al menos 1 imagen.')
-        return
+        setError("La publicación debe tener al menos 1 imagen.");
+        return;
       }
 
       if (!videosValidos) {
-        setError('Solo se permiten enlaces de YouTube o Plataformas permitidas.')
-        return
+        setError(
+          "Solo se permiten enlaces de YouTube o Plataformas permitidas.",
+        );
+        return;
       }
 
       if (videosConTexto > LIMITE_VIDEOS) {
-        setError(`Solo se permiten hasta ${LIMITE_VIDEOS} enlaces de video.`)
-        return
+        setError(`Solo se permiten hasta ${LIMITE_VIDEOS} enlaces de video.`);
+        return;
       }
 
-      const apiUrl = getApiUrl()
-      const token = getToken()
+      const apiUrl = getApiUrl();
+      const token = getToken();
 
       const videosLimpios = videosUrl
         .map((video) => video.trim())
-        .filter(Boolean)
+        .filter(Boolean);
 
       const response = await fetch(
         `${apiUrl}/api/publicaciones/${publicacionId}/multimedia`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({
             imagenesActuales: imagenes,
             imagenesNuevas,
             videoUrl: videosLimpios[0] ?? null,
-            videoUrls: videosLimpios
-          })
-        }
-      )
+            videoUrls: videosLimpios,
+          }),
+        },
+      );
 
-      const data = await leerRespuesta(response)
+      const data = await leerRespuesta(response);
 
       if (!response.ok) {
         throw new Error(
-          data?.message ?? data?.error ?? 'No se pudo guardar la multimedia'
-        )
+          data?.message ?? data?.error ?? "No se pudo guardar la multimedia",
+        );
       }
 
-      setSuccess('Contenido multimedia actualizado correctamente.')
+      setSuccess("Contenido multimedia actualizado correctamente.");
 
       setTimeout(async () => {
-        await onSaved()
-        onClose()
-      }, 900)
+        await onSaved();
+        onClose();
+      }, 900);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'No se pudo guardar la multimedia'
-      )
+        err instanceof Error ? err.message : "No se pudo guardar la multimedia",
+      );
     } finally {
-      setGuardando(false)
+      setGuardando(false);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
@@ -401,8 +409,8 @@ export default function EditarMultimediaModal({
 
           <div className="space-y-5">
             {videosUrl.map((video, index) => {
-              const videoTieneTexto = video.trim().length > 0
-              const videoValido = esVideoPermitido(video)
+              const videoTieneTexto = video.trim().length > 0;
+              const videoValido = esVideoPermitido(video);
 
               return (
                 <div key={`video-${index}`} className="space-y-3">
@@ -414,12 +422,14 @@ export default function EditarMultimediaModal({
                     <input
                       type="url"
                       value={video}
-                      onChange={(e) => handleCambiarVideo(index, e.target.value)}
+                      onChange={(e) =>
+                        handleCambiarVideo(index, e.target.value)
+                      }
                       placeholder="https://www.youtube.com/watch?v=..."
                       className={`h-14 flex-1 rounded-lg border px-4 text-lg outline-none focus:border-[#D97706] ${
                         videoTieneTexto && !videoValido
-                          ? 'border-red-400'
-                          : 'border-gray-300'
+                          ? "border-red-400"
+                          : "border-gray-300"
                       }`}
                     />
 
@@ -445,7 +455,7 @@ export default function EditarMultimediaModal({
                       type="button"
                       onClick={() =>
                         setError(
-                          'El video se actualizará al guardar multimedia'
+                          "El video se actualizará al guardar multimedia",
                         )
                       }
                       disabled={guardando || !videoTieneTexto || !videoValido}
@@ -464,7 +474,7 @@ export default function EditarMultimediaModal({
                     </button>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -486,11 +496,11 @@ export default function EditarMultimediaModal({
               disabled={guardando}
               className="h-14 rounded-lg bg-[#D97706] font-semibold text-white hover:bg-[#bf6905] disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {guardando ? 'Guardando...' : 'Guardar multimedia'}
+              {guardando ? "Guardando..." : "Guardar multimedia"}
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

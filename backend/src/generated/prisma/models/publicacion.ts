@@ -7,117 +7,119 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model publicacion
  *
  */
-export type publicacionModel = runtime.Types.Result.DefaultSelection<Prisma.$publicacionPayload>
+export type publicacionModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$publicacionPayload>;
 
 export type AggregatePublicacion = {
-  _count: PublicacionCountAggregateOutputType | null
-  _avg: PublicacionAvgAggregateOutputType | null
-  _sum: PublicacionSumAggregateOutputType | null
-  _min: PublicacionMinAggregateOutputType | null
-  _max: PublicacionMaxAggregateOutputType | null
-}
+  _count: PublicacionCountAggregateOutputType | null;
+  _avg: PublicacionAvgAggregateOutputType | null;
+  _sum: PublicacionSumAggregateOutputType | null;
+  _min: PublicacionMinAggregateOutputType | null;
+  _max: PublicacionMaxAggregateOutputType | null;
+};
 
 export type PublicacionAvgAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-  inmueble_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+  inmueble_id: number | null;
+};
 
 export type PublicacionSumAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-  inmueble_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+  inmueble_id: number | null;
+};
 
 export type PublicacionMinAggregateOutputType = {
-  id: number | null
-  titulo: string | null
-  descripcion: string | null
-  estado: $Enums.estado_publicacion | null
-  fecha_publicacion: Date | null
-  usuario_id: number | null
-  inmueble_id: number | null
-}
+  id: number | null;
+  titulo: string | null;
+  descripcion: string | null;
+  estado: $Enums.estado_publicacion | null;
+  fecha_publicacion: Date | null;
+  usuario_id: number | null;
+  inmueble_id: number | null;
+};
 
 export type PublicacionMaxAggregateOutputType = {
-  id: number | null
-  titulo: string | null
-  descripcion: string | null
-  estado: $Enums.estado_publicacion | null
-  fecha_publicacion: Date | null
-  usuario_id: number | null
-  inmueble_id: number | null
-}
+  id: number | null;
+  titulo: string | null;
+  descripcion: string | null;
+  estado: $Enums.estado_publicacion | null;
+  fecha_publicacion: Date | null;
+  usuario_id: number | null;
+  inmueble_id: number | null;
+};
 
 export type PublicacionCountAggregateOutputType = {
-  id: number
-  titulo: number
-  descripcion: number
-  estado: number
-  fecha_publicacion: number
-  usuario_id: number
-  inmueble_id: number
-  _all: number
-}
+  id: number;
+  titulo: number;
+  descripcion: number;
+  estado: number;
+  fecha_publicacion: number;
+  usuario_id: number;
+  inmueble_id: number;
+  _all: number;
+};
 
 export type PublicacionAvgAggregateInputType = {
-  id?: true
-  usuario_id?: true
-  inmueble_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+  inmueble_id?: true;
+};
 
 export type PublicacionSumAggregateInputType = {
-  id?: true
-  usuario_id?: true
-  inmueble_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+  inmueble_id?: true;
+};
 
 export type PublicacionMinAggregateInputType = {
-  id?: true
-  titulo?: true
-  descripcion?: true
-  estado?: true
-  fecha_publicacion?: true
-  usuario_id?: true
-  inmueble_id?: true
-}
+  id?: true;
+  titulo?: true;
+  descripcion?: true;
+  estado?: true;
+  fecha_publicacion?: true;
+  usuario_id?: true;
+  inmueble_id?: true;
+};
 
 export type PublicacionMaxAggregateInputType = {
-  id?: true
-  titulo?: true
-  descripcion?: true
-  estado?: true
-  fecha_publicacion?: true
-  usuario_id?: true
-  inmueble_id?: true
-}
+  id?: true;
+  titulo?: true;
+  descripcion?: true;
+  estado?: true;
+  fecha_publicacion?: true;
+  usuario_id?: true;
+  inmueble_id?: true;
+};
 
 export type PublicacionCountAggregateInputType = {
-  id?: true
-  titulo?: true
-  descripcion?: true
-  estado?: true
-  fecha_publicacion?: true
-  usuario_id?: true
-  inmueble_id?: true
-  _all?: true
-}
+  id?: true;
+  titulo?: true;
+  descripcion?: true;
+  estado?: true;
+  fecha_publicacion?: true;
+  usuario_id?: true;
+  inmueble_id?: true;
+  _all?: true;
+};
 
 export type PublicacionAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which publicacion to aggregate.
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -125,340 +127,381 @@ export type PublicacionAggregateArgs<
    */
   orderBy?:
     | Prisma.publicacionOrderByWithRelationInput
-    | Prisma.publicacionOrderByWithRelationInput[]
+    | Prisma.publicacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.publicacionWhereUniqueInput
+  cursor?: Prisma.publicacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` publicacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` publicacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned publicacions
    **/
-  _count?: true | PublicacionCountAggregateInputType
+  _count?: true | PublicacionCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: PublicacionAvgAggregateInputType
+  _avg?: PublicacionAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: PublicacionSumAggregateInputType
+  _sum?: PublicacionSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: PublicacionMinAggregateInputType
+  _min?: PublicacionMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: PublicacionMaxAggregateInputType
-}
+  _max?: PublicacionMaxAggregateInputType;
+};
 
 export type GetPublicacionAggregateType<T extends PublicacionAggregateArgs> = {
-  [P in keyof T & keyof AggregatePublicacion]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregatePublicacion]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregatePublicacion[P]>
-    : Prisma.GetScalarType<T[P], AggregatePublicacion[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregatePublicacion[P]>;
+};
 
 export type publicacionGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   orderBy?:
     | Prisma.publicacionOrderByWithAggregationInput
-    | Prisma.publicacionOrderByWithAggregationInput[]
-  by: Prisma.PublicacionScalarFieldEnum[] | Prisma.PublicacionScalarFieldEnum
-  having?: Prisma.publicacionScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: PublicacionCountAggregateInputType | true
-  _avg?: PublicacionAvgAggregateInputType
-  _sum?: PublicacionSumAggregateInputType
-  _min?: PublicacionMinAggregateInputType
-  _max?: PublicacionMaxAggregateInputType
-}
+    | Prisma.publicacionOrderByWithAggregationInput[];
+  by: Prisma.PublicacionScalarFieldEnum[] | Prisma.PublicacionScalarFieldEnum;
+  having?: Prisma.publicacionScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: PublicacionCountAggregateInputType | true;
+  _avg?: PublicacionAvgAggregateInputType;
+  _sum?: PublicacionSumAggregateInputType;
+  _min?: PublicacionMinAggregateInputType;
+  _max?: PublicacionMaxAggregateInputType;
+};
 
 export type PublicacionGroupByOutputType = {
-  id: number
-  titulo: string
-  descripcion: string | null
-  estado: $Enums.estado_publicacion | null
-  fecha_publicacion: Date | null
-  usuario_id: number
-  inmueble_id: number
-  _count: PublicacionCountAggregateOutputType | null
-  _avg: PublicacionAvgAggregateOutputType | null
-  _sum: PublicacionSumAggregateOutputType | null
-  _min: PublicacionMinAggregateOutputType | null
-  _max: PublicacionMaxAggregateOutputType | null
-}
+  id: number;
+  titulo: string;
+  descripcion: string | null;
+  estado: $Enums.estado_publicacion | null;
+  fecha_publicacion: Date | null;
+  usuario_id: number;
+  inmueble_id: number;
+  _count: PublicacionCountAggregateOutputType | null;
+  _avg: PublicacionAvgAggregateOutputType | null;
+  _sum: PublicacionSumAggregateOutputType | null;
+  _min: PublicacionMinAggregateOutputType | null;
+  _max: PublicacionMaxAggregateOutputType | null;
+};
 
-export type GetPublicacionGroupByPayload<T extends publicacionGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<PublicacionGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof PublicacionGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], PublicacionGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], PublicacionGroupByOutputType[P]>
-    }
-  >
->
+export type GetPublicacionGroupByPayload<T extends publicacionGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<PublicacionGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof PublicacionGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], PublicacionGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], PublicacionGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type publicacionWhereInput = {
-  AND?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[]
-  OR?: Prisma.publicacionWhereInput[]
-  NOT?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[]
-  id?: Prisma.IntFilter<'publicacion'> | number
-  titulo?: Prisma.StringFilter<'publicacion'> | string
-  descripcion?: Prisma.StringNullableFilter<'publicacion'> | string | null
+  AND?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[];
+  OR?: Prisma.publicacionWhereInput[];
+  NOT?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[];
+  id?: Prisma.IntFilter<"publicacion"> | number;
+  titulo?: Prisma.StringFilter<"publicacion"> | string;
+  descripcion?: Prisma.StringNullableFilter<"publicacion"> | string | null;
   estado?:
-    | Prisma.Enumestado_publicacionNullableFilter<'publicacion'>
+    | Prisma.Enumestado_publicacionNullableFilter<"publicacion">
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
-  usuario_id?: Prisma.IntFilter<'publicacion'> | number
-  inmueble_id?: Prisma.IntFilter<'publicacion'> | number
-  multimedia?: Prisma.MultimediaListRelationFilter
-  inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
-  usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.DateTimeNullableFilter<"publicacion">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFilter<"publicacion"> | number;
+  inmueble_id?: Prisma.IntFilter<"publicacion"> | number;
+  multimedia?: Prisma.MultimediaListRelationFilter;
+  inmueble?: Prisma.XOR<
+    Prisma.InmuebleScalarRelationFilter,
+    Prisma.inmuebleWhereInput
+  >;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  >;
+};
 
 export type publicacionOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder
-  estado?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  multimedia?: Prisma.multimediaOrderByRelationAggregateInput
-  inmueble?: Prisma.inmuebleOrderByWithRelationInput
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  multimedia?: Prisma.multimediaOrderByRelationAggregateInput;
+  inmueble?: Prisma.inmuebleOrderByWithRelationInput;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+};
 
 export type publicacionWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[]
-    OR?: Prisma.publicacionWhereInput[]
-    NOT?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[]
-    titulo?: Prisma.StringFilter<'publicacion'> | string
-    descripcion?: Prisma.StringNullableFilter<'publicacion'> | string | null
+    id?: number;
+    AND?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[];
+    OR?: Prisma.publicacionWhereInput[];
+    NOT?: Prisma.publicacionWhereInput | Prisma.publicacionWhereInput[];
+    titulo?: Prisma.StringFilter<"publicacion"> | string;
+    descripcion?: Prisma.StringNullableFilter<"publicacion"> | string | null;
     estado?:
-      | Prisma.Enumestado_publicacionNullableFilter<'publicacion'>
+      | Prisma.Enumestado_publicacionNullableFilter<"publicacion">
       | $Enums.estado_publicacion
-      | null
-    fecha_publicacion?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
-    usuario_id?: Prisma.IntFilter<'publicacion'> | number
-    inmueble_id?: Prisma.IntFilter<'publicacion'> | number
-    multimedia?: Prisma.MultimediaListRelationFilter
-    inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
-    usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
+      | null;
+    fecha_publicacion?:
+      | Prisma.DateTimeNullableFilter<"publicacion">
+      | Date
+      | string
+      | null;
+    usuario_id?: Prisma.IntFilter<"publicacion"> | number;
+    inmueble_id?: Prisma.IntFilter<"publicacion"> | number;
+    multimedia?: Prisma.MultimediaListRelationFilter;
+    inmueble?: Prisma.XOR<
+      Prisma.InmuebleScalarRelationFilter,
+      Prisma.inmuebleWhereInput
+    >;
+    usuario?: Prisma.XOR<
+      Prisma.UsuarioScalarRelationFilter,
+      Prisma.usuarioWhereInput
+    >;
   },
-  'id'
->
+  "id"
+>;
 
 export type publicacionOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder
-  estado?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-  _count?: Prisma.publicacionCountOrderByAggregateInput
-  _avg?: Prisma.publicacionAvgOrderByAggregateInput
-  _max?: Prisma.publicacionMaxOrderByAggregateInput
-  _min?: Prisma.publicacionMinOrderByAggregateInput
-  _sum?: Prisma.publicacionSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+  _count?: Prisma.publicacionCountOrderByAggregateInput;
+  _avg?: Prisma.publicacionAvgOrderByAggregateInput;
+  _max?: Prisma.publicacionMaxOrderByAggregateInput;
+  _min?: Prisma.publicacionMinOrderByAggregateInput;
+  _sum?: Prisma.publicacionSumOrderByAggregateInput;
+};
 
 export type publicacionScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.publicacionScalarWhereWithAggregatesInput
-    | Prisma.publicacionScalarWhereWithAggregatesInput[]
-  OR?: Prisma.publicacionScalarWhereWithAggregatesInput[]
+    | Prisma.publicacionScalarWhereWithAggregatesInput[];
+  OR?: Prisma.publicacionScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.publicacionScalarWhereWithAggregatesInput
-    | Prisma.publicacionScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'publicacion'> | number
-  titulo?: Prisma.StringWithAggregatesFilter<'publicacion'> | string
-  descripcion?: Prisma.StringNullableWithAggregatesFilter<'publicacion'> | string | null
+    | Prisma.publicacionScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"publicacion"> | number;
+  titulo?: Prisma.StringWithAggregatesFilter<"publicacion"> | string;
+  descripcion?:
+    | Prisma.StringNullableWithAggregatesFilter<"publicacion">
+    | string
+    | null;
   estado?:
-    | Prisma.Enumestado_publicacionNullableWithAggregatesFilter<'publicacion'>
+    | Prisma.Enumestado_publicacionNullableWithAggregatesFilter<"publicacion">
     | $Enums.estado_publicacion
-    | null
+    | null;
   fecha_publicacion?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'publicacion'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"publicacion">
     | Date
     | string
-    | null
-  usuario_id?: Prisma.IntWithAggregatesFilter<'publicacion'> | number
-  inmueble_id?: Prisma.IntWithAggregatesFilter<'publicacion'> | number
-}
+    | null;
+  usuario_id?: Prisma.IntWithAggregatesFilter<"publicacion"> | number;
+  inmueble_id?: Prisma.IntWithAggregatesFilter<"publicacion"> | number;
+};
 
 export type publicacionCreateInput = {
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
-}
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput;
+};
 
 export type publicacionUncheckedCreateInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  usuario_id: number
-  inmueble_id: number
-  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  usuario_id: number;
+  inmueble_id: number;
+  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput;
+};
 
 export type publicacionUpdateInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput;
+};
 
 export type publicacionUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput;
+};
 
 export type publicacionCreateManyInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  usuario_id: number
-  inmueble_id: number
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  usuario_id: number;
+  inmueble_id: number;
+};
 
 export type publicacionUpdateManyMutationInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type publicacionUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type PublicacionListRelationFilter = {
-  every?: Prisma.publicacionWhereInput
-  some?: Prisma.publicacionWhereInput
-  none?: Prisma.publicacionWhereInput
-}
+  every?: Prisma.publicacionWhereInput;
+  some?: Prisma.publicacionWhereInput;
+  none?: Prisma.publicacionWhereInput;
+};
 
 export type publicacionOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type PublicacionScalarRelationFilter = {
-  is?: Prisma.publicacionWhereInput
-  isNot?: Prisma.publicacionWhereInput
-}
+  is?: Prisma.publicacionWhereInput;
+  isNot?: Prisma.publicacionWhereInput;
+};
 
 export type publicacionCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+};
 
 export type publicacionAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+};
 
 export type publicacionMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+};
 
 export type publicacionMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  descripcion?: Prisma.SortOrder
-  estado?: Prisma.SortOrder
-  fecha_publicacion?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  descripcion?: Prisma.SortOrder;
+  estado?: Prisma.SortOrder;
+  fecha_publicacion?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+};
 
 export type publicacionSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  inmueble_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  inmueble_id?: Prisma.SortOrder;
+};
 
 export type publicacionCreateNestedManyWithoutInmuebleInput = {
   create?:
@@ -467,13 +510,15 @@ export type publicacionCreateNestedManyWithoutInmuebleInput = {
         Prisma.publicacionUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.publicacionCreateWithoutInmuebleInput[]
-    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutInmuebleInput
-    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[]
-  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-}
+    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[];
+  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope;
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+};
 
 export type publicacionUncheckedCreateNestedManyWithoutInmuebleInput = {
   create?:
@@ -482,13 +527,15 @@ export type publicacionUncheckedCreateNestedManyWithoutInmuebleInput = {
         Prisma.publicacionUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.publicacionCreateWithoutInmuebleInput[]
-    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutInmuebleInput
-    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[]
-  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-}
+    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[];
+  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope;
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+};
 
 export type publicacionUpdateManyWithoutInmuebleNestedInput = {
   create?:
@@ -497,26 +544,36 @@ export type publicacionUpdateManyWithoutInmuebleNestedInput = {
         Prisma.publicacionUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.publicacionCreateWithoutInmuebleInput[]
-    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutInmuebleInput
-    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[]
+    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[];
   upsert?:
     | Prisma.publicacionUpsertWithWhereUniqueWithoutInmuebleInput
-    | Prisma.publicacionUpsertWithWhereUniqueWithoutInmuebleInput[]
-  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope
-  set?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  disconnect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  delete?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
+    | Prisma.publicacionUpsertWithWhereUniqueWithoutInmuebleInput[];
+  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope;
+  set?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  delete?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
   update?:
     | Prisma.publicacionUpdateWithWhereUniqueWithoutInmuebleInput
-    | Prisma.publicacionUpdateWithWhereUniqueWithoutInmuebleInput[]
+    | Prisma.publicacionUpdateWithWhereUniqueWithoutInmuebleInput[];
   updateMany?:
     | Prisma.publicacionUpdateManyWithWhereWithoutInmuebleInput
-    | Prisma.publicacionUpdateManyWithWhereWithoutInmuebleInput[]
-  deleteMany?: Prisma.publicacionScalarWhereInput | Prisma.publicacionScalarWhereInput[]
-}
+    | Prisma.publicacionUpdateManyWithWhereWithoutInmuebleInput[];
+  deleteMany?:
+    | Prisma.publicacionScalarWhereInput
+    | Prisma.publicacionScalarWhereInput[];
+};
 
 export type publicacionUncheckedUpdateManyWithoutInmuebleNestedInput = {
   create?:
@@ -525,56 +582,66 @@ export type publicacionUncheckedUpdateManyWithoutInmuebleNestedInput = {
         Prisma.publicacionUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.publicacionCreateWithoutInmuebleInput[]
-    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.publicacionUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutInmuebleInput
-    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[]
+    | Prisma.publicacionCreateOrConnectWithoutInmuebleInput[];
   upsert?:
     | Prisma.publicacionUpsertWithWhereUniqueWithoutInmuebleInput
-    | Prisma.publicacionUpsertWithWhereUniqueWithoutInmuebleInput[]
-  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope
-  set?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  disconnect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  delete?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
+    | Prisma.publicacionUpsertWithWhereUniqueWithoutInmuebleInput[];
+  createMany?: Prisma.publicacionCreateManyInmuebleInputEnvelope;
+  set?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  delete?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
   update?:
     | Prisma.publicacionUpdateWithWhereUniqueWithoutInmuebleInput
-    | Prisma.publicacionUpdateWithWhereUniqueWithoutInmuebleInput[]
+    | Prisma.publicacionUpdateWithWhereUniqueWithoutInmuebleInput[];
   updateMany?:
     | Prisma.publicacionUpdateManyWithWhereWithoutInmuebleInput
-    | Prisma.publicacionUpdateManyWithWhereWithoutInmuebleInput[]
-  deleteMany?: Prisma.publicacionScalarWhereInput | Prisma.publicacionScalarWhereInput[]
-}
+    | Prisma.publicacionUpdateManyWithWhereWithoutInmuebleInput[];
+  deleteMany?:
+    | Prisma.publicacionScalarWhereInput
+    | Prisma.publicacionScalarWhereInput[];
+};
 
 export type publicacionCreateNestedOneWithoutMultimediaInput = {
   create?: Prisma.XOR<
     Prisma.publicacionCreateWithoutMultimediaInput,
     Prisma.publicacionUncheckedCreateWithoutMultimediaInput
-  >
-  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutMultimediaInput
-  connect?: Prisma.publicacionWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutMultimediaInput;
+  connect?: Prisma.publicacionWhereUniqueInput;
+};
 
 export type publicacionUpdateOneRequiredWithoutMultimediaNestedInput = {
   create?: Prisma.XOR<
     Prisma.publicacionCreateWithoutMultimediaInput,
     Prisma.publicacionUncheckedCreateWithoutMultimediaInput
-  >
-  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutMultimediaInput
-  upsert?: Prisma.publicacionUpsertWithoutMultimediaInput
-  connect?: Prisma.publicacionWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutMultimediaInput;
+  upsert?: Prisma.publicacionUpsertWithoutMultimediaInput;
+  connect?: Prisma.publicacionWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.publicacionUpdateToOneWithWhereWithoutMultimediaInput,
       Prisma.publicacionUpdateWithoutMultimediaInput
     >,
     Prisma.publicacionUncheckedUpdateWithoutMultimediaInput
-  >
-}
+  >;
+};
 
 export type NullableEnumestado_publicacionFieldUpdateOperationsInput = {
-  set?: $Enums.estado_publicacion | null
-}
+  set?: $Enums.estado_publicacion | null;
+};
 
 export type publicacionCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -583,13 +650,15 @@ export type publicacionCreateNestedManyWithoutUsuarioInput = {
         Prisma.publicacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.publicacionCreateWithoutUsuarioInput[]
-    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-}
+    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+};
 
 export type publicacionUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -598,13 +667,15 @@ export type publicacionUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.publicacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.publicacionCreateWithoutUsuarioInput[]
-    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-}
+    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+};
 
 export type publicacionUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -613,26 +684,36 @@ export type publicacionUpdateManyWithoutUsuarioNestedInput = {
         Prisma.publicacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.publicacionCreateWithoutUsuarioInput[]
-    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.publicacionUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.publicacionUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope
-  set?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  disconnect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  delete?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
+    | Prisma.publicacionUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  delete?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
   update?:
     | Prisma.publicacionUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.publicacionUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.publicacionUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.publicacionUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.publicacionUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.publicacionScalarWhereInput | Prisma.publicacionScalarWhereInput[]
-}
+    | Prisma.publicacionUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.publicacionScalarWhereInput
+    | Prisma.publicacionScalarWhereInput[];
+};
 
 export type publicacionUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -641,493 +722,570 @@ export type publicacionUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.publicacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.publicacionCreateWithoutUsuarioInput[]
-    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.publicacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.publicacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.publicacionCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.publicacionUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.publicacionUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope
-  set?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  disconnect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  delete?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
-  connect?: Prisma.publicacionWhereUniqueInput | Prisma.publicacionWhereUniqueInput[]
+    | Prisma.publicacionUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.publicacionCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  delete?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
+  connect?:
+    | Prisma.publicacionWhereUniqueInput
+    | Prisma.publicacionWhereUniqueInput[];
   update?:
     | Prisma.publicacionUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.publicacionUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.publicacionUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.publicacionUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.publicacionUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.publicacionScalarWhereInput | Prisma.publicacionScalarWhereInput[]
-}
+    | Prisma.publicacionUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.publicacionScalarWhereInput
+    | Prisma.publicacionScalarWhereInput[];
+};
 
 export type publicacionCreateWithoutInmuebleInput = {
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
-}
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput;
+};
 
 export type publicacionUncheckedCreateWithoutInmuebleInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  usuario_id: number
-  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  usuario_id: number;
+  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput;
+};
 
 export type publicacionCreateOrConnectWithoutInmuebleInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.publicacionCreateWithoutInmuebleInput,
     Prisma.publicacionUncheckedCreateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type publicacionCreateManyInmuebleInputEnvelope = {
-  data: Prisma.publicacionCreateManyInmuebleInput | Prisma.publicacionCreateManyInmuebleInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.publicacionCreateManyInmuebleInput
+    | Prisma.publicacionCreateManyInmuebleInput[];
+  skipDuplicates?: boolean;
+};
 
 export type publicacionUpsertWithWhereUniqueWithoutInmuebleInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.publicacionUpdateWithoutInmuebleInput,
     Prisma.publicacionUncheckedUpdateWithoutInmuebleInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.publicacionCreateWithoutInmuebleInput,
     Prisma.publicacionUncheckedCreateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type publicacionUpdateWithWhereUniqueWithoutInmuebleInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.publicacionUpdateWithoutInmuebleInput,
     Prisma.publicacionUncheckedUpdateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type publicacionUpdateManyWithWhereWithoutInmuebleInput = {
-  where: Prisma.publicacionScalarWhereInput
+  where: Prisma.publicacionScalarWhereInput;
   data: Prisma.XOR<
     Prisma.publicacionUpdateManyMutationInput,
     Prisma.publicacionUncheckedUpdateManyWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type publicacionScalarWhereInput = {
-  AND?: Prisma.publicacionScalarWhereInput | Prisma.publicacionScalarWhereInput[]
-  OR?: Prisma.publicacionScalarWhereInput[]
-  NOT?: Prisma.publicacionScalarWhereInput | Prisma.publicacionScalarWhereInput[]
-  id?: Prisma.IntFilter<'publicacion'> | number
-  titulo?: Prisma.StringFilter<'publicacion'> | string
-  descripcion?: Prisma.StringNullableFilter<'publicacion'> | string | null
+  AND?:
+    | Prisma.publicacionScalarWhereInput
+    | Prisma.publicacionScalarWhereInput[];
+  OR?: Prisma.publicacionScalarWhereInput[];
+  NOT?:
+    | Prisma.publicacionScalarWhereInput
+    | Prisma.publicacionScalarWhereInput[];
+  id?: Prisma.IntFilter<"publicacion"> | number;
+  titulo?: Prisma.StringFilter<"publicacion"> | string;
+  descripcion?: Prisma.StringNullableFilter<"publicacion"> | string | null;
   estado?:
-    | Prisma.Enumestado_publicacionNullableFilter<'publicacion'>
+    | Prisma.Enumestado_publicacionNullableFilter<"publicacion">
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
-  usuario_id?: Prisma.IntFilter<'publicacion'> | number
-  inmueble_id?: Prisma.IntFilter<'publicacion'> | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.DateTimeNullableFilter<"publicacion">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFilter<"publicacion"> | number;
+  inmueble_id?: Prisma.IntFilter<"publicacion"> | number;
+};
 
 export type publicacionCreateWithoutMultimediaInput = {
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
-  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
-}
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput;
+  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput;
+};
 
 export type publicacionUncheckedCreateWithoutMultimediaInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  usuario_id: number
-  inmueble_id: number
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  usuario_id: number;
+  inmueble_id: number;
+};
 
 export type publicacionCreateOrConnectWithoutMultimediaInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.publicacionCreateWithoutMultimediaInput,
     Prisma.publicacionUncheckedCreateWithoutMultimediaInput
-  >
-}
+  >;
+};
 
 export type publicacionUpsertWithoutMultimediaInput = {
   update: Prisma.XOR<
     Prisma.publicacionUpdateWithoutMultimediaInput,
     Prisma.publicacionUncheckedUpdateWithoutMultimediaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.publicacionCreateWithoutMultimediaInput,
     Prisma.publicacionUncheckedCreateWithoutMultimediaInput
-  >
-  where?: Prisma.publicacionWhereInput
-}
+  >;
+  where?: Prisma.publicacionWhereInput;
+};
 
 export type publicacionUpdateToOneWithWhereWithoutMultimediaInput = {
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   data: Prisma.XOR<
     Prisma.publicacionUpdateWithoutMultimediaInput,
     Prisma.publicacionUncheckedUpdateWithoutMultimediaInput
-  >
-}
+  >;
+};
 
 export type publicacionUpdateWithoutMultimediaInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput;
+};
 
 export type publicacionUncheckedUpdateWithoutMultimediaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type publicacionCreateWithoutUsuarioInput = {
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
-}
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput;
+};
 
 export type publicacionUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  inmueble_id: number
-  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  inmueble_id: number;
+  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput;
+};
 
 export type publicacionCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.publicacionCreateWithoutUsuarioInput,
     Prisma.publicacionUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type publicacionCreateManyUsuarioInputEnvelope = {
-  data: Prisma.publicacionCreateManyUsuarioInput | Prisma.publicacionCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.publicacionCreateManyUsuarioInput
+    | Prisma.publicacionCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type publicacionUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.publicacionUpdateWithoutUsuarioInput,
     Prisma.publicacionUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.publicacionCreateWithoutUsuarioInput,
     Prisma.publicacionUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type publicacionUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.publicacionUpdateWithoutUsuarioInput,
     Prisma.publicacionUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type publicacionUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.publicacionScalarWhereInput
+  where: Prisma.publicacionScalarWhereInput;
   data: Prisma.XOR<
     Prisma.publicacionUpdateManyMutationInput,
     Prisma.publicacionUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type publicacionCreateManyInmuebleInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  usuario_id: number
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  usuario_id: number;
+};
 
 export type publicacionUpdateWithoutInmuebleInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput;
+};
 
 export type publicacionUncheckedUpdateWithoutInmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput;
+};
 
 export type publicacionUncheckedUpdateManyWithoutInmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type publicacionCreateManyUsuarioInput = {
-  id?: number
-  titulo: string
-  descripcion?: string | null
-  estado?: $Enums.estado_publicacion | null
-  fecha_publicacion?: Date | string | null
-  inmueble_id: number
-}
+  id?: number;
+  titulo: string;
+  descripcion?: string | null;
+  estado?: $Enums.estado_publicacion | null;
+  fecha_publicacion?: Date | string | null;
+  inmueble_id: number;
+};
 
 export type publicacionUpdateWithoutUsuarioInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput;
+};
 
 export type publicacionUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput;
+};
 
 export type publicacionUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   estado?:
     | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
     | $Enums.estado_publicacion
-    | null
-  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  fecha_publicacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 /**
  * Count Type PublicacionCountOutputType
  */
 
 export type PublicacionCountOutputType = {
-  multimedia: number
-}
+  multimedia: number;
+};
 
 export type PublicacionCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  multimedia?: boolean | PublicacionCountOutputTypeCountMultimediaArgs
-}
+  multimedia?: boolean | PublicacionCountOutputTypeCountMultimediaArgs;
+};
 
 /**
  * PublicacionCountOutputType without action
  */
 export type PublicacionCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the PublicacionCountOutputType
    */
-  select?: Prisma.PublicacionCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.PublicacionCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * PublicacionCountOutputType without action
  */
 export type PublicacionCountOutputTypeCountMultimediaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.multimediaWhereInput
-}
+  where?: Prisma.multimediaWhereInput;
+};
 
 export type publicacionSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    descripcion?: boolean
-    estado?: boolean
-    fecha_publicacion?: boolean
-    usuario_id?: boolean
-    inmueble_id?: boolean
-    multimedia?: boolean | Prisma.publicacion$multimediaArgs<ExtArgs>
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-    _count?: boolean | Prisma.PublicacionCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    descripcion?: boolean;
+    estado?: boolean;
+    fecha_publicacion?: boolean;
+    usuario_id?: boolean;
+    inmueble_id?: boolean;
+    multimedia?: boolean | Prisma.publicacion$multimediaArgs<ExtArgs>;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+    _count?: boolean | Prisma.PublicacionCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['publicacion']
->
+  ExtArgs["result"]["publicacion"]
+>;
 
 export type publicacionSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    descripcion?: boolean
-    estado?: boolean
-    fecha_publicacion?: boolean
-    usuario_id?: boolean
-    inmueble_id?: boolean
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    descripcion?: boolean;
+    estado?: boolean;
+    fecha_publicacion?: boolean;
+    usuario_id?: boolean;
+    inmueble_id?: boolean;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['publicacion']
->
+  ExtArgs["result"]["publicacion"]
+>;
 
 export type publicacionSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    descripcion?: boolean
-    estado?: boolean
-    fecha_publicacion?: boolean
-    usuario_id?: boolean
-    inmueble_id?: boolean
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    descripcion?: boolean;
+    estado?: boolean;
+    fecha_publicacion?: boolean;
+    usuario_id?: boolean;
+    inmueble_id?: boolean;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['publicacion']
->
+  ExtArgs["result"]["publicacion"]
+>;
 
 export type publicacionSelectScalar = {
-  id?: boolean
-  titulo?: boolean
-  descripcion?: boolean
-  estado?: boolean
-  fecha_publicacion?: boolean
-  usuario_id?: boolean
-  inmueble_id?: boolean
-}
+  id?: boolean;
+  titulo?: boolean;
+  descripcion?: boolean;
+  estado?: boolean;
+  fecha_publicacion?: boolean;
+  usuario_id?: boolean;
+  inmueble_id?: boolean;
+};
 
 export type publicacionOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'titulo' | 'descripcion' | 'estado' | 'fecha_publicacion' | 'usuario_id' | 'inmueble_id',
-  ExtArgs['result']['publicacion']
->
+  | "id"
+  | "titulo"
+  | "descripcion"
+  | "estado"
+  | "fecha_publicacion"
+  | "usuario_id"
+  | "inmueble_id",
+  ExtArgs["result"]["publicacion"]
+>;
 export type publicacionInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  multimedia?: boolean | Prisma.publicacion$multimediaArgs<ExtArgs>
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-  _count?: boolean | Prisma.PublicacionCountOutputTypeDefaultArgs<ExtArgs>
-}
+  multimedia?: boolean | Prisma.publicacion$multimediaArgs<ExtArgs>;
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+  _count?: boolean | Prisma.PublicacionCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type publicacionIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type publicacionIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 
 export type $publicacionPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'publicacion'
+  name: "publicacion";
   objects: {
-    multimedia: Prisma.$multimediaPayload<ExtArgs>[]
-    inmueble: Prisma.$inmueblePayload<ExtArgs>
-    usuario: Prisma.$usuarioPayload<ExtArgs>
-  }
+    multimedia: Prisma.$multimediaPayload<ExtArgs>[];
+    inmueble: Prisma.$inmueblePayload<ExtArgs>;
+    usuario: Prisma.$usuarioPayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      titulo: string
-      descripcion: string | null
-      estado: $Enums.estado_publicacion | null
-      fecha_publicacion: Date | null
-      usuario_id: number
-      inmueble_id: number
+      id: number;
+      titulo: string;
+      descripcion: string | null;
+      estado: $Enums.estado_publicacion | null;
+      fecha_publicacion: Date | null;
+      usuario_id: number;
+      inmueble_id: number;
     },
-    ExtArgs['result']['publicacion']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["publicacion"]
+  >;
+  composites: {};
+};
 
-export type publicacionGetPayload<S extends boolean | null | undefined | publicacionDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$publicacionPayload, S>
+export type publicacionGetPayload<
+  S extends boolean | null | undefined | publicacionDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$publicacionPayload, S>;
 
 export type publicacionCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<publicacionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: PublicacionCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  publicacionFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: PublicacionCountAggregateInputType | true;
+};
 
 export interface publicacionDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['publicacion']
-    meta: { name: 'publicacion' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["publicacion"];
+    meta: { name: "publicacion" };
+  };
   /**
    * Find zero or one Publicacion that matches the filter.
    * @param {publicacionFindUniqueArgs} args - Arguments to find a Publicacion
@@ -1140,18 +1298,18 @@ export interface publicacionDelegate<
    * })
    */
   findUnique<T extends publicacionFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, publicacionFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Publicacion that matches the filter or throw an error with `error.code='P2025'`
@@ -1166,18 +1324,18 @@ export interface publicacionDelegate<
    * })
    */
   findUniqueOrThrow<T extends publicacionFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, publicacionFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Publicacion that matches the filter.
@@ -1193,18 +1351,18 @@ export interface publicacionDelegate<
    * })
    */
   findFirst<T extends publicacionFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, publicacionFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, publicacionFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Publicacion that matches the filter or
@@ -1221,18 +1379,18 @@ export interface publicacionDelegate<
    * })
    */
   findFirstOrThrow<T extends publicacionFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, publicacionFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, publicacionFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Publicacions that matches the filter.
@@ -1251,15 +1409,15 @@ export interface publicacionDelegate<
    *
    */
   findMany<T extends publicacionFindManyArgs>(
-    args?: Prisma.SelectSubset<T, publicacionFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, publicacionFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Publicacion.
@@ -1274,18 +1432,18 @@ export interface publicacionDelegate<
    *
    */
   create<T extends publicacionCreateArgs>(
-    args: Prisma.SelectSubset<T, publicacionCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Publicacions.
@@ -1300,8 +1458,8 @@ export interface publicacionDelegate<
    *
    */
   createMany<T extends publicacionCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, publicacionCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, publicacionCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Publicacions and returns the data saved in the database.
@@ -1326,15 +1484,15 @@ export interface publicacionDelegate<
    *
    */
   createManyAndReturn<T extends publicacionCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, publicacionCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, publicacionCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Publicacion.
@@ -1349,18 +1507,18 @@ export interface publicacionDelegate<
    *
    */
   delete<T extends publicacionDeleteArgs>(
-    args: Prisma.SelectSubset<T, publicacionDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Publicacion.
@@ -1378,18 +1536,18 @@ export interface publicacionDelegate<
    *
    */
   update<T extends publicacionUpdateArgs>(
-    args: Prisma.SelectSubset<T, publicacionUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Publicacions.
@@ -1404,8 +1562,8 @@ export interface publicacionDelegate<
    *
    */
   deleteMany<T extends publicacionDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, publicacionDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, publicacionDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Publicacions.
@@ -1425,8 +1583,8 @@ export interface publicacionDelegate<
    *
    */
   updateMany<T extends publicacionUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, publicacionUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, publicacionUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Publicacions and returns the data updated in the database.
@@ -1457,15 +1615,15 @@ export interface publicacionDelegate<
    *
    */
   updateManyAndReturn<T extends publicacionUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, publicacionUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Publicacion.
@@ -1485,18 +1643,18 @@ export interface publicacionDelegate<
    * })
    */
   upsert<T extends publicacionUpsertArgs>(
-    args: Prisma.SelectSubset<T, publicacionUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, publicacionUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$publicacionPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Publicacions.
@@ -1512,14 +1670,14 @@ export interface publicacionDelegate<
    * })
    **/
   count<T extends publicacionCountArgs>(
-    args?: Prisma.Subset<T, publicacionCountArgs>
+    args?: Prisma.Subset<T, publicacionCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], PublicacionCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], PublicacionCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Publicacion.
@@ -1546,8 +1704,8 @@ export interface publicacionDelegate<
    * })
    **/
   aggregate<T extends PublicacionAggregateArgs>(
-    args: Prisma.Subset<T, PublicacionAggregateArgs>
-  ): Prisma.PrismaPromise<GetPublicacionAggregateType<T>>
+    args: Prisma.Subset<T, PublicacionAggregateArgs>,
+  ): Prisma.PrismaPromise<GetPublicacionAggregateType<T>>;
 
   /**
    * Group by Publicacion.
@@ -1570,20 +1728,20 @@ export interface publicacionDelegate<
   groupBy<
     T extends publicacionGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: publicacionGroupByArgs['orderBy'] }
-      : { orderBy?: publicacionGroupByArgs['orderBy'] },
+      ? { orderBy: publicacionGroupByArgs["orderBy"] }
+      : { orderBy?: publicacionGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1592,26 +1750,31 @@ export interface publicacionDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1619,15 +1782,18 @@ export interface publicacionDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, publicacionGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetPublicacionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, publicacionGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetPublicacionGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the publicacion model
    */
-  readonly fields: publicacionFieldRefs
+  readonly fields: publicacionFieldRefs;
 }
 
 /**
@@ -1639,49 +1805,50 @@ export interface publicacionDelegate<
 export interface Prisma__publicacionClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   multimedia<T extends Prisma.publicacion$multimediaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.publicacion$multimediaArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.publicacion$multimediaArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$multimediaPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   inmueble<T extends Prisma.inmuebleDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     | runtime.Types.Result.GetResult<
         Prisma.$inmueblePayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     | runtime.Types.Result.GetResult<
         Prisma.$usuarioPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1689,37 +1856,48 @@ export interface Prisma__publicacionClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the publicacion model
  */
 export interface publicacionFieldRefs {
-  readonly id: Prisma.FieldRef<'publicacion', 'Int'>
-  readonly titulo: Prisma.FieldRef<'publicacion', 'String'>
-  readonly descripcion: Prisma.FieldRef<'publicacion', 'String'>
-  readonly estado: Prisma.FieldRef<'publicacion', 'estado_publicacion'>
-  readonly fecha_publicacion: Prisma.FieldRef<'publicacion', 'DateTime'>
-  readonly usuario_id: Prisma.FieldRef<'publicacion', 'Int'>
-  readonly inmueble_id: Prisma.FieldRef<'publicacion', 'Int'>
+  readonly id: Prisma.FieldRef<"publicacion", "Int">;
+  readonly titulo: Prisma.FieldRef<"publicacion", "String">;
+  readonly descripcion: Prisma.FieldRef<"publicacion", "String">;
+  readonly estado: Prisma.FieldRef<"publicacion", "estado_publicacion">;
+  readonly fecha_publicacion: Prisma.FieldRef<"publicacion", "DateTime">;
+  readonly usuario_id: Prisma.FieldRef<"publicacion", "Int">;
+  readonly inmueble_id: Prisma.FieldRef<"publicacion", "Int">;
 }
 
 // Custom InputTypes
@@ -1727,72 +1905,75 @@ export interface publicacionFieldRefs {
  * publicacion findUnique
  */
 export type publicacionFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * Filter, which publicacion to fetch.
    */
-  where: Prisma.publicacionWhereUniqueInput
-}
+  where: Prisma.publicacionWhereUniqueInput;
+};
 
 /**
  * publicacion findUniqueOrThrow
  */
 export type publicacionFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * Filter, which publicacion to fetch.
    */
-  where: Prisma.publicacionWhereUniqueInput
-}
+  where: Prisma.publicacionWhereUniqueInput;
+};
 
 /**
  * publicacion findFirst
  */
 export type publicacionFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * Filter, which publicacion to fetch.
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1800,55 +1981,58 @@ export type publicacionFindFirstArgs<
    */
   orderBy?:
     | Prisma.publicacionOrderByWithRelationInput
-    | Prisma.publicacionOrderByWithRelationInput[]
+    | Prisma.publicacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for publicacions.
    */
-  cursor?: Prisma.publicacionWhereUniqueInput
+  cursor?: Prisma.publicacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` publicacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` publicacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of publicacions.
    */
-  distinct?: Prisma.PublicacionScalarFieldEnum | Prisma.PublicacionScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.PublicacionScalarFieldEnum
+    | Prisma.PublicacionScalarFieldEnum[];
+};
 
 /**
  * publicacion findFirstOrThrow
  */
 export type publicacionFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * Filter, which publicacion to fetch.
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1856,55 +2040,58 @@ export type publicacionFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.publicacionOrderByWithRelationInput
-    | Prisma.publicacionOrderByWithRelationInput[]
+    | Prisma.publicacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for publicacions.
    */
-  cursor?: Prisma.publicacionWhereUniqueInput
+  cursor?: Prisma.publicacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` publicacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` publicacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of publicacions.
    */
-  distinct?: Prisma.PublicacionScalarFieldEnum | Prisma.PublicacionScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.PublicacionScalarFieldEnum
+    | Prisma.PublicacionScalarFieldEnum[];
+};
 
 /**
  * publicacion findMany
  */
 export type publicacionFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * Filter, which publicacions to fetch.
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1912,128 +2099,141 @@ export type publicacionFindManyArgs<
    */
   orderBy?:
     | Prisma.publicacionOrderByWithRelationInput
-    | Prisma.publicacionOrderByWithRelationInput[]
+    | Prisma.publicacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing publicacions.
    */
-  cursor?: Prisma.publicacionWhereUniqueInput
+  cursor?: Prisma.publicacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` publicacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` publicacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of publicacions.
    */
-  distinct?: Prisma.PublicacionScalarFieldEnum | Prisma.PublicacionScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.PublicacionScalarFieldEnum
+    | Prisma.PublicacionScalarFieldEnum[];
+};
 
 /**
  * publicacion create
  */
 export type publicacionCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * The data needed to create a publicacion.
    */
-  data: Prisma.XOR<Prisma.publicacionCreateInput, Prisma.publicacionUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.publicacionCreateInput,
+    Prisma.publicacionUncheckedCreateInput
+  >;
+};
 
 /**
  * publicacion createMany
  */
 export type publicacionCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many publicacions.
    */
-  data: Prisma.publicacionCreateManyInput | Prisma.publicacionCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.publicacionCreateManyInput | Prisma.publicacionCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * publicacion createManyAndReturn
  */
 export type publicacionCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.publicacionSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * The data used to create many publicacions.
    */
-  data: Prisma.publicacionCreateManyInput | Prisma.publicacionCreateManyInput[]
-  skipDuplicates?: boolean
+  data: Prisma.publicacionCreateManyInput | Prisma.publicacionCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.publicacionIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * publicacion update
  */
 export type publicacionUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * The data needed to update a publicacion.
    */
-  data: Prisma.XOR<Prisma.publicacionUpdateInput, Prisma.publicacionUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.publicacionUpdateInput,
+    Prisma.publicacionUncheckedUpdateInput
+  >;
   /**
    * Choose, which publicacion to update.
    */
-  where: Prisma.publicacionWhereUniqueInput
-}
+  where: Prisma.publicacionWhereUniqueInput;
+};
 
 /**
  * publicacion updateMany
  */
 export type publicacionUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update publicacions.
@@ -2041,166 +2241,182 @@ export type publicacionUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.publicacionUpdateManyMutationInput,
     Prisma.publicacionUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which publicacions to update
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * Limit how many publicacions to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * publicacion updateManyAndReturn
  */
 export type publicacionUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.publicacionSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * The data used to update publicacions.
    */
   data: Prisma.XOR<
     Prisma.publicacionUpdateManyMutationInput,
     Prisma.publicacionUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which publicacions to update
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * Limit how many publicacions to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.publicacionIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * publicacion upsert
  */
 export type publicacionUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * The filter to search for the publicacion to update in case it exists.
    */
-  where: Prisma.publicacionWhereUniqueInput
+  where: Prisma.publicacionWhereUniqueInput;
   /**
    * In case the publicacion found by the `where` argument doesn't exist, create a new publicacion with this data.
    */
-  create: Prisma.XOR<Prisma.publicacionCreateInput, Prisma.publicacionUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.publicacionCreateInput,
+    Prisma.publicacionUncheckedCreateInput
+  >;
   /**
    * In case the publicacion was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.publicacionUpdateInput, Prisma.publicacionUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.publicacionUpdateInput,
+    Prisma.publicacionUncheckedUpdateInput
+  >;
+};
 
 /**
  * publicacion delete
  */
 export type publicacionDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
   /**
    * Filter which publicacion to delete.
    */
-  where: Prisma.publicacionWhereUniqueInput
-}
+  where: Prisma.publicacionWhereUniqueInput;
+};
 
 /**
  * publicacion deleteMany
  */
 export type publicacionDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which publicacions to delete
    */
-  where?: Prisma.publicacionWhereInput
+  where?: Prisma.publicacionWhereInput;
   /**
    * Limit how many publicacions to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * publicacion.multimedia
  */
 export type publicacion$multimediaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
-  where?: Prisma.multimediaWhereInput
-  orderBy?: Prisma.multimediaOrderByWithRelationInput | Prisma.multimediaOrderByWithRelationInput[]
-  cursor?: Prisma.multimediaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MultimediaScalarFieldEnum | Prisma.MultimediaScalarFieldEnum[]
-}
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
+  where?: Prisma.multimediaWhereInput;
+  orderBy?:
+    | Prisma.multimediaOrderByWithRelationInput
+    | Prisma.multimediaOrderByWithRelationInput[];
+  cursor?: Prisma.multimediaWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.MultimediaScalarFieldEnum
+    | Prisma.MultimediaScalarFieldEnum[];
+};
 
 /**
  * publicacion without action
  */
 export type publicacionDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the publicacion
    */
-  select?: Prisma.publicacionSelect<ExtArgs> | null
+  select?: Prisma.publicacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the publicacion
    */
-  omit?: Prisma.publicacionOmit<ExtArgs> | null
+  omit?: Prisma.publicacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.publicacionInclude<ExtArgs> | null
-}
+  include?: Prisma.publicacionInclude<ExtArgs> | null;
+};

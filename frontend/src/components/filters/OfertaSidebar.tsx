@@ -1,37 +1,46 @@
 // frontend/src/components/filters/OfertaSidebar.tsx
-'use client'
+"use client";
 
-import { X, Flame, TrendingDown, Sparkles, Target, Gavel } from 'lucide-react'
-import { useState } from 'react'
+import { X, Flame, TrendingDown, Sparkles, Target, Gavel } from "lucide-react";
+import { useState } from "react";
 
 interface OfertaSidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-type EtiquetaOferta = 'urgente' | 'negociable' | 'nueva' | 'oportunidad' | 'remate'
+type EtiquetaOferta =
+  | "urgente"
+  | "negociable"
+  | "nueva"
+  | "oportunidad"
+  | "remate";
 
-const ETIQUETAS: { id: EtiquetaOferta; label: string; icon: React.ElementType }[] = [
-  { id: 'urgente', label: 'Urgente', icon: Flame },
-  { id: 'negociable', label: 'Negociable', icon: TrendingDown },
-  { id: 'nueva', label: 'Nueva', icon: Sparkles },
-  { id: 'oportunidad', label: 'Oportunidad', icon: Target },
-  { id: 'remate', label: 'Remate', icon: Gavel }
-]
+const ETIQUETAS: {
+  id: EtiquetaOferta;
+  label: string;
+  icon: React.ElementType;
+}[] = [
+  { id: "urgente", label: "Urgente", icon: Flame },
+  { id: "negociable", label: "Negociable", icon: TrendingDown },
+  { id: "nueva", label: "Nueva", icon: Sparkles },
+  { id: "oportunidad", label: "Oportunidad", icon: Target },
+  { id: "remate", label: "Remate", icon: Gavel },
+];
 
 export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
-  const [soloOfertas, setSoloOfertas] = useState(true)
-  const [etiquetasSeleccionadas, setEtiquetasSeleccionadas] = useState<EtiquetaOferta[]>([])
+  const [soloOfertas, setSoloOfertas] = useState(true);
+  const [etiquetasSeleccionadas, setEtiquetasSeleccionadas] = useState<
+    EtiquetaOferta[]
+  >([]);
 
   const toggleEtiqueta = (id: EtiquetaOferta) => {
-    setEtiquetasSeleccionadas(prev =>
-      prev.includes(id)
-        ? prev.filter(e => e !== id)
-        : [...prev, id]
-    )
-  }
+    setEtiquetasSeleccionadas((prev) =>
+      prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id],
+    );
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="flex flex-col h-full min-h-0 bg-white">
@@ -50,7 +59,6 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
 
       {/* Contenido */}
       <div className="flex-1 overflow-y-auto px-5 pt-2 space-y-5">
-        
         {/* Checkbox: Solo propiedades con precio reducido */}
         <div>
           <label className="flex items-center gap-3 text-sm text-stone-800 font-normal cursor-pointer">
@@ -61,9 +69,10 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
                 onChange={() => setSoloOfertas(!soloOfertas)}
                 className={`
                   w-[28px] h-[18px] rounded border cursor-pointer appearance-none
-                  ${soloOfertas
-                    ? 'bg-[#d97706] border-[#d97706]'
-                    : 'bg-white border-gray-400'
+                  ${
+                    soloOfertas
+                      ? "bg-[#d97706] border-[#d97706]"
+                      : "bg-white border-gray-400"
                   }
                 `}
               />
@@ -92,7 +101,7 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {ETIQUETAS.map(({ id, label, icon: Icon }) => {
-              const isSelected = etiquetasSeleccionadas.includes(id)
+              const isSelected = etiquetasSeleccionadas.includes(id);
               return (
                 <button
                   key={id}
@@ -100,28 +109,30 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
                   onClick={() => toggleEtiqueta(id)}
                   className={`
                     flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium tracking-wid transition-all
-                    ${isSelected
-                      ? 'bg-[#d97706] text-white'
-                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                    ${
+                      isSelected
+                        ? "bg-[#d97706] text-white"
+                        : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                     }
                   `}
                 >
-                  <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-stone-700'}`} />
+                  <Icon
+                    className={`w-4 h-4 ${isSelected ? "text-white" : "text-stone-700"}`}
+                  />
                   <span>{label}</span>
                 </button>
-              )
+              );
             })}
           </div>
         </div>
-
       </div>
 
       {/* Botones - Estilo CapacidadSidebar */}
       <div className="shrink-0 px-4 pb-4 pt-2 bg-white border-t border-stone-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
         <button
           onClick={() => {
-            setSoloOfertas(true)
-            setEtiquetasSeleccionadas([])
+            setSoloOfertas(true);
+            setEtiquetasSeleccionadas([]);
           }}
           className="w-full mb-3 text-gray-700 text-xs underline underline-offset-4 hover:text-gray-900 transition-colors"
         >
@@ -129,10 +140,10 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
         </button>
         <button
           onClick={() => {
-            console.log('Aplicar filtro:', {
+            console.log("Aplicar filtro:", {
               soloOfertas,
-              etiquetas: etiquetasSeleccionadas
-            })
+              etiquetas: etiquetasSeleccionadas,
+            });
           }}
           className="w-full py-2.5 text-white bg-[#d97706] rounded-lg hover:bg-[#b95e00] transition-colors font-medium shadow-md active:scale-95"
         >
@@ -140,5 +151,5 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }

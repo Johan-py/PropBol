@@ -7,419 +7,445 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model multimedia
  *
  */
-export type multimediaModel = runtime.Types.Result.DefaultSelection<Prisma.$multimediaPayload>
+export type multimediaModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$multimediaPayload>;
 
 export type AggregateMultimedia = {
-  _count: MultimediaCountAggregateOutputType | null
-  _avg: MultimediaAvgAggregateOutputType | null
-  _sum: MultimediaSumAggregateOutputType | null
-  _min: MultimediaMinAggregateOutputType | null
-  _max: MultimediaMaxAggregateOutputType | null
-}
+  _count: MultimediaCountAggregateOutputType | null;
+  _avg: MultimediaAvgAggregateOutputType | null;
+  _sum: MultimediaSumAggregateOutputType | null;
+  _min: MultimediaMinAggregateOutputType | null;
+  _max: MultimediaMaxAggregateOutputType | null;
+};
 
 export type MultimediaAvgAggregateOutputType = {
-  id: number | null
-  peso_mb: runtime.Decimal | null
-  publicacion_id: number | null
-}
+  id: number | null;
+  peso_mb: runtime.Decimal | null;
+  publicacion_id: number | null;
+};
 
 export type MultimediaSumAggregateOutputType = {
-  id: number | null
-  peso_mb: runtime.Decimal | null
-  publicacion_id: number | null
-}
+  id: number | null;
+  peso_mb: runtime.Decimal | null;
+  publicacion_id: number | null;
+};
 
 export type MultimediaMinAggregateOutputType = {
-  id: number | null
-  url: string | null
-  tipo: $Enums.tipo_multimedia | null
-  peso_mb: runtime.Decimal | null
-  publicacion_id: number | null
-}
+  id: number | null;
+  url: string | null;
+  tipo: $Enums.tipo_multimedia | null;
+  peso_mb: runtime.Decimal | null;
+  publicacion_id: number | null;
+};
 
 export type MultimediaMaxAggregateOutputType = {
-  id: number | null
-  url: string | null
-  tipo: $Enums.tipo_multimedia | null
-  peso_mb: runtime.Decimal | null
-  publicacion_id: number | null
-}
+  id: number | null;
+  url: string | null;
+  tipo: $Enums.tipo_multimedia | null;
+  peso_mb: runtime.Decimal | null;
+  publicacion_id: number | null;
+};
 
 export type MultimediaCountAggregateOutputType = {
-  id: number
-  url: number
-  tipo: number
-  peso_mb: number
-  publicacion_id: number
-  _all: number
-}
+  id: number;
+  url: number;
+  tipo: number;
+  peso_mb: number;
+  publicacion_id: number;
+  _all: number;
+};
 
 export type MultimediaAvgAggregateInputType = {
-  id?: true
-  peso_mb?: true
-  publicacion_id?: true
-}
+  id?: true;
+  peso_mb?: true;
+  publicacion_id?: true;
+};
 
 export type MultimediaSumAggregateInputType = {
-  id?: true
-  peso_mb?: true
-  publicacion_id?: true
-}
+  id?: true;
+  peso_mb?: true;
+  publicacion_id?: true;
+};
 
 export type MultimediaMinAggregateInputType = {
-  id?: true
-  url?: true
-  tipo?: true
-  peso_mb?: true
-  publicacion_id?: true
-}
+  id?: true;
+  url?: true;
+  tipo?: true;
+  peso_mb?: true;
+  publicacion_id?: true;
+};
 
 export type MultimediaMaxAggregateInputType = {
-  id?: true
-  url?: true
-  tipo?: true
-  peso_mb?: true
-  publicacion_id?: true
-}
+  id?: true;
+  url?: true;
+  tipo?: true;
+  peso_mb?: true;
+  publicacion_id?: true;
+};
 
 export type MultimediaCountAggregateInputType = {
-  id?: true
-  url?: true
-  tipo?: true
-  peso_mb?: true
-  publicacion_id?: true
-  _all?: true
-}
+  id?: true;
+  url?: true;
+  tipo?: true;
+  peso_mb?: true;
+  publicacion_id?: true;
+  _all?: true;
+};
 
 export type MultimediaAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which multimedia to aggregate.
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of multimedias to fetch.
    */
-  orderBy?: Prisma.multimediaOrderByWithRelationInput | Prisma.multimediaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.multimediaOrderByWithRelationInput
+    | Prisma.multimediaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.multimediaWhereUniqueInput
+  cursor?: Prisma.multimediaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` multimedias from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` multimedias.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned multimedias
    **/
-  _count?: true | MultimediaCountAggregateInputType
+  _count?: true | MultimediaCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: MultimediaAvgAggregateInputType
+  _avg?: MultimediaAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: MultimediaSumAggregateInputType
+  _sum?: MultimediaSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: MultimediaMinAggregateInputType
+  _min?: MultimediaMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: MultimediaMaxAggregateInputType
-}
+  _max?: MultimediaMaxAggregateInputType;
+};
 
 export type GetMultimediaAggregateType<T extends MultimediaAggregateArgs> = {
-  [P in keyof T & keyof AggregateMultimedia]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateMultimedia]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateMultimedia[P]>
-    : Prisma.GetScalarType<T[P], AggregateMultimedia[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateMultimedia[P]>;
+};
 
 export type multimediaGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   orderBy?:
     | Prisma.multimediaOrderByWithAggregationInput
-    | Prisma.multimediaOrderByWithAggregationInput[]
-  by: Prisma.MultimediaScalarFieldEnum[] | Prisma.MultimediaScalarFieldEnum
-  having?: Prisma.multimediaScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: MultimediaCountAggregateInputType | true
-  _avg?: MultimediaAvgAggregateInputType
-  _sum?: MultimediaSumAggregateInputType
-  _min?: MultimediaMinAggregateInputType
-  _max?: MultimediaMaxAggregateInputType
-}
+    | Prisma.multimediaOrderByWithAggregationInput[];
+  by: Prisma.MultimediaScalarFieldEnum[] | Prisma.MultimediaScalarFieldEnum;
+  having?: Prisma.multimediaScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: MultimediaCountAggregateInputType | true;
+  _avg?: MultimediaAvgAggregateInputType;
+  _sum?: MultimediaSumAggregateInputType;
+  _min?: MultimediaMinAggregateInputType;
+  _max?: MultimediaMaxAggregateInputType;
+};
 
 export type MultimediaGroupByOutputType = {
-  id: number
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb: runtime.Decimal | null
-  publicacion_id: number
-  _count: MultimediaCountAggregateOutputType | null
-  _avg: MultimediaAvgAggregateOutputType | null
-  _sum: MultimediaSumAggregateOutputType | null
-  _min: MultimediaMinAggregateOutputType | null
-  _max: MultimediaMaxAggregateOutputType | null
-}
+  id: number;
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb: runtime.Decimal | null;
+  publicacion_id: number;
+  _count: MultimediaCountAggregateOutputType | null;
+  _avg: MultimediaAvgAggregateOutputType | null;
+  _sum: MultimediaSumAggregateOutputType | null;
+  _min: MultimediaMinAggregateOutputType | null;
+  _max: MultimediaMaxAggregateOutputType | null;
+};
 
-export type GetMultimediaGroupByPayload<T extends multimediaGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<MultimediaGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof MultimediaGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], MultimediaGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], MultimediaGroupByOutputType[P]>
-    }
-  >
->
+export type GetMultimediaGroupByPayload<T extends multimediaGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<MultimediaGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof MultimediaGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], MultimediaGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], MultimediaGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type multimediaWhereInput = {
-  AND?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[]
-  OR?: Prisma.multimediaWhereInput[]
-  NOT?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[]
-  id?: Prisma.IntFilter<'multimedia'> | number
-  url?: Prisma.StringFilter<'multimedia'> | string
-  tipo?: Prisma.Enumtipo_multimediaFilter<'multimedia'> | $Enums.tipo_multimedia
+  AND?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[];
+  OR?: Prisma.multimediaWhereInput[];
+  NOT?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[];
+  id?: Prisma.IntFilter<"multimedia"> | number;
+  url?: Prisma.StringFilter<"multimedia"> | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFilter<"multimedia">
+    | $Enums.tipo_multimedia;
   peso_mb?:
-    | Prisma.DecimalNullableFilter<'multimedia'>
+    | Prisma.DecimalNullableFilter<"multimedia">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  publicacion_id?: Prisma.IntFilter<'multimedia'> | number
-  publicacion?: Prisma.XOR<Prisma.PublicacionScalarRelationFilter, Prisma.publicacionWhereInput>
-}
+    | null;
+  publicacion_id?: Prisma.IntFilter<"multimedia"> | number;
+  publicacion?: Prisma.XOR<
+    Prisma.PublicacionScalarRelationFilter,
+    Prisma.publicacionWhereInput
+  >;
+};
 
 export type multimediaOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  url?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrderInput | Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-  publicacion?: Prisma.publicacionOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  url?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrderInput | Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+  publicacion?: Prisma.publicacionOrderByWithRelationInput;
+};
 
 export type multimediaWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[]
-    OR?: Prisma.multimediaWhereInput[]
-    NOT?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[]
-    url?: Prisma.StringFilter<'multimedia'> | string
-    tipo?: Prisma.Enumtipo_multimediaFilter<'multimedia'> | $Enums.tipo_multimedia
+    id?: number;
+    AND?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[];
+    OR?: Prisma.multimediaWhereInput[];
+    NOT?: Prisma.multimediaWhereInput | Prisma.multimediaWhereInput[];
+    url?: Prisma.StringFilter<"multimedia"> | string;
+    tipo?:
+      | Prisma.Enumtipo_multimediaFilter<"multimedia">
+      | $Enums.tipo_multimedia;
     peso_mb?:
-      | Prisma.DecimalNullableFilter<'multimedia'>
+      | Prisma.DecimalNullableFilter<"multimedia">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
       | string
-      | null
-    publicacion_id?: Prisma.IntFilter<'multimedia'> | number
-    publicacion?: Prisma.XOR<Prisma.PublicacionScalarRelationFilter, Prisma.publicacionWhereInput>
+      | null;
+    publicacion_id?: Prisma.IntFilter<"multimedia"> | number;
+    publicacion?: Prisma.XOR<
+      Prisma.PublicacionScalarRelationFilter,
+      Prisma.publicacionWhereInput
+    >;
   },
-  'id'
->
+  "id"
+>;
 
 export type multimediaOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  url?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrderInput | Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-  _count?: Prisma.multimediaCountOrderByAggregateInput
-  _avg?: Prisma.multimediaAvgOrderByAggregateInput
-  _max?: Prisma.multimediaMaxOrderByAggregateInput
-  _min?: Prisma.multimediaMinOrderByAggregateInput
-  _sum?: Prisma.multimediaSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  url?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrderInput | Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+  _count?: Prisma.multimediaCountOrderByAggregateInput;
+  _avg?: Prisma.multimediaAvgOrderByAggregateInput;
+  _max?: Prisma.multimediaMaxOrderByAggregateInput;
+  _min?: Prisma.multimediaMinOrderByAggregateInput;
+  _sum?: Prisma.multimediaSumOrderByAggregateInput;
+};
 
 export type multimediaScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.multimediaScalarWhereWithAggregatesInput
-    | Prisma.multimediaScalarWhereWithAggregatesInput[]
-  OR?: Prisma.multimediaScalarWhereWithAggregatesInput[]
+    | Prisma.multimediaScalarWhereWithAggregatesInput[];
+  OR?: Prisma.multimediaScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.multimediaScalarWhereWithAggregatesInput
-    | Prisma.multimediaScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'multimedia'> | number
-  url?: Prisma.StringWithAggregatesFilter<'multimedia'> | string
-  tipo?: Prisma.Enumtipo_multimediaWithAggregatesFilter<'multimedia'> | $Enums.tipo_multimedia
+    | Prisma.multimediaScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"multimedia"> | number;
+  url?: Prisma.StringWithAggregatesFilter<"multimedia"> | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaWithAggregatesFilter<"multimedia">
+    | $Enums.tipo_multimedia;
   peso_mb?:
-    | Prisma.DecimalNullableWithAggregatesFilter<'multimedia'>
+    | Prisma.DecimalNullableWithAggregatesFilter<"multimedia">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  publicacion_id?: Prisma.IntWithAggregatesFilter<'multimedia'> | number
-}
+    | null;
+  publicacion_id?: Prisma.IntWithAggregatesFilter<"multimedia"> | number;
+};
 
 export type multimediaCreateInput = {
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  publicacion: Prisma.publicacionCreateNestedOneWithoutMultimediaInput
-}
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  publicacion: Prisma.publicacionCreateNestedOneWithoutMultimediaInput;
+};
 
 export type multimediaUncheckedCreateInput = {
-  id?: number
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  publicacion_id: number
-}
+  id?: number;
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  publicacion_id: number;
+};
 
 export type multimediaUpdateInput = {
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  publicacion?: Prisma.publicacionUpdateOneRequiredWithoutMultimediaNestedInput
-}
+    | null;
+  publicacion?: Prisma.publicacionUpdateOneRequiredWithoutMultimediaNestedInput;
+};
 
 export type multimediaUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  publicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  publicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type multimediaCreateManyInput = {
-  id?: number
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  publicacion_id: number
-}
+  id?: number;
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+  publicacion_id: number;
+};
 
 export type multimediaUpdateManyMutationInput = {
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-}
+    | null;
+};
 
 export type multimediaUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  publicacion_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+    | null;
+  publicacion_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type multimediaCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  url?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+};
 
 export type multimediaAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+};
 
 export type multimediaMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  url?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+};
 
 export type multimediaMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  url?: Prisma.SortOrder
-  tipo?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  url?: Prisma.SortOrder;
+  tipo?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+};
 
 export type multimediaSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  peso_mb?: Prisma.SortOrder
-  publicacion_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  peso_mb?: Prisma.SortOrder;
+  publicacion_id?: Prisma.SortOrder;
+};
 
 export type MultimediaListRelationFilter = {
-  every?: Prisma.multimediaWhereInput
-  some?: Prisma.multimediaWhereInput
-  none?: Prisma.multimediaWhereInput
-}
+  every?: Prisma.multimediaWhereInput;
+  some?: Prisma.multimediaWhereInput;
+  none?: Prisma.multimediaWhereInput;
+};
 
 export type multimediaOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type Enumtipo_multimediaFieldUpdateOperationsInput = {
-  set?: $Enums.tipo_multimedia
-}
+  set?: $Enums.tipo_multimedia;
+};
 
 export type multimediaCreateNestedManyWithoutPublicacionInput = {
   create?:
@@ -428,13 +454,15 @@ export type multimediaCreateNestedManyWithoutPublicacionInput = {
         Prisma.multimediaUncheckedCreateWithoutPublicacionInput
       >
     | Prisma.multimediaCreateWithoutPublicacionInput[]
-    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[]
+    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[];
   connectOrCreate?:
     | Prisma.multimediaCreateOrConnectWithoutPublicacionInput
-    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[]
-  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope
-  connect?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-}
+    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[];
+  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope;
+  connect?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
+};
 
 export type multimediaUncheckedCreateNestedManyWithoutPublicacionInput = {
   create?:
@@ -443,13 +471,15 @@ export type multimediaUncheckedCreateNestedManyWithoutPublicacionInput = {
         Prisma.multimediaUncheckedCreateWithoutPublicacionInput
       >
     | Prisma.multimediaCreateWithoutPublicacionInput[]
-    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[]
+    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[];
   connectOrCreate?:
     | Prisma.multimediaCreateOrConnectWithoutPublicacionInput
-    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[]
-  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope
-  connect?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-}
+    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[];
+  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope;
+  connect?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
+};
 
 export type multimediaUpdateManyWithoutPublicacionNestedInput = {
   create?:
@@ -458,26 +488,34 @@ export type multimediaUpdateManyWithoutPublicacionNestedInput = {
         Prisma.multimediaUncheckedCreateWithoutPublicacionInput
       >
     | Prisma.multimediaCreateWithoutPublicacionInput[]
-    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[]
+    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[];
   connectOrCreate?:
     | Prisma.multimediaCreateOrConnectWithoutPublicacionInput
-    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[]
+    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[];
   upsert?:
     | Prisma.multimediaUpsertWithWhereUniqueWithoutPublicacionInput
-    | Prisma.multimediaUpsertWithWhereUniqueWithoutPublicacionInput[]
-  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope
-  set?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-  disconnect?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-  delete?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-  connect?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
+    | Prisma.multimediaUpsertWithWhereUniqueWithoutPublicacionInput[];
+  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope;
+  set?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
+  delete?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
+  connect?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
   update?:
     | Prisma.multimediaUpdateWithWhereUniqueWithoutPublicacionInput
-    | Prisma.multimediaUpdateWithWhereUniqueWithoutPublicacionInput[]
+    | Prisma.multimediaUpdateWithWhereUniqueWithoutPublicacionInput[];
   updateMany?:
     | Prisma.multimediaUpdateManyWithWhereWithoutPublicacionInput
-    | Prisma.multimediaUpdateManyWithWhereWithoutPublicacionInput[]
-  deleteMany?: Prisma.multimediaScalarWhereInput | Prisma.multimediaScalarWhereInput[]
-}
+    | Prisma.multimediaUpdateManyWithWhereWithoutPublicacionInput[];
+  deleteMany?:
+    | Prisma.multimediaScalarWhereInput
+    | Prisma.multimediaScalarWhereInput[];
+};
 
 export type multimediaUncheckedUpdateManyWithoutPublicacionNestedInput = {
   create?:
@@ -486,252 +524,281 @@ export type multimediaUncheckedUpdateManyWithoutPublicacionNestedInput = {
         Prisma.multimediaUncheckedCreateWithoutPublicacionInput
       >
     | Prisma.multimediaCreateWithoutPublicacionInput[]
-    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[]
+    | Prisma.multimediaUncheckedCreateWithoutPublicacionInput[];
   connectOrCreate?:
     | Prisma.multimediaCreateOrConnectWithoutPublicacionInput
-    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[]
+    | Prisma.multimediaCreateOrConnectWithoutPublicacionInput[];
   upsert?:
     | Prisma.multimediaUpsertWithWhereUniqueWithoutPublicacionInput
-    | Prisma.multimediaUpsertWithWhereUniqueWithoutPublicacionInput[]
-  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope
-  set?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-  disconnect?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-  delete?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
-  connect?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[]
+    | Prisma.multimediaUpsertWithWhereUniqueWithoutPublicacionInput[];
+  createMany?: Prisma.multimediaCreateManyPublicacionInputEnvelope;
+  set?: Prisma.multimediaWhereUniqueInput | Prisma.multimediaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
+  delete?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
+  connect?:
+    | Prisma.multimediaWhereUniqueInput
+    | Prisma.multimediaWhereUniqueInput[];
   update?:
     | Prisma.multimediaUpdateWithWhereUniqueWithoutPublicacionInput
-    | Prisma.multimediaUpdateWithWhereUniqueWithoutPublicacionInput[]
+    | Prisma.multimediaUpdateWithWhereUniqueWithoutPublicacionInput[];
   updateMany?:
     | Prisma.multimediaUpdateManyWithWhereWithoutPublicacionInput
-    | Prisma.multimediaUpdateManyWithWhereWithoutPublicacionInput[]
-  deleteMany?: Prisma.multimediaScalarWhereInput | Prisma.multimediaScalarWhereInput[]
-}
+    | Prisma.multimediaUpdateManyWithWhereWithoutPublicacionInput[];
+  deleteMany?:
+    | Prisma.multimediaScalarWhereInput
+    | Prisma.multimediaScalarWhereInput[];
+};
 
 export type multimediaCreateWithoutPublicacionInput = {
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-}
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+};
 
 export type multimediaUncheckedCreateWithoutPublicacionInput = {
-  id?: number
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-}
+  id?: number;
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+};
 
 export type multimediaCreateOrConnectWithoutPublicacionInput = {
-  where: Prisma.multimediaWhereUniqueInput
+  where: Prisma.multimediaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.multimediaCreateWithoutPublicacionInput,
     Prisma.multimediaUncheckedCreateWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type multimediaCreateManyPublicacionInputEnvelope = {
-  data: Prisma.multimediaCreateManyPublicacionInput | Prisma.multimediaCreateManyPublicacionInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.multimediaCreateManyPublicacionInput
+    | Prisma.multimediaCreateManyPublicacionInput[];
+  skipDuplicates?: boolean;
+};
 
 export type multimediaUpsertWithWhereUniqueWithoutPublicacionInput = {
-  where: Prisma.multimediaWhereUniqueInput
+  where: Prisma.multimediaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.multimediaUpdateWithoutPublicacionInput,
     Prisma.multimediaUncheckedUpdateWithoutPublicacionInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.multimediaCreateWithoutPublicacionInput,
     Prisma.multimediaUncheckedCreateWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type multimediaUpdateWithWhereUniqueWithoutPublicacionInput = {
-  where: Prisma.multimediaWhereUniqueInput
+  where: Prisma.multimediaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.multimediaUpdateWithoutPublicacionInput,
     Prisma.multimediaUncheckedUpdateWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type multimediaUpdateManyWithWhereWithoutPublicacionInput = {
-  where: Prisma.multimediaScalarWhereInput
+  where: Prisma.multimediaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.multimediaUpdateManyMutationInput,
     Prisma.multimediaUncheckedUpdateManyWithoutPublicacionInput
-  >
-}
+  >;
+};
 
 export type multimediaScalarWhereInput = {
-  AND?: Prisma.multimediaScalarWhereInput | Prisma.multimediaScalarWhereInput[]
-  OR?: Prisma.multimediaScalarWhereInput[]
-  NOT?: Prisma.multimediaScalarWhereInput | Prisma.multimediaScalarWhereInput[]
-  id?: Prisma.IntFilter<'multimedia'> | number
-  url?: Prisma.StringFilter<'multimedia'> | string
-  tipo?: Prisma.Enumtipo_multimediaFilter<'multimedia'> | $Enums.tipo_multimedia
+  AND?: Prisma.multimediaScalarWhereInput | Prisma.multimediaScalarWhereInput[];
+  OR?: Prisma.multimediaScalarWhereInput[];
+  NOT?: Prisma.multimediaScalarWhereInput | Prisma.multimediaScalarWhereInput[];
+  id?: Prisma.IntFilter<"multimedia"> | number;
+  url?: Prisma.StringFilter<"multimedia"> | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFilter<"multimedia">
+    | $Enums.tipo_multimedia;
   peso_mb?:
-    | Prisma.DecimalNullableFilter<'multimedia'>
+    | Prisma.DecimalNullableFilter<"multimedia">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-  publicacion_id?: Prisma.IntFilter<'multimedia'> | number
-}
+    | null;
+  publicacion_id?: Prisma.IntFilter<"multimedia"> | number;
+};
 
 export type multimediaCreateManyPublicacionInput = {
-  id?: number
-  url: string
-  tipo: $Enums.tipo_multimedia
-  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-}
+  id?: number;
+  url: string;
+  tipo: $Enums.tipo_multimedia;
+  peso_mb?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
+};
 
 export type multimediaUpdateWithoutPublicacionInput = {
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-}
+    | null;
+};
 
 export type multimediaUncheckedUpdateWithoutPublicacionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-}
+    | null;
+};
 
 export type multimediaUncheckedUpdateManyWithoutPublicacionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  url?: Prisma.StringFieldUpdateOperationsInput | string
-  tipo?: Prisma.Enumtipo_multimediaFieldUpdateOperationsInput | $Enums.tipo_multimedia
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  url?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?:
+    | Prisma.Enumtipo_multimediaFieldUpdateOperationsInput
+    | $Enums.tipo_multimedia;
   peso_mb?:
     | Prisma.NullableDecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-    | null
-}
+    | null;
+};
 
 export type multimediaSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    url?: boolean
-    tipo?: boolean
-    peso_mb?: boolean
-    publicacion_id?: boolean
-    publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>
+    id?: boolean;
+    url?: boolean;
+    tipo?: boolean;
+    peso_mb?: boolean;
+    publicacion_id?: boolean;
+    publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['multimedia']
->
+  ExtArgs["result"]["multimedia"]
+>;
 
 export type multimediaSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    url?: boolean
-    tipo?: boolean
-    peso_mb?: boolean
-    publicacion_id?: boolean
-    publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>
+    id?: boolean;
+    url?: boolean;
+    tipo?: boolean;
+    peso_mb?: boolean;
+    publicacion_id?: boolean;
+    publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['multimedia']
->
+  ExtArgs["result"]["multimedia"]
+>;
 
 export type multimediaSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    url?: boolean
-    tipo?: boolean
-    peso_mb?: boolean
-    publicacion_id?: boolean
-    publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>
+    id?: boolean;
+    url?: boolean;
+    tipo?: boolean;
+    peso_mb?: boolean;
+    publicacion_id?: boolean;
+    publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['multimedia']
->
+  ExtArgs["result"]["multimedia"]
+>;
 
 export type multimediaSelectScalar = {
-  id?: boolean
-  url?: boolean
-  tipo?: boolean
-  peso_mb?: boolean
-  publicacion_id?: boolean
-}
+  id?: boolean;
+  url?: boolean;
+  tipo?: boolean;
+  peso_mb?: boolean;
+  publicacion_id?: boolean;
+};
 
 export type multimediaOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'url' | 'tipo' | 'peso_mb' | 'publicacion_id',
-  ExtArgs['result']['multimedia']
->
+  "id" | "url" | "tipo" | "peso_mb" | "publicacion_id",
+  ExtArgs["result"]["multimedia"]
+>;
 export type multimediaInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>
-}
+  publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>;
+};
 export type multimediaIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>
-}
+  publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>;
+};
 export type multimediaIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>
-}
+  publicacion?: boolean | Prisma.publicacionDefaultArgs<ExtArgs>;
+};
 
 export type $multimediaPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'multimedia'
+  name: "multimedia";
   objects: {
-    publicacion: Prisma.$publicacionPayload<ExtArgs>
-  }
+    publicacion: Prisma.$publicacionPayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      url: string
-      tipo: $Enums.tipo_multimedia
-      peso_mb: runtime.Decimal | null
-      publicacion_id: number
+      id: number;
+      url: string;
+      tipo: $Enums.tipo_multimedia;
+      peso_mb: runtime.Decimal | null;
+      publicacion_id: number;
     },
-    ExtArgs['result']['multimedia']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["multimedia"]
+  >;
+  composites: {};
+};
 
-export type multimediaGetPayload<S extends boolean | null | undefined | multimediaDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$multimediaPayload, S>
+export type multimediaGetPayload<
+  S extends boolean | null | undefined | multimediaDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$multimediaPayload, S>;
 
 export type multimediaCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<multimediaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: MultimediaCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<multimediaFindManyArgs, "select" | "include" | "distinct" | "omit"> & {
+  select?: MultimediaCountAggregateInputType | true;
+};
 
 export interface multimediaDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['multimedia']
-    meta: { name: 'multimedia' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["multimedia"];
+    meta: { name: "multimedia" };
+  };
   /**
    * Find zero or one Multimedia that matches the filter.
    * @param {multimediaFindUniqueArgs} args - Arguments to find a Multimedia
@@ -744,18 +811,18 @@ export interface multimediaDelegate<
    * })
    */
   findUnique<T extends multimediaFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, multimediaFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Multimedia that matches the filter or throw an error with `error.code='P2025'`
@@ -770,18 +837,18 @@ export interface multimediaDelegate<
    * })
    */
   findUniqueOrThrow<T extends multimediaFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, multimediaFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Multimedia that matches the filter.
@@ -797,18 +864,18 @@ export interface multimediaDelegate<
    * })
    */
   findFirst<T extends multimediaFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, multimediaFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, multimediaFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Multimedia that matches the filter or
@@ -825,18 +892,18 @@ export interface multimediaDelegate<
    * })
    */
   findFirstOrThrow<T extends multimediaFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, multimediaFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, multimediaFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Multimedias that matches the filter.
@@ -855,15 +922,15 @@ export interface multimediaDelegate<
    *
    */
   findMany<T extends multimediaFindManyArgs>(
-    args?: Prisma.SelectSubset<T, multimediaFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, multimediaFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Multimedia.
@@ -878,18 +945,18 @@ export interface multimediaDelegate<
    *
    */
   create<T extends multimediaCreateArgs>(
-    args: Prisma.SelectSubset<T, multimediaCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Multimedias.
@@ -904,8 +971,8 @@ export interface multimediaDelegate<
    *
    */
   createMany<T extends multimediaCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, multimediaCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, multimediaCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Multimedias and returns the data saved in the database.
@@ -930,15 +997,15 @@ export interface multimediaDelegate<
    *
    */
   createManyAndReturn<T extends multimediaCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, multimediaCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, multimediaCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Multimedia.
@@ -953,18 +1020,18 @@ export interface multimediaDelegate<
    *
    */
   delete<T extends multimediaDeleteArgs>(
-    args: Prisma.SelectSubset<T, multimediaDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Multimedia.
@@ -982,18 +1049,18 @@ export interface multimediaDelegate<
    *
    */
   update<T extends multimediaUpdateArgs>(
-    args: Prisma.SelectSubset<T, multimediaUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Multimedias.
@@ -1008,8 +1075,8 @@ export interface multimediaDelegate<
    *
    */
   deleteMany<T extends multimediaDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, multimediaDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, multimediaDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Multimedias.
@@ -1029,8 +1096,8 @@ export interface multimediaDelegate<
    *
    */
   updateMany<T extends multimediaUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, multimediaUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, multimediaUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Multimedias and returns the data updated in the database.
@@ -1061,15 +1128,15 @@ export interface multimediaDelegate<
    *
    */
   updateManyAndReturn<T extends multimediaUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, multimediaUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Multimedia.
@@ -1089,18 +1156,18 @@ export interface multimediaDelegate<
    * })
    */
   upsert<T extends multimediaUpsertArgs>(
-    args: Prisma.SelectSubset<T, multimediaUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, multimediaUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__multimediaClient<
     runtime.Types.Result.GetResult<
       Prisma.$multimediaPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Multimedias.
@@ -1116,14 +1183,14 @@ export interface multimediaDelegate<
    * })
    **/
   count<T extends multimediaCountArgs>(
-    args?: Prisma.Subset<T, multimediaCountArgs>
+    args?: Prisma.Subset<T, multimediaCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], MultimediaCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], MultimediaCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Multimedia.
@@ -1150,8 +1217,8 @@ export interface multimediaDelegate<
    * })
    **/
   aggregate<T extends MultimediaAggregateArgs>(
-    args: Prisma.Subset<T, MultimediaAggregateArgs>
-  ): Prisma.PrismaPromise<GetMultimediaAggregateType<T>>
+    args: Prisma.Subset<T, MultimediaAggregateArgs>,
+  ): Prisma.PrismaPromise<GetMultimediaAggregateType<T>>;
 
   /**
    * Group by Multimedia.
@@ -1174,20 +1241,20 @@ export interface multimediaDelegate<
   groupBy<
     T extends multimediaGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: multimediaGroupByArgs['orderBy'] }
-      : { orderBy?: multimediaGroupByArgs['orderBy'] },
+      ? { orderBy: multimediaGroupByArgs["orderBy"] }
+      : { orderBy?: multimediaGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1196,26 +1263,31 @@ export interface multimediaDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1223,15 +1295,18 @@ export interface multimediaDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, multimediaGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetMultimediaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, multimediaGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetMultimediaGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the multimedia model
    */
-  readonly fields: multimediaFieldRefs
+  readonly fields: multimediaFieldRefs;
 }
 
 /**
@@ -1243,24 +1318,25 @@ export interface multimediaDelegate<
 export interface Prisma__multimediaClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   publicacion<T extends Prisma.publicacionDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.publicacionDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.publicacionDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__publicacionClient<
     | runtime.Types.Result.GetResult<
         Prisma.$publicacionPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1268,35 +1344,46 @@ export interface Prisma__multimediaClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the multimedia model
  */
 export interface multimediaFieldRefs {
-  readonly id: Prisma.FieldRef<'multimedia', 'Int'>
-  readonly url: Prisma.FieldRef<'multimedia', 'String'>
-  readonly tipo: Prisma.FieldRef<'multimedia', 'tipo_multimedia'>
-  readonly peso_mb: Prisma.FieldRef<'multimedia', 'Decimal'>
-  readonly publicacion_id: Prisma.FieldRef<'multimedia', 'Int'>
+  readonly id: Prisma.FieldRef<"multimedia", "Int">;
+  readonly url: Prisma.FieldRef<"multimedia", "String">;
+  readonly tipo: Prisma.FieldRef<"multimedia", "tipo_multimedia">;
+  readonly peso_mb: Prisma.FieldRef<"multimedia", "Decimal">;
+  readonly publicacion_id: Prisma.FieldRef<"multimedia", "Int">;
 }
 
 // Custom InputTypes
@@ -1304,307 +1391,335 @@ export interface multimediaFieldRefs {
  * multimedia findUnique
  */
 export type multimediaFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * Filter, which multimedia to fetch.
    */
-  where: Prisma.multimediaWhereUniqueInput
-}
+  where: Prisma.multimediaWhereUniqueInput;
+};
 
 /**
  * multimedia findUniqueOrThrow
  */
 export type multimediaFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * Filter, which multimedia to fetch.
    */
-  where: Prisma.multimediaWhereUniqueInput
-}
+  where: Prisma.multimediaWhereUniqueInput;
+};
 
 /**
  * multimedia findFirst
  */
 export type multimediaFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * Filter, which multimedia to fetch.
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of multimedias to fetch.
    */
-  orderBy?: Prisma.multimediaOrderByWithRelationInput | Prisma.multimediaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.multimediaOrderByWithRelationInput
+    | Prisma.multimediaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for multimedias.
    */
-  cursor?: Prisma.multimediaWhereUniqueInput
+  cursor?: Prisma.multimediaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` multimedias from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` multimedias.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of multimedias.
    */
-  distinct?: Prisma.MultimediaScalarFieldEnum | Prisma.MultimediaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.MultimediaScalarFieldEnum
+    | Prisma.MultimediaScalarFieldEnum[];
+};
 
 /**
  * multimedia findFirstOrThrow
  */
 export type multimediaFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * Filter, which multimedia to fetch.
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of multimedias to fetch.
    */
-  orderBy?: Prisma.multimediaOrderByWithRelationInput | Prisma.multimediaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.multimediaOrderByWithRelationInput
+    | Prisma.multimediaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for multimedias.
    */
-  cursor?: Prisma.multimediaWhereUniqueInput
+  cursor?: Prisma.multimediaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` multimedias from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` multimedias.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of multimedias.
    */
-  distinct?: Prisma.MultimediaScalarFieldEnum | Prisma.MultimediaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.MultimediaScalarFieldEnum
+    | Prisma.MultimediaScalarFieldEnum[];
+};
 
 /**
  * multimedia findMany
  */
 export type multimediaFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * Filter, which multimedias to fetch.
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of multimedias to fetch.
    */
-  orderBy?: Prisma.multimediaOrderByWithRelationInput | Prisma.multimediaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.multimediaOrderByWithRelationInput
+    | Prisma.multimediaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing multimedias.
    */
-  cursor?: Prisma.multimediaWhereUniqueInput
+  cursor?: Prisma.multimediaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` multimedias from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` multimedias.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of multimedias.
    */
-  distinct?: Prisma.MultimediaScalarFieldEnum | Prisma.MultimediaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.MultimediaScalarFieldEnum
+    | Prisma.MultimediaScalarFieldEnum[];
+};
 
 /**
  * multimedia create
  */
 export type multimediaCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * The data needed to create a multimedia.
    */
-  data: Prisma.XOR<Prisma.multimediaCreateInput, Prisma.multimediaUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.multimediaCreateInput,
+    Prisma.multimediaUncheckedCreateInput
+  >;
+};
 
 /**
  * multimedia createMany
  */
 export type multimediaCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many multimedias.
    */
-  data: Prisma.multimediaCreateManyInput | Prisma.multimediaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.multimediaCreateManyInput | Prisma.multimediaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * multimedia createManyAndReturn
  */
 export type multimediaCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.multimediaSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * The data used to create many multimedias.
    */
-  data: Prisma.multimediaCreateManyInput | Prisma.multimediaCreateManyInput[]
-  skipDuplicates?: boolean
+  data: Prisma.multimediaCreateManyInput | Prisma.multimediaCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.multimediaIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * multimedia update
  */
 export type multimediaUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * The data needed to update a multimedia.
    */
-  data: Prisma.XOR<Prisma.multimediaUpdateInput, Prisma.multimediaUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.multimediaUpdateInput,
+    Prisma.multimediaUncheckedUpdateInput
+  >;
   /**
    * Choose, which multimedia to update.
    */
-  where: Prisma.multimediaWhereUniqueInput
-}
+  where: Prisma.multimediaWhereUniqueInput;
+};
 
 /**
  * multimedia updateMany
  */
 export type multimediaUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update multimedias.
@@ -1612,140 +1727,151 @@ export type multimediaUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.multimediaUpdateManyMutationInput,
     Prisma.multimediaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which multimedias to update
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * Limit how many multimedias to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * multimedia updateManyAndReturn
  */
 export type multimediaUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.multimediaSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * The data used to update multimedias.
    */
   data: Prisma.XOR<
     Prisma.multimediaUpdateManyMutationInput,
     Prisma.multimediaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which multimedias to update
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * Limit how many multimedias to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.multimediaIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * multimedia upsert
  */
 export type multimediaUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * The filter to search for the multimedia to update in case it exists.
    */
-  where: Prisma.multimediaWhereUniqueInput
+  where: Prisma.multimediaWhereUniqueInput;
   /**
    * In case the multimedia found by the `where` argument doesn't exist, create a new multimedia with this data.
    */
-  create: Prisma.XOR<Prisma.multimediaCreateInput, Prisma.multimediaUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.multimediaCreateInput,
+    Prisma.multimediaUncheckedCreateInput
+  >;
   /**
    * In case the multimedia was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.multimediaUpdateInput, Prisma.multimediaUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.multimediaUpdateInput,
+    Prisma.multimediaUncheckedUpdateInput
+  >;
+};
 
 /**
  * multimedia delete
  */
 export type multimediaDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
   /**
    * Filter which multimedia to delete.
    */
-  where: Prisma.multimediaWhereUniqueInput
-}
+  where: Prisma.multimediaWhereUniqueInput;
+};
 
 /**
  * multimedia deleteMany
  */
 export type multimediaDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which multimedias to delete
    */
-  where?: Prisma.multimediaWhereInput
+  where?: Prisma.multimediaWhereInput;
   /**
    * Limit how many multimedias to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * multimedia without action
  */
 export type multimediaDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the multimedia
    */
-  select?: Prisma.multimediaSelect<ExtArgs> | null
+  select?: Prisma.multimediaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the multimedia
    */
-  omit?: Prisma.multimediaOmit<ExtArgs> | null
+  omit?: Prisma.multimediaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.multimediaInclude<ExtArgs> | null
-}
+  include?: Prisma.multimediaInclude<ExtArgs> | null;
+};

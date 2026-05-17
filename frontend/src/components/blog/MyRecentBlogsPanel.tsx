@@ -7,7 +7,7 @@ import { Blog } from "@/types/blog";
 
 const MAX_VISIBLE = 5;
 const USER_STORAGE_KEY = "propbol_user";
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const STATUS_STYLES: Record<string, string> = {
   PUBLICADO: "bg-green-50 text-green-700 border-green-200",
@@ -47,14 +47,16 @@ type UserBlogResponse = {
   fecha_creacion?: string;
 };
 
-const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlogs }) => {
+const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
+  blogs: propBlogs,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [internalBlogs, setInternalBlogs] = useState<Blog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const syncAuthState = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const isAuth = Boolean(localStorage.getItem(USER_STORAGE_KEY));
       setIsAuthenticated(isAuth);
 
@@ -62,20 +64,20 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
         setIsLoading(true);
         try {
           const res = await fetch(`${API_URL}/api/blogs/mis-blogs`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           });
 
-          if (!res.ok) throw new Error('Error al obtener blogs');
+          if (!res.ok) throw new Error("Error al obtener blogs");
 
           const data = (await res.json()) as UserBlogResponse[];
           const mapped: Blog[] = data.map((b) => ({
             id: b.id,
             titulo: b.titulo,
-            imagenUrl: b.imagen || '/placeholder-house.jpg',
+            imagenUrl: b.imagen || "/placeholder-house.jpg",
             estado: b.estado,
             fecha: b.fecha_creacion
-              ? new Date(b.fecha_creacion).toLocaleDateString('es-BO')
-              : ''
+              ? new Date(b.fecha_creacion).toLocaleDateString("es-BO")
+              : "",
           }));
           setInternalBlogs(mapped);
         } catch {
@@ -88,12 +90,12 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
     };
 
     syncAuthState();
-    window.addEventListener('storage', syncAuthState);
-    window.addEventListener('propbol:session-changed', syncAuthState);
+    window.addEventListener("storage", syncAuthState);
+    window.addEventListener("propbol:session-changed", syncAuthState);
 
     return () => {
-      window.removeEventListener('storage', syncAuthState);
-      window.removeEventListener('propbol:session-changed', syncAuthState);
+      window.removeEventListener("storage", syncAuthState);
+      window.removeEventListener("propbol:session-changed", syncAuthState);
     };
   }, []);
 

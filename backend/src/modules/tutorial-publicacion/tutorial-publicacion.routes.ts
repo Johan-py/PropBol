@@ -1,30 +1,29 @@
-import { Router } from 'express'
-import { requireAuth } from '../../middleware/auth.middleware.js'
+import { Router } from "express";
+import { requireAuth } from "../../middleware/auth.middleware.js";
 import {
   confirmTutorialPublicacionController,
   getTutorialPublicacionContentController,
-  getTutorialPublicacionEstadoController
-} from './tutorial-publicacion.controller.js'
+  getTutorialPublicacionEstadoController,
+} from "./tutorial-publicacion.controller.js";
 
-const tutorialPublicacionRoutes = Router()
-
-tutorialPublicacionRoutes.get(
-  '/',
-  requireAuth,
-  getTutorialPublicacionContentController
-)
+const tutorialPublicacionRoutes = Router();
 
 tutorialPublicacionRoutes.get(
-  '/estado',
+  "/",
   requireAuth,
-  getTutorialPublicacionEstadoController
-)
+  getTutorialPublicacionContentController,
+);
+
+tutorialPublicacionRoutes.get(
+  "/estado",
+  requireAuth,
+  getTutorialPublicacionEstadoController,
+);
 
 tutorialPublicacionRoutes.post(
-  '/confirmar',
+  "/confirmar",
   requireAuth,
-  confirmTutorialPublicacionController
-)
+  confirmTutorialPublicacionController,
+);
 
-
-export default tutorialPublicacionRoutes
+export default tutorialPublicacionRoutes;

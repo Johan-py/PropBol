@@ -18,11 +18,11 @@ const router = Router();
 router.post(
   "/publicaciones",
   authMiddleware,
-  reglasValidacionHU5,        // validaciones HU‑5 v2
-  manejarErroresPublicacion,  // agrupación de errores HU‑5 v2
-  validarEtapaFinal,          // BUG‑E01/E05: etapa final
-  validarCancelacion,         // BUG‑E03/E04: cancelación explícita
-  crearPublicacion            // flujo HU‑1 con progreso real (BUG‑E02)
+  reglasValidacionHU5, // validaciones HU‑5 v2
+  manejarErroresPublicacion, // agrupación de errores HU‑5 v2
+  validarEtapaFinal, // BUG‑E01/E05: etapa final
+  validarCancelacion, // BUG‑E03/E04: cancelación explícita
+  crearPublicacion, // flujo HU‑1 con progreso real (BUG‑E02)
 );
 
 // HU‑1: Listar publicaciones

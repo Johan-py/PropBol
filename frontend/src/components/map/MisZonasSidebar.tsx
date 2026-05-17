@@ -1,41 +1,49 @@
-'use client'
+"use client";
 
-import { ChevronRight, Plus, Pencil, Trash2, Check, X, Map as MapIcon } from 'lucide-react'
+import {
+  ChevronRight,
+  Plus,
+  Pencil,
+  Trash2,
+  Check,
+  X,
+  Map as MapIcon,
+} from "lucide-react";
 
 export interface ZonaPersonalizada {
-  id: string
-  usuarioId?: number
-  nombre: string
+  id: string;
+  usuarioId?: number;
+  nombre: string;
 }
 
 interface MisZonasSidebarProps {
-  isOpen: boolean
-  onClose: () => void
-  isAuthenticated: boolean
-  zonas: ZonaPersonalizada[]
-  editingZoneId?: string | null
-  editingZoneName?: string
-  isSavingEditZone?: boolean
-  onEditingZoneNameChange?: (name: string) => void
-  onConfirmEditZone?: () => void
-  onCancelEditZone?: () => void
-  draftZoneName?: string
-  isDraftZoneVisible?: boolean
-  isSavingDraftZone?: boolean
-  onDraftZoneNameChange?: (name: string) => void
-  onConfirmDraftZone?: () => void
-  onCancelDraftZone?: () => void
-  onAddZone: () => void
-  onEditZone: (id: string) => void
-  onDeleteZone: (id: string) => void
-  currentUserId?: number
-  onZoneSelect?: (id: number) => void
-  showPredefinidas?: boolean
-  onShowPredefinidas?: (show: boolean) => void
-  showPersonalizadas?: boolean
-  onShowPersonalizadas?: (show: boolean) => void
+  isOpen: boolean;
+  onClose: () => void;
+  isAuthenticated: boolean;
+  zonas: ZonaPersonalizada[];
+  editingZoneId?: string | null;
+  editingZoneName?: string;
+  isSavingEditZone?: boolean;
+  onEditingZoneNameChange?: (name: string) => void;
+  onConfirmEditZone?: () => void;
+  onCancelEditZone?: () => void;
+  draftZoneName?: string;
+  isDraftZoneVisible?: boolean;
+  isSavingDraftZone?: boolean;
+  onDraftZoneNameChange?: (name: string) => void;
+  onConfirmDraftZone?: () => void;
+  onCancelDraftZone?: () => void;
+  onAddZone: () => void;
+  onEditZone: (id: string) => void;
+  onDeleteZone: (id: string) => void;
+  currentUserId?: number;
+  onZoneSelect?: (id: number) => void;
+  showPredefinidas?: boolean;
+  onShowPredefinidas?: (show: boolean) => void;
+  showPersonalizadas?: boolean;
+  onShowPersonalizadas?: (show: boolean) => void;
   /** En móvil se renderiza como bottom sheet en vez de panel lateral */
-  isMobile?: boolean
+  isMobile?: boolean;
 }
 
 export default function MisZonasSidebar({
@@ -44,12 +52,12 @@ export default function MisZonasSidebar({
   isAuthenticated,
   zonas,
   editingZoneId = null,
-  editingZoneName = '',
+  editingZoneName = "",
   isSavingEditZone = false,
   onEditingZoneNameChange,
   onConfirmEditZone,
   onCancelEditZone,
-  draftZoneName = '',
+  draftZoneName = "",
   isDraftZoneVisible = false,
   isSavingDraftZone = false,
   onDraftZoneNameChange,
@@ -66,38 +74,45 @@ export default function MisZonasSidebar({
   onShowPersonalizadas,
   isMobile = false,
 }: MisZonasSidebarProps) {
-
   // ─── Contenido interior compartido ───────────────────────────────────────────
   const inner = (
     <>
       {/* Toggles de visibilidad de zonas */}
       <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-700 space-y-3 shrink-0">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-stone-700 dark:text-stone-300">Zonas predefinidas</span>
+          <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+            Zonas predefinidas
+          </span>
           <button
             onClick={() => onShowPredefinidas?.(!showPredefinidas)}
-            style={{ backgroundColor: showPredefinidas ? '#f97316' : '#57534e' }}
+            style={{
+              backgroundColor: showPredefinidas ? "#f97316" : "#57534e",
+            }}
             className={`map-toggle-switch relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
           >
             <span
-              style={{ backgroundColor: '#ffffff' }}
+              style={{ backgroundColor: "#ffffff" }}
               className={`inline-block h-4 w-4 transform rounded-full shadow-lg transition-transform ${
-                showPredefinidas ? 'translate-x-6' : 'translate-x-1'
+                showPredefinidas ? "translate-x-6" : "translate-x-1"
               }`}
             />
           </button>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-stone-700 dark:text-stone-300">Mis zonas</span>
+          <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+            Mis zonas
+          </span>
           <button
             onClick={() => onShowPersonalizadas?.(!showPersonalizadas)}
-            style={{ backgroundColor: showPersonalizadas ? '#22c55e' : '#57534e' }}
+            style={{
+              backgroundColor: showPersonalizadas ? "#22c55e" : "#57534e",
+            }}
             className={`map-toggle-switch relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
           >
             <span
-              style={{ backgroundColor: '#ffffff' }}
+              style={{ backgroundColor: "#ffffff" }}
               className={`inline-block h-4 w-4 transform rounded-full shadow-lg transition-transform ${
-                showPersonalizadas ? 'translate-x-6' : 'translate-x-1'
+                showPersonalizadas ? "translate-x-6" : "translate-x-1"
               }`}
             />
           </button>
@@ -106,7 +121,6 @@ export default function MisZonasSidebar({
 
       {/* Contenido principal condicionado por la autenticación */}
       <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-
         <button
           onClick={onAddZone}
           className="w-full flex items-center justify-center gap-2 py-2 text-orange-600 hover:text-orange-700 active:text-orange-800 transition-colors font-semibold text-sm"
@@ -138,7 +152,9 @@ export default function MisZonasSidebar({
                     >
                       <input
                         value={editingZoneName}
-                        onChange={(e) => onEditingZoneNameChange?.(e.target.value)}
+                        onChange={(e) =>
+                          onEditingZoneNameChange?.(e.target.value)
+                        }
                         placeholder="Nueva zona"
                         maxLength={100}
                         className="min-w-0 flex-1 text-sm text-stone-700 dark:text-stone-300 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
@@ -173,8 +189,8 @@ export default function MisZonasSidebar({
                       <div className="flex items-center gap-1 opacity-100">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            onEditZone(zona.id)
+                            e.stopPropagation();
+                            onEditZone(zona.id);
                           }}
                           className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-stone-700 rounded-md transition-colors"
                           title="Editar zona"
@@ -183,8 +199,8 @@ export default function MisZonasSidebar({
                         </button>
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            onDeleteZone(zona.id)
+                            e.stopPropagation();
+                            onDeleteZone(zona.id);
                           }}
                           className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-stone-700 rounded-md transition-colors"
                           title="Eliminar zona"
@@ -193,7 +209,7 @@ export default function MisZonasSidebar({
                         </button>
                       </div>
                     </li>
-                  )
+                  ),
                 )}
 
                 {isDraftZoneVisible && (
@@ -230,7 +246,7 @@ export default function MisZonasSidebar({
         )}
       </div>
     </>
-  )
+  );
 
   // ─── MÓVIL: bottom sheet ──────────────────────────────────────────────────────
   if (isMobile) {
@@ -248,15 +264,17 @@ export default function MisZonasSidebar({
         <div
           className="fixed left-0 right-0 bottom-0 z-[1100] bg-white dark:bg-stone-800 rounded-t-2xl shadow-[0_-4px_32px_rgba(0,0,0,0.18)] flex flex-col transform transition-transform duration-300 ease-in-out"
           style={{
-            maxHeight: '80dvh',
-            transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
+            maxHeight: "80dvh",
+            transform: isOpen ? "translateY(0)" : "translateY(100%)",
           }}
         >
           {/* Handle + cabecera */}
           <div className="shrink-0 flex flex-col items-center pt-3 pb-2 border-b border-stone-200 dark:border-stone-700">
             <div className="w-10 h-1.5 bg-stone-300 dark:bg-stone-600 rounded-full mb-3" />
             <div className="flex items-center justify-between w-full px-4">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-stone-100">Mis zonas</h2>
+              <h2 className="text-base font-semibold text-slate-800 dark:text-stone-100">
+                Mis zonas
+              </h2>
               <button
                 onClick={onClose}
                 className="p-1.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-full transition-colors"
@@ -269,7 +287,7 @@ export default function MisZonasSidebar({
           {inner}
         </div>
       </>
-    )
+    );
   }
 
   // ─── DESKTOP: panel lateral ───────────────────────────────────────────────────
@@ -284,11 +302,13 @@ export default function MisZonasSidebar({
 
       <aside
         className={`absolute top-0 right-0 h-full w-full sm:w-80 bg-white dark:bg-stone-800 shadow-2xl z-[1100] transform transition-transform duration-300 ease-in-out flex flex-col border-l border-stone-200 dark:border-stone-700 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
-          <h2 className="text-lg text-slate-800 dark:text-stone-100">Mis zonas</h2>
+          <h2 className="text-lg text-slate-800 dark:text-stone-100">
+            Mis zonas
+          </h2>
           <button
             onClick={onClose}
             className="p-1.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-full transition-colors"
@@ -300,5 +320,5 @@ export default function MisZonasSidebar({
         {inner}
       </aside>
     </>
-  )
+  );
 }

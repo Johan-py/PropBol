@@ -1,22 +1,22 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Blog } from '@/types/blog'
-import { Trash2, Edit3 } from 'lucide-react'
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Blog } from "@/types/blog";
+import { Trash2, Edit3 } from "lucide-react";
 
 interface UserBlogCardProps {
-  blog: Blog
+  blog: Blog;
 }
 
 const UserBlogCard: React.FC<UserBlogCardProps> = ({ blog }) => {
-  const isEditable = blog.estado === 'Borrador' || blog.estado === 'Rechazado'
+  const isEditable = blog.estado === "Borrador" || blog.estado === "Rechazado";
 
   return (
     <div className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
       {/* 1. Imagen Miniatura (HU7) */}
       <div className="relative w-24 h-20 overflow-hidden rounded-lg flex-shrink-0 bg-gray-100">
         <Image
-          src={blog.imagenUrl || '/placeholder-house.jpg'}
+          src={blog.imagenUrl || "/placeholder-house.jpg"}
           alt={blog.titulo}
           fill
           className="object-cover"
@@ -29,8 +29,12 @@ const UserBlogCard: React.FC<UserBlogCardProps> = ({ blog }) => {
         <div className="flex justify-between items-start">
           {/* Título y Fecha (HU7) */}
           <div className="flex flex-col">
-            <h3 className="text-sm font-bold text-gray-800 line-clamp-1">{blog.titulo}</h3>
-            <span className="text-[10px] text-gray-400 font-medium mt-1">{blog.fecha}</span>
+            <h3 className="text-sm font-bold text-gray-800 line-clamp-1">
+              {blog.titulo}
+            </h3>
+            <span className="text-[10px] text-gray-400 font-medium mt-1">
+              {blog.fecha}
+            </span>
           </div>
 
           {/* Icono de eliminar (HU11) */}
@@ -63,7 +67,7 @@ const UserBlogCard: React.FC<UserBlogCardProps> = ({ blog }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserBlogCard
+export default UserBlogCard;

@@ -75,7 +75,13 @@ function MiniBrowserPreview({ mode }: { mode: "light" | "dark" }) {
   );
 }
 
-function ThemeCard({ title, description, selected, onClick, preview }: ThemeCardProps) {
+function ThemeCard({
+  title,
+  description,
+  selected,
+  onClick,
+  preview,
+}: ThemeCardProps) {
   return (
     <button
       type="button"
@@ -96,13 +102,13 @@ function ThemeCard({ title, description, selected, onClick, preview }: ThemeCard
               : "border-gray-300 bg-white"
           }`}
         >
-          {selected && (
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-          )}
+          {selected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
         </span>
         <div>
           <p className="font-semibold text-gray-900">{title}</p>
-          <p className="mt-0.5 text-sm leading-5 text-gray-500">{description}</p>
+          <p className="mt-0.5 text-sm leading-5 text-gray-500">
+            {description}
+          </p>
         </div>
       </div>
     </button>
@@ -151,13 +157,13 @@ function AccessibilityCard({
               : "border-gray-300 bg-white"
           }`}
         >
-          {selected && (
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-          )}
+          {selected && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
         </span>
         <div>
           <p className="font-semibold text-gray-900">{title}</p>
-          <p className="mt-0.5 text-sm leading-5 text-gray-500">{description}</p>
+          <p className="mt-0.5 text-sm leading-5 text-gray-500">
+            {description}
+          </p>
         </div>
       </div>
     </button>
@@ -214,7 +220,6 @@ export default function AjustesVisualizacion() {
   return (
     <main className="propbol-visual-settings-page min-h-screen bg-[#f8f6f1] px-4 py-8 text-gray-900">
       <section className="mx-auto w-full max-w-3xl space-y-6">
-
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 md:p-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             Ajustes de Visualización
@@ -278,7 +283,6 @@ export default function AjustesVisualizacion() {
             ))}
           </div>
         </div>
-
       </section>
     </main>
   );

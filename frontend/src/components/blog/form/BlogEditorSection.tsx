@@ -16,7 +16,7 @@ export default function BlogEditorSection({
   setContenido,
   insertLink,
   error,
-  editorRef
+  editorRef,
 }: BlogEditorSectionProps) {
   return (
     <div className="space-y-3">
@@ -35,7 +35,9 @@ export default function BlogEditorSection({
         />
       </div>
 
-      {error && <p className="px-2 text-sm font-medium text-red-500">{error}</p>}
+      {error && (
+        <p className="px-2 text-sm font-medium text-red-500">{error}</p>
+      )}
     </div>
   );
 }

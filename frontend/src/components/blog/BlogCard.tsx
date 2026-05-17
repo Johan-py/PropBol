@@ -27,10 +27,10 @@ export default function BlogCard({
 
   // Trunca el excerpt a una longitud fija y añade tres puntos suspensivos
   const truncateExcerpt = (text: string, max = 140) => {
-    if (!text) return '';
-    const t = text.replace(/\s+/g, ' ').trim();
+    if (!text) return "";
+    const t = text.replace(/\s+/g, " ").trim();
     if (t.length <= max) return t;
-    return t.slice(0, max).trimEnd() + '...';
+    return t.slice(0, max).trimEnd() + "...";
   };
 
   return (
@@ -78,9 +78,7 @@ export default function BlogCard({
 
           {/* Botón y Metadata */}
           <div className="mt-auto flex items-center justify-between">
-            <div
-              className="rounded-full bg-[#D97706] px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition-all group-hover:bg-[#D97706]/90 group-hover:shadow-lg group-hover:shadow-[#D97706]/20"
-            >
+            <div className="rounded-full bg-[#D97706] px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition-all group-hover:bg-[#D97706]/90 group-hover:shadow-lg group-hover:shadow-[#D97706]/20">
               Leer Más
             </div>
 
@@ -89,7 +87,11 @@ export default function BlogCard({
                 {authorName}
               </p>
               <p className="text-[9px] text-stone-400">
-                {new Date(publishedAt).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+                {new Date(publishedAt).toLocaleDateString("es-ES", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </p>
             </div>
           </div>

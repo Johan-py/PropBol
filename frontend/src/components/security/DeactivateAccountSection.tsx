@@ -268,7 +268,9 @@ export default function DeactivateAccountSection() {
       }
 
       if (!API_URL) {
-        setEmailCodeError("No se configuró NEXT_PUBLIC_API_URL en el frontend.");
+        setEmailCodeError(
+          "No se configuró NEXT_PUBLIC_API_URL en el frontend.",
+        );
         return;
       }
 
@@ -434,7 +436,9 @@ export default function DeactivateAccountSection() {
                       void handleDeactivateAccount();
                     }
                   }}
-                  placeholder={isLocked ? "Bloqueado temporalmente" : "••••••••"}
+                  placeholder={
+                    isLocked ? "Bloqueado temporalmente" : "••••••••"
+                  }
                   maxLength={MAX_PASSWORD_LENGTH}
                   disabled={isLocked || isSubmitting || !!successMessage}
                   className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none placeholder:text-red-400 disabled:cursor-not-allowed disabled:opacity-60"
@@ -477,7 +481,9 @@ export default function DeactivateAccountSection() {
                 disabled={isSubmitting || !!successMessage || isSendingCode}
                 className="mt-2 text-sm font-medium text-blue-600 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSendingCode ? "Enviando código..." : "Verificación mediante correo"}
+                {isSendingCode
+                  ? "Enviando código..."
+                  : "Verificación mediante correo"}
               </button>
             </div>
 

@@ -1,17 +1,19 @@
-import { CalendarDays, MessageSquare } from 'lucide-react'
+import { CalendarDays, MessageSquare } from "lucide-react";
 
 interface Props {
   contacto: {
-    nombre: string
-    correo: string | null
-    telefono: string | null
-  }
+    nombre: string;
+    correo: string | null;
+    telefono: string | null;
+  };
 }
 
 export default function ContactoPropiedad({ contacto }: Props) {
   return (
     <aside className="w-full rounded-2xl border border-[#b8afa4] bg-[#f1f1f1] px-5 py-6">
-      <h3 className="text-[18px] font-bold text-[#1f1f1f]">{contacto.nombre}</h3>
+      <h3 className="text-[18px] font-bold text-[#1f1f1f]">
+        {contacto.nombre}
+      </h3>
 
       <div className="mt-5 space-y-4 text-sm text-[#5c5650]">
         <div className="flex items-start gap-3">
@@ -45,5 +47,5 @@ export default function ContactoPropiedad({ contacto }: Props) {
         </button>
       </div>
     </aside>
-  )
+  );
 }

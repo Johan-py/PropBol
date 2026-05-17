@@ -22,17 +22,17 @@ function getYoutubeId(url: string) {
   const trimmed = url.trim();
 
   const shortMatch = trimmed.match(
-    /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/
+    /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
   );
   if (shortMatch) return shortMatch[1];
 
   const normalMatch = trimmed.match(
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
   );
   if (normalMatch) return normalMatch[1];
 
   const embedMatch = trimmed.match(
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
   );
   if (embedMatch) return embedMatch[1];
 

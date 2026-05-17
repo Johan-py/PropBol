@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Star, Shield, LayoutDashboard, CheckCircle } from "lucide-react";
+import {
+  User as UserIcon,
+  Eye,
+  FileText,
+  Map,
+  Star,
+  Shield,
+  LayoutDashboard,
+  CheckCircle,
+} from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -43,7 +52,6 @@ export default function UserMenu({
   onLogin,
   onOpenLogoutModal,
 }: UserMenuProps) {
-
   // Estado local para manejar los datos del usuario de forma independiente
   const [localUser, setLocalUser] = useState<User | null>(user);
 
@@ -53,16 +61,16 @@ export default function UserMenu({
 
   // Inicialización segura desde localStorage si está disponible (solo lado del cliente)
   useEffect(() => {
-    if (user && typeof window !== 'undefined') {
-      const storedAvatar = localStorage.getItem('avatar');
-      const storedName = localStorage.getItem('nombre');
-      const storedEmail = localStorage.getItem('correo');
+    if (user && typeof window !== "undefined") {
+      const storedAvatar = localStorage.getItem("avatar");
+      const storedName = localStorage.getItem("nombre");
+      const storedEmail = localStorage.getItem("correo");
 
-      setLocalUser(prev => ({
+      setLocalUser((prev) => ({
         ...user,
         avatar: storedAvatar || user.avatar,
         name: storedName || user.name,
-        email: storedEmail || user.email
+        email: storedEmail || user.email,
       }));
     } else {
       setLocalUser(user);
@@ -83,11 +91,14 @@ export default function UserMenu({
 
     if (user) {
       setLocalUser((prevLocal) => {
-        // Para ser extra seguros, incluso si aceptamos la prop del padre, 
+        // Para ser extra seguros, incluso si aceptamos la prop del padre,
         // preferimos el localStorage si existe
-        const storedAvatar = typeof window !== 'undefined' ? localStorage.getItem('avatar') : null;
-        const storedName = typeof window !== 'undefined' ? localStorage.getItem('nombre') : null;
-        const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('correo') : null;
+        const storedAvatar =
+          typeof window !== "undefined" ? localStorage.getItem("avatar") : null;
+        const storedName =
+          typeof window !== "undefined" ? localStorage.getItem("nombre") : null;
+        const storedEmail =
+          typeof window !== "undefined" ? localStorage.getItem("correo") : null;
 
         return {
           ...user,
@@ -111,9 +122,9 @@ export default function UserMenu({
         setLocalUser((prev) => {
           if (!prev) return prev;
           const keyMap: Record<string, keyof User> = {
-            'avatar': 'avatar',
-            'nombre': 'name',
-            'correo': 'email'
+            avatar: "avatar",
+            nombre: "name",
+            correo: "email",
           };
           const userKey = keyMap[e.detail.key];
           if (userKey) {
@@ -132,22 +143,22 @@ export default function UserMenu({
         if (!prev) return prev;
         return {
           ...prev,
-          avatar: localStorage.getItem('avatar') || prev.avatar,
-          name: localStorage.getItem('nombre') || prev.name,
-          email: localStorage.getItem('correo') || prev.email,
+          avatar: localStorage.getItem("avatar") || prev.avatar,
+          name: localStorage.getItem("nombre") || prev.name,
+          email: localStorage.getItem("correo") || prev.email,
         };
       });
     };
 
-    window.addEventListener('profileUpdate', handleCustomUpdate);
-    window.addEventListener('profileUpdated', handleStorageFallback);
+    window.addEventListener("profileUpdate", handleCustomUpdate);
+    window.addEventListener("profileUpdated", handleStorageFallback);
     // Escuchar también storage por si acaso, aunque CustomEvents son más confiables aquí
-    window.addEventListener('storage', handleStorageFallback);
+    window.addEventListener("storage", handleStorageFallback);
 
     return () => {
-      window.removeEventListener('profileUpdate', handleCustomUpdate);
-      window.removeEventListener('profileUpdated', handleStorageFallback);
-      window.removeEventListener('storage', handleStorageFallback);
+      window.removeEventListener("profileUpdate", handleCustomUpdate);
+      window.removeEventListener("profileUpdated", handleStorageFallback);
+      window.removeEventListener("storage", handleStorageFallback);
     };
   }, []);
 
@@ -226,7 +237,10 @@ export default function UserMenu({
                 <p className="font-bold text-gray-800 text-sm leading-tight truncate">
                   {localUser.name}
                 </p>
-                <p className="text-xs text-gray-500 truncate" title={localUser.email}>
+                <p
+                  className="text-xs text-gray-500 truncate"
+                  title={localUser.email}
+                >
                   {localUser.email}
                 </p>
               </div>

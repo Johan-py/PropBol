@@ -1,103 +1,115 @@
-'use client'
-import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
-import dynamic from 'next/dynamic'
-import FiltrosEstadisticas from './components/FiltrosEstadisticas'
-import DashboardResultados from './components/DashboardResultados'
+"use client";
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import dynamic from "next/dynamic";
+import FiltrosEstadisticas from "./components/FiltrosEstadisticas";
+import DashboardResultados from "./components/DashboardResultados";
 
-const MapaSeleccionZona = dynamic(() => import('./components/MapaSeleccionZona'), {
-  ssr: false,
-  loading: () => (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
-      <div className="bg-white rounded-2xl p-8 text-gray-500 animate-pulse">Cargando mapa…</div>
-    </div>
-  )
-})
+const MapaSeleccionZona = dynamic(
+  () => import("./components/MapaSeleccionZona"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+        <div className="bg-white rounded-2xl p-8 text-gray-500 animate-pulse">
+          Cargando mapa…
+        </div>
+      </div>
+    ),
+  },
+);
 
-export type TipoOperacion = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
+export type TipoOperacion = "VENTA" | "ALQUILER" | "ANTICRETO";
 
 export interface ZonaSeleccionada {
-  id: number
-  nombre: string
+  id: number;
+  nombre: string;
 }
 
 export interface EstadisticasData {
-  zona: { id: number; nombre: string }
-  tipoOperacion: string
-  promedioPrecio: number
-  totalPropiedades: number
-  precioMinimo: number
-  precioMaximo: number
-  evolucionPrecios: { mes: string; promedio: number }[]
-  distribucionPorCategoria: { categoria: string; cantidad: number; porcentaje: number }[]
+  zona: { id: number; nombre: string };
+  tipoOperacion: string;
+  promedioPrecio: number;
+  totalPropiedades: number;
+  precioMinimo: number;
+  precioMaximo: number;
+  evolucionPrecios: { mes: string; promedio: number }[];
+  distribucionPorCategoria: {
+    categoria: string;
+    cantidad: number;
+    porcentaje: number;
+  }[];
 }
 
 // Usa rutas internas Next.js que proxean al backend local (sin CORS)
 
 export default function EstadisticasZonaPage() {
-  const router = useRouter()
+  const router = useRouter();
 
   // ─── Estado principal ───────────────────────────────────────────────
-  const [zonaSeleccionada, setZonaSeleccionada] = useState<ZonaSeleccionada | null>(null)
-  const [tipoOperacion, setTipoOperacion] = useState<TipoOperacion>('VENTA')
-  const [mostrarMapa, setMostrarMapa] = useState(false)
+  const [zonaSeleccionada, setZonaSeleccionada] =
+    useState<ZonaSeleccionada | null>(null);
+  const [tipoOperacion, setTipoOperacion] = useState<TipoOperacion>("VENTA");
+  const [mostrarMapa, setMostrarMapa] = useState(false);
 
   // ─── Estado de resultados ────────────────────────────────────────────
-  const [estadisticas, setEstadisticas] = useState<EstadisticasData | null>(null)
-  const [sinDatos, setSinDatos] = useState(false)
-  const [cargando, setCargando] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [mostrandoResultados, setMostrandoResultados] = useState(false)
+  const [estadisticas, setEstadisticas] = useState<EstadisticasData | null>(
+    null,
+  );
+  const [sinDatos, setSinDatos] = useState(false);
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [mostrandoResultados, setMostrandoResultados] = useState(false);
 
   // ─── Consultar estadísticas (CA 7) ───────────────────────────────────
   const consultarEstadisticas = useCallback(async () => {
-    if (!zonaSeleccionada || !tipoOperacion) return
+    if (!zonaSeleccionada || !tipoOperacion) return;
 
-    setCargando(true)
-    setError(null)
-    setSinDatos(false)
+    setCargando(true);
+    setError(null);
+    setSinDatos(false);
 
     try {
       const res = await fetch(
-        `/api/estadisticas-zona?zonaId=${zonaSeleccionada.id}&tipoOperacion=${tipoOperacion}`
-      )
-      const json = await res.json()
+        `/api/estadisticas-zona?zonaId=${zonaSeleccionada.id}&tipoOperacion=${tipoOperacion}`,
+      );
+      const json = await res.json();
 
       if (json.sinDatos) {
-        setSinDatos(true)
-        setEstadisticas(null)
-        setMostrandoResultados(true)
-        return
+        setSinDatos(true);
+        setEstadisticas(null);
+        setMostrandoResultados(true);
+        return;
       }
 
       if (!json.ok || !json.data) {
-        setError(json.mensaje ?? 'Error al obtener estadísticas.')
-        return
+        setError(json.mensaje ?? "Error al obtener estadísticas.");
+        return;
       }
 
-      setEstadisticas(json.data)
-      setMostrandoResultados(true)
+      setEstadisticas(json.data);
+      setMostrandoResultados(true);
     } catch {
-      setError('Error de conexión. Verifica tu conexión e intenta nuevamente.')
+      setError("Error de conexión. Verifica tu conexión e intenta nuevamente.");
     } finally {
-      setCargando(false)
+      setCargando(false);
     }
-  }, [zonaSeleccionada, tipoOperacion])
+  }, [zonaSeleccionada, tipoOperacion]);
 
   // ─── Cambiar filtros (CA 11) ─────────────────────────────────────────
   const handleCambiarFiltros = () => {
-    setMostrandoResultados(false)
-    setEstadisticas(null)
-    setSinDatos(false)
-    setError(null)
-  }
+    setMostrandoResultados(false);
+    setEstadisticas(null);
+    setSinDatos(false);
+    setError(null);
+  };
 
   // ─── Selección de zona desde mapa ────────────────────────────────────
   const handleSeleccionarZonaDesdemapa = (zona: ZonaSeleccionada) => {
-    setZonaSeleccionada(zona)
-    setMostrarMapa(false)
-  }
+    setZonaSeleccionada(zona);
+    setMostrarMapa(false);
+  };
 
   return (
     <main className="min-h-screen bg-[#FAF8F5]">
@@ -110,8 +122,8 @@ export default function EstadisticasZonaPage() {
           onCerrar={() => setMostrarMapa(false)}
           onTipoOperacionChange={setTipoOperacion}
           onVerEstadisticas={() => {
-            setMostrarMapa(false)
-            consultarEstadisticas()
+            setMostrarMapa(false);
+            consultarEstadisticas();
           }}
         />
       )}
@@ -119,12 +131,14 @@ export default function EstadisticasZonaPage() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Back button */}
         <button
-          onClick={() => (mostrandoResultados ? handleCambiarFiltros() : router.back())}
+          onClick={() =>
+            mostrandoResultados ? handleCambiarFiltros() : router.back()
+          }
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-6 transition-colors"
           id="btn-volver-estadisticas"
         >
           <ArrowLeft size={16} />
-          {mostrandoResultados ? 'Volver' : 'Volver al inicio'}
+          {mostrandoResultados ? "Volver" : "Volver al inicio"}
         </button>
 
         {/* Título */}
@@ -163,5 +177,5 @@ export default function EstadisticasZonaPage() {
         )}
       </div>
     </main>
-  )
+  );
 }

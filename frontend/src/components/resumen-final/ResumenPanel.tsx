@@ -66,16 +66,15 @@ function getAuthToken(): string | null {
 function normalizarParametros(data: any): ParametroItem[] {
   if (!data) return [];
 
-  const lista =
-    Array.isArray(data)
-      ? data
-      : Array.isArray(data.data)
-        ? data.data
-        : Array.isArray(data.parametros)
-          ? data.parametros
-          : Array.isArray(data.parametrosPersonalizados)
-            ? data.parametrosPersonalizados
-            : [];
+  const lista = Array.isArray(data)
+    ? data
+    : Array.isArray(data.data)
+      ? data.data
+      : Array.isArray(data.parametros)
+        ? data.parametros
+        : Array.isArray(data.parametrosPersonalizados)
+          ? data.parametrosPersonalizados
+          : [];
 
   return lista
     .map((item: any) => {
@@ -143,7 +142,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
           `${API_BASE_URL}/api/publicaciones/${publicacionId}/resumen-final`,
           {
             headers,
-          }
+          },
         );
 
         const jsonResumen = await resResumen.json();
@@ -152,7 +151,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
           throw new Error(
             jsonResumen?.message ||
               jsonResumen?.mensaje ||
-              "Error cargando el resumen final"
+              "Error cargando el resumen final",
           );
         }
 
@@ -160,7 +159,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
         setData(resumen);
 
         const parametrosDesdeResumen = normalizarParametros(
-          resumen?.parametrosPersonalizados
+          resumen?.parametrosPersonalizados,
         );
 
         if (parametrosDesdeResumen.length > 0) {
@@ -168,14 +167,14 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
           console.log(
             "✅ Parámetros personalizados recuperados desde resumen:",
-            parametrosDesdeResumen
+            parametrosDesdeResumen,
           );
         } else {
           const resParametros = await fetch(
             `${API_BASE_URL}/api/publicaciones/${publicacionId}/parametros`,
             {
               headers,
-            }
+            },
           );
 
           if (resParametros.ok) {
@@ -186,11 +185,11 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
             console.log(
               "✅ Parámetros personalizados recuperados desde endpoint:",
-              parametrosNormalizados
+              parametrosNormalizados,
             );
           } else {
             console.warn(
-              "⚠️ No se pudieron recuperar los parámetros personalizados"
+              "⚠️ No se pudieron recuperar los parámetros personalizados",
             );
             setParametrosExtra([]);
           }
@@ -209,7 +208,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
   // ================= LOGICA PARAMETROS =================
   const parametrosFinales = useMemo(() => {
     const parametrosDesdeResumen = normalizarParametros(
-      data?.parametrosPersonalizados
+      data?.parametrosPersonalizados,
     );
 
     if (parametrosDesdeResumen.length > 0) {
@@ -276,9 +275,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
   return (
     <>
       <section className="mx-auto max-w-7xl bg-white p-6 rounded-2xl">
-        <h1 className="text-3xl font-bold mb-6">
-          Resumen de la propiedad
-        </h1>
+        <h1 className="text-3xl font-bold mb-6">Resumen de la propiedad</h1>
 
         <div className="grid md:grid-cols-2 gap-6">
           <InfoPropiedad data={data} />
@@ -336,9 +333,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
       {mostrarModalExito && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white p-10 rounded-2xl text-center shadow-xl max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">
-              Publicado con éxito
-            </h2>
+            <h2 className="text-2xl font-bold mb-4">Publicado con éxito</h2>
 
             <p className="text-gray-600 mb-6">
               La publicación fue registrada correctamente.

@@ -1,25 +1,25 @@
-'use client'
+"use client";
 
-import { type KeyboardEvent } from 'react'
-import CityCarousel from '@/components/home/CityCarousel'
-import type { City } from '@/types/city'
+import { type KeyboardEvent } from "react";
+import CityCarousel from "@/components/home/CityCarousel";
+import type { City } from "@/types/city";
 
 type Props = {
-  city: City
-  onClick: (city: City) => void
-}
+  city: City;
+  onClick: (city: City) => void;
+};
 
 export default function CityCard({ city, onClick }: Props) {
   const handleClick = () => {
-    onClick(city)
-  }
+    onClick(city);
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      handleClick()
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleClick();
     }
-  }
+  };
 
   return (
     <article
@@ -38,17 +38,21 @@ export default function CityCard({ city, onClick }: Props) {
             {city.name}
           </h3>
           {city.locationReference ? (
-            <p className="text-sm font-medium text-stone-500">{city.locationReference}</p>
+            <p className="text-sm font-medium text-stone-500">
+              {city.locationReference}
+            </p>
           ) : null}
         </div>
 
-        <p className="flex-1 text-sm leading-6 text-stone-600">{city.description}</p>
+        <p className="flex-1 text-sm leading-6 text-stone-600">
+          {city.description}
+        </p>
 
         <button
           type="button"
           onClick={(event) => {
-            event.stopPropagation()
-            handleClick()
+            event.stopPropagation();
+            handleClick();
           }}
           className="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-amber-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-amber-600"
         >
@@ -57,5 +61,5 @@ export default function CityCard({ city, onClick }: Props) {
         </button>
       </div>
     </article>
-  )
+  );
 }

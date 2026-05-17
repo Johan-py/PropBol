@@ -11,7 +11,7 @@ interface RawPropertyItem {
   titulo: string;
   descripcion?: string;
   precio: string | number;
-  precio_anterior?: string | number; 
+  precio_anterior?: string | number;
   categoria?: string;
   currency?: string;
   moneda?: string;
@@ -47,7 +47,9 @@ interface RawPropertyItem {
 const BOB_EXCHANGE_RATE = 6.96;
 
 function traducirCategoria(categoria?: string): string {
-  const normalizada = String(categoria || "").toUpperCase().trim();
+  const normalizada = String(categoria || "")
+    .toUpperCase()
+    .trim();
   switch (normalizada) {
     case "CASA":
       return "Casa";
@@ -67,7 +69,9 @@ function traducirCategoria(categoria?: string): string {
 }
 
 function traducirAccion(accion?: string): string {
-  const normalizada = String(accion || "").toUpperCase().trim();
+  const normalizada = String(accion || "")
+    .toUpperCase()
+    .trim();
   switch (normalizada) {
     case "VENTA":
       return "Venta";
@@ -95,7 +99,8 @@ function construirUbicacionTexto(item: RawPropertyItem): string {
   if (partes.length > 0) return partes.join(", ");
 
   const fallback = ubicacion?.ubicacion_maestra?.nombre;
-  if (typeof fallback === "string" && fallback.trim().length > 0) return fallback.trim();
+  if (typeof fallback === "string" && fallback.trim().length > 0)
+    return fallback.trim();
 
   return "Ubicación no especificada";
 }
@@ -115,8 +120,8 @@ export function useProperties(): UsePropertiesResult {
   const searchParamsStr = searchParams.toString();
 
   useEffect(() => {
-    let cancelled = false
-    console.log('🔄 useProperties disparado:', searchParamsStr)
+    let cancelled = false;
+    console.log("🔄 useProperties disparado:", searchParamsStr);
 
     async function fetchNormalSearch() {
       // Configuramos el temporizador de 1 segundo
@@ -180,8 +185,10 @@ export function useProperties(): UsePropertiesResult {
                 price: displayPrice,
                 currency: selectedCurrency,
                 precioFormateado: formattedText,
-                precio: Number(item.precio),                               
-                precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
+                precio: Number(item.precio),
+                precio_anterior: item.precio_anterior
+                  ? Number(item.precio_anterior)
+                  : null,
                 type: (item.categoria?.toLowerCase().trim() ||
                   "casa") as PropertyType,
                 title: item.titulo,
@@ -219,38 +226,57 @@ export function useProperties(): UsePropertiesResult {
         if (!cancelled) setIsLoading(true);
       }, 1000);
       try {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-        const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
+        const token =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const headers: Record<string, string> = token
+          ? { Authorization: `Bearer ${token}` }
+          : {};
         if (!token) {
-          const modos = searchParams.getAll('modoInmueble')
-          const qs = new URLSearchParams()
-          qs.set('fecha', 'mas-populares')
-          modos.forEach(m => qs.append('modoInmueble', m))
-          const res = await fetch(`${API_URL}/api/properties/inmuebles?${qs.toString()}`)
-          if (!res.ok) throw new Error(`Error ${res.status}`)
-          const json = await res.json()
+          const modos = searchParams.getAll("modoInmueble");
+          const qs = new URLSearchParams();
+          qs.set("fecha", "mas-populares");
+          modos.forEach((m) => qs.append("modoInmueble", m));
+          const res = await fetch(
+            `${API_URL}/api/properties/inmuebles?${qs.toString()}`,
+          );
+          if (!res.ok) throw new Error(`Error ${res.status}`);
+          const json = await res.json();
           const selectedCurrency = (
-            (searchParams.get('currency') || 'USD').toUpperCase() === 'BOB' ? 'BOB' : 'USD'
-          ) as 'USD' | 'BOB'
+            (searchParams.get("currency") || "USD").toUpperCase() === "BOB"
+              ? "BOB"
+              : "USD"
+          ) as "USD" | "BOB";
           if (!cancelled) {
             const mappedData: PropertyMapPin[] = (json.data || [])
               .filter((item: any) => {
-                const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
-                const lat = Number(ubicacion?.latitud)
-                const lng = Number(ubicacion?.longitud)
-                return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
+                const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+                const lat = Number(ubicacion?.latitud);
+                const lng = Number(ubicacion?.longitud);
+                return (
+                  ubicacion &&
+                  !isNaN(lat) &&
+                  !isNaN(lng) &&
+                  lat !== 0 &&
+                  lng !== 0
+                );
               })
               .map((item: any) => {
-                const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
-                const basePrice = Number(item.precio)
-                const priceInUsd = String(item.currency || 'USD').toUpperCase() === 'BOB'
-                  ? basePrice / BOB_EXCHANGE_RATE : basePrice
-                const displayPrice = selectedCurrency === 'BOB'
-                  ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
-                const formattedText = selectedCurrency === 'BOB'
-                  ? `Bs ${displayPrice.toLocaleString('es-BO')}`
-                  : `$${displayPrice.toLocaleString('en-US')} USD`
-                const publicaciones = item.publicaciones ?? item.publicacion ?? []
+                const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+                const basePrice = Number(item.precio);
+                const priceInUsd =
+                  String(item.currency || "USD").toUpperCase() === "BOB"
+                    ? basePrice / BOB_EXCHANGE_RATE
+                    : basePrice;
+                const displayPrice =
+                  selectedCurrency === "BOB"
+                    ? priceInUsd * BOB_EXCHANGE_RATE
+                    : priceInUsd;
+                const formattedText =
+                  selectedCurrency === "BOB"
+                    ? `Bs ${displayPrice.toLocaleString("es-BO")}`
+                    : `$${displayPrice.toLocaleString("en-US")} USD`;
+                const publicaciones =
+                  item.publicaciones ?? item.publicacion ?? [];
                 return {
                   id: item.id.toString(),
                   lat: Number(ubicacion.latitud),
@@ -259,8 +285,11 @@ export function useProperties(): UsePropertiesResult {
                   currency: selectedCurrency,
                   precioFormateado: formattedText,
                   precio: Number(item.precio),
-                  precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
-                  type: (item.categoria?.toLowerCase().trim() || 'casa') as PropertyType,
+                  precio_anterior: item.precio_anterior
+                    ? Number(item.precio_anterior)
+                    : null,
+                  type: (item.categoria?.toLowerCase().trim() ||
+                    "casa") as PropertyType,
                   title: item.titulo,
                   descripcion: item.descripcion ?? null,
                   ubicacionTexto: construirUbicacionTexto(item),
@@ -268,56 +297,69 @@ export function useProperties(): UsePropertiesResult {
                   accionTexto: traducirAccion(item.tipoAccion),
                   nroCuartos: item.nroCuartos ?? null,
                   nroBanos: item.nroBanos ?? null,
-                  superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
-                  thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
-                }
-              })
-            setProperties(mappedData)
+                  superficieM2: item.superficieM2
+                    ? Number(item.superficieM2)
+                    : null,
+                  thumbnailUrl:
+                    publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+                };
+              });
+            setProperties(mappedData);
           }
-          return
+          return;
         }
 
         // Intentamos respetar una "zona" textual si el usuario la está filtrando.
-        const zona = searchParams.get('query') || undefined
-        const limit = 200
-        const url = new URL(`${API_URL}/api/recomendaciones/inmuebles`)
-        if (zona) url.searchParams.set('zona', zona)
-        url.searchParams.set('limit', String(limit))
+        const zona = searchParams.get("query") || undefined;
+        const limit = 200;
+        const url = new URL(`${API_URL}/api/recomendaciones/inmuebles`);
+        if (zona) url.searchParams.set("zona", zona);
+        url.searchParams.set("limit", String(limit));
 
-        const res = await fetch(url.toString(), { headers })
-        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`)
-        const json = await res.json()
+        const res = await fetch(url.toString(), { headers });
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+        const json = await res.json();
 
-        const data = json.data || []
+        const data = json.data || [];
         const selectedCurrency =
-          (searchParams.get('currency') || 'USD').toUpperCase() === 'BOB' ? 'BOB' : 'USD'
+          (searchParams.get("currency") || "USD").toUpperCase() === "BOB"
+            ? "BOB"
+            : "USD";
 
         const mappedData: PropertyMapPin[] = data
           .filter((item: any) => {
-            const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
-            const lat = Number(ubicacion?.latitud)
-            const lng = Number(ubicacion?.longitud)
-            return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
+            const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+            const lat = Number(ubicacion?.latitud);
+            const lng = Number(ubicacion?.longitud);
+            return (
+              ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
+            );
           })
           .map((item: any) => {
-            const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
-            const basePrice = Number(item.precio)
-            const sourceCurrency = String(item.currency || item.moneda || 'USD').toUpperCase()
+            const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+            const basePrice = Number(item.precio);
+            const sourceCurrency = String(
+              item.currency || item.moneda || "USD",
+            ).toUpperCase();
             const priceInUsd =
-              sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
+              sourceCurrency === "BOB"
+                ? basePrice / BOB_EXCHANGE_RATE
+                : basePrice;
             const displayPrice =
-              selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
+              selectedCurrency === "BOB"
+                ? priceInUsd * BOB_EXCHANGE_RATE
+                : priceInUsd;
             const formattedText =
-              selectedCurrency === 'BOB'
-                ? `Bs ${displayPrice.toLocaleString('es-BO')}`
-                : `$${displayPrice.toLocaleString('en-US')} USD`
-            const categoriaTexto = traducirCategoria(item.categoria)
-            const accionTexto = traducirAccion(item.tipoAccion)
+              selectedCurrency === "BOB"
+                ? `Bs ${displayPrice.toLocaleString("es-BO")}`
+                : `$${displayPrice.toLocaleString("en-US")} USD`;
+            const categoriaTexto = traducirCategoria(item.categoria);
+            const accionTexto = traducirAccion(item.tipoAccion);
             const ubicacionTexto =
               item.ubicacionTexto ||
               item.direccion ||
               item.ubicacion?.direccion ||
-              'Ubicación no especificada'
+              "Ubicación no especificada";
 
             return {
               id: item.id.toString(),
@@ -326,9 +368,11 @@ export function useProperties(): UsePropertiesResult {
               price: displayPrice,
               currency: selectedCurrency,
               precioFormateado: formattedText,
-              precio: Number(item.precio),                                   
-              precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,  
-              type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
+              precio: Number(item.precio),
+              precio_anterior: item.precio_anterior
+                ? Number(item.precio_anterior)
+                : null,
+              type: (item.categoria?.toLowerCase().trim() || "casa") as any,
               title: item.titulo,
               descripcion: item.descripcion ?? null,
               ubicacionTexto,
@@ -336,42 +380,44 @@ export function useProperties(): UsePropertiesResult {
               accionTexto,
               nroCuartos: item.nroCuartos ?? null,
               nroBanos: item.nroBanos ?? null,
-              superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
+              superficieM2: item.superficieM2
+                ? Number(item.superficieM2)
+                : null,
               thumbnailUrl: item.thumbnailUrl,
               score: item.score,
               razones: item.razones,
-            }
-          })
+            };
+          });
 
-        if (!cancelled) setProperties(mappedData)
+        if (!cancelled) setProperties(mappedData);
       } catch (err) {
         if (!cancelled) {
-          console.error('Error recomendados:', err)
-          await fetchNormalSearch()
+          console.error("Error recomendados:", err);
+          await fetchNormalSearch();
         }
       } finally {
         clearTimeout(loaderTimer);
-        if (!cancelled) setIsLoading(false)
+        if (!cancelled) setIsLoading(false);
       }
     }
 
     async function fetchProperties() {
-      setError(null)
+      setError(null);
 
       // ✅ Modo recomendados (persistente por URL)
-      if (searchParams.get('orden') === 'recomendados') {
-        await fetchRecomendados()
-        return
+      if (searchParams.get("orden") === "recomendados") {
+        await fetchRecomendados();
+        return;
       }
 
-      await fetchNormalSearch()
+      await fetchNormalSearch();
     }
 
-    fetchProperties()
+    fetchProperties();
     return () => {
-      cancelled = true
-    }
-  }, [searchParamsStr, searchParams])
+      cancelled = true;
+    };
+  }, [searchParamsStr, searchParams]);
 
   return { properties, isLoading, error };
 }

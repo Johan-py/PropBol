@@ -402,7 +402,9 @@ export default function LoginForm() {
     setShowMagicLinkForm(false);
   };
 
-  const handleMagicLinkSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleMagicLinkSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
     if (isLoadingMagicLink) {
@@ -1009,7 +1011,8 @@ export default function LoginForm() {
       }
 
       setSuccessMessage(
-        data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
+        data.message ||
+          "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
       );
       setErrorMessage("");
       setPassword("");
@@ -1047,12 +1050,15 @@ export default function LoginForm() {
     setIsActivating(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/request-activation-code`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo: activationEmail }),
-        signal: controller.signal,
-      });
+      const response = await fetch(
+        `${API_URL}/api/auth/request-activation-code`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ correo: activationEmail }),
+          signal: controller.signal,
+        },
+      );
 
       const data = await response.json().catch(() => ({}));
 
@@ -1086,7 +1092,9 @@ export default function LoginForm() {
     }
 
     if (!/^\d{6}$/.test(trimmedCode)) {
-      setActivationError("El código debe tener exactamente 6 dígitos numéricos");
+      setActivationError(
+        "El código debe tener exactamente 6 dígitos numéricos",
+      );
       return;
     }
 
@@ -1131,7 +1139,8 @@ export default function LoginForm() {
       }
 
       setSuccessMessage(
-        data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
+        data.message ||
+          "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
       );
       setErrorMessage("");
       setPassword("");

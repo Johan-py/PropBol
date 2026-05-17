@@ -82,7 +82,9 @@ export default function FacebookRegisterButton({
     cleanup();
 
     if (data.type === "propbol:facebook-login-error") {
-      onError?.(data.message || "No se pudo completar el registro con Facebook.");
+      onError?.(
+        data.message || "No se pudo completar el registro con Facebook.",
+      );
       return;
     }
 

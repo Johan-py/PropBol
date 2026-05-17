@@ -7,125 +7,127 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model notificacion
  *
  */
-export type notificacionModel = runtime.Types.Result.DefaultSelection<Prisma.$notificacionPayload>
+export type notificacionModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$notificacionPayload>;
 
 export type AggregateNotificacion = {
-  _count: NotificacionCountAggregateOutputType | null
-  _avg: NotificacionAvgAggregateOutputType | null
-  _sum: NotificacionSumAggregateOutputType | null
-  _min: NotificacionMinAggregateOutputType | null
-  _max: NotificacionMaxAggregateOutputType | null
-}
+  _count: NotificacionCountAggregateOutputType | null;
+  _avg: NotificacionAvgAggregateOutputType | null;
+  _sum: NotificacionSumAggregateOutputType | null;
+  _min: NotificacionMinAggregateOutputType | null;
+  _max: NotificacionMaxAggregateOutputType | null;
+};
 
 export type NotificacionAvgAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type NotificacionSumAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type NotificacionMinAggregateOutputType = {
-  id: number | null
-  titulo: string | null
-  mensaje: string | null
-  leida: boolean | null
-  fecha_creacion: Date | null
-  fecha_lectura: Date | null
-  eliminada: boolean | null
-  archivada: boolean | null
-  usuario_id: number | null
-}
+  id: number | null;
+  titulo: string | null;
+  mensaje: string | null;
+  leida: boolean | null;
+  fecha_creacion: Date | null;
+  fecha_lectura: Date | null;
+  eliminada: boolean | null;
+  archivada: boolean | null;
+  usuario_id: number | null;
+};
 
 export type NotificacionMaxAggregateOutputType = {
-  id: number | null
-  titulo: string | null
-  mensaje: string | null
-  leida: boolean | null
-  fecha_creacion: Date | null
-  fecha_lectura: Date | null
-  eliminada: boolean | null
-  archivada: boolean | null
-  usuario_id: number | null
-}
+  id: number | null;
+  titulo: string | null;
+  mensaje: string | null;
+  leida: boolean | null;
+  fecha_creacion: Date | null;
+  fecha_lectura: Date | null;
+  eliminada: boolean | null;
+  archivada: boolean | null;
+  usuario_id: number | null;
+};
 
 export type NotificacionCountAggregateOutputType = {
-  id: number
-  titulo: number
-  mensaje: number
-  leida: number
-  fecha_creacion: number
-  fecha_lectura: number
-  eliminada: number
-  archivada: number
-  usuario_id: number
-  _all: number
-}
+  id: number;
+  titulo: number;
+  mensaje: number;
+  leida: number;
+  fecha_creacion: number;
+  fecha_lectura: number;
+  eliminada: number;
+  archivada: number;
+  usuario_id: number;
+  _all: number;
+};
 
 export type NotificacionAvgAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type NotificacionSumAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type NotificacionMinAggregateInputType = {
-  id?: true
-  titulo?: true
-  mensaje?: true
-  leida?: true
-  fecha_creacion?: true
-  fecha_lectura?: true
-  eliminada?: true
-  archivada?: true
-  usuario_id?: true
-}
+  id?: true;
+  titulo?: true;
+  mensaje?: true;
+  leida?: true;
+  fecha_creacion?: true;
+  fecha_lectura?: true;
+  eliminada?: true;
+  archivada?: true;
+  usuario_id?: true;
+};
 
 export type NotificacionMaxAggregateInputType = {
-  id?: true
-  titulo?: true
-  mensaje?: true
-  leida?: true
-  fecha_creacion?: true
-  fecha_lectura?: true
-  eliminada?: true
-  archivada?: true
-  usuario_id?: true
-}
+  id?: true;
+  titulo?: true;
+  mensaje?: true;
+  leida?: true;
+  fecha_creacion?: true;
+  fecha_lectura?: true;
+  eliminada?: true;
+  archivada?: true;
+  usuario_id?: true;
+};
 
 export type NotificacionCountAggregateInputType = {
-  id?: true
-  titulo?: true
-  mensaje?: true
-  leida?: true
-  fecha_creacion?: true
-  fecha_lectura?: true
-  eliminada?: true
-  archivada?: true
-  usuario_id?: true
-  _all?: true
-}
+  id?: true;
+  titulo?: true;
+  mensaje?: true;
+  leida?: true;
+  fecha_creacion?: true;
+  fecha_lectura?: true;
+  eliminada?: true;
+  archivada?: true;
+  usuario_id?: true;
+  _all?: true;
+};
 
 export type NotificacionAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which notificacion to aggregate.
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -133,335 +135,405 @@ export type NotificacionAggregateArgs<
    */
   orderBy?:
     | Prisma.notificacionOrderByWithRelationInput
-    | Prisma.notificacionOrderByWithRelationInput[]
+    | Prisma.notificacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.notificacionWhereUniqueInput
+  cursor?: Prisma.notificacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` notificacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` notificacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned notificacions
    **/
-  _count?: true | NotificacionCountAggregateInputType
+  _count?: true | NotificacionCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: NotificacionAvgAggregateInputType
+  _avg?: NotificacionAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: NotificacionSumAggregateInputType
+  _sum?: NotificacionSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: NotificacionMinAggregateInputType
+  _min?: NotificacionMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: NotificacionMaxAggregateInputType
-}
+  _max?: NotificacionMaxAggregateInputType;
+};
 
-export type GetNotificacionAggregateType<T extends NotificacionAggregateArgs> = {
-  [P in keyof T & keyof AggregateNotificacion]: P extends '_count' | 'count'
-    ? T[P] extends true
-      ? number
-      : Prisma.GetScalarType<T[P], AggregateNotificacion[P]>
-    : Prisma.GetScalarType<T[P], AggregateNotificacion[P]>
-}
+export type GetNotificacionAggregateType<T extends NotificacionAggregateArgs> =
+  {
+    [P in keyof T & keyof AggregateNotificacion]: P extends "_count" | "count"
+      ? T[P] extends true
+        ? number
+        : Prisma.GetScalarType<T[P], AggregateNotificacion[P]>
+      : Prisma.GetScalarType<T[P], AggregateNotificacion[P]>;
+  };
 
 export type notificacionGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   orderBy?:
     | Prisma.notificacionOrderByWithAggregationInput
-    | Prisma.notificacionOrderByWithAggregationInput[]
-  by: Prisma.NotificacionScalarFieldEnum[] | Prisma.NotificacionScalarFieldEnum
-  having?: Prisma.notificacionScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: NotificacionCountAggregateInputType | true
-  _avg?: NotificacionAvgAggregateInputType
-  _sum?: NotificacionSumAggregateInputType
-  _min?: NotificacionMinAggregateInputType
-  _max?: NotificacionMaxAggregateInputType
-}
+    | Prisma.notificacionOrderByWithAggregationInput[];
+  by: Prisma.NotificacionScalarFieldEnum[] | Prisma.NotificacionScalarFieldEnum;
+  having?: Prisma.notificacionScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: NotificacionCountAggregateInputType | true;
+  _avg?: NotificacionAvgAggregateInputType;
+  _sum?: NotificacionSumAggregateInputType;
+  _min?: NotificacionMinAggregateInputType;
+  _max?: NotificacionMaxAggregateInputType;
+};
 
 export type NotificacionGroupByOutputType = {
-  id: number
-  titulo: string
-  mensaje: string
-  leida: boolean | null
-  fecha_creacion: Date | null
-  fecha_lectura: Date | null
-  eliminada: boolean | null
-  archivada: boolean | null
-  usuario_id: number
-  _count: NotificacionCountAggregateOutputType | null
-  _avg: NotificacionAvgAggregateOutputType | null
-  _sum: NotificacionSumAggregateOutputType | null
-  _min: NotificacionMinAggregateOutputType | null
-  _max: NotificacionMaxAggregateOutputType | null
-}
+  id: number;
+  titulo: string;
+  mensaje: string;
+  leida: boolean | null;
+  fecha_creacion: Date | null;
+  fecha_lectura: Date | null;
+  eliminada: boolean | null;
+  archivada: boolean | null;
+  usuario_id: number;
+  _count: NotificacionCountAggregateOutputType | null;
+  _avg: NotificacionAvgAggregateOutputType | null;
+  _sum: NotificacionSumAggregateOutputType | null;
+  _min: NotificacionMinAggregateOutputType | null;
+  _max: NotificacionMaxAggregateOutputType | null;
+};
 
-export type GetNotificacionGroupByPayload<T extends notificacionGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<NotificacionGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof NotificacionGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], NotificacionGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], NotificacionGroupByOutputType[P]>
-    }
-  >
->
+export type GetNotificacionGroupByPayload<T extends notificacionGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<NotificacionGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof NotificacionGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], NotificacionGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], NotificacionGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type notificacionWhereInput = {
-  AND?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[]
-  OR?: Prisma.notificacionWhereInput[]
-  NOT?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[]
-  id?: Prisma.IntFilter<'notificacion'> | number
-  titulo?: Prisma.StringFilter<'notificacion'> | string
-  mensaje?: Prisma.StringFilter<'notificacion'> | string
-  leida?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  fecha_creacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  fecha_lectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  eliminada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  archivada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  usuario_id?: Prisma.IntFilter<'notificacion'> | number
-  usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-}
+  AND?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[];
+  OR?: Prisma.notificacionWhereInput[];
+  NOT?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[];
+  id?: Prisma.IntFilter<"notificacion"> | number;
+  titulo?: Prisma.StringFilter<"notificacion"> | string;
+  mensaje?: Prisma.StringFilter<"notificacion"> | string;
+  leida?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+  fecha_creacion?:
+    | Prisma.DateTimeNullableFilter<"notificacion">
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.DateTimeNullableFilter<"notificacion">
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+  archivada?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+  usuario_id?: Prisma.IntFilter<"notificacion"> | number;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  >;
+};
 
 export type notificacionOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrderInput | Prisma.SortOrder
-  eliminada?: Prisma.SortOrderInput | Prisma.SortOrder
-  archivada?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  leida?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_lectura?: Prisma.SortOrderInput | Prisma.SortOrder;
+  eliminada?: Prisma.SortOrderInput | Prisma.SortOrder;
+  archivada?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+};
 
 export type notificacionWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[]
-    OR?: Prisma.notificacionWhereInput[]
-    NOT?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[]
-    titulo?: Prisma.StringFilter<'notificacion'> | string
-    mensaje?: Prisma.StringFilter<'notificacion'> | string
-    leida?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-    fecha_creacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-    fecha_lectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-    eliminada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-    archivada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-    usuario_id?: Prisma.IntFilter<'notificacion'> | number
-    usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
+    id?: number;
+    AND?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[];
+    OR?: Prisma.notificacionWhereInput[];
+    NOT?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[];
+    titulo?: Prisma.StringFilter<"notificacion"> | string;
+    mensaje?: Prisma.StringFilter<"notificacion"> | string;
+    leida?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+    fecha_creacion?:
+      | Prisma.DateTimeNullableFilter<"notificacion">
+      | Date
+      | string
+      | null;
+    fecha_lectura?:
+      | Prisma.DateTimeNullableFilter<"notificacion">
+      | Date
+      | string
+      | null;
+    eliminada?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+    archivada?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+    usuario_id?: Prisma.IntFilter<"notificacion"> | number;
+    usuario?: Prisma.XOR<
+      Prisma.UsuarioScalarRelationFilter,
+      Prisma.usuarioWhereInput
+    >;
   },
-  'id'
->
+  "id"
+>;
 
 export type notificacionOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrderInput | Prisma.SortOrder
-  eliminada?: Prisma.SortOrderInput | Prisma.SortOrder
-  archivada?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  _count?: Prisma.notificacionCountOrderByAggregateInput
-  _avg?: Prisma.notificacionAvgOrderByAggregateInput
-  _max?: Prisma.notificacionMaxOrderByAggregateInput
-  _min?: Prisma.notificacionMinOrderByAggregateInput
-  _sum?: Prisma.notificacionSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  leida?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_lectura?: Prisma.SortOrderInput | Prisma.SortOrder;
+  eliminada?: Prisma.SortOrderInput | Prisma.SortOrder;
+  archivada?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  _count?: Prisma.notificacionCountOrderByAggregateInput;
+  _avg?: Prisma.notificacionAvgOrderByAggregateInput;
+  _max?: Prisma.notificacionMaxOrderByAggregateInput;
+  _min?: Prisma.notificacionMinOrderByAggregateInput;
+  _sum?: Prisma.notificacionSumOrderByAggregateInput;
+};
 
 export type notificacionScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.notificacionScalarWhereWithAggregatesInput
-    | Prisma.notificacionScalarWhereWithAggregatesInput[]
-  OR?: Prisma.notificacionScalarWhereWithAggregatesInput[]
+    | Prisma.notificacionScalarWhereWithAggregatesInput[];
+  OR?: Prisma.notificacionScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.notificacionScalarWhereWithAggregatesInput
-    | Prisma.notificacionScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'notificacion'> | number
-  titulo?: Prisma.StringWithAggregatesFilter<'notificacion'> | string
-  mensaje?: Prisma.StringWithAggregatesFilter<'notificacion'> | string
-  leida?: Prisma.BoolNullableWithAggregatesFilter<'notificacion'> | boolean | null
+    | Prisma.notificacionScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"notificacion"> | number;
+  titulo?: Prisma.StringWithAggregatesFilter<"notificacion"> | string;
+  mensaje?: Prisma.StringWithAggregatesFilter<"notificacion"> | string;
+  leida?:
+    | Prisma.BoolNullableWithAggregatesFilter<"notificacion">
+    | boolean
+    | null;
   fecha_creacion?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'notificacion'>
+    | Prisma.DateTimeNullableWithAggregatesFilter<"notificacion">
     | Date
     | string
-    | null
-  fecha_lectura?: Prisma.DateTimeNullableWithAggregatesFilter<'notificacion'> | Date | string | null
-  eliminada?: Prisma.BoolNullableWithAggregatesFilter<'notificacion'> | boolean | null
-  archivada?: Prisma.BoolNullableWithAggregatesFilter<'notificacion'> | boolean | null
-  usuario_id?: Prisma.IntWithAggregatesFilter<'notificacion'> | number
-}
+    | null;
+  fecha_lectura?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"notificacion">
+    | Date
+    | string
+    | null;
+  eliminada?:
+    | Prisma.BoolNullableWithAggregatesFilter<"notificacion">
+    | boolean
+    | null;
+  archivada?:
+    | Prisma.BoolNullableWithAggregatesFilter<"notificacion">
+    | boolean
+    | null;
+  usuario_id?: Prisma.IntWithAggregatesFilter<"notificacion"> | number;
+};
 
 export type notificacionCreateInput = {
-  titulo: string
-  mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutNotificacionInput
-}
+  titulo: string;
+  mensaje: string;
+  leida?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  fecha_lectura?: Date | string | null;
+  eliminada?: boolean | null;
+  archivada?: boolean | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutNotificacionInput;
+};
 
 export type notificacionUncheckedCreateInput = {
-  id?: number
-  titulo: string
-  mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-  usuario_id: number
-}
+  id?: number;
+  titulo: string;
+  mensaje: string;
+  leida?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  fecha_lectura?: Date | string | null;
+  eliminada?: boolean | null;
+  archivada?: boolean | null;
+  usuario_id: number;
+};
 
 export type notificacionUpdateInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutNotificacionNestedInput
-}
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutNotificacionNestedInput;
+};
 
 export type notificacionUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type notificacionCreateManyInput = {
-  id?: number
-  titulo: string
-  mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-  usuario_id: number
-}
+  id?: number;
+  titulo: string;
+  mensaje: string;
+  leida?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  fecha_lectura?: Date | string | null;
+  eliminada?: boolean | null;
+  archivada?: boolean | null;
+  usuario_id: number;
+};
 
 export type notificacionUpdateManyMutationInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type notificacionUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type notificacionCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrder
-  eliminada?: Prisma.SortOrder
-  archivada?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  leida?: Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrder;
+  fecha_lectura?: Prisma.SortOrder;
+  eliminada?: Prisma.SortOrder;
+  archivada?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type notificacionAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type notificacionMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrder
-  eliminada?: Prisma.SortOrder
-  archivada?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  leida?: Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrder;
+  fecha_lectura?: Prisma.SortOrder;
+  eliminada?: Prisma.SortOrder;
+  archivada?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type notificacionMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrder
-  eliminada?: Prisma.SortOrder
-  archivada?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  titulo?: Prisma.SortOrder;
+  mensaje?: Prisma.SortOrder;
+  leida?: Prisma.SortOrder;
+  fecha_creacion?: Prisma.SortOrder;
+  fecha_lectura?: Prisma.SortOrder;
+  eliminada?: Prisma.SortOrder;
+  archivada?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type notificacionSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type NotificacionListRelationFilter = {
-  every?: Prisma.notificacionWhereInput
-  some?: Prisma.notificacionWhereInput
-  none?: Prisma.notificacionWhereInput
-}
+  every?: Prisma.notificacionWhereInput;
+  some?: Prisma.notificacionWhereInput;
+  none?: Prisma.notificacionWhereInput;
+};
 
 export type notificacionOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type notificacionCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -470,13 +542,15 @@ export type notificacionCreateNestedManyWithoutUsuarioInput = {
         Prisma.notificacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.notificacionCreateWithoutUsuarioInput[]
-    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.notificacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope
-  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-}
+    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+};
 
 export type notificacionUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -485,13 +559,15 @@ export type notificacionUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.notificacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.notificacionCreateWithoutUsuarioInput[]
-    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.notificacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope
-  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-}
+    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+};
 
 export type notificacionUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -500,26 +576,36 @@ export type notificacionUpdateManyWithoutUsuarioNestedInput = {
         Prisma.notificacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.notificacionCreateWithoutUsuarioInput[]
-    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.notificacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.notificacionUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.notificacionUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope
-  set?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-  disconnect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-  delete?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+    | Prisma.notificacionUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+  delete?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+  connect?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
   update?:
     | Prisma.notificacionUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.notificacionUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.notificacionUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.notificacionUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.notificacionUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
-}
+    | Prisma.notificacionUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.notificacionScalarWhereInput
+    | Prisma.notificacionScalarWhereInput[];
+};
 
 export type notificacionUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -528,284 +614,346 @@ export type notificacionUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.notificacionUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.notificacionCreateWithoutUsuarioInput[]
-    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.notificacionUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.notificacionCreateOrConnectWithoutUsuarioInput
-    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.notificacionCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.notificacionUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.notificacionUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope
-  set?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-  disconnect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-  delete?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
-  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+    | Prisma.notificacionUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.notificacionCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+  delete?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
+  connect?:
+    | Prisma.notificacionWhereUniqueInput
+    | Prisma.notificacionWhereUniqueInput[];
   update?:
     | Prisma.notificacionUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.notificacionUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.notificacionUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.notificacionUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.notificacionUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
-}
+    | Prisma.notificacionUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.notificacionScalarWhereInput
+    | Prisma.notificacionScalarWhereInput[];
+};
 
 export type notificacionCreateWithoutUsuarioInput = {
-  titulo: string
-  mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-}
+  titulo: string;
+  mensaje: string;
+  leida?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  fecha_lectura?: Date | string | null;
+  eliminada?: boolean | null;
+  archivada?: boolean | null;
+};
 
 export type notificacionUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  titulo: string
-  mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-}
+  id?: number;
+  titulo: string;
+  mensaje: string;
+  leida?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  fecha_lectura?: Date | string | null;
+  eliminada?: boolean | null;
+  archivada?: boolean | null;
+};
 
 export type notificacionCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.notificacionWhereUniqueInput
+  where: Prisma.notificacionWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.notificacionCreateWithoutUsuarioInput,
     Prisma.notificacionUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type notificacionCreateManyUsuarioInputEnvelope = {
-  data: Prisma.notificacionCreateManyUsuarioInput | Prisma.notificacionCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.notificacionCreateManyUsuarioInput
+    | Prisma.notificacionCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type notificacionUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.notificacionWhereUniqueInput
+  where: Prisma.notificacionWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.notificacionUpdateWithoutUsuarioInput,
     Prisma.notificacionUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.notificacionCreateWithoutUsuarioInput,
     Prisma.notificacionUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type notificacionUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.notificacionWhereUniqueInput
+  where: Prisma.notificacionWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.notificacionUpdateWithoutUsuarioInput,
     Prisma.notificacionUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type notificacionUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.notificacionScalarWhereInput
+  where: Prisma.notificacionScalarWhereInput;
   data: Prisma.XOR<
     Prisma.notificacionUpdateManyMutationInput,
     Prisma.notificacionUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type notificacionScalarWhereInput = {
-  AND?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
-  OR?: Prisma.notificacionScalarWhereInput[]
-  NOT?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
-  id?: Prisma.IntFilter<'notificacion'> | number
-  titulo?: Prisma.StringFilter<'notificacion'> | string
-  mensaje?: Prisma.StringFilter<'notificacion'> | string
-  leida?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  fecha_creacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  fecha_lectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  eliminada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  archivada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  usuario_id?: Prisma.IntFilter<'notificacion'> | number
-}
+  AND?:
+    | Prisma.notificacionScalarWhereInput
+    | Prisma.notificacionScalarWhereInput[];
+  OR?: Prisma.notificacionScalarWhereInput[];
+  NOT?:
+    | Prisma.notificacionScalarWhereInput
+    | Prisma.notificacionScalarWhereInput[];
+  id?: Prisma.IntFilter<"notificacion"> | number;
+  titulo?: Prisma.StringFilter<"notificacion"> | string;
+  mensaje?: Prisma.StringFilter<"notificacion"> | string;
+  leida?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+  fecha_creacion?:
+    | Prisma.DateTimeNullableFilter<"notificacion">
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.DateTimeNullableFilter<"notificacion">
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+  archivada?: Prisma.BoolNullableFilter<"notificacion"> | boolean | null;
+  usuario_id?: Prisma.IntFilter<"notificacion"> | number;
+};
 
 export type notificacionCreateManyUsuarioInput = {
-  id?: number
-  titulo: string
-  mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-}
+  id?: number;
+  titulo: string;
+  mensaje: string;
+  leida?: boolean | null;
+  fecha_creacion?: Date | string | null;
+  fecha_lectura?: Date | string | null;
+  eliminada?: boolean | null;
+  archivada?: boolean | null;
+};
 
 export type notificacionUpdateWithoutUsuarioInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type notificacionUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type notificacionUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string
-  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string;
+  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  fecha_creacion?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  fecha_lectura?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+};
 
 export type notificacionSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    mensaje?: boolean
-    leida?: boolean
-    fecha_creacion?: boolean
-    fecha_lectura?: boolean
-    eliminada?: boolean
-    archivada?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    mensaje?: boolean;
+    leida?: boolean;
+    fecha_creacion?: boolean;
+    fecha_lectura?: boolean;
+    eliminada?: boolean;
+    archivada?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['notificacion']
->
+  ExtArgs["result"]["notificacion"]
+>;
 
 export type notificacionSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    mensaje?: boolean
-    leida?: boolean
-    fecha_creacion?: boolean
-    fecha_lectura?: boolean
-    eliminada?: boolean
-    archivada?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    mensaje?: boolean;
+    leida?: boolean;
+    fecha_creacion?: boolean;
+    fecha_lectura?: boolean;
+    eliminada?: boolean;
+    archivada?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['notificacion']
->
+  ExtArgs["result"]["notificacion"]
+>;
 
 export type notificacionSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    titulo?: boolean
-    mensaje?: boolean
-    leida?: boolean
-    fecha_creacion?: boolean
-    fecha_lectura?: boolean
-    eliminada?: boolean
-    archivada?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    titulo?: boolean;
+    mensaje?: boolean;
+    leida?: boolean;
+    fecha_creacion?: boolean;
+    fecha_lectura?: boolean;
+    eliminada?: boolean;
+    archivada?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['notificacion']
->
+  ExtArgs["result"]["notificacion"]
+>;
 
 export type notificacionSelectScalar = {
-  id?: boolean
-  titulo?: boolean
-  mensaje?: boolean
-  leida?: boolean
-  fecha_creacion?: boolean
-  fecha_lectura?: boolean
-  eliminada?: boolean
-  archivada?: boolean
-  usuario_id?: boolean
-}
+  id?: boolean;
+  titulo?: boolean;
+  mensaje?: boolean;
+  leida?: boolean;
+  fecha_creacion?: boolean;
+  fecha_lectura?: boolean;
+  eliminada?: boolean;
+  archivada?: boolean;
+  usuario_id?: boolean;
+};
 
 export type notificacionOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'titulo'
-  | 'mensaje'
-  | 'leida'
-  | 'fecha_creacion'
-  | 'fecha_lectura'
-  | 'eliminada'
-  | 'archivada'
-  | 'usuario_id',
-  ExtArgs['result']['notificacion']
->
+  | "id"
+  | "titulo"
+  | "mensaje"
+  | "leida"
+  | "fecha_creacion"
+  | "fecha_lectura"
+  | "eliminada"
+  | "archivada"
+  | "usuario_id",
+  ExtArgs["result"]["notificacion"]
+>;
 export type notificacionInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type notificacionIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type notificacionIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 
 export type $notificacionPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'notificacion'
+  name: "notificacion";
   objects: {
-    usuario: Prisma.$usuarioPayload<ExtArgs>
-  }
+    usuario: Prisma.$usuarioPayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      titulo: string
-      mensaje: string
-      leida: boolean | null
-      fecha_creacion: Date | null
-      fecha_lectura: Date | null
-      eliminada: boolean | null
-      archivada: boolean | null
-      usuario_id: number
+      id: number;
+      titulo: string;
+      mensaje: string;
+      leida: boolean | null;
+      fecha_creacion: Date | null;
+      fecha_lectura: Date | null;
+      eliminada: boolean | null;
+      archivada: boolean | null;
+      usuario_id: number;
     },
-    ExtArgs['result']['notificacion']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["notificacion"]
+  >;
+  composites: {};
+};
 
-export type notificacionGetPayload<S extends boolean | null | undefined | notificacionDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$notificacionPayload, S>
+export type notificacionGetPayload<
+  S extends boolean | null | undefined | notificacionDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$notificacionPayload, S>;
 
 export type notificacionCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<notificacionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: NotificacionCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  notificacionFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: NotificacionCountAggregateInputType | true;
+};
 
 export interface notificacionDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['notificacion']
-    meta: { name: 'notificacion' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["notificacion"];
+    meta: { name: "notificacion" };
+  };
   /**
    * Find zero or one Notificacion that matches the filter.
    * @param {notificacionFindUniqueArgs} args - Arguments to find a Notificacion
@@ -818,18 +966,18 @@ export interface notificacionDelegate<
    * })
    */
   findUnique<T extends notificacionFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, notificacionFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Notificacion that matches the filter or throw an error with `error.code='P2025'`
@@ -844,18 +992,18 @@ export interface notificacionDelegate<
    * })
    */
   findUniqueOrThrow<T extends notificacionFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, notificacionFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Notificacion that matches the filter.
@@ -871,18 +1019,18 @@ export interface notificacionDelegate<
    * })
    */
   findFirst<T extends notificacionFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, notificacionFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, notificacionFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Notificacion that matches the filter or
@@ -899,18 +1047,18 @@ export interface notificacionDelegate<
    * })
    */
   findFirstOrThrow<T extends notificacionFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, notificacionFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, notificacionFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Notificacions that matches the filter.
@@ -929,15 +1077,15 @@ export interface notificacionDelegate<
    *
    */
   findMany<T extends notificacionFindManyArgs>(
-    args?: Prisma.SelectSubset<T, notificacionFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, notificacionFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Notificacion.
@@ -952,18 +1100,18 @@ export interface notificacionDelegate<
    *
    */
   create<T extends notificacionCreateArgs>(
-    args: Prisma.SelectSubset<T, notificacionCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Notificacions.
@@ -978,8 +1126,8 @@ export interface notificacionDelegate<
    *
    */
   createMany<T extends notificacionCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, notificacionCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, notificacionCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Notificacions and returns the data saved in the database.
@@ -1004,15 +1152,15 @@ export interface notificacionDelegate<
    *
    */
   createManyAndReturn<T extends notificacionCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, notificacionCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, notificacionCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Notificacion.
@@ -1027,18 +1175,18 @@ export interface notificacionDelegate<
    *
    */
   delete<T extends notificacionDeleteArgs>(
-    args: Prisma.SelectSubset<T, notificacionDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Notificacion.
@@ -1056,18 +1204,18 @@ export interface notificacionDelegate<
    *
    */
   update<T extends notificacionUpdateArgs>(
-    args: Prisma.SelectSubset<T, notificacionUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Notificacions.
@@ -1082,8 +1230,8 @@ export interface notificacionDelegate<
    *
    */
   deleteMany<T extends notificacionDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, notificacionDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, notificacionDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Notificacions.
@@ -1103,8 +1251,8 @@ export interface notificacionDelegate<
    *
    */
   updateMany<T extends notificacionUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, notificacionUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, notificacionUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Notificacions and returns the data updated in the database.
@@ -1135,15 +1283,15 @@ export interface notificacionDelegate<
    *
    */
   updateManyAndReturn<T extends notificacionUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, notificacionUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Notificacion.
@@ -1163,18 +1311,18 @@ export interface notificacionDelegate<
    * })
    */
   upsert<T extends notificacionUpsertArgs>(
-    args: Prisma.SelectSubset<T, notificacionUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, notificacionUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__notificacionClient<
     runtime.Types.Result.GetResult<
       Prisma.$notificacionPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Notificacions.
@@ -1190,14 +1338,17 @@ export interface notificacionDelegate<
    * })
    **/
   count<T extends notificacionCountArgs>(
-    args?: Prisma.Subset<T, notificacionCountArgs>
+    args?: Prisma.Subset<T, notificacionCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], NotificacionCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            NotificacionCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Notificacion.
@@ -1224,8 +1375,8 @@ export interface notificacionDelegate<
    * })
    **/
   aggregate<T extends NotificacionAggregateArgs>(
-    args: Prisma.Subset<T, NotificacionAggregateArgs>
-  ): Prisma.PrismaPromise<GetNotificacionAggregateType<T>>
+    args: Prisma.Subset<T, NotificacionAggregateArgs>,
+  ): Prisma.PrismaPromise<GetNotificacionAggregateType<T>>;
 
   /**
    * Group by Notificacion.
@@ -1248,20 +1399,20 @@ export interface notificacionDelegate<
   groupBy<
     T extends notificacionGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: notificacionGroupByArgs['orderBy'] }
-      : { orderBy?: notificacionGroupByArgs['orderBy'] },
+      ? { orderBy: notificacionGroupByArgs["orderBy"] }
+      : { orderBy?: notificacionGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1270,26 +1421,31 @@ export interface notificacionDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1297,15 +1453,18 @@ export interface notificacionDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, notificacionGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetNotificacionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, notificacionGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetNotificacionGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the notificacion model
    */
-  readonly fields: notificacionFieldRefs
+  readonly fields: notificacionFieldRefs;
 }
 
 /**
@@ -1317,24 +1476,25 @@ export interface notificacionDelegate<
 export interface Prisma__notificacionClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     | runtime.Types.Result.GetResult<
         Prisma.$usuarioPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1342,39 +1502,50 @@ export interface Prisma__notificacionClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the notificacion model
  */
 export interface notificacionFieldRefs {
-  readonly id: Prisma.FieldRef<'notificacion', 'Int'>
-  readonly titulo: Prisma.FieldRef<'notificacion', 'String'>
-  readonly mensaje: Prisma.FieldRef<'notificacion', 'String'>
-  readonly leida: Prisma.FieldRef<'notificacion', 'Boolean'>
-  readonly fecha_creacion: Prisma.FieldRef<'notificacion', 'DateTime'>
-  readonly fecha_lectura: Prisma.FieldRef<'notificacion', 'DateTime'>
-  readonly eliminada: Prisma.FieldRef<'notificacion', 'Boolean'>
-  readonly archivada: Prisma.FieldRef<'notificacion', 'Boolean'>
-  readonly usuario_id: Prisma.FieldRef<'notificacion', 'Int'>
+  readonly id: Prisma.FieldRef<"notificacion", "Int">;
+  readonly titulo: Prisma.FieldRef<"notificacion", "String">;
+  readonly mensaje: Prisma.FieldRef<"notificacion", "String">;
+  readonly leida: Prisma.FieldRef<"notificacion", "Boolean">;
+  readonly fecha_creacion: Prisma.FieldRef<"notificacion", "DateTime">;
+  readonly fecha_lectura: Prisma.FieldRef<"notificacion", "DateTime">;
+  readonly eliminada: Prisma.FieldRef<"notificacion", "Boolean">;
+  readonly archivada: Prisma.FieldRef<"notificacion", "Boolean">;
+  readonly usuario_id: Prisma.FieldRef<"notificacion", "Int">;
 }
 
 // Custom InputTypes
@@ -1382,72 +1553,75 @@ export interface notificacionFieldRefs {
  * notificacion findUnique
  */
 export type notificacionFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * Filter, which notificacion to fetch.
    */
-  where: Prisma.notificacionWhereUniqueInput
-}
+  where: Prisma.notificacionWhereUniqueInput;
+};
 
 /**
  * notificacion findUniqueOrThrow
  */
 export type notificacionFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * Filter, which notificacion to fetch.
    */
-  where: Prisma.notificacionWhereUniqueInput
-}
+  where: Prisma.notificacionWhereUniqueInput;
+};
 
 /**
  * notificacion findFirst
  */
 export type notificacionFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * Filter, which notificacion to fetch.
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1455,55 +1629,58 @@ export type notificacionFindFirstArgs<
    */
   orderBy?:
     | Prisma.notificacionOrderByWithRelationInput
-    | Prisma.notificacionOrderByWithRelationInput[]
+    | Prisma.notificacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for notificacions.
    */
-  cursor?: Prisma.notificacionWhereUniqueInput
+  cursor?: Prisma.notificacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` notificacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` notificacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of notificacions.
    */
-  distinct?: Prisma.NotificacionScalarFieldEnum | Prisma.NotificacionScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.NotificacionScalarFieldEnum
+    | Prisma.NotificacionScalarFieldEnum[];
+};
 
 /**
  * notificacion findFirstOrThrow
  */
 export type notificacionFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * Filter, which notificacion to fetch.
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1511,55 +1688,58 @@ export type notificacionFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.notificacionOrderByWithRelationInput
-    | Prisma.notificacionOrderByWithRelationInput[]
+    | Prisma.notificacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for notificacions.
    */
-  cursor?: Prisma.notificacionWhereUniqueInput
+  cursor?: Prisma.notificacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` notificacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` notificacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of notificacions.
    */
-  distinct?: Prisma.NotificacionScalarFieldEnum | Prisma.NotificacionScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.NotificacionScalarFieldEnum
+    | Prisma.NotificacionScalarFieldEnum[];
+};
 
 /**
  * notificacion findMany
  */
 export type notificacionFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * Filter, which notificacions to fetch.
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1567,128 +1747,145 @@ export type notificacionFindManyArgs<
    */
   orderBy?:
     | Prisma.notificacionOrderByWithRelationInput
-    | Prisma.notificacionOrderByWithRelationInput[]
+    | Prisma.notificacionOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing notificacions.
    */
-  cursor?: Prisma.notificacionWhereUniqueInput
+  cursor?: Prisma.notificacionWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` notificacions from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` notificacions.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of notificacions.
    */
-  distinct?: Prisma.NotificacionScalarFieldEnum | Prisma.NotificacionScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.NotificacionScalarFieldEnum
+    | Prisma.NotificacionScalarFieldEnum[];
+};
 
 /**
  * notificacion create
  */
 export type notificacionCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * The data needed to create a notificacion.
    */
-  data: Prisma.XOR<Prisma.notificacionCreateInput, Prisma.notificacionUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.notificacionCreateInput,
+    Prisma.notificacionUncheckedCreateInput
+  >;
+};
 
 /**
  * notificacion createMany
  */
 export type notificacionCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many notificacions.
    */
-  data: Prisma.notificacionCreateManyInput | Prisma.notificacionCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.notificacionCreateManyInput
+    | Prisma.notificacionCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * notificacion createManyAndReturn
  */
 export type notificacionCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.notificacionSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * The data used to create many notificacions.
    */
-  data: Prisma.notificacionCreateManyInput | Prisma.notificacionCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.notificacionCreateManyInput
+    | Prisma.notificacionCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.notificacionIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * notificacion update
  */
 export type notificacionUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * The data needed to update a notificacion.
    */
-  data: Prisma.XOR<Prisma.notificacionUpdateInput, Prisma.notificacionUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.notificacionUpdateInput,
+    Prisma.notificacionUncheckedUpdateInput
+  >;
   /**
    * Choose, which notificacion to update.
    */
-  where: Prisma.notificacionWhereUniqueInput
-}
+  where: Prisma.notificacionWhereUniqueInput;
+};
 
 /**
  * notificacion updateMany
  */
 export type notificacionUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update notificacions.
@@ -1696,140 +1893,151 @@ export type notificacionUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.notificacionUpdateManyMutationInput,
     Prisma.notificacionUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which notificacions to update
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * Limit how many notificacions to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * notificacion updateManyAndReturn
  */
 export type notificacionUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.notificacionSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * The data used to update notificacions.
    */
   data: Prisma.XOR<
     Prisma.notificacionUpdateManyMutationInput,
     Prisma.notificacionUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which notificacions to update
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * Limit how many notificacions to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.notificacionIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * notificacion upsert
  */
 export type notificacionUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * The filter to search for the notificacion to update in case it exists.
    */
-  where: Prisma.notificacionWhereUniqueInput
+  where: Prisma.notificacionWhereUniqueInput;
   /**
    * In case the notificacion found by the `where` argument doesn't exist, create a new notificacion with this data.
    */
-  create: Prisma.XOR<Prisma.notificacionCreateInput, Prisma.notificacionUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.notificacionCreateInput,
+    Prisma.notificacionUncheckedCreateInput
+  >;
   /**
    * In case the notificacion was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.notificacionUpdateInput, Prisma.notificacionUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.notificacionUpdateInput,
+    Prisma.notificacionUncheckedUpdateInput
+  >;
+};
 
 /**
  * notificacion delete
  */
 export type notificacionDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
   /**
    * Filter which notificacion to delete.
    */
-  where: Prisma.notificacionWhereUniqueInput
-}
+  where: Prisma.notificacionWhereUniqueInput;
+};
 
 /**
  * notificacion deleteMany
  */
 export type notificacionDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which notificacions to delete
    */
-  where?: Prisma.notificacionWhereInput
+  where?: Prisma.notificacionWhereInput;
   /**
    * Limit how many notificacions to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * notificacion without action
  */
 export type notificacionDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the notificacion
    */
-  select?: Prisma.notificacionSelect<ExtArgs> | null
+  select?: Prisma.notificacionSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the notificacion
    */
-  omit?: Prisma.notificacionOmit<ExtArgs> | null
+  omit?: Prisma.notificacionOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.notificacionInclude<ExtArgs> | null
-}
+  include?: Prisma.notificacionInclude<ExtArgs> | null;
+};

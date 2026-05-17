@@ -1,7 +1,10 @@
 // correoverificacion.controller.ts
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
-import { enviarCodigoCambioEmail, enviarAvisoCambioPassword } from "../../lib/email.service.js";
+import {
+  enviarCodigoCambioEmail,
+  enviarAvisoCambioPassword,
+} from "../../lib/email.service.js";
 import { notificarCambioPassword } from "../whatsapp/whatsapp.notifications.js";
 import { invalidateOtherUserSessions } from "../auth/auth.repository.js";
 
@@ -64,7 +67,7 @@ const obtenerBloqueoPorCambiosFrecuentes = async (usuarioId: number) => {
 
   const bloqueoHasta = new Date(
     cambioMasReciente.getTime() +
-      MINUTOS_BLOQUEO_CAMBIOS_FRECUENTES * 60 * 1000
+      MINUTOS_BLOQUEO_CAMBIOS_FRECUENTES * 60 * 1000,
   );
 
   if (Date.now() >= bloqueoHasta.getTime()) {
@@ -155,8 +158,7 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
     }
 
     if (
-      usuario.intentos_fallidos_cambio_password >=
-      MAX_INTENTOS_CAMBIO_PASSWORD
+      usuario.intentos_fallidos_cambio_password >= MAX_INTENTOS_CAMBIO_PASSWORD
     ) {
       return res.status(423).json({
         ok: false,
@@ -172,12 +174,12 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
     if (passwordIncorrecta) {
       const nuevosIntentos = Math.min(
         usuario.intentos_fallidos_cambio_password + 1,
-        MAX_INTENTOS_CAMBIO_PASSWORD
+        MAX_INTENTOS_CAMBIO_PASSWORD,
       );
 
       if (nuevosIntentos >= MAX_INTENTOS_CAMBIO_PASSWORD) {
         const bloqueoHasta = new Date(
-          Date.now() + MINUTOS_BLOQUEO_CAMBIO_PASSWORD * 60 * 1000
+          Date.now() + MINUTOS_BLOQUEO_CAMBIO_PASSWORD * 60 * 1000,
         );
 
         await prisma.usuario.update({
@@ -229,7 +231,7 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
     });
 
     const esPasswordReciente = historialReciente.some(
-      (h) => h.passwordHash === nuevaPasswordNormalizada
+      (h) => h.passwordHash === nuevaPasswordNormalizada,
     );
 
     if (esPasswordReciente) {
@@ -239,8 +241,9 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    const bloqueoPorCambiosFrecuentes = await obtenerBloqueoPorCambiosFrecuentes(usuarioId);
+    const bloqueoPorCambiosFrecuentes =
       await obtenerBloqueoPorCambiosFrecuentes(usuarioId);
+    await obtenerBloqueoPorCambiosFrecuentes(usuarioId);
 
     if (bloqueoPorCambiosFrecuentes) {
       return res.status(429).json({
@@ -252,49 +255,51 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
     }
 
     const cambioRealizado = await prisma.$transaction(async (tx) => {
-    const resultadoActualizacion = await tx.usuario.updateMany({
-      where: {
-        id: usuarioId,
-        password: passwordActualNormalizada,
-      },
-      data: {
-        password: nuevaPasswordNormalizada,
-        intentos_fallidos_cambio_password: 0,
-        bloqueo_cambio_password_hasta: null,
-        password_actualizado_en: new Date(),
-      },
+      const resultadoActualizacion = await tx.usuario.updateMany({
+        where: {
+          id: usuarioId,
+          password: passwordActualNormalizada,
+        },
+        data: {
+          password: nuevaPasswordNormalizada,
+          intentos_fallidos_cambio_password: 0,
+          bloqueo_cambio_password_hasta: null,
+          password_actualizado_en: new Date(),
+        },
+      });
+
+      if (resultadoActualizacion.count !== 1) {
+        return false;
+      }
+
+      await tx.historial_password.create({
+        data: {
+          usuarioId,
+          passwordHash: passwordActualNormalizada,
+        },
+      });
+
+      return true;
     });
 
-    if (resultadoActualizacion.count !== 1) {
-      return false;
+    if (!cambioRealizado) {
+      return res.status(409).json({
+        ok: false,
+        msg: "La contraseña ya fue modificada en otra ventana. Actualiza la página e intenta nuevamente.",
+      });
     }
-
-    await tx.historial_password.create({
-      data: {
-        usuarioId,
-        passwordHash: passwordActualNormalizada,
-      },
-    });
-
-    return true;
-  });
-
-  if (!cambioRealizado) {
-    return res.status(409).json({
-      ok: false,
-      msg: "La contraseña ya fue modificada en otra ventana. Actualiza la página e intenta nuevamente.",
-    });
-  }
 
     await invalidateOtherUserSessions(usuarioId, currentToken);
 
     enviarAvisoCambioPassword({
       emailDestino: usuario.correo,
       nombreUsuario: usuario.nombre,
-    }).catch((err) => console.error("Error enviando email de aviso cambio password:", err));
+    }).catch((err) =>
+      console.error("Error enviando email de aviso cambio password:", err),
+    );
 
     notificarCambioPassword(usuarioId).catch((err) =>
-      console.error("Error enviando WhatsApp de aviso cambio password:", err)
+      console.error("Error enviando WhatsApp de aviso cambio password:", err),
     );
 
     return res.json({
@@ -366,8 +371,7 @@ export const verificarPassword = async (req: AuthRequest, res: Response) => {
     }
 
     if (
-      usuario.intentos_fallidos_cambio_password >=
-      MAX_INTENTOS_CAMBIO_PASSWORD
+      usuario.intentos_fallidos_cambio_password >= MAX_INTENTOS_CAMBIO_PASSWORD
     ) {
       return res.status(423).json({
         ok: false,
@@ -383,12 +387,12 @@ export const verificarPassword = async (req: AuthRequest, res: Response) => {
     if (!validPassword) {
       const nuevosIntentos = Math.min(
         usuario.intentos_fallidos_cambio_password + 1,
-        MAX_INTENTOS_CAMBIO_PASSWORD
+        MAX_INTENTOS_CAMBIO_PASSWORD,
       );
 
       if (nuevosIntentos >= MAX_INTENTOS_CAMBIO_PASSWORD) {
         const bloqueoHasta = new Date(
-          Date.now() + MINUTOS_BLOQUEO_CAMBIO_PASSWORD * 60 * 1000
+          Date.now() + MINUTOS_BLOQUEO_CAMBIO_PASSWORD * 60 * 1000,
         );
 
         await prisma.usuario.update({
@@ -488,7 +492,7 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
 
     if (!emailEnviado.success) {
       console.error(
-        `❌ Error al enviar email a ${emailNuevo}, pero el OTP fue guardado`
+        `❌ Error al enviar email a ${emailNuevo}, pero el OTP fue guardado`,
       );
     }
 

@@ -1,59 +1,73 @@
-'use client'
+"use client";
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from "react";
 
 interface Props {
   imagenes: Array<{
-    id: number
-    url: string
-    tipo: string
-    pesoMb: number | null
-  }>
-  titulo: string
-  esOferta?: boolean
-  porcentajeDescuento?: number
+    id: number;
+    url: string;
+    tipo: string;
+    pesoMb: number | null;
+  }>;
+  titulo: string;
+  esOferta?: boolean;
+  porcentajeDescuento?: number;
 }
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+).replace(/\/$/, "");
 
 function resolverUrlMultimedia(url: string) {
-  if (!url) return '/placeholder-house.jpg'
+  if (!url) return "/placeholder-house.jpg";
 
   // Si ya viene absoluta (Cloudinary, YouTube, etc.), la dejamos tal cual
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
   }
 
   // Si viene relativa desde backend, la apuntamos al backend
-  if (url.startsWith('/')) {
-    return `${API_URL}${url}`
+  if (url.startsWith("/")) {
+    return `${API_URL}${url}`;
   }
 
-  return `${API_URL}/${url}`
+  return `${API_URL}/${url}`;
 }
 
-export default function GaleriaPropiedad({ imagenes, titulo, esOferta, porcentajeDescuento }: Props) {
+export default function GaleriaPropiedad({
+  imagenes,
+  titulo,
+  esOferta,
+  porcentajeDescuento,
+}: Props) {
   const imagenesValidas = useMemo(
     () =>
       imagenes
-        .filter((img) => img.tipo === 'IMAGEN')
+        .filter((img) => img.tipo === "IMAGEN")
         .map((img) => ({
           ...img,
-          url: resolverUrlMultimedia(img.url)
+          url: resolverUrlMultimedia(img.url),
         })),
-    [imagenes]
-  )
+    [imagenes],
+  );
 
   const lista =
     imagenesValidas.length > 0
       ? imagenesValidas
-      : [{ id: 0, url: '/placeholder-house.jpg', tipo: 'IMAGEN', pesoMb: null }]
+      : [
+          {
+            id: 0,
+            url: "/placeholder-house.jpg",
+            tipo: "IMAGEN",
+            pesoMb: null,
+          },
+        ];
 
-  const [imagenPrincipal, setImagenPrincipal] = useState(lista[0].url)
+  const [imagenPrincipal, setImagenPrincipal] = useState(lista[0].url);
 
   useEffect(() => {
-    setImagenPrincipal(lista[0].url)
-  }, [lista])
+    setImagenPrincipal(lista[0].url);
+  }, [lista]);
 
   return (
     <section className="grid gap-3 lg:grid-cols-[1.65fr_1fr]">
@@ -73,7 +87,7 @@ export default function GaleriaPropiedad({ imagenes, titulo, esOferta, porcentaj
 
       <div className="grid grid-cols-2 gap-3">
         {lista.slice(0, 4).map((img, index) => {
-          const esUltima = index === 3 && lista.length >= 4
+          const esUltima = index === 3 && lista.length >= 4;
 
           return (
             <button
@@ -94,9 +108,9 @@ export default function GaleriaPropiedad({ imagenes, titulo, esOferta, porcentaj
                 </div>
               )}
             </button>
-          )
+          );
         })}
       </div>
     </section>
-  )
+  );
 }

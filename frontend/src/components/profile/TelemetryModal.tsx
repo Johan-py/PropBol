@@ -1,5 +1,5 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
 // 1. Agregamos onAccept a las propiedades esperadas
 interface TelemetryModalProps {
@@ -9,7 +9,11 @@ interface TelemetryModalProps {
 }
 
 // 2. Recibimos onAccept en los parámetros
-const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose, onAccept }) => {
+const TelemetryModal: React.FC<TelemetryModalProps> = ({
+  isOpen,
+  onClose,
+  onAccept,
+}) => {
   // Ya no necesitamos useRouter
   if (!isOpen) return null;
 
@@ -26,23 +30,36 @@ const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose, onAcce
         {/* Cuerpo - Piedra 600 */}
         <div className="text-[#78716c] text-sm space-y-4 mb-8 leading-relaxed">
           <p>
-            En <strong>PropBol</strong>, queremos que tu búsqueda sea lo más fluida posible. Para lograrlo, utilizamos herramientas de análisis que nos permiten entender mejor las tendencias del mercado inmobiliario.
+            En <strong>PropBol</strong>, queremos que tu búsqueda sea lo más
+            fluida posible. Para lograrlo, utilizamos herramientas de análisis
+            que nos permiten entender mejor las tendencias del mercado
+            inmobiliario.
           </p>
 
           {/* Caja informativa - Piedra 100 */}
           <ul className="space-y-3 bg-[#f5f5f4] p-5 rounded-lg border border-stone-200">
             <li className="flex gap-3">
               <span className="text-[#D97706] font-bold">•</span>
-              <span><strong>Mejora automática:</strong> Al iniciar sesión, detectamos de forma segura tu zona geográfica de conexión para optimizar los resultados en tu área.</span>
+              <span>
+                <strong>Mejora automática:</strong> Al iniciar sesión,
+                detectamos de forma segura tu zona geográfica de conexión para
+                optimizar los resultados en tu área.
+              </span>
             </li>
             <li className="flex gap-3">
               <span className="text-[#D97706] font-bold">•</span>
-              <span><strong>Personalización opcional:</strong> Puedes completar tu género y edad en tu perfil para que el sistema te sugiera propiedades más afines a ti.</span>
+              <span>
+                <strong>Personalización opcional:</strong> Puedes completar tu
+                género y edad en tu perfil para que el sistema te sugiera
+                propiedades más afines a ti.
+              </span>
             </li>
           </ul>
 
           <p className="text-[11px] italic text-stone-500 text-center">
-            * Recuerda que estos datos son completamente opcionales. Tu privacidad es nuestra prioridad y puedes dejar tu perfil vacío si así lo prefieres.
+            * Recuerda que estos datos son completamente opcionales. Tu
+            privacidad es nuestra prioridad y puedes dejar tu perfil vacío si
+            así lo prefieres.
           </p>
         </div>
 

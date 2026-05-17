@@ -443,7 +443,8 @@ export default function Navbar() {
 
       if (
         limiteResponse.ok &&
-        (limiteData.message === "LIMIT_REACHED" || Number(limiteData.restantes) <= 0)
+        (limiteData.message === "LIMIT_REACHED" ||
+          Number(limiteData.restantes) <= 0)
       ) {
         router.push("/Cobros-Limite");
         return;
@@ -644,12 +645,24 @@ export default function Navbar() {
                                       void markAsRead(notification.id);
                                     }
                                     toggleNotifications();
-                                    if (notification.tipo === "BLOG_APROBADO" && notification.blogId) {
-                                      router.push(`/blog/${notification.blogId}`);
-                                    } else if (notification.tipo === "BLOG_RECHAZADO" && notification.blogId) {
-                                      router.push(`/blog/${notification.blogId}/edit`);
+                                    if (
+                                      notification.tipo === "BLOG_APROBADO" &&
+                                      notification.blogId
+                                    ) {
+                                      router.push(
+                                        `/blog/${notification.blogId}`,
+                                      );
+                                    } else if (
+                                      notification.tipo === "BLOG_RECHAZADO" &&
+                                      notification.blogId
+                                    ) {
+                                      router.push(
+                                        `/blog/${notification.blogId}/edit`,
+                                      );
                                     } else {
-                                      router.push(`/notificaciones/${notification.id}`);
+                                      router.push(
+                                        `/notificaciones/${notification.id}`,
+                                      );
                                     }
                                   }}
                                   className={`cursor-pointer border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
@@ -670,7 +683,9 @@ export default function Navbar() {
                                         </p>
                                       </div>
 
-                                      <p className={`mt-1 line-clamp-2 text-sm ${notification.tipo === "BLOG_RECHAZADO" ? "text-red-600" : "text-stone-600"}`}>
+                                      <p
+                                        className={`mt-1 line-clamp-2 text-sm ${notification.tipo === "BLOG_RECHAZADO" ? "text-red-600" : "text-stone-600"}`}
+                                      >
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
@@ -832,8 +847,9 @@ export default function Navbar() {
                   retroceder desde "tour-notificaciones" al paso anterior. */}
               <button
                 id="tour-publicar-home-mobile"
-                onClick={() => {setIsMobileMenuOpen(false);
-                void handlePublicarInmueble();
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  void handlePublicarInmueble();
                 }}
                 className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >

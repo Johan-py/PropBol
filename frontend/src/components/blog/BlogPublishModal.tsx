@@ -20,8 +20,8 @@ export default function BlogPublishModal({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Overlay con desenfoque */}
-      <div 
-        className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity" 
+      <div
+        className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
@@ -45,7 +45,8 @@ export default function BlogPublishModal({
             Enviar para Publicación
           </h2>
           <p className="mb-10 text-base leading-relaxed text-stone-600">
-            Tu artículo será revisado por el administrador para su publicación y puedes revisar el estado en el apartado de blogs.
+            Tu artículo será revisado por el administrador para su publicación y
+            puedes revisar el estado en el apartado de blogs.
           </p>
 
           {/* Botones */}

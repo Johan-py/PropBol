@@ -7,487 +7,517 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model etiqueta
  *
  */
-export type etiquetaModel = runtime.Types.Result.DefaultSelection<Prisma.$etiquetaPayload>
+export type etiquetaModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$etiquetaPayload>;
 
 export type AggregateEtiqueta = {
-  _count: EtiquetaCountAggregateOutputType | null
-  _avg: EtiquetaAvgAggregateOutputType | null
-  _sum: EtiquetaSumAggregateOutputType | null
-  _min: EtiquetaMinAggregateOutputType | null
-  _max: EtiquetaMaxAggregateOutputType | null
-}
+  _count: EtiquetaCountAggregateOutputType | null;
+  _avg: EtiquetaAvgAggregateOutputType | null;
+  _sum: EtiquetaSumAggregateOutputType | null;
+  _min: EtiquetaMinAggregateOutputType | null;
+  _max: EtiquetaMaxAggregateOutputType | null;
+};
 
 export type EtiquetaAvgAggregateOutputType = {
-  id: number | null
-}
+  id: number | null;
+};
 
 export type EtiquetaSumAggregateOutputType = {
-  id: number | null
-}
+  id: number | null;
+};
 
 export type EtiquetaMinAggregateOutputType = {
-  id: number | null
-  nombre: string | null
-}
+  id: number | null;
+  nombre: string | null;
+};
 
 export type EtiquetaMaxAggregateOutputType = {
-  id: number | null
-  nombre: string | null
-}
+  id: number | null;
+  nombre: string | null;
+};
 
 export type EtiquetaCountAggregateOutputType = {
-  id: number
-  nombre: number
-  _all: number
-}
+  id: number;
+  nombre: number;
+  _all: number;
+};
 
 export type EtiquetaAvgAggregateInputType = {
-  id?: true
-}
+  id?: true;
+};
 
 export type EtiquetaSumAggregateInputType = {
-  id?: true
-}
+  id?: true;
+};
 
 export type EtiquetaMinAggregateInputType = {
-  id?: true
-  nombre?: true
-}
+  id?: true;
+  nombre?: true;
+};
 
 export type EtiquetaMaxAggregateInputType = {
-  id?: true
-  nombre?: true
-}
+  id?: true;
+  nombre?: true;
+};
 
 export type EtiquetaCountAggregateInputType = {
-  id?: true
-  nombre?: true
-  _all?: true
-}
+  id?: true;
+  nombre?: true;
+  _all?: true;
+};
 
 export type EtiquetaAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which etiqueta to aggregate.
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of etiquetas to fetch.
    */
-  orderBy?: Prisma.etiquetaOrderByWithRelationInput | Prisma.etiquetaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.etiquetaOrderByWithRelationInput
+    | Prisma.etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.etiquetaWhereUniqueInput
+  cursor?: Prisma.etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned etiquetas
    **/
-  _count?: true | EtiquetaCountAggregateInputType
+  _count?: true | EtiquetaCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: EtiquetaAvgAggregateInputType
+  _avg?: EtiquetaAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: EtiquetaSumAggregateInputType
+  _sum?: EtiquetaSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: EtiquetaMinAggregateInputType
+  _min?: EtiquetaMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: EtiquetaMaxAggregateInputType
-}
+  _max?: EtiquetaMaxAggregateInputType;
+};
 
 export type GetEtiquetaAggregateType<T extends EtiquetaAggregateArgs> = {
-  [P in keyof T & keyof AggregateEtiqueta]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateEtiqueta]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateEtiqueta[P]>
-    : Prisma.GetScalarType<T[P], AggregateEtiqueta[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateEtiqueta[P]>;
+};
 
 export type etiquetaGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   orderBy?:
     | Prisma.etiquetaOrderByWithAggregationInput
-    | Prisma.etiquetaOrderByWithAggregationInput[]
-  by: Prisma.EtiquetaScalarFieldEnum[] | Prisma.EtiquetaScalarFieldEnum
-  having?: Prisma.etiquetaScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: EtiquetaCountAggregateInputType | true
-  _avg?: EtiquetaAvgAggregateInputType
-  _sum?: EtiquetaSumAggregateInputType
-  _min?: EtiquetaMinAggregateInputType
-  _max?: EtiquetaMaxAggregateInputType
-}
+    | Prisma.etiquetaOrderByWithAggregationInput[];
+  by: Prisma.EtiquetaScalarFieldEnum[] | Prisma.EtiquetaScalarFieldEnum;
+  having?: Prisma.etiquetaScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: EtiquetaCountAggregateInputType | true;
+  _avg?: EtiquetaAvgAggregateInputType;
+  _sum?: EtiquetaSumAggregateInputType;
+  _min?: EtiquetaMinAggregateInputType;
+  _max?: EtiquetaMaxAggregateInputType;
+};
 
 export type EtiquetaGroupByOutputType = {
-  id: number
-  nombre: string
-  _count: EtiquetaCountAggregateOutputType | null
-  _avg: EtiquetaAvgAggregateOutputType | null
-  _sum: EtiquetaSumAggregateOutputType | null
-  _min: EtiquetaMinAggregateOutputType | null
-  _max: EtiquetaMaxAggregateOutputType | null
-}
+  id: number;
+  nombre: string;
+  _count: EtiquetaCountAggregateOutputType | null;
+  _avg: EtiquetaAvgAggregateOutputType | null;
+  _sum: EtiquetaSumAggregateOutputType | null;
+  _min: EtiquetaMinAggregateOutputType | null;
+  _max: EtiquetaMaxAggregateOutputType | null;
+};
 
-export type GetEtiquetaGroupByPayload<T extends etiquetaGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<EtiquetaGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof EtiquetaGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], EtiquetaGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], EtiquetaGroupByOutputType[P]>
-    }
-  >
->
+export type GetEtiquetaGroupByPayload<T extends etiquetaGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<EtiquetaGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof EtiquetaGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], EtiquetaGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], EtiquetaGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type etiquetaWhereInput = {
-  AND?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[]
-  OR?: Prisma.etiquetaWhereInput[]
-  NOT?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[]
-  id?: Prisma.IntFilter<'etiqueta'> | number
-  nombre?: Prisma.StringFilter<'etiqueta'> | string
-  inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter
-}
+  AND?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[];
+  OR?: Prisma.etiquetaWhereInput[];
+  NOT?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[];
+  id?: Prisma.IntFilter<"etiqueta"> | number;
+  nombre?: Prisma.StringFilter<"etiqueta"> | string;
+  inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter;
+};
 
 export type etiquetaOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaOrderByRelationAggregateInput
-}
+  id?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaOrderByRelationAggregateInput;
+};
 
 export type etiquetaWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    nombre?: string
-    AND?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[]
-    OR?: Prisma.etiquetaWhereInput[]
-    NOT?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[]
-    inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter
+    id?: number;
+    nombre?: string;
+    AND?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[];
+    OR?: Prisma.etiquetaWhereInput[];
+    NOT?: Prisma.etiquetaWhereInput | Prisma.etiquetaWhereInput[];
+    inmueble_etiqueta?: Prisma.Inmueble_etiquetaListRelationFilter;
   },
-  'id' | 'nombre'
->
+  "id" | "nombre"
+>;
 
 export type etiquetaOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  _count?: Prisma.etiquetaCountOrderByAggregateInput
-  _avg?: Prisma.etiquetaAvgOrderByAggregateInput
-  _max?: Prisma.etiquetaMaxOrderByAggregateInput
-  _min?: Prisma.etiquetaMinOrderByAggregateInput
-  _sum?: Prisma.etiquetaSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  _count?: Prisma.etiquetaCountOrderByAggregateInput;
+  _avg?: Prisma.etiquetaAvgOrderByAggregateInput;
+  _max?: Prisma.etiquetaMaxOrderByAggregateInput;
+  _min?: Prisma.etiquetaMinOrderByAggregateInput;
+  _sum?: Prisma.etiquetaSumOrderByAggregateInput;
+};
 
 export type etiquetaScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.etiquetaScalarWhereWithAggregatesInput
-    | Prisma.etiquetaScalarWhereWithAggregatesInput[]
-  OR?: Prisma.etiquetaScalarWhereWithAggregatesInput[]
+    | Prisma.etiquetaScalarWhereWithAggregatesInput[];
+  OR?: Prisma.etiquetaScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.etiquetaScalarWhereWithAggregatesInput
-    | Prisma.etiquetaScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'etiqueta'> | number
-  nombre?: Prisma.StringWithAggregatesFilter<'etiqueta'> | string
-}
+    | Prisma.etiquetaScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"etiqueta"> | number;
+  nombre?: Prisma.StringWithAggregatesFilter<"etiqueta"> | string;
+};
 
 export type etiquetaCreateInput = {
-  nombre: string
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutEtiquetaInput
-}
+  nombre: string;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaCreateNestedManyWithoutEtiquetaInput;
+};
 
 export type etiquetaUncheckedCreateInput = {
-  id?: number
-  nombre: string
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutEtiquetaInput
-}
+  id?: number;
+  nombre: string;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedCreateNestedManyWithoutEtiquetaInput;
+};
 
 export type etiquetaUpdateInput = {
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutEtiquetaNestedInput
-}
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUpdateManyWithoutEtiquetaNestedInput;
+};
 
 export type etiquetaUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
-  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutEtiquetaNestedInput
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
+  inmueble_etiqueta?: Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutEtiquetaNestedInput;
+};
 
 export type etiquetaCreateManyInput = {
-  id?: number
-  nombre: string
-}
+  id?: number;
+  nombre: string;
+};
 
 export type etiquetaUpdateManyMutationInput = {
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
-}
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
+};
 
 export type etiquetaUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
+};
 
 export type etiquetaCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+};
 
 export type etiquetaAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+};
 
 export type etiquetaMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+};
 
 export type etiquetaMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+};
 
 export type etiquetaSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+};
 
 export type EtiquetaScalarRelationFilter = {
-  is?: Prisma.etiquetaWhereInput
-  isNot?: Prisma.etiquetaWhereInput
-}
+  is?: Prisma.etiquetaWhereInput;
+  isNot?: Prisma.etiquetaWhereInput;
+};
 
 export type etiquetaCreateNestedOneWithoutInmueble_etiquetaInput = {
   create?: Prisma.XOR<
     Prisma.etiquetaCreateWithoutInmueble_etiquetaInput,
     Prisma.etiquetaUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-  connectOrCreate?: Prisma.etiquetaCreateOrConnectWithoutInmueble_etiquetaInput
-  connect?: Prisma.etiquetaWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.etiquetaCreateOrConnectWithoutInmueble_etiquetaInput;
+  connect?: Prisma.etiquetaWhereUniqueInput;
+};
 
 export type etiquetaUpdateOneRequiredWithoutInmueble_etiquetaNestedInput = {
   create?: Prisma.XOR<
     Prisma.etiquetaCreateWithoutInmueble_etiquetaInput,
     Prisma.etiquetaUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-  connectOrCreate?: Prisma.etiquetaCreateOrConnectWithoutInmueble_etiquetaInput
-  upsert?: Prisma.etiquetaUpsertWithoutInmueble_etiquetaInput
-  connect?: Prisma.etiquetaWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.etiquetaCreateOrConnectWithoutInmueble_etiquetaInput;
+  upsert?: Prisma.etiquetaUpsertWithoutInmueble_etiquetaInput;
+  connect?: Prisma.etiquetaWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.etiquetaUpdateToOneWithWhereWithoutInmueble_etiquetaInput,
       Prisma.etiquetaUpdateWithoutInmueble_etiquetaInput
     >,
     Prisma.etiquetaUncheckedUpdateWithoutInmueble_etiquetaInput
-  >
-}
+  >;
+};
 
 export type etiquetaCreateWithoutInmueble_etiquetaInput = {
-  nombre: string
-}
+  nombre: string;
+};
 
 export type etiquetaUncheckedCreateWithoutInmueble_etiquetaInput = {
-  id?: number
-  nombre: string
-}
+  id?: number;
+  nombre: string;
+};
 
 export type etiquetaCreateOrConnectWithoutInmueble_etiquetaInput = {
-  where: Prisma.etiquetaWhereUniqueInput
+  where: Prisma.etiquetaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.etiquetaCreateWithoutInmueble_etiquetaInput,
     Prisma.etiquetaUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-}
+  >;
+};
 
 export type etiquetaUpsertWithoutInmueble_etiquetaInput = {
   update: Prisma.XOR<
     Prisma.etiquetaUpdateWithoutInmueble_etiquetaInput,
     Prisma.etiquetaUncheckedUpdateWithoutInmueble_etiquetaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.etiquetaCreateWithoutInmueble_etiquetaInput,
     Prisma.etiquetaUncheckedCreateWithoutInmueble_etiquetaInput
-  >
-  where?: Prisma.etiquetaWhereInput
-}
+  >;
+  where?: Prisma.etiquetaWhereInput;
+};
 
 export type etiquetaUpdateToOneWithWhereWithoutInmueble_etiquetaInput = {
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   data: Prisma.XOR<
     Prisma.etiquetaUpdateWithoutInmueble_etiquetaInput,
     Prisma.etiquetaUncheckedUpdateWithoutInmueble_etiquetaInput
-  >
-}
+  >;
+};
 
 export type etiquetaUpdateWithoutInmueble_etiquetaInput = {
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
-}
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
+};
 
 export type etiquetaUncheckedUpdateWithoutInmueble_etiquetaInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
+};
 
 /**
  * Count Type EtiquetaCountOutputType
  */
 
 export type EtiquetaCountOutputType = {
-  inmueble_etiqueta: number
-}
+  inmueble_etiqueta: number;
+};
 
 export type EtiquetaCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble_etiqueta?: boolean | EtiquetaCountOutputTypeCountInmueble_etiquetaArgs
-}
+  inmueble_etiqueta?:
+    | boolean
+    | EtiquetaCountOutputTypeCountInmueble_etiquetaArgs;
+};
 
 /**
  * EtiquetaCountOutputType without action
  */
 export type EtiquetaCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the EtiquetaCountOutputType
    */
-  select?: Prisma.EtiquetaCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.EtiquetaCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * EtiquetaCountOutputType without action
  */
 export type EtiquetaCountOutputTypeCountInmueble_etiquetaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.inmueble_etiquetaWhereInput
-}
+  where?: Prisma.inmueble_etiquetaWhereInput;
+};
 
 export type etiquetaSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    nombre?: boolean
-    inmueble_etiqueta?: boolean | Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs>
-    _count?: boolean | Prisma.EtiquetaCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    nombre?: boolean;
+    inmueble_etiqueta?:
+      | boolean
+      | Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs>;
+    _count?: boolean | Prisma.EtiquetaCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['etiqueta']
->
+  ExtArgs["result"]["etiqueta"]
+>;
 
 export type etiquetaSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    nombre?: boolean
+    id?: boolean;
+    nombre?: boolean;
   },
-  ExtArgs['result']['etiqueta']
->
+  ExtArgs["result"]["etiqueta"]
+>;
 
 export type etiquetaSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    nombre?: boolean
+    id?: boolean;
+    nombre?: boolean;
   },
-  ExtArgs['result']['etiqueta']
->
+  ExtArgs["result"]["etiqueta"]
+>;
 
 export type etiquetaSelectScalar = {
-  id?: boolean
-  nombre?: boolean
-}
+  id?: boolean;
+  nombre?: boolean;
+};
 
 export type etiquetaOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = runtime.Types.Extensions.GetOmit<'id' | 'nombre', ExtArgs['result']['etiqueta']>
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = runtime.Types.Extensions.GetOmit<
+  "id" | "nombre",
+  ExtArgs["result"]["etiqueta"]
+>;
 export type etiquetaInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  inmueble_etiqueta?: boolean | Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs>
-  _count?: boolean | Prisma.EtiquetaCountOutputTypeDefaultArgs<ExtArgs>
-}
+  inmueble_etiqueta?: boolean | Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs>;
+  _count?: boolean | Prisma.EtiquetaCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type etiquetaIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 export type etiquetaIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 
 export type $etiquetaPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'etiqueta'
+  name: "etiqueta";
   objects: {
-    inmueble_etiqueta: Prisma.$inmueble_etiquetaPayload<ExtArgs>[]
-  }
+    inmueble_etiqueta: Prisma.$inmueble_etiquetaPayload<ExtArgs>[];
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      nombre: string
+      id: number;
+      nombre: string;
     },
-    ExtArgs['result']['etiqueta']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["etiqueta"]
+  >;
+  composites: {};
+};
 
-export type etiquetaGetPayload<S extends boolean | null | undefined | etiquetaDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$etiquetaPayload, S>
+export type etiquetaGetPayload<
+  S extends boolean | null | undefined | etiquetaDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$etiquetaPayload, S>;
 
 export type etiquetaCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<etiquetaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: EtiquetaCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<etiquetaFindManyArgs, "select" | "include" | "distinct" | "omit"> & {
+  select?: EtiquetaCountAggregateInputType | true;
+};
 
 export interface etiquetaDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['etiqueta']; meta: { name: 'etiqueta' } }
+  [K: symbol]: {
+    types: Prisma.TypeMap<ExtArgs>["model"]["etiqueta"];
+    meta: { name: "etiqueta" };
+  };
   /**
    * Find zero or one Etiqueta that matches the filter.
    * @param {etiquetaFindUniqueArgs} args - Arguments to find a Etiqueta
@@ -500,18 +530,18 @@ export interface etiquetaDelegate<
    * })
    */
   findUnique<T extends etiquetaFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, etiquetaFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Etiqueta that matches the filter or throw an error with `error.code='P2025'`
@@ -526,18 +556,18 @@ export interface etiquetaDelegate<
    * })
    */
   findUniqueOrThrow<T extends etiquetaFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, etiquetaFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Etiqueta that matches the filter.
@@ -553,18 +583,18 @@ export interface etiquetaDelegate<
    * })
    */
   findFirst<T extends etiquetaFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, etiquetaFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, etiquetaFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Etiqueta that matches the filter or
@@ -581,18 +611,18 @@ export interface etiquetaDelegate<
    * })
    */
   findFirstOrThrow<T extends etiquetaFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, etiquetaFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, etiquetaFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Etiquetas that matches the filter.
@@ -611,15 +641,15 @@ export interface etiquetaDelegate<
    *
    */
   findMany<T extends etiquetaFindManyArgs>(
-    args?: Prisma.SelectSubset<T, etiquetaFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, etiquetaFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Etiqueta.
@@ -634,18 +664,18 @@ export interface etiquetaDelegate<
    *
    */
   create<T extends etiquetaCreateArgs>(
-    args: Prisma.SelectSubset<T, etiquetaCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Etiquetas.
@@ -660,8 +690,8 @@ export interface etiquetaDelegate<
    *
    */
   createMany<T extends etiquetaCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, etiquetaCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, etiquetaCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Etiquetas and returns the data saved in the database.
@@ -686,15 +716,15 @@ export interface etiquetaDelegate<
    *
    */
   createManyAndReturn<T extends etiquetaCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, etiquetaCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, etiquetaCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Etiqueta.
@@ -709,18 +739,18 @@ export interface etiquetaDelegate<
    *
    */
   delete<T extends etiquetaDeleteArgs>(
-    args: Prisma.SelectSubset<T, etiquetaDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Etiqueta.
@@ -738,18 +768,18 @@ export interface etiquetaDelegate<
    *
    */
   update<T extends etiquetaUpdateArgs>(
-    args: Prisma.SelectSubset<T, etiquetaUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Etiquetas.
@@ -764,8 +794,8 @@ export interface etiquetaDelegate<
    *
    */
   deleteMany<T extends etiquetaDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, etiquetaDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, etiquetaDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Etiquetas.
@@ -785,8 +815,8 @@ export interface etiquetaDelegate<
    *
    */
   updateMany<T extends etiquetaUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, etiquetaUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, etiquetaUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Etiquetas and returns the data updated in the database.
@@ -817,15 +847,15 @@ export interface etiquetaDelegate<
    *
    */
   updateManyAndReturn<T extends etiquetaUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, etiquetaUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Etiqueta.
@@ -845,18 +875,18 @@ export interface etiquetaDelegate<
    * })
    */
   upsert<T extends etiquetaUpsertArgs>(
-    args: Prisma.SelectSubset<T, etiquetaUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, etiquetaUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$etiquetaPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Etiquetas.
@@ -872,14 +902,14 @@ export interface etiquetaDelegate<
    * })
    **/
   count<T extends etiquetaCountArgs>(
-    args?: Prisma.Subset<T, etiquetaCountArgs>
+    args?: Prisma.Subset<T, etiquetaCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], EtiquetaCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], EtiquetaCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Etiqueta.
@@ -906,8 +936,8 @@ export interface etiquetaDelegate<
    * })
    **/
   aggregate<T extends EtiquetaAggregateArgs>(
-    args: Prisma.Subset<T, EtiquetaAggregateArgs>
-  ): Prisma.PrismaPromise<GetEtiquetaAggregateType<T>>
+    args: Prisma.Subset<T, EtiquetaAggregateArgs>,
+  ): Prisma.PrismaPromise<GetEtiquetaAggregateType<T>>;
 
   /**
    * Group by Etiqueta.
@@ -930,20 +960,20 @@ export interface etiquetaDelegate<
   groupBy<
     T extends etiquetaGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: etiquetaGroupByArgs['orderBy'] }
-      : { orderBy?: etiquetaGroupByArgs['orderBy'] },
+      ? { orderBy: etiquetaGroupByArgs["orderBy"] }
+      : { orderBy?: etiquetaGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -952,26 +982,31 @@ export interface etiquetaDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -979,15 +1014,18 @@ export interface etiquetaDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, etiquetaGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetEtiquetaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, etiquetaGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetEtiquetaGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the etiqueta model
    */
-  readonly fields: etiquetaFieldRefs
+  readonly fields: etiquetaFieldRefs;
 }
 
 /**
@@ -999,21 +1037,24 @@ export interface etiquetaDelegate<
 export interface Prisma__etiquetaClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  inmueble_etiqueta<T extends Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  inmueble_etiqueta<
+    T extends Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.etiqueta$inmueble_etiquetaArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$inmueble_etiquetaPayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1021,32 +1062,43 @@ export interface Prisma__etiquetaClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the etiqueta model
  */
 export interface etiquetaFieldRefs {
-  readonly id: Prisma.FieldRef<'etiqueta', 'Int'>
-  readonly nombre: Prisma.FieldRef<'etiqueta', 'String'>
+  readonly id: Prisma.FieldRef<"etiqueta", "Int">;
+  readonly nombre: Prisma.FieldRef<"etiqueta", "String">;
 }
 
 // Custom InputTypes
@@ -1054,462 +1106,504 @@ export interface etiquetaFieldRefs {
  * etiqueta findUnique
  */
 export type etiquetaFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which etiqueta to fetch.
    */
-  where: Prisma.etiquetaWhereUniqueInput
-}
+  where: Prisma.etiquetaWhereUniqueInput;
+};
 
 /**
  * etiqueta findUniqueOrThrow
  */
 export type etiquetaFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which etiqueta to fetch.
    */
-  where: Prisma.etiquetaWhereUniqueInput
-}
+  where: Prisma.etiquetaWhereUniqueInput;
+};
 
 /**
  * etiqueta findFirst
  */
 export type etiquetaFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which etiqueta to fetch.
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of etiquetas to fetch.
    */
-  orderBy?: Prisma.etiquetaOrderByWithRelationInput | Prisma.etiquetaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.etiquetaOrderByWithRelationInput
+    | Prisma.etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for etiquetas.
    */
-  cursor?: Prisma.etiquetaWhereUniqueInput
+  cursor?: Prisma.etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of etiquetas.
    */
-  distinct?: Prisma.EtiquetaScalarFieldEnum | Prisma.EtiquetaScalarFieldEnum[]
-}
+  distinct?: Prisma.EtiquetaScalarFieldEnum | Prisma.EtiquetaScalarFieldEnum[];
+};
 
 /**
  * etiqueta findFirstOrThrow
  */
 export type etiquetaFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which etiqueta to fetch.
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of etiquetas to fetch.
    */
-  orderBy?: Prisma.etiquetaOrderByWithRelationInput | Prisma.etiquetaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.etiquetaOrderByWithRelationInput
+    | Prisma.etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for etiquetas.
    */
-  cursor?: Prisma.etiquetaWhereUniqueInput
+  cursor?: Prisma.etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of etiquetas.
    */
-  distinct?: Prisma.EtiquetaScalarFieldEnum | Prisma.EtiquetaScalarFieldEnum[]
-}
+  distinct?: Prisma.EtiquetaScalarFieldEnum | Prisma.EtiquetaScalarFieldEnum[];
+};
 
 /**
  * etiqueta findMany
  */
 export type etiquetaFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which etiquetas to fetch.
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of etiquetas to fetch.
    */
-  orderBy?: Prisma.etiquetaOrderByWithRelationInput | Prisma.etiquetaOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.etiquetaOrderByWithRelationInput
+    | Prisma.etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing etiquetas.
    */
-  cursor?: Prisma.etiquetaWhereUniqueInput
+  cursor?: Prisma.etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of etiquetas.
    */
-  distinct?: Prisma.EtiquetaScalarFieldEnum | Prisma.EtiquetaScalarFieldEnum[]
-}
+  distinct?: Prisma.EtiquetaScalarFieldEnum | Prisma.EtiquetaScalarFieldEnum[];
+};
 
 /**
  * etiqueta create
  */
 export type etiquetaCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * The data needed to create a etiqueta.
    */
-  data: Prisma.XOR<Prisma.etiquetaCreateInput, Prisma.etiquetaUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.etiquetaCreateInput,
+    Prisma.etiquetaUncheckedCreateInput
+  >;
+};
 
 /**
  * etiqueta createMany
  */
 export type etiquetaCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many etiquetas.
    */
-  data: Prisma.etiquetaCreateManyInput | Prisma.etiquetaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.etiquetaCreateManyInput | Prisma.etiquetaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * etiqueta createManyAndReturn
  */
 export type etiquetaCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.etiquetaSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * The data used to create many etiquetas.
    */
-  data: Prisma.etiquetaCreateManyInput | Prisma.etiquetaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.etiquetaCreateManyInput | Prisma.etiquetaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * etiqueta update
  */
 export type etiquetaUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * The data needed to update a etiqueta.
    */
-  data: Prisma.XOR<Prisma.etiquetaUpdateInput, Prisma.etiquetaUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.etiquetaUpdateInput,
+    Prisma.etiquetaUncheckedUpdateInput
+  >;
   /**
    * Choose, which etiqueta to update.
    */
-  where: Prisma.etiquetaWhereUniqueInput
-}
+  where: Prisma.etiquetaWhereUniqueInput;
+};
 
 /**
  * etiqueta updateMany
  */
 export type etiquetaUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update etiquetas.
    */
-  data: Prisma.XOR<Prisma.etiquetaUpdateManyMutationInput, Prisma.etiquetaUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.etiquetaUpdateManyMutationInput,
+    Prisma.etiquetaUncheckedUpdateManyInput
+  >;
   /**
    * Filter which etiquetas to update
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * Limit how many etiquetas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * etiqueta updateManyAndReturn
  */
 export type etiquetaUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.etiquetaSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * The data used to update etiquetas.
    */
-  data: Prisma.XOR<Prisma.etiquetaUpdateManyMutationInput, Prisma.etiquetaUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.etiquetaUpdateManyMutationInput,
+    Prisma.etiquetaUncheckedUpdateManyInput
+  >;
   /**
    * Filter which etiquetas to update
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * Limit how many etiquetas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * etiqueta upsert
  */
 export type etiquetaUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * The filter to search for the etiqueta to update in case it exists.
    */
-  where: Prisma.etiquetaWhereUniqueInput
+  where: Prisma.etiquetaWhereUniqueInput;
   /**
    * In case the etiqueta found by the `where` argument doesn't exist, create a new etiqueta with this data.
    */
-  create: Prisma.XOR<Prisma.etiquetaCreateInput, Prisma.etiquetaUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.etiquetaCreateInput,
+    Prisma.etiquetaUncheckedCreateInput
+  >;
   /**
    * In case the etiqueta was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.etiquetaUpdateInput, Prisma.etiquetaUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.etiquetaUpdateInput,
+    Prisma.etiquetaUncheckedUpdateInput
+  >;
+};
 
 /**
  * etiqueta delete
  */
 export type etiquetaDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
   /**
    * Filter which etiqueta to delete.
    */
-  where: Prisma.etiquetaWhereUniqueInput
-}
+  where: Prisma.etiquetaWhereUniqueInput;
+};
 
 /**
  * etiqueta deleteMany
  */
 export type etiquetaDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which etiquetas to delete
    */
-  where?: Prisma.etiquetaWhereInput
+  where?: Prisma.etiquetaWhereInput;
   /**
    * Limit how many etiquetas to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * etiqueta.inmueble_etiqueta
  */
 export type etiqueta$inmueble_etiquetaArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
-  where?: Prisma.inmueble_etiquetaWhereInput
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
+  where?: Prisma.inmueble_etiquetaWhereInput;
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithRelationInput
-    | Prisma.inmueble_etiquetaOrderByWithRelationInput[]
-  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Inmueble_etiquetaScalarFieldEnum | Prisma.Inmueble_etiquetaScalarFieldEnum[]
-}
+    | Prisma.inmueble_etiquetaOrderByWithRelationInput[];
+  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Inmueble_etiquetaScalarFieldEnum
+    | Prisma.Inmueble_etiquetaScalarFieldEnum[];
+};
 
 /**
  * etiqueta without action
  */
 export type etiquetaDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the etiqueta
    */
-  select?: Prisma.etiquetaSelect<ExtArgs> | null
+  select?: Prisma.etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the etiqueta
    */
-  omit?: Prisma.etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.etiquetaInclude<ExtArgs> | null
-}
+  include?: Prisma.etiquetaInclude<ExtArgs> | null;
+};

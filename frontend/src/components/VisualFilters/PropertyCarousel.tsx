@@ -62,13 +62,18 @@ export default function PropertyCarousel({
       query: filterParam,
     });
 
-    const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
-    sessionStorage.setItem('propbol_global_filters', JSON.stringify({
-      ...currentFilters,
-      modoInmueble: [modo],
-      query: filterParam,
-      updatedAt: new Date().toISOString()
-    }));
+    const currentFilters = JSON.parse(
+      sessionStorage.getItem("propbol_global_filters") || "{}",
+    );
+    sessionStorage.setItem(
+      "propbol_global_filters",
+      JSON.stringify({
+        ...currentFilters,
+        modoInmueble: [modo],
+        query: filterParam,
+        updatedAt: new Date().toISOString(),
+      }),
+    );
 
     router.push(`/busqueda_mapa?${params.toString()}`);
   };
@@ -97,14 +102,20 @@ export default function PropertyCarousel({
         <div
           ref={scrollRef}
           className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x" }}
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            overscrollBehaviorX: "contain",
+            touchAction: "pan-x",
+          }}
         >
           {/* ... dentro del ref={scrollRef} ... */}
           {items.map((item, i) => {
             // Obtenemos la primera imagen de las previews para mostrarla de entrada
-            const mainImage = item.previews && item.previews.length > 0
-              ? item.previews[0].imagen
-              : item.image;
+            const mainImage =
+              item.previews && item.previews.length > 0
+                ? item.previews[0].imagen
+                : item.image;
 
             return (
               <PropertyCard

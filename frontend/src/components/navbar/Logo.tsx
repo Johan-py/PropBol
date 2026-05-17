@@ -1,16 +1,22 @@
-import type { MouseEventHandler } from 'react'
-import Link from 'next/link'
+import type { MouseEventHandler } from "react";
+import Link from "next/link";
 
 type LogoProps = {
-  className?: string
-  iconClassName?: string
-  iconSize?: number
-  onClick?: MouseEventHandler<HTMLAnchorElement>
-  textClassName?: string
-}
+  className?: string;
+  iconClassName?: string;
+  iconSize?: number;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  textClassName?: string;
+};
 
-export function LogoMark({ className = '', size = 44 }: { className?: string; size?: number }) {
-  const iconSize = Math.max(18, Math.round(size * 0.6))
+export function LogoMark({
+  className = "",
+  size = 44,
+}: {
+  className?: string;
+  size?: number;
+}) {
+  const iconSize = Math.max(18, Math.round(size * 0.6));
 
   return (
     <span
@@ -36,23 +42,22 @@ export function LogoMark({ className = '', size = 44 }: { className?: string; si
         <rect x="9.5" y="16" width="7" height="7" rx="2.5" fill="#D97706" />
       </svg>
     </span>
-  )
+  );
 }
 
 export default function Logo({
-  className = '',
+  className = "",
   iconClassName,
   iconSize = 34,
   onClick,
-  textClassName = ''
+  textClassName = "",
 }: LogoProps) {
   return (
-     // HU-05: ID de referencia para el tour guiado - Paso "Inicio"
+    // HU-05: ID de referencia para el tour guiado - Paso "Inicio"
     // Este enlace será resaltado por el tour para indicar cómo volver al home
     <Link
       href="/"
-        id="tour-logo"
-        
+      id="tour-logo"
       onClick={onClick}
       className={`flex items-center gap-2 p-0.5 transition hover:opacity-80 ${className}`}
     >
@@ -63,5 +68,5 @@ export default function Logo({
         Prop<span className="text-amber-600">Bol</span>
       </span>
     </Link>
-  )
+  );
 }

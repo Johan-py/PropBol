@@ -7,362 +7,404 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model visitor
  *
  */
-export type visitorModel = runtime.Types.Result.DefaultSelection<Prisma.$visitorPayload>
+export type visitorModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$visitorPayload>;
 
 export type AggregateVisitor = {
-  _count: VisitorCountAggregateOutputType | null
-  _avg: VisitorAvgAggregateOutputType | null
-  _sum: VisitorSumAggregateOutputType | null
-  _min: VisitorMinAggregateOutputType | null
-  _max: VisitorMaxAggregateOutputType | null
-}
+  _count: VisitorCountAggregateOutputType | null;
+  _avg: VisitorAvgAggregateOutputType | null;
+  _sum: VisitorSumAggregateOutputType | null;
+  _min: VisitorMinAggregateOutputType | null;
+  _max: VisitorMaxAggregateOutputType | null;
+};
 
 export type VisitorAvgAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type VisitorSumAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type VisitorMinAggregateOutputType = {
-  id: number | null
-  ip: string | null
-  fecha_visita: Date | null
-  usuario_id: number | null
-}
+  id: number | null;
+  ip: string | null;
+  fecha_visita: Date | null;
+  usuario_id: number | null;
+};
 
 export type VisitorMaxAggregateOutputType = {
-  id: number | null
-  ip: string | null
-  fecha_visita: Date | null
-  usuario_id: number | null
-}
+  id: number | null;
+  ip: string | null;
+  fecha_visita: Date | null;
+  usuario_id: number | null;
+};
 
 export type VisitorCountAggregateOutputType = {
-  id: number
-  ip: number
-  meta_data: number
-  fecha_visita: number
-  usuario_id: number
-  _all: number
-}
+  id: number;
+  ip: number;
+  meta_data: number;
+  fecha_visita: number;
+  usuario_id: number;
+  _all: number;
+};
 
 export type VisitorAvgAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type VisitorSumAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type VisitorMinAggregateInputType = {
-  id?: true
-  ip?: true
-  fecha_visita?: true
-  usuario_id?: true
-}
+  id?: true;
+  ip?: true;
+  fecha_visita?: true;
+  usuario_id?: true;
+};
 
 export type VisitorMaxAggregateInputType = {
-  id?: true
-  ip?: true
-  fecha_visita?: true
-  usuario_id?: true
-}
+  id?: true;
+  ip?: true;
+  fecha_visita?: true;
+  usuario_id?: true;
+};
 
 export type VisitorCountAggregateInputType = {
-  id?: true
-  ip?: true
-  meta_data?: true
-  fecha_visita?: true
-  usuario_id?: true
-  _all?: true
-}
+  id?: true;
+  ip?: true;
+  meta_data?: true;
+  fecha_visita?: true;
+  usuario_id?: true;
+  _all?: true;
+};
 
 export type VisitorAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which visitor to aggregate.
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of visitors to fetch.
    */
-  orderBy?: Prisma.visitorOrderByWithRelationInput | Prisma.visitorOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.visitorOrderByWithRelationInput
+    | Prisma.visitorOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.visitorWhereUniqueInput
+  cursor?: Prisma.visitorWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` visitors from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` visitors.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned visitors
    **/
-  _count?: true | VisitorCountAggregateInputType
+  _count?: true | VisitorCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: VisitorAvgAggregateInputType
+  _avg?: VisitorAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: VisitorSumAggregateInputType
+  _sum?: VisitorSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: VisitorMinAggregateInputType
+  _min?: VisitorMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: VisitorMaxAggregateInputType
-}
+  _max?: VisitorMaxAggregateInputType;
+};
 
 export type GetVisitorAggregateType<T extends VisitorAggregateArgs> = {
-  [P in keyof T & keyof AggregateVisitor]: P extends '_count' | 'count'
+  [P in keyof T & keyof AggregateVisitor]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateVisitor[P]>
-    : Prisma.GetScalarType<T[P], AggregateVisitor[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateVisitor[P]>;
+};
 
 export type visitorGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.visitorWhereInput
-  orderBy?: Prisma.visitorOrderByWithAggregationInput | Prisma.visitorOrderByWithAggregationInput[]
-  by: Prisma.VisitorScalarFieldEnum[] | Prisma.VisitorScalarFieldEnum
-  having?: Prisma.visitorScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: VisitorCountAggregateInputType | true
-  _avg?: VisitorAvgAggregateInputType
-  _sum?: VisitorSumAggregateInputType
-  _min?: VisitorMinAggregateInputType
-  _max?: VisitorMaxAggregateInputType
-}
+  where?: Prisma.visitorWhereInput;
+  orderBy?:
+    | Prisma.visitorOrderByWithAggregationInput
+    | Prisma.visitorOrderByWithAggregationInput[];
+  by: Prisma.VisitorScalarFieldEnum[] | Prisma.VisitorScalarFieldEnum;
+  having?: Prisma.visitorScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: VisitorCountAggregateInputType | true;
+  _avg?: VisitorAvgAggregateInputType;
+  _sum?: VisitorSumAggregateInputType;
+  _min?: VisitorMinAggregateInputType;
+  _max?: VisitorMaxAggregateInputType;
+};
 
 export type VisitorGroupByOutputType = {
-  id: number
-  ip: string
-  meta_data: runtime.JsonValue | null
-  fecha_visita: Date | null
-  usuario_id: number | null
-  _count: VisitorCountAggregateOutputType | null
-  _avg: VisitorAvgAggregateOutputType | null
-  _sum: VisitorSumAggregateOutputType | null
-  _min: VisitorMinAggregateOutputType | null
-  _max: VisitorMaxAggregateOutputType | null
-}
+  id: number;
+  ip: string;
+  meta_data: runtime.JsonValue | null;
+  fecha_visita: Date | null;
+  usuario_id: number | null;
+  _count: VisitorCountAggregateOutputType | null;
+  _avg: VisitorAvgAggregateOutputType | null;
+  _sum: VisitorSumAggregateOutputType | null;
+  _min: VisitorMinAggregateOutputType | null;
+  _max: VisitorMaxAggregateOutputType | null;
+};
 
-export type GetVisitorGroupByPayload<T extends visitorGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<VisitorGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof VisitorGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], VisitorGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], VisitorGroupByOutputType[P]>
-    }
-  >
->
+export type GetVisitorGroupByPayload<T extends visitorGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<VisitorGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof VisitorGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], VisitorGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], VisitorGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type visitorWhereInput = {
-  AND?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[]
-  OR?: Prisma.visitorWhereInput[]
-  NOT?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[]
-  id?: Prisma.IntFilter<'visitor'> | number
-  ip?: Prisma.StringFilter<'visitor'> | string
-  meta_data?: Prisma.JsonNullableFilter<'visitor'>
-  fecha_visita?: Prisma.DateTimeNullableFilter<'visitor'> | Date | string | null
-  usuario_id?: Prisma.IntNullableFilter<'visitor'> | number | null
-  usuario?: Prisma.XOR<Prisma.UsuarioNullableScalarRelationFilter, Prisma.usuarioWhereInput> | null
-}
+  AND?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[];
+  OR?: Prisma.visitorWhereInput[];
+  NOT?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[];
+  id?: Prisma.IntFilter<"visitor"> | number;
+  ip?: Prisma.StringFilter<"visitor"> | string;
+  meta_data?: Prisma.JsonNullableFilter<"visitor">;
+  fecha_visita?:
+    | Prisma.DateTimeNullableFilter<"visitor">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntNullableFilter<"visitor"> | number | null;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioNullableScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  > | null;
+};
 
 export type visitorOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  ip?: Prisma.SortOrder
-  meta_data?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_visita?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  ip?: Prisma.SortOrder;
+  meta_data?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_visita?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+};
 
 export type visitorWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[]
-    OR?: Prisma.visitorWhereInput[]
-    NOT?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[]
-    ip?: Prisma.StringFilter<'visitor'> | string
-    meta_data?: Prisma.JsonNullableFilter<'visitor'>
-    fecha_visita?: Prisma.DateTimeNullableFilter<'visitor'> | Date | string | null
-    usuario_id?: Prisma.IntNullableFilter<'visitor'> | number | null
+    id?: number;
+    AND?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[];
+    OR?: Prisma.visitorWhereInput[];
+    NOT?: Prisma.visitorWhereInput | Prisma.visitorWhereInput[];
+    ip?: Prisma.StringFilter<"visitor"> | string;
+    meta_data?: Prisma.JsonNullableFilter<"visitor">;
+    fecha_visita?:
+      | Prisma.DateTimeNullableFilter<"visitor">
+      | Date
+      | string
+      | null;
+    usuario_id?: Prisma.IntNullableFilter<"visitor"> | number | null;
     usuario?: Prisma.XOR<
       Prisma.UsuarioNullableScalarRelationFilter,
       Prisma.usuarioWhereInput
-    > | null
+    > | null;
   },
-  'id'
->
+  "id"
+>;
 
 export type visitorOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  ip?: Prisma.SortOrder
-  meta_data?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_visita?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.visitorCountOrderByAggregateInput
-  _avg?: Prisma.visitorAvgOrderByAggregateInput
-  _max?: Prisma.visitorMaxOrderByAggregateInput
-  _min?: Prisma.visitorMinOrderByAggregateInput
-  _sum?: Prisma.visitorSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  ip?: Prisma.SortOrder;
+  meta_data?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fecha_visita?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.visitorCountOrderByAggregateInput;
+  _avg?: Prisma.visitorAvgOrderByAggregateInput;
+  _max?: Prisma.visitorMaxOrderByAggregateInput;
+  _min?: Prisma.visitorMinOrderByAggregateInput;
+  _sum?: Prisma.visitorSumOrderByAggregateInput;
+};
 
 export type visitorScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.visitorScalarWhereWithAggregatesInput
-    | Prisma.visitorScalarWhereWithAggregatesInput[]
-  OR?: Prisma.visitorScalarWhereWithAggregatesInput[]
+    | Prisma.visitorScalarWhereWithAggregatesInput[];
+  OR?: Prisma.visitorScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.visitorScalarWhereWithAggregatesInput
-    | Prisma.visitorScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'visitor'> | number
-  ip?: Prisma.StringWithAggregatesFilter<'visitor'> | string
-  meta_data?: Prisma.JsonNullableWithAggregatesFilter<'visitor'>
-  fecha_visita?: Prisma.DateTimeNullableWithAggregatesFilter<'visitor'> | Date | string | null
-  usuario_id?: Prisma.IntNullableWithAggregatesFilter<'visitor'> | number | null
-}
+    | Prisma.visitorScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"visitor"> | number;
+  ip?: Prisma.StringWithAggregatesFilter<"visitor"> | string;
+  meta_data?: Prisma.JsonNullableWithAggregatesFilter<"visitor">;
+  fecha_visita?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"visitor">
+    | Date
+    | string
+    | null;
+  usuario_id?:
+    | Prisma.IntNullableWithAggregatesFilter<"visitor">
+    | number
+    | null;
+};
 
 export type visitorCreateInput = {
-  ip: string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Date | string | null
-  usuario?: Prisma.usuarioCreateNestedOneWithoutVisitorInput
-}
+  ip: string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?: Date | string | null;
+  usuario?: Prisma.usuarioCreateNestedOneWithoutVisitorInput;
+};
 
 export type visitorUncheckedCreateInput = {
-  id?: number
-  ip: string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Date | string | null
-  usuario_id?: number | null
-}
+  id?: number;
+  ip: string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?: Date | string | null;
+  usuario_id?: number | null;
+};
 
 export type visitorUpdateInput = {
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneWithoutVisitorNestedInput
-}
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneWithoutVisitorNestedInput;
+};
 
 export type visitorUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type visitorCreateManyInput = {
-  id?: number
-  ip: string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Date | string | null
-  usuario_id?: number | null
-}
+  id?: number;
+  ip: string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?: Date | string | null;
+  usuario_id?: number | null;
+};
 
 export type visitorUpdateManyMutationInput = {
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type visitorUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type VisitorListRelationFilter = {
-  every?: Prisma.visitorWhereInput
-  some?: Prisma.visitorWhereInput
-  none?: Prisma.visitorWhereInput
-}
+  every?: Prisma.visitorWhereInput;
+  some?: Prisma.visitorWhereInput;
+  none?: Prisma.visitorWhereInput;
+};
 
 export type visitorOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type visitorCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  ip?: Prisma.SortOrder
-  meta_data?: Prisma.SortOrder
-  fecha_visita?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  ip?: Prisma.SortOrder;
+  meta_data?: Prisma.SortOrder;
+  fecha_visita?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type visitorAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type visitorMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  ip?: Prisma.SortOrder
-  fecha_visita?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  ip?: Prisma.SortOrder;
+  fecha_visita?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type visitorMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  ip?: Prisma.SortOrder
-  fecha_visita?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  ip?: Prisma.SortOrder;
+  fecha_visita?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type visitorSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type visitorCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -371,13 +413,13 @@ export type visitorCreateNestedManyWithoutUsuarioInput = {
         Prisma.visitorUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.visitorCreateWithoutUsuarioInput[]
-    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.visitorCreateOrConnectWithoutUsuarioInput
-    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope
-  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-}
+    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope;
+  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
+};
 
 export type visitorUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -386,13 +428,13 @@ export type visitorUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.visitorUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.visitorCreateWithoutUsuarioInput[]
-    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.visitorCreateOrConnectWithoutUsuarioInput
-    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope
-  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-}
+    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope;
+  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
+};
 
 export type visitorUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -401,26 +443,30 @@ export type visitorUpdateManyWithoutUsuarioNestedInput = {
         Prisma.visitorUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.visitorCreateWithoutUsuarioInput[]
-    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.visitorCreateOrConnectWithoutUsuarioInput
-    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.visitorUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.visitorUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope
-  set?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-  disconnect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-  delete?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
+    | Prisma.visitorUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope;
+  set?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
+  disconnect?:
+    | Prisma.visitorWhereUniqueInput
+    | Prisma.visitorWhereUniqueInput[];
+  delete?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
+  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
   update?:
     | Prisma.visitorUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.visitorUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.visitorUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.visitorUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.visitorUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.visitorScalarWhereInput | Prisma.visitorScalarWhereInput[]
-}
+    | Prisma.visitorUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.visitorScalarWhereInput
+    | Prisma.visitorScalarWhereInput[];
+};
 
 export type visitorUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -429,225 +475,261 @@ export type visitorUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.visitorUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.visitorCreateWithoutUsuarioInput[]
-    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.visitorUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.visitorCreateOrConnectWithoutUsuarioInput
-    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.visitorCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.visitorUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.visitorUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope
-  set?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-  disconnect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-  delete?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
-  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[]
+    | Prisma.visitorUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.visitorCreateManyUsuarioInputEnvelope;
+  set?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
+  disconnect?:
+    | Prisma.visitorWhereUniqueInput
+    | Prisma.visitorWhereUniqueInput[];
+  delete?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
+  connect?: Prisma.visitorWhereUniqueInput | Prisma.visitorWhereUniqueInput[];
   update?:
     | Prisma.visitorUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.visitorUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.visitorUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.visitorUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.visitorUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.visitorScalarWhereInput | Prisma.visitorScalarWhereInput[]
-}
+    | Prisma.visitorUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.visitorScalarWhereInput
+    | Prisma.visitorScalarWhereInput[];
+};
 
 export type visitorCreateWithoutUsuarioInput = {
-  ip: string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Date | string | null
-}
+  ip: string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?: Date | string | null;
+};
 
 export type visitorUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  ip: string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Date | string | null
-}
+  id?: number;
+  ip: string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?: Date | string | null;
+};
 
 export type visitorCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.visitorWhereUniqueInput
+  where: Prisma.visitorWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.visitorCreateWithoutUsuarioInput,
     Prisma.visitorUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type visitorCreateManyUsuarioInputEnvelope = {
-  data: Prisma.visitorCreateManyUsuarioInput | Prisma.visitorCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.visitorCreateManyUsuarioInput
+    | Prisma.visitorCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type visitorUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.visitorWhereUniqueInput
+  where: Prisma.visitorWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.visitorUpdateWithoutUsuarioInput,
     Prisma.visitorUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.visitorCreateWithoutUsuarioInput,
     Prisma.visitorUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type visitorUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.visitorWhereUniqueInput
+  where: Prisma.visitorWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.visitorUpdateWithoutUsuarioInput,
     Prisma.visitorUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type visitorUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.visitorScalarWhereInput
+  where: Prisma.visitorScalarWhereInput;
   data: Prisma.XOR<
     Prisma.visitorUpdateManyMutationInput,
     Prisma.visitorUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type visitorScalarWhereInput = {
-  AND?: Prisma.visitorScalarWhereInput | Prisma.visitorScalarWhereInput[]
-  OR?: Prisma.visitorScalarWhereInput[]
-  NOT?: Prisma.visitorScalarWhereInput | Prisma.visitorScalarWhereInput[]
-  id?: Prisma.IntFilter<'visitor'> | number
-  ip?: Prisma.StringFilter<'visitor'> | string
-  meta_data?: Prisma.JsonNullableFilter<'visitor'>
-  fecha_visita?: Prisma.DateTimeNullableFilter<'visitor'> | Date | string | null
-  usuario_id?: Prisma.IntNullableFilter<'visitor'> | number | null
-}
+  AND?: Prisma.visitorScalarWhereInput | Prisma.visitorScalarWhereInput[];
+  OR?: Prisma.visitorScalarWhereInput[];
+  NOT?: Prisma.visitorScalarWhereInput | Prisma.visitorScalarWhereInput[];
+  id?: Prisma.IntFilter<"visitor"> | number;
+  ip?: Prisma.StringFilter<"visitor"> | string;
+  meta_data?: Prisma.JsonNullableFilter<"visitor">;
+  fecha_visita?:
+    | Prisma.DateTimeNullableFilter<"visitor">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntNullableFilter<"visitor"> | number | null;
+};
 
 export type visitorCreateManyUsuarioInput = {
-  id?: number
-  ip: string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Date | string | null
-}
+  id?: number;
+  ip: string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?: Date | string | null;
+};
 
 export type visitorUpdateWithoutUsuarioInput = {
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type visitorUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type visitorUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  ip?: Prisma.StringFieldUpdateOperationsInput | string
-  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  fecha_visita?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  ip?: Prisma.StringFieldUpdateOperationsInput | string;
+  meta_data?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+  fecha_visita?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type visitorSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    ip?: boolean
-    meta_data?: boolean
-    fecha_visita?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>
+    id?: boolean;
+    ip?: boolean;
+    meta_data?: boolean;
+    fecha_visita?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>;
   },
-  ExtArgs['result']['visitor']
->
+  ExtArgs["result"]["visitor"]
+>;
 
 export type visitorSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    ip?: boolean
-    meta_data?: boolean
-    fecha_visita?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>
+    id?: boolean;
+    ip?: boolean;
+    meta_data?: boolean;
+    fecha_visita?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>;
   },
-  ExtArgs['result']['visitor']
->
+  ExtArgs["result"]["visitor"]
+>;
 
 export type visitorSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    ip?: boolean
-    meta_data?: boolean
-    fecha_visita?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>
+    id?: boolean;
+    ip?: boolean;
+    meta_data?: boolean;
+    fecha_visita?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>;
   },
-  ExtArgs['result']['visitor']
->
+  ExtArgs["result"]["visitor"]
+>;
 
 export type visitorSelectScalar = {
-  id?: boolean
-  ip?: boolean
-  meta_data?: boolean
-  fecha_visita?: boolean
-  usuario_id?: boolean
-}
+  id?: boolean;
+  ip?: boolean;
+  meta_data?: boolean;
+  fecha_visita?: boolean;
+  usuario_id?: boolean;
+};
 
 export type visitorOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'ip' | 'meta_data' | 'fecha_visita' | 'usuario_id',
-  ExtArgs['result']['visitor']
->
+  "id" | "ip" | "meta_data" | "fecha_visita" | "usuario_id",
+  ExtArgs["result"]["visitor"]
+>;
 export type visitorInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>;
+};
 export type visitorIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>;
+};
 export type visitorIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.visitor$usuarioArgs<ExtArgs>;
+};
 
 export type $visitorPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'visitor'
+  name: "visitor";
   objects: {
-    usuario: Prisma.$usuarioPayload<ExtArgs> | null
-  }
+    usuario: Prisma.$usuarioPayload<ExtArgs> | null;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      ip: string
-      meta_data: runtime.JsonValue | null
-      fecha_visita: Date | null
-      usuario_id: number | null
+      id: number;
+      ip: string;
+      meta_data: runtime.JsonValue | null;
+      fecha_visita: Date | null;
+      usuario_id: number | null;
     },
-    ExtArgs['result']['visitor']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["visitor"]
+  >;
+  composites: {};
+};
 
-export type visitorGetPayload<S extends boolean | null | undefined | visitorDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$visitorPayload, S>
+export type visitorGetPayload<
+  S extends boolean | null | undefined | visitorDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$visitorPayload, S>;
 
 export type visitorCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<visitorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: VisitorCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<visitorFindManyArgs, "select" | "include" | "distinct" | "omit"> & {
+  select?: VisitorCountAggregateInputType | true;
+};
 
 export interface visitorDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['visitor']; meta: { name: 'visitor' } }
+  [K: symbol]: {
+    types: Prisma.TypeMap<ExtArgs>["model"]["visitor"];
+    meta: { name: "visitor" };
+  };
   /**
    * Find zero or one Visitor that matches the filter.
    * @param {visitorFindUniqueArgs} args - Arguments to find a Visitor
@@ -660,18 +742,18 @@ export interface visitorDelegate<
    * })
    */
   findUnique<T extends visitorFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, visitorFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Visitor that matches the filter or throw an error with `error.code='P2025'`
@@ -686,18 +768,18 @@ export interface visitorDelegate<
    * })
    */
   findUniqueOrThrow<T extends visitorFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, visitorFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Visitor that matches the filter.
@@ -713,18 +795,18 @@ export interface visitorDelegate<
    * })
    */
   findFirst<T extends visitorFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, visitorFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, visitorFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Visitor that matches the filter or
@@ -741,18 +823,18 @@ export interface visitorDelegate<
    * })
    */
   findFirstOrThrow<T extends visitorFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, visitorFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, visitorFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Visitors that matches the filter.
@@ -771,15 +853,15 @@ export interface visitorDelegate<
    *
    */
   findMany<T extends visitorFindManyArgs>(
-    args?: Prisma.SelectSubset<T, visitorFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, visitorFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Visitor.
@@ -794,13 +876,18 @@ export interface visitorDelegate<
    *
    */
   create<T extends visitorCreateArgs>(
-    args: Prisma.SelectSubset<T, visitorCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
-    runtime.Types.Result.GetResult<Prisma.$visitorPayload<ExtArgs>, T, 'create', GlobalOmitOptions>,
+    runtime.Types.Result.GetResult<
+      Prisma.$visitorPayload<ExtArgs>,
+      T,
+      "create",
+      GlobalOmitOptions
+    >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Visitors.
@@ -815,8 +902,8 @@ export interface visitorDelegate<
    *
    */
   createMany<T extends visitorCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, visitorCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, visitorCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Visitors and returns the data saved in the database.
@@ -841,15 +928,15 @@ export interface visitorDelegate<
    *
    */
   createManyAndReturn<T extends visitorCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, visitorCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, visitorCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Visitor.
@@ -864,13 +951,18 @@ export interface visitorDelegate<
    *
    */
   delete<T extends visitorDeleteArgs>(
-    args: Prisma.SelectSubset<T, visitorDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
-    runtime.Types.Result.GetResult<Prisma.$visitorPayload<ExtArgs>, T, 'delete', GlobalOmitOptions>,
+    runtime.Types.Result.GetResult<
+      Prisma.$visitorPayload<ExtArgs>,
+      T,
+      "delete",
+      GlobalOmitOptions
+    >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Visitor.
@@ -888,13 +980,18 @@ export interface visitorDelegate<
    *
    */
   update<T extends visitorUpdateArgs>(
-    args: Prisma.SelectSubset<T, visitorUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
-    runtime.Types.Result.GetResult<Prisma.$visitorPayload<ExtArgs>, T, 'update', GlobalOmitOptions>,
+    runtime.Types.Result.GetResult<
+      Prisma.$visitorPayload<ExtArgs>,
+      T,
+      "update",
+      GlobalOmitOptions
+    >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Visitors.
@@ -909,8 +1006,8 @@ export interface visitorDelegate<
    *
    */
   deleteMany<T extends visitorDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, visitorDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, visitorDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Visitors.
@@ -930,8 +1027,8 @@ export interface visitorDelegate<
    *
    */
   updateMany<T extends visitorUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, visitorUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, visitorUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Visitors and returns the data updated in the database.
@@ -962,15 +1059,15 @@ export interface visitorDelegate<
    *
    */
   updateManyAndReturn<T extends visitorUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, visitorUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$visitorPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Visitor.
@@ -990,13 +1087,18 @@ export interface visitorDelegate<
    * })
    */
   upsert<T extends visitorUpsertArgs>(
-    args: Prisma.SelectSubset<T, visitorUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, visitorUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__visitorClient<
-    runtime.Types.Result.GetResult<Prisma.$visitorPayload<ExtArgs>, T, 'upsert', GlobalOmitOptions>,
+    runtime.Types.Result.GetResult<
+      Prisma.$visitorPayload<ExtArgs>,
+      T,
+      "upsert",
+      GlobalOmitOptions
+    >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Visitors.
@@ -1012,14 +1114,14 @@ export interface visitorDelegate<
    * })
    **/
   count<T extends visitorCountArgs>(
-    args?: Prisma.Subset<T, visitorCountArgs>
+    args?: Prisma.Subset<T, visitorCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], VisitorCountAggregateOutputType>
+        : Prisma.GetScalarType<T["select"], VisitorCountAggregateOutputType>
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Visitor.
@@ -1046,8 +1148,8 @@ export interface visitorDelegate<
    * })
    **/
   aggregate<T extends VisitorAggregateArgs>(
-    args: Prisma.Subset<T, VisitorAggregateArgs>
-  ): Prisma.PrismaPromise<GetVisitorAggregateType<T>>
+    args: Prisma.Subset<T, VisitorAggregateArgs>,
+  ): Prisma.PrismaPromise<GetVisitorAggregateType<T>>;
 
   /**
    * Group by Visitor.
@@ -1070,20 +1172,20 @@ export interface visitorDelegate<
   groupBy<
     T extends visitorGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: visitorGroupByArgs['orderBy'] }
-      : { orderBy?: visitorGroupByArgs['orderBy'] },
+      ? { orderBy: visitorGroupByArgs["orderBy"] }
+      : { orderBy?: visitorGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1092,26 +1194,31 @@ export interface visitorDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1119,15 +1226,18 @@ export interface visitorDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, visitorGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetVisitorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, visitorGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetVisitorGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the visitor model
    */
-  readonly fields: visitorFieldRefs
+  readonly fields: visitorFieldRefs;
 }
 
 /**
@@ -1139,23 +1249,24 @@ export interface visitorDelegate<
 export interface Prisma__visitorClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   usuario<T extends Prisma.visitor$usuarioArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.visitor$usuarioArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.visitor$usuarioArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     runtime.Types.Result.GetResult<
       Prisma.$usuarioPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1163,35 +1274,46 @@ export interface Prisma__visitorClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the visitor model
  */
 export interface visitorFieldRefs {
-  readonly id: Prisma.FieldRef<'visitor', 'Int'>
-  readonly ip: Prisma.FieldRef<'visitor', 'String'>
-  readonly meta_data: Prisma.FieldRef<'visitor', 'Json'>
-  readonly fecha_visita: Prisma.FieldRef<'visitor', 'DateTime'>
-  readonly usuario_id: Prisma.FieldRef<'visitor', 'Int'>
+  readonly id: Prisma.FieldRef<"visitor", "Int">;
+  readonly ip: Prisma.FieldRef<"visitor", "String">;
+  readonly meta_data: Prisma.FieldRef<"visitor", "Json">;
+  readonly fecha_visita: Prisma.FieldRef<"visitor", "DateTime">;
+  readonly usuario_id: Prisma.FieldRef<"visitor", "Int">;
 }
 
 // Custom InputTypes
@@ -1199,463 +1321,503 @@ export interface visitorFieldRefs {
  * visitor findUnique
  */
 export type visitorFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * Filter, which visitor to fetch.
    */
-  where: Prisma.visitorWhereUniqueInput
-}
+  where: Prisma.visitorWhereUniqueInput;
+};
 
 /**
  * visitor findUniqueOrThrow
  */
 export type visitorFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * Filter, which visitor to fetch.
    */
-  where: Prisma.visitorWhereUniqueInput
-}
+  where: Prisma.visitorWhereUniqueInput;
+};
 
 /**
  * visitor findFirst
  */
 export type visitorFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * Filter, which visitor to fetch.
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of visitors to fetch.
    */
-  orderBy?: Prisma.visitorOrderByWithRelationInput | Prisma.visitorOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.visitorOrderByWithRelationInput
+    | Prisma.visitorOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for visitors.
    */
-  cursor?: Prisma.visitorWhereUniqueInput
+  cursor?: Prisma.visitorWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` visitors from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` visitors.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of visitors.
    */
-  distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[]
-}
+  distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[];
+};
 
 /**
  * visitor findFirstOrThrow
  */
 export type visitorFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * Filter, which visitor to fetch.
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of visitors to fetch.
    */
-  orderBy?: Prisma.visitorOrderByWithRelationInput | Prisma.visitorOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.visitorOrderByWithRelationInput
+    | Prisma.visitorOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for visitors.
    */
-  cursor?: Prisma.visitorWhereUniqueInput
+  cursor?: Prisma.visitorWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` visitors from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` visitors.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of visitors.
    */
-  distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[]
-}
+  distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[];
+};
 
 /**
  * visitor findMany
  */
 export type visitorFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * Filter, which visitors to fetch.
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
    * Determine the order of visitors to fetch.
    */
-  orderBy?: Prisma.visitorOrderByWithRelationInput | Prisma.visitorOrderByWithRelationInput[]
+  orderBy?:
+    | Prisma.visitorOrderByWithRelationInput
+    | Prisma.visitorOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing visitors.
    */
-  cursor?: Prisma.visitorWhereUniqueInput
+  cursor?: Prisma.visitorWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` visitors from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` visitors.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of visitors.
    */
-  distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[]
-}
+  distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[];
+};
 
 /**
  * visitor create
  */
 export type visitorCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * The data needed to create a visitor.
    */
-  data: Prisma.XOR<Prisma.visitorCreateInput, Prisma.visitorUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.visitorCreateInput,
+    Prisma.visitorUncheckedCreateInput
+  >;
+};
 
 /**
  * visitor createMany
  */
 export type visitorCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many visitors.
    */
-  data: Prisma.visitorCreateManyInput | Prisma.visitorCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data: Prisma.visitorCreateManyInput | Prisma.visitorCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * visitor createManyAndReturn
  */
 export type visitorCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.visitorSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * The data used to create many visitors.
    */
-  data: Prisma.visitorCreateManyInput | Prisma.visitorCreateManyInput[]
-  skipDuplicates?: boolean
+  data: Prisma.visitorCreateManyInput | Prisma.visitorCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.visitorIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * visitor update
  */
 export type visitorUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * The data needed to update a visitor.
    */
-  data: Prisma.XOR<Prisma.visitorUpdateInput, Prisma.visitorUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.visitorUpdateInput,
+    Prisma.visitorUncheckedUpdateInput
+  >;
   /**
    * Choose, which visitor to update.
    */
-  where: Prisma.visitorWhereUniqueInput
-}
+  where: Prisma.visitorWhereUniqueInput;
+};
 
 /**
  * visitor updateMany
  */
 export type visitorUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update visitors.
    */
-  data: Prisma.XOR<Prisma.visitorUpdateManyMutationInput, Prisma.visitorUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.visitorUpdateManyMutationInput,
+    Prisma.visitorUncheckedUpdateManyInput
+  >;
   /**
    * Filter which visitors to update
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * Limit how many visitors to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * visitor updateManyAndReturn
  */
 export type visitorUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.visitorSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * The data used to update visitors.
    */
-  data: Prisma.XOR<Prisma.visitorUpdateManyMutationInput, Prisma.visitorUncheckedUpdateManyInput>
+  data: Prisma.XOR<
+    Prisma.visitorUpdateManyMutationInput,
+    Prisma.visitorUncheckedUpdateManyInput
+  >;
   /**
    * Filter which visitors to update
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * Limit how many visitors to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.visitorIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * visitor upsert
  */
 export type visitorUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * The filter to search for the visitor to update in case it exists.
    */
-  where: Prisma.visitorWhereUniqueInput
+  where: Prisma.visitorWhereUniqueInput;
   /**
    * In case the visitor found by the `where` argument doesn't exist, create a new visitor with this data.
    */
-  create: Prisma.XOR<Prisma.visitorCreateInput, Prisma.visitorUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.visitorCreateInput,
+    Prisma.visitorUncheckedCreateInput
+  >;
   /**
    * In case the visitor was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.visitorUpdateInput, Prisma.visitorUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.visitorUpdateInput,
+    Prisma.visitorUncheckedUpdateInput
+  >;
+};
 
 /**
  * visitor delete
  */
 export type visitorDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
+  include?: Prisma.visitorInclude<ExtArgs> | null;
   /**
    * Filter which visitor to delete.
    */
-  where: Prisma.visitorWhereUniqueInput
-}
+  where: Prisma.visitorWhereUniqueInput;
+};
 
 /**
  * visitor deleteMany
  */
 export type visitorDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which visitors to delete
    */
-  where?: Prisma.visitorWhereInput
+  where?: Prisma.visitorWhereInput;
   /**
    * Limit how many visitors to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * visitor.usuario
  */
 export type visitor$usuarioArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the usuario
    */
-  select?: Prisma.usuarioSelect<ExtArgs> | null
+  select?: Prisma.usuarioSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the usuario
    */
-  omit?: Prisma.usuarioOmit<ExtArgs> | null
+  omit?: Prisma.usuarioOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.usuarioInclude<ExtArgs> | null
-  where?: Prisma.usuarioWhereInput
-}
+  include?: Prisma.usuarioInclude<ExtArgs> | null;
+  where?: Prisma.usuarioWhereInput;
+};
 
 /**
  * visitor without action
  */
 export type visitorDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the visitor
    */
-  select?: Prisma.visitorSelect<ExtArgs> | null
+  select?: Prisma.visitorSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the visitor
    */
-  omit?: Prisma.visitorOmit<ExtArgs> | null
+  omit?: Prisma.visitorOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.visitorInclude<ExtArgs> | null
-}
+  include?: Prisma.visitorInclude<ExtArgs> | null;
+};

@@ -7,128 +7,129 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model ubicacion_maestra
  *
  */
 export type ubicacion_maestraModel =
-  runtime.Types.Result.DefaultSelection<Prisma.$ubicacion_maestraPayload>
+  runtime.Types.Result.DefaultSelection<Prisma.$ubicacion_maestraPayload>;
 
 export type AggregateUbicacion_maestra = {
-  _count: Ubicacion_maestraCountAggregateOutputType | null
-  _avg: Ubicacion_maestraAvgAggregateOutputType | null
-  _sum: Ubicacion_maestraSumAggregateOutputType | null
-  _min: Ubicacion_maestraMinAggregateOutputType | null
-  _max: Ubicacion_maestraMaxAggregateOutputType | null
-}
+  _count: Ubicacion_maestraCountAggregateOutputType | null;
+  _avg: Ubicacion_maestraAvgAggregateOutputType | null;
+  _sum: Ubicacion_maestraSumAggregateOutputType | null;
+  _min: Ubicacion_maestraMinAggregateOutputType | null;
+  _max: Ubicacion_maestraMaxAggregateOutputType | null;
+};
 
 export type Ubicacion_maestraAvgAggregateOutputType = {
-  id: number | null
-  latitud: runtime.Decimal | null
-  longitud: runtime.Decimal | null
-  popularidad: number | null
-}
+  id: number | null;
+  latitud: runtime.Decimal | null;
+  longitud: runtime.Decimal | null;
+  popularidad: number | null;
+};
 
 export type Ubicacion_maestraSumAggregateOutputType = {
-  id: number | null
-  latitud: runtime.Decimal | null
-  longitud: runtime.Decimal | null
-  popularidad: number | null
-}
+  id: number | null;
+  latitud: runtime.Decimal | null;
+  longitud: runtime.Decimal | null;
+  popularidad: number | null;
+};
 
 export type Ubicacion_maestraMinAggregateOutputType = {
-  id: number | null
-  departamento: string | null
-  provincia: string | null
-  municipio: string | null
-  nombre: string | null
-  latitud: runtime.Decimal | null
-  longitud: runtime.Decimal | null
-  popularidad: number | null
-}
+  id: number | null;
+  departamento: string | null;
+  provincia: string | null;
+  municipio: string | null;
+  nombre: string | null;
+  latitud: runtime.Decimal | null;
+  longitud: runtime.Decimal | null;
+  popularidad: number | null;
+};
 
 export type Ubicacion_maestraMaxAggregateOutputType = {
-  id: number | null
-  departamento: string | null
-  provincia: string | null
-  municipio: string | null
-  nombre: string | null
-  latitud: runtime.Decimal | null
-  longitud: runtime.Decimal | null
-  popularidad: number | null
-}
+  id: number | null;
+  departamento: string | null;
+  provincia: string | null;
+  municipio: string | null;
+  nombre: string | null;
+  latitud: runtime.Decimal | null;
+  longitud: runtime.Decimal | null;
+  popularidad: number | null;
+};
 
 export type Ubicacion_maestraCountAggregateOutputType = {
-  id: number
-  departamento: number
-  provincia: number
-  municipio: number
-  nombre: number
-  latitud: number
-  longitud: number
-  popularidad: number
-  _all: number
-}
+  id: number;
+  departamento: number;
+  provincia: number;
+  municipio: number;
+  nombre: number;
+  latitud: number;
+  longitud: number;
+  popularidad: number;
+  _all: number;
+};
 
 export type Ubicacion_maestraAvgAggregateInputType = {
-  id?: true
-  latitud?: true
-  longitud?: true
-  popularidad?: true
-}
+  id?: true;
+  latitud?: true;
+  longitud?: true;
+  popularidad?: true;
+};
 
 export type Ubicacion_maestraSumAggregateInputType = {
-  id?: true
-  latitud?: true
-  longitud?: true
-  popularidad?: true
-}
+  id?: true;
+  latitud?: true;
+  longitud?: true;
+  popularidad?: true;
+};
 
 export type Ubicacion_maestraMinAggregateInputType = {
-  id?: true
-  departamento?: true
-  provincia?: true
-  municipio?: true
-  nombre?: true
-  latitud?: true
-  longitud?: true
-  popularidad?: true
-}
+  id?: true;
+  departamento?: true;
+  provincia?: true;
+  municipio?: true;
+  nombre?: true;
+  latitud?: true;
+  longitud?: true;
+  popularidad?: true;
+};
 
 export type Ubicacion_maestraMaxAggregateInputType = {
-  id?: true
-  departamento?: true
-  provincia?: true
-  municipio?: true
-  nombre?: true
-  latitud?: true
-  longitud?: true
-  popularidad?: true
-}
+  id?: true;
+  departamento?: true;
+  provincia?: true;
+  municipio?: true;
+  nombre?: true;
+  latitud?: true;
+  longitud?: true;
+  popularidad?: true;
+};
 
 export type Ubicacion_maestraCountAggregateInputType = {
-  id?: true
-  departamento?: true
-  provincia?: true
-  municipio?: true
-  nombre?: true
-  latitud?: true
-  longitud?: true
-  popularidad?: true
-  _all?: true
-}
+  id?: true;
+  departamento?: true;
+  provincia?: true;
+  municipio?: true;
+  nombre?: true;
+  latitud?: true;
+  longitud?: true;
+  popularidad?: true;
+  _all?: true;
+};
 
 export type Ubicacion_maestraAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which ubicacion_maestra to aggregate.
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -136,672 +137,733 @@ export type Ubicacion_maestraAggregateArgs<
    */
   orderBy?:
     | Prisma.ubicacion_maestraOrderByWithRelationInput
-    | Prisma.ubicacion_maestraOrderByWithRelationInput[]
+    | Prisma.ubicacion_maestraOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.ubicacion_maestraWhereUniqueInput
+  cursor?: Prisma.ubicacion_maestraWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` ubicacion_maestras from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` ubicacion_maestras.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned ubicacion_maestras
    **/
-  _count?: true | Ubicacion_maestraCountAggregateInputType
+  _count?: true | Ubicacion_maestraCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Ubicacion_maestraAvgAggregateInputType
+  _avg?: Ubicacion_maestraAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Ubicacion_maestraSumAggregateInputType
+  _sum?: Ubicacion_maestraSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Ubicacion_maestraMinAggregateInputType
+  _min?: Ubicacion_maestraMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Ubicacion_maestraMaxAggregateInputType
-}
+  _max?: Ubicacion_maestraMaxAggregateInputType;
+};
 
-export type GetUbicacion_maestraAggregateType<T extends Ubicacion_maestraAggregateArgs> = {
-  [P in keyof T & keyof AggregateUbicacion_maestra]: P extends '_count' | 'count'
+export type GetUbicacion_maestraAggregateType<
+  T extends Ubicacion_maestraAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateUbicacion_maestra]: P extends
+    | "_count"
+    | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateUbicacion_maestra[P]>
-    : Prisma.GetScalarType<T[P], AggregateUbicacion_maestra[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateUbicacion_maestra[P]>;
+};
 
 export type ubicacion_maestraGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   orderBy?:
     | Prisma.ubicacion_maestraOrderByWithAggregationInput
-    | Prisma.ubicacion_maestraOrderByWithAggregationInput[]
-  by: Prisma.Ubicacion_maestraScalarFieldEnum[] | Prisma.Ubicacion_maestraScalarFieldEnum
-  having?: Prisma.ubicacion_maestraScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Ubicacion_maestraCountAggregateInputType | true
-  _avg?: Ubicacion_maestraAvgAggregateInputType
-  _sum?: Ubicacion_maestraSumAggregateInputType
-  _min?: Ubicacion_maestraMinAggregateInputType
-  _max?: Ubicacion_maestraMaxAggregateInputType
-}
+    | Prisma.ubicacion_maestraOrderByWithAggregationInput[];
+  by:
+    | Prisma.Ubicacion_maestraScalarFieldEnum[]
+    | Prisma.Ubicacion_maestraScalarFieldEnum;
+  having?: Prisma.ubicacion_maestraScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Ubicacion_maestraCountAggregateInputType | true;
+  _avg?: Ubicacion_maestraAvgAggregateInputType;
+  _sum?: Ubicacion_maestraSumAggregateInputType;
+  _min?: Ubicacion_maestraMinAggregateInputType;
+  _max?: Ubicacion_maestraMaxAggregateInputType;
+};
 
 export type Ubicacion_maestraGroupByOutputType = {
-  id: number
-  departamento: string
-  provincia: string | null
-  municipio: string | null
-  nombre: string
-  latitud: runtime.Decimal
-  longitud: runtime.Decimal
-  popularidad: number | null
-  _count: Ubicacion_maestraCountAggregateOutputType | null
-  _avg: Ubicacion_maestraAvgAggregateOutputType | null
-  _sum: Ubicacion_maestraSumAggregateOutputType | null
-  _min: Ubicacion_maestraMinAggregateOutputType | null
-  _max: Ubicacion_maestraMaxAggregateOutputType | null
-}
+  id: number;
+  departamento: string;
+  provincia: string | null;
+  municipio: string | null;
+  nombre: string;
+  latitud: runtime.Decimal;
+  longitud: runtime.Decimal;
+  popularidad: number | null;
+  _count: Ubicacion_maestraCountAggregateOutputType | null;
+  _avg: Ubicacion_maestraAvgAggregateOutputType | null;
+  _sum: Ubicacion_maestraSumAggregateOutputType | null;
+  _min: Ubicacion_maestraMinAggregateOutputType | null;
+  _max: Ubicacion_maestraMaxAggregateOutputType | null;
+};
 
-export type GetUbicacion_maestraGroupByPayload<T extends ubicacion_maestraGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<Ubicacion_maestraGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Ubicacion_maestraGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], Ubicacion_maestraGroupByOutputType[P]>
+export type GetUbicacion_maestraGroupByPayload<
+  T extends ubicacion_maestraGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<Ubicacion_maestraGroupByOutputType, T["by"]> & {
+      [P in keyof T &
+        keyof Ubicacion_maestraGroupByOutputType]: P extends "_count"
+        ? T[P] extends boolean
+          ? number
           : Prisma.GetScalarType<T[P], Ubicacion_maestraGroupByOutputType[P]>
-      }
-    >
+        : Prisma.GetScalarType<T[P], Ubicacion_maestraGroupByOutputType[P]>;
+    }
   >
+>;
 
 export type ubicacion_maestraWhereInput = {
-  AND?: Prisma.ubicacion_maestraWhereInput | Prisma.ubicacion_maestraWhereInput[]
-  OR?: Prisma.ubicacion_maestraWhereInput[]
-  NOT?: Prisma.ubicacion_maestraWhereInput | Prisma.ubicacion_maestraWhereInput[]
-  id?: Prisma.IntFilter<'ubicacion_maestra'> | number
-  departamento?: Prisma.StringFilter<'ubicacion_maestra'> | string
-  provincia?: Prisma.StringNullableFilter<'ubicacion_maestra'> | string | null
-  municipio?: Prisma.StringNullableFilter<'ubicacion_maestra'> | string | null
-  nombre?: Prisma.StringFilter<'ubicacion_maestra'> | string
+  AND?:
+    | Prisma.ubicacion_maestraWhereInput
+    | Prisma.ubicacion_maestraWhereInput[];
+  OR?: Prisma.ubicacion_maestraWhereInput[];
+  NOT?:
+    | Prisma.ubicacion_maestraWhereInput
+    | Prisma.ubicacion_maestraWhereInput[];
+  id?: Prisma.IntFilter<"ubicacion_maestra"> | number;
+  departamento?: Prisma.StringFilter<"ubicacion_maestra"> | string;
+  provincia?: Prisma.StringNullableFilter<"ubicacion_maestra"> | string | null;
+  municipio?: Prisma.StringNullableFilter<"ubicacion_maestra"> | string | null;
+  nombre?: Prisma.StringFilter<"ubicacion_maestra"> | string;
   latitud?:
-    | Prisma.DecimalFilter<'ubicacion_maestra'>
+    | Prisma.DecimalFilter<"ubicacion_maestra">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
-    | Prisma.DecimalFilter<'ubicacion_maestra'>
+    | Prisma.DecimalFilter<"ubicacion_maestra">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.IntNullableFilter<'ubicacion_maestra'> | number | null
-  ubicacion_inmueble?: Prisma.Ubicacion_inmuebleListRelationFilter
-}
+    | string;
+  popularidad?: Prisma.IntNullableFilter<"ubicacion_maestra"> | number | null;
+  ubicacion_inmueble?: Prisma.Ubicacion_inmuebleListRelationFilter;
+};
 
 export type ubicacion_maestraOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  departamento?: Prisma.SortOrder
-  provincia?: Prisma.SortOrderInput | Prisma.SortOrder
-  municipio?: Prisma.SortOrderInput | Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrderInput | Prisma.SortOrder
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleOrderByRelationAggregateInput
-}
+  id?: Prisma.SortOrder;
+  departamento?: Prisma.SortOrder;
+  provincia?: Prisma.SortOrderInput | Prisma.SortOrder;
+  municipio?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrderInput | Prisma.SortOrder;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleOrderByRelationAggregateInput;
+};
 
 export type ubicacion_maestraWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    AND?: Prisma.ubicacion_maestraWhereInput | Prisma.ubicacion_maestraWhereInput[]
-    OR?: Prisma.ubicacion_maestraWhereInput[]
-    NOT?: Prisma.ubicacion_maestraWhereInput | Prisma.ubicacion_maestraWhereInput[]
-    departamento?: Prisma.StringFilter<'ubicacion_maestra'> | string
-    provincia?: Prisma.StringNullableFilter<'ubicacion_maestra'> | string | null
-    municipio?: Prisma.StringNullableFilter<'ubicacion_maestra'> | string | null
-    nombre?: Prisma.StringFilter<'ubicacion_maestra'> | string
+    id?: number;
+    AND?:
+      | Prisma.ubicacion_maestraWhereInput
+      | Prisma.ubicacion_maestraWhereInput[];
+    OR?: Prisma.ubicacion_maestraWhereInput[];
+    NOT?:
+      | Prisma.ubicacion_maestraWhereInput
+      | Prisma.ubicacion_maestraWhereInput[];
+    departamento?: Prisma.StringFilter<"ubicacion_maestra"> | string;
+    provincia?:
+      | Prisma.StringNullableFilter<"ubicacion_maestra">
+      | string
+      | null;
+    municipio?:
+      | Prisma.StringNullableFilter<"ubicacion_maestra">
+      | string
+      | null;
+    nombre?: Prisma.StringFilter<"ubicacion_maestra"> | string;
     latitud?:
-      | Prisma.DecimalFilter<'ubicacion_maestra'>
+      | Prisma.DecimalFilter<"ubicacion_maestra">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
+      | string;
     longitud?:
-      | Prisma.DecimalFilter<'ubicacion_maestra'>
+      | Prisma.DecimalFilter<"ubicacion_maestra">
       | runtime.Decimal
       | runtime.DecimalJsLike
       | number
-      | string
-    popularidad?: Prisma.IntNullableFilter<'ubicacion_maestra'> | number | null
-    ubicacion_inmueble?: Prisma.Ubicacion_inmuebleListRelationFilter
+      | string;
+    popularidad?: Prisma.IntNullableFilter<"ubicacion_maestra"> | number | null;
+    ubicacion_inmueble?: Prisma.Ubicacion_inmuebleListRelationFilter;
   },
-  'id'
->
+  "id"
+>;
 
 export type ubicacion_maestraOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  departamento?: Prisma.SortOrder
-  provincia?: Prisma.SortOrderInput | Prisma.SortOrder
-  municipio?: Prisma.SortOrderInput | Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.ubicacion_maestraCountOrderByAggregateInput
-  _avg?: Prisma.ubicacion_maestraAvgOrderByAggregateInput
-  _max?: Prisma.ubicacion_maestraMaxOrderByAggregateInput
-  _min?: Prisma.ubicacion_maestraMinOrderByAggregateInput
-  _sum?: Prisma.ubicacion_maestraSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  departamento?: Prisma.SortOrder;
+  provincia?: Prisma.SortOrderInput | Prisma.SortOrder;
+  municipio?: Prisma.SortOrderInput | Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrderInput | Prisma.SortOrder;
+  _count?: Prisma.ubicacion_maestraCountOrderByAggregateInput;
+  _avg?: Prisma.ubicacion_maestraAvgOrderByAggregateInput;
+  _max?: Prisma.ubicacion_maestraMaxOrderByAggregateInput;
+  _min?: Prisma.ubicacion_maestraMinOrderByAggregateInput;
+  _sum?: Prisma.ubicacion_maestraSumOrderByAggregateInput;
+};
 
 export type ubicacion_maestraScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.ubicacion_maestraScalarWhereWithAggregatesInput
-    | Prisma.ubicacion_maestraScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ubicacion_maestraScalarWhereWithAggregatesInput[]
+    | Prisma.ubicacion_maestraScalarWhereWithAggregatesInput[];
+  OR?: Prisma.ubicacion_maestraScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.ubicacion_maestraScalarWhereWithAggregatesInput
-    | Prisma.ubicacion_maestraScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'ubicacion_maestra'> | number
-  departamento?: Prisma.StringWithAggregatesFilter<'ubicacion_maestra'> | string
-  provincia?: Prisma.StringNullableWithAggregatesFilter<'ubicacion_maestra'> | string | null
-  municipio?: Prisma.StringNullableWithAggregatesFilter<'ubicacion_maestra'> | string | null
-  nombre?: Prisma.StringWithAggregatesFilter<'ubicacion_maestra'> | string
+    | Prisma.ubicacion_maestraScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"ubicacion_maestra"> | number;
+  departamento?:
+    | Prisma.StringWithAggregatesFilter<"ubicacion_maestra">
+    | string;
+  provincia?:
+    | Prisma.StringNullableWithAggregatesFilter<"ubicacion_maestra">
+    | string
+    | null;
+  municipio?:
+    | Prisma.StringNullableWithAggregatesFilter<"ubicacion_maestra">
+    | string
+    | null;
+  nombre?: Prisma.StringWithAggregatesFilter<"ubicacion_maestra"> | string;
   latitud?:
-    | Prisma.DecimalWithAggregatesFilter<'ubicacion_maestra'>
+    | Prisma.DecimalWithAggregatesFilter<"ubicacion_maestra">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
-    | Prisma.DecimalWithAggregatesFilter<'ubicacion_maestra'>
+    | Prisma.DecimalWithAggregatesFilter<"ubicacion_maestra">
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.IntNullableWithAggregatesFilter<'ubicacion_maestra'> | number | null
-}
+    | string;
+  popularidad?:
+    | Prisma.IntNullableWithAggregatesFilter<"ubicacion_maestra">
+    | number
+    | null;
+};
 
 export type ubicacion_maestraCreateInput = {
-  departamento: string
-  provincia?: string | null
-  municipio?: string | null
-  nombre: string
-  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  popularidad?: number | null
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedManyWithoutUbicacion_maestraInput
-}
+  departamento: string;
+  provincia?: string | null;
+  municipio?: string | null;
+  nombre: string;
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  popularidad?: number | null;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleCreateNestedManyWithoutUbicacion_maestraInput;
+};
 
 export type ubicacion_maestraUncheckedCreateInput = {
-  id?: number
-  departamento: string
-  provincia?: string | null
-  municipio?: string | null
-  nombre: string
-  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  popularidad?: number | null
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedManyWithoutUbicacion_maestraInput
-}
+  id?: number;
+  departamento: string;
+  provincia?: string | null;
+  municipio?: string | null;
+  nombre: string;
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  popularidad?: number | null;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedCreateNestedManyWithoutUbicacion_maestraInput;
+};
 
 export type ubicacion_maestraUpdateInput = {
-  departamento?: Prisma.StringFieldUpdateOperationsInput | string
-  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  departamento?: Prisma.StringFieldUpdateOperationsInput | string;
+  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
   latitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateManyWithoutUbicacion_maestraNestedInput
-}
+    | string;
+  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUpdateManyWithoutUbicacion_maestraNestedInput;
+};
 
 export type ubicacion_maestraUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  departamento?: Prisma.StringFieldUpdateOperationsInput | string
-  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  departamento?: Prisma.StringFieldUpdateOperationsInput | string;
+  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
   latitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateManyWithoutUbicacion_maestraNestedInput
-}
+    | string;
+  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  ubicacion_inmueble?: Prisma.ubicacion_inmuebleUncheckedUpdateManyWithoutUbicacion_maestraNestedInput;
+};
 
 export type ubicacion_maestraCreateManyInput = {
-  id?: number
-  departamento: string
-  provincia?: string | null
-  municipio?: string | null
-  nombre: string
-  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  popularidad?: number | null
-}
+  id?: number;
+  departamento: string;
+  provincia?: string | null;
+  municipio?: string | null;
+  nombre: string;
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  popularidad?: number | null;
+};
 
 export type ubicacion_maestraUpdateManyMutationInput = {
-  departamento?: Prisma.StringFieldUpdateOperationsInput | string
-  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  departamento?: Prisma.StringFieldUpdateOperationsInput | string;
+  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
   latitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | string;
+  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type ubicacion_maestraUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  departamento?: Prisma.StringFieldUpdateOperationsInput | string
-  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  departamento?: Prisma.StringFieldUpdateOperationsInput | string;
+  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
   latitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | string;
+  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type Ubicacion_maestraNullableScalarRelationFilter = {
-  is?: Prisma.ubicacion_maestraWhereInput | null
-  isNot?: Prisma.ubicacion_maestraWhereInput | null
-}
+  is?: Prisma.ubicacion_maestraWhereInput | null;
+  isNot?: Prisma.ubicacion_maestraWhereInput | null;
+};
 
 export type ubicacion_maestraCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  departamento?: Prisma.SortOrder
-  provincia?: Prisma.SortOrder
-  municipio?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  departamento?: Prisma.SortOrder;
+  provincia?: Prisma.SortOrder;
+  municipio?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrder;
+};
 
 export type ubicacion_maestraAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrder;
+};
 
 export type ubicacion_maestraMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  departamento?: Prisma.SortOrder
-  provincia?: Prisma.SortOrder
-  municipio?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  departamento?: Prisma.SortOrder;
+  provincia?: Prisma.SortOrder;
+  municipio?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrder;
+};
 
 export type ubicacion_maestraMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  departamento?: Prisma.SortOrder
-  provincia?: Prisma.SortOrder
-  municipio?: Prisma.SortOrder
-  nombre?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  departamento?: Prisma.SortOrder;
+  provincia?: Prisma.SortOrder;
+  municipio?: Prisma.SortOrder;
+  nombre?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrder;
+};
 
 export type ubicacion_maestraSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  latitud?: Prisma.SortOrder
-  longitud?: Prisma.SortOrder
-  popularidad?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  latitud?: Prisma.SortOrder;
+  longitud?: Prisma.SortOrder;
+  popularidad?: Prisma.SortOrder;
+};
 
 export type ubicacion_maestraCreateNestedOneWithoutUbicacion_inmuebleInput = {
   create?: Prisma.XOR<
     Prisma.ubicacion_maestraCreateWithoutUbicacion_inmuebleInput,
     Prisma.ubicacion_maestraUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-  connectOrCreate?: Prisma.ubicacion_maestraCreateOrConnectWithoutUbicacion_inmuebleInput
-  connect?: Prisma.ubicacion_maestraWhereUniqueInput
-}
+  >;
+  connectOrCreate?: Prisma.ubicacion_maestraCreateOrConnectWithoutUbicacion_inmuebleInput;
+  connect?: Prisma.ubicacion_maestraWhereUniqueInput;
+};
 
 export type ubicacion_maestraUpdateOneWithoutUbicacion_inmuebleNestedInput = {
   create?: Prisma.XOR<
     Prisma.ubicacion_maestraCreateWithoutUbicacion_inmuebleInput,
     Prisma.ubicacion_maestraUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-  connectOrCreate?: Prisma.ubicacion_maestraCreateOrConnectWithoutUbicacion_inmuebleInput
-  upsert?: Prisma.ubicacion_maestraUpsertWithoutUbicacion_inmuebleInput
-  disconnect?: Prisma.ubicacion_maestraWhereInput | boolean
-  delete?: Prisma.ubicacion_maestraWhereInput | boolean
-  connect?: Prisma.ubicacion_maestraWhereUniqueInput
+  >;
+  connectOrCreate?: Prisma.ubicacion_maestraCreateOrConnectWithoutUbicacion_inmuebleInput;
+  upsert?: Prisma.ubicacion_maestraUpsertWithoutUbicacion_inmuebleInput;
+  disconnect?: Prisma.ubicacion_maestraWhereInput | boolean;
+  delete?: Prisma.ubicacion_maestraWhereInput | boolean;
+  connect?: Prisma.ubicacion_maestraWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
       Prisma.ubicacion_maestraUpdateToOneWithWhereWithoutUbicacion_inmuebleInput,
       Prisma.ubicacion_maestraUpdateWithoutUbicacion_inmuebleInput
     >,
     Prisma.ubicacion_maestraUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type ubicacion_maestraCreateWithoutUbicacion_inmuebleInput = {
-  departamento: string
-  provincia?: string | null
-  municipio?: string | null
-  nombre: string
-  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  popularidad?: number | null
-}
+  departamento: string;
+  provincia?: string | null;
+  municipio?: string | null;
+  nombre: string;
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  popularidad?: number | null;
+};
 
 export type ubicacion_maestraUncheckedCreateWithoutUbicacion_inmuebleInput = {
-  id?: number
-  departamento: string
-  provincia?: string | null
-  municipio?: string | null
-  nombre: string
-  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
-  popularidad?: number | null
-}
+  id?: number;
+  departamento: string;
+  provincia?: string | null;
+  municipio?: string | null;
+  nombre: string;
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string;
+  popularidad?: number | null;
+};
 
 export type ubicacion_maestraCreateOrConnectWithoutUbicacion_inmuebleInput = {
-  where: Prisma.ubicacion_maestraWhereUniqueInput
+  where: Prisma.ubicacion_maestraWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.ubicacion_maestraCreateWithoutUbicacion_inmuebleInput,
     Prisma.ubicacion_maestraUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-}
+  >;
+};
 
 export type ubicacion_maestraUpsertWithoutUbicacion_inmuebleInput = {
   update: Prisma.XOR<
     Prisma.ubicacion_maestraUpdateWithoutUbicacion_inmuebleInput,
     Prisma.ubicacion_maestraUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.ubicacion_maestraCreateWithoutUbicacion_inmuebleInput,
     Prisma.ubicacion_maestraUncheckedCreateWithoutUbicacion_inmuebleInput
-  >
-  where?: Prisma.ubicacion_maestraWhereInput
-}
+  >;
+  where?: Prisma.ubicacion_maestraWhereInput;
+};
 
-export type ubicacion_maestraUpdateToOneWithWhereWithoutUbicacion_inmuebleInput = {
-  where?: Prisma.ubicacion_maestraWhereInput
-  data: Prisma.XOR<
-    Prisma.ubicacion_maestraUpdateWithoutUbicacion_inmuebleInput,
-    Prisma.ubicacion_maestraUncheckedUpdateWithoutUbicacion_inmuebleInput
-  >
-}
+export type ubicacion_maestraUpdateToOneWithWhereWithoutUbicacion_inmuebleInput =
+  {
+    where?: Prisma.ubicacion_maestraWhereInput;
+    data: Prisma.XOR<
+      Prisma.ubicacion_maestraUpdateWithoutUbicacion_inmuebleInput,
+      Prisma.ubicacion_maestraUncheckedUpdateWithoutUbicacion_inmuebleInput
+    >;
+  };
 
 export type ubicacion_maestraUpdateWithoutUbicacion_inmuebleInput = {
-  departamento?: Prisma.StringFieldUpdateOperationsInput | string
-  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  departamento?: Prisma.StringFieldUpdateOperationsInput | string;
+  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
   latitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | string;
+  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 export type ubicacion_maestraUncheckedUpdateWithoutUbicacion_inmuebleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  departamento?: Prisma.StringFieldUpdateOperationsInput | string
-  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  departamento?: Prisma.StringFieldUpdateOperationsInput | string;
+  provincia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string;
   latitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
+    | string;
   longitud?:
     | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
-    | string
-  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
+    | string;
+  popularidad?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+};
 
 /**
  * Count Type Ubicacion_maestraCountOutputType
  */
 
 export type Ubicacion_maestraCountOutputType = {
-  ubicacion_inmueble: number
-}
+  ubicacion_inmueble: number;
+};
 
 export type Ubicacion_maestraCountOutputTypeSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  ubicacion_inmueble?: boolean | Ubicacion_maestraCountOutputTypeCountUbicacion_inmuebleArgs
-}
+  ubicacion_inmueble?:
+    | boolean
+    | Ubicacion_maestraCountOutputTypeCountUbicacion_inmuebleArgs;
+};
 
 /**
  * Ubicacion_maestraCountOutputType without action
  */
 export type Ubicacion_maestraCountOutputTypeDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the Ubicacion_maestraCountOutputType
    */
-  select?: Prisma.Ubicacion_maestraCountOutputTypeSelect<ExtArgs> | null
-}
+  select?: Prisma.Ubicacion_maestraCountOutputTypeSelect<ExtArgs> | null;
+};
 
 /**
  * Ubicacion_maestraCountOutputType without action
  */
 export type Ubicacion_maestraCountOutputTypeCountUbicacion_inmuebleArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.ubicacion_inmuebleWhereInput
-}
+  where?: Prisma.ubicacion_inmuebleWhereInput;
+};
 
 export type ubicacion_maestraSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    departamento?: boolean
-    provincia?: boolean
-    municipio?: boolean
-    nombre?: boolean
-    latitud?: boolean
-    longitud?: boolean
-    popularidad?: boolean
-    ubicacion_inmueble?: boolean | Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs>
-    _count?: boolean | Prisma.Ubicacion_maestraCountOutputTypeDefaultArgs<ExtArgs>
+    id?: boolean;
+    departamento?: boolean;
+    provincia?: boolean;
+    municipio?: boolean;
+    nombre?: boolean;
+    latitud?: boolean;
+    longitud?: boolean;
+    popularidad?: boolean;
+    ubicacion_inmueble?:
+      | boolean
+      | Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs>;
+    _count?:
+      | boolean
+      | Prisma.Ubicacion_maestraCountOutputTypeDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['ubicacion_maestra']
->
+  ExtArgs["result"]["ubicacion_maestra"]
+>;
 
 export type ubicacion_maestraSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    departamento?: boolean
-    provincia?: boolean
-    municipio?: boolean
-    nombre?: boolean
-    latitud?: boolean
-    longitud?: boolean
-    popularidad?: boolean
+    id?: boolean;
+    departamento?: boolean;
+    provincia?: boolean;
+    municipio?: boolean;
+    nombre?: boolean;
+    latitud?: boolean;
+    longitud?: boolean;
+    popularidad?: boolean;
   },
-  ExtArgs['result']['ubicacion_maestra']
->
+  ExtArgs["result"]["ubicacion_maestra"]
+>;
 
 export type ubicacion_maestraSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    departamento?: boolean
-    provincia?: boolean
-    municipio?: boolean
-    nombre?: boolean
-    latitud?: boolean
-    longitud?: boolean
-    popularidad?: boolean
+    id?: boolean;
+    departamento?: boolean;
+    provincia?: boolean;
+    municipio?: boolean;
+    nombre?: boolean;
+    latitud?: boolean;
+    longitud?: boolean;
+    popularidad?: boolean;
   },
-  ExtArgs['result']['ubicacion_maestra']
->
+  ExtArgs["result"]["ubicacion_maestra"]
+>;
 
 export type ubicacion_maestraSelectScalar = {
-  id?: boolean
-  departamento?: boolean
-  provincia?: boolean
-  municipio?: boolean
-  nombre?: boolean
-  latitud?: boolean
-  longitud?: boolean
-  popularidad?: boolean
-}
+  id?: boolean;
+  departamento?: boolean;
+  provincia?: boolean;
+  municipio?: boolean;
+  nombre?: boolean;
+  latitud?: boolean;
+  longitud?: boolean;
+  popularidad?: boolean;
+};
 
 export type ubicacion_maestraOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  | 'id'
-  | 'departamento'
-  | 'provincia'
-  | 'municipio'
-  | 'nombre'
-  | 'latitud'
-  | 'longitud'
-  | 'popularidad',
-  ExtArgs['result']['ubicacion_maestra']
->
+  | "id"
+  | "departamento"
+  | "provincia"
+  | "municipio"
+  | "nombre"
+  | "latitud"
+  | "longitud"
+  | "popularidad",
+  ExtArgs["result"]["ubicacion_maestra"]
+>;
 export type ubicacion_maestraInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  ubicacion_inmueble?: boolean | Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs>
-  _count?: boolean | Prisma.Ubicacion_maestraCountOutputTypeDefaultArgs<ExtArgs>
-}
+  ubicacion_inmueble?:
+    | boolean
+    | Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs>;
+  _count?:
+    | boolean
+    | Prisma.Ubicacion_maestraCountOutputTypeDefaultArgs<ExtArgs>;
+};
 export type ubicacion_maestraIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 export type ubicacion_maestraIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {};
 
 export type $ubicacion_maestraPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'ubicacion_maestra'
+  name: "ubicacion_maestra";
   objects: {
-    ubicacion_inmueble: Prisma.$ubicacion_inmueblePayload<ExtArgs>[]
-  }
+    ubicacion_inmueble: Prisma.$ubicacion_inmueblePayload<ExtArgs>[];
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      departamento: string
-      provincia: string | null
-      municipio: string | null
-      nombre: string
-      latitud: runtime.Decimal
-      longitud: runtime.Decimal
-      popularidad: number | null
+      id: number;
+      departamento: string;
+      provincia: string | null;
+      municipio: string | null;
+      nombre: string;
+      latitud: runtime.Decimal;
+      longitud: runtime.Decimal;
+      popularidad: number | null;
     },
-    ExtArgs['result']['ubicacion_maestra']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["ubicacion_maestra"]
+  >;
+  composites: {};
+};
 
 export type ubicacion_maestraGetPayload<
-  S extends boolean | null | undefined | ubicacion_maestraDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$ubicacion_maestraPayload, S>
+  S extends boolean | null | undefined | ubicacion_maestraDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$ubicacion_maestraPayload, S>;
 
 export type ubicacion_maestraCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<ubicacion_maestraFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Ubicacion_maestraCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  ubicacion_maestraFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Ubicacion_maestraCountAggregateInputType | true;
+};
 
 export interface ubicacion_maestraDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['ubicacion_maestra']
-    meta: { name: 'ubicacion_maestra' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["ubicacion_maestra"];
+    meta: { name: "ubicacion_maestra" };
+  };
   /**
    * Find zero or one Ubicacion_maestra that matches the filter.
    * @param {ubicacion_maestraFindUniqueArgs} args - Arguments to find a Ubicacion_maestra
@@ -814,18 +876,18 @@ export interface ubicacion_maestraDelegate<
    * })
    */
   findUnique<T extends ubicacion_maestraFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, ubicacion_maestraFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Ubicacion_maestra that matches the filter or throw an error with `error.code='P2025'`
@@ -840,18 +902,21 @@ export interface ubicacion_maestraDelegate<
    * })
    */
   findUniqueOrThrow<T extends ubicacion_maestraFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      ubicacion_maestraFindUniqueOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Ubicacion_maestra that matches the filter.
@@ -867,18 +932,18 @@ export interface ubicacion_maestraDelegate<
    * })
    */
   findFirst<T extends ubicacion_maestraFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, ubicacion_maestraFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, ubicacion_maestraFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Ubicacion_maestra that matches the filter or
@@ -895,18 +960,21 @@ export interface ubicacion_maestraDelegate<
    * })
    */
   findFirstOrThrow<T extends ubicacion_maestraFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, ubicacion_maestraFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      ubicacion_maestraFindFirstOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Ubicacion_maestras that matches the filter.
@@ -925,15 +993,15 @@ export interface ubicacion_maestraDelegate<
    *
    */
   findMany<T extends ubicacion_maestraFindManyArgs>(
-    args?: Prisma.SelectSubset<T, ubicacion_maestraFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, ubicacion_maestraFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Ubicacion_maestra.
@@ -948,18 +1016,18 @@ export interface ubicacion_maestraDelegate<
    *
    */
   create<T extends ubicacion_maestraCreateArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, ubicacion_maestraCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Ubicacion_maestras.
@@ -974,8 +1042,8 @@ export interface ubicacion_maestraDelegate<
    *
    */
   createMany<T extends ubicacion_maestraCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, ubicacion_maestraCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, ubicacion_maestraCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Ubicacion_maestras and returns the data saved in the database.
@@ -1000,15 +1068,18 @@ export interface ubicacion_maestraDelegate<
    *
    */
   createManyAndReturn<T extends ubicacion_maestraCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, ubicacion_maestraCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      ubicacion_maestraCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Ubicacion_maestra.
@@ -1023,18 +1094,18 @@ export interface ubicacion_maestraDelegate<
    *
    */
   delete<T extends ubicacion_maestraDeleteArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, ubicacion_maestraDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Ubicacion_maestra.
@@ -1052,18 +1123,18 @@ export interface ubicacion_maestraDelegate<
    *
    */
   update<T extends ubicacion_maestraUpdateArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, ubicacion_maestraUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Ubicacion_maestras.
@@ -1078,8 +1149,8 @@ export interface ubicacion_maestraDelegate<
    *
    */
   deleteMany<T extends ubicacion_maestraDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, ubicacion_maestraDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, ubicacion_maestraDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Ubicacion_maestras.
@@ -1099,8 +1170,8 @@ export interface ubicacion_maestraDelegate<
    *
    */
   updateMany<T extends ubicacion_maestraUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, ubicacion_maestraUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Ubicacion_maestras and returns the data updated in the database.
@@ -1131,15 +1202,18 @@ export interface ubicacion_maestraDelegate<
    *
    */
   updateManyAndReturn<T extends ubicacion_maestraUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      ubicacion_maestraUpdateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Ubicacion_maestra.
@@ -1159,18 +1233,18 @@ export interface ubicacion_maestraDelegate<
    * })
    */
   upsert<T extends ubicacion_maestraUpsertArgs>(
-    args: Prisma.SelectSubset<T, ubicacion_maestraUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, ubicacion_maestraUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__ubicacion_maestraClient<
     runtime.Types.Result.GetResult<
       Prisma.$ubicacion_maestraPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Ubicacion_maestras.
@@ -1186,14 +1260,17 @@ export interface ubicacion_maestraDelegate<
    * })
    **/
   count<T extends ubicacion_maestraCountArgs>(
-    args?: Prisma.Subset<T, ubicacion_maestraCountArgs>
+    args?: Prisma.Subset<T, ubicacion_maestraCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Ubicacion_maestraCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Ubicacion_maestraCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Ubicacion_maestra.
@@ -1220,8 +1297,8 @@ export interface ubicacion_maestraDelegate<
    * })
    **/
   aggregate<T extends Ubicacion_maestraAggregateArgs>(
-    args: Prisma.Subset<T, Ubicacion_maestraAggregateArgs>
-  ): Prisma.PrismaPromise<GetUbicacion_maestraAggregateType<T>>
+    args: Prisma.Subset<T, Ubicacion_maestraAggregateArgs>,
+  ): Prisma.PrismaPromise<GetUbicacion_maestraAggregateType<T>>;
 
   /**
    * Group by Ubicacion_maestra.
@@ -1244,20 +1321,20 @@ export interface ubicacion_maestraDelegate<
   groupBy<
     T extends ubicacion_maestraGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ubicacion_maestraGroupByArgs['orderBy'] }
-      : { orderBy?: ubicacion_maestraGroupByArgs['orderBy'] },
+      ? { orderBy: ubicacion_maestraGroupByArgs["orderBy"] }
+      : { orderBy?: ubicacion_maestraGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1266,26 +1343,31 @@ export interface ubicacion_maestraDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1293,17 +1375,22 @@ export interface ubicacion_maestraDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, ubicacion_maestraGroupByArgs, OrderByArg> & InputErrors
+    args: Prisma.SubsetIntersection<
+      T,
+      ubicacion_maestraGroupByArgs,
+      OrderByArg
+    > &
+      InputErrors,
   ): {} extends InputErrors
     ? GetUbicacion_maestraGroupByPayload<T>
-    : Prisma.PrismaPromise<InputErrors>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the ubicacion_maestra model
    */
-  readonly fields: ubicacion_maestraFieldRefs
+  readonly fields: ubicacion_maestraFieldRefs;
 }
 
 /**
@@ -1315,21 +1402,27 @@ export interface ubicacion_maestraDelegate<
 export interface Prisma__ubicacion_maestraClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
-  ubicacion_inmueble<T extends Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs>>
+  readonly [Symbol.toStringTag]: "PrismaPromise";
+  ubicacion_inmueble<
+    T extends Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<
+      T,
+      Prisma.ubicacion_maestra$ubicacion_inmuebleArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$ubicacion_inmueblePayload<ExtArgs>,
         T,
-        'findMany',
+        "findMany",
         GlobalOmitOptions
       >
     | Null
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1337,38 +1430,49 @@ export interface Prisma__ubicacion_maestraClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the ubicacion_maestra model
  */
 export interface ubicacion_maestraFieldRefs {
-  readonly id: Prisma.FieldRef<'ubicacion_maestra', 'Int'>
-  readonly departamento: Prisma.FieldRef<'ubicacion_maestra', 'String'>
-  readonly provincia: Prisma.FieldRef<'ubicacion_maestra', 'String'>
-  readonly municipio: Prisma.FieldRef<'ubicacion_maestra', 'String'>
-  readonly nombre: Prisma.FieldRef<'ubicacion_maestra', 'String'>
-  readonly latitud: Prisma.FieldRef<'ubicacion_maestra', 'Decimal'>
-  readonly longitud: Prisma.FieldRef<'ubicacion_maestra', 'Decimal'>
-  readonly popularidad: Prisma.FieldRef<'ubicacion_maestra', 'Int'>
+  readonly id: Prisma.FieldRef<"ubicacion_maestra", "Int">;
+  readonly departamento: Prisma.FieldRef<"ubicacion_maestra", "String">;
+  readonly provincia: Prisma.FieldRef<"ubicacion_maestra", "String">;
+  readonly municipio: Prisma.FieldRef<"ubicacion_maestra", "String">;
+  readonly nombre: Prisma.FieldRef<"ubicacion_maestra", "String">;
+  readonly latitud: Prisma.FieldRef<"ubicacion_maestra", "Decimal">;
+  readonly longitud: Prisma.FieldRef<"ubicacion_maestra", "Decimal">;
+  readonly popularidad: Prisma.FieldRef<"ubicacion_maestra", "Int">;
 }
 
 // Custom InputTypes
@@ -1376,72 +1480,75 @@ export interface ubicacion_maestraFieldRefs {
  * ubicacion_maestra findUnique
  */
 export type ubicacion_maestraFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * Filter, which ubicacion_maestra to fetch.
    */
-  where: Prisma.ubicacion_maestraWhereUniqueInput
-}
+  where: Prisma.ubicacion_maestraWhereUniqueInput;
+};
 
 /**
  * ubicacion_maestra findUniqueOrThrow
  */
 export type ubicacion_maestraFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * Filter, which ubicacion_maestra to fetch.
    */
-  where: Prisma.ubicacion_maestraWhereUniqueInput
-}
+  where: Prisma.ubicacion_maestraWhereUniqueInput;
+};
 
 /**
  * ubicacion_maestra findFirst
  */
 export type ubicacion_maestraFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * Filter, which ubicacion_maestra to fetch.
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1449,55 +1556,58 @@ export type ubicacion_maestraFindFirstArgs<
    */
   orderBy?:
     | Prisma.ubicacion_maestraOrderByWithRelationInput
-    | Prisma.ubicacion_maestraOrderByWithRelationInput[]
+    | Prisma.ubicacion_maestraOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for ubicacion_maestras.
    */
-  cursor?: Prisma.ubicacion_maestraWhereUniqueInput
+  cursor?: Prisma.ubicacion_maestraWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` ubicacion_maestras from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` ubicacion_maestras.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of ubicacion_maestras.
    */
-  distinct?: Prisma.Ubicacion_maestraScalarFieldEnum | Prisma.Ubicacion_maestraScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Ubicacion_maestraScalarFieldEnum
+    | Prisma.Ubicacion_maestraScalarFieldEnum[];
+};
 
 /**
  * ubicacion_maestra findFirstOrThrow
  */
 export type ubicacion_maestraFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * Filter, which ubicacion_maestra to fetch.
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1505,55 +1615,58 @@ export type ubicacion_maestraFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.ubicacion_maestraOrderByWithRelationInput
-    | Prisma.ubicacion_maestraOrderByWithRelationInput[]
+    | Prisma.ubicacion_maestraOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for ubicacion_maestras.
    */
-  cursor?: Prisma.ubicacion_maestraWhereUniqueInput
+  cursor?: Prisma.ubicacion_maestraWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` ubicacion_maestras from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` ubicacion_maestras.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of ubicacion_maestras.
    */
-  distinct?: Prisma.Ubicacion_maestraScalarFieldEnum | Prisma.Ubicacion_maestraScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Ubicacion_maestraScalarFieldEnum
+    | Prisma.Ubicacion_maestraScalarFieldEnum[];
+};
 
 /**
  * ubicacion_maestra findMany
  */
 export type ubicacion_maestraFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * Filter, which ubicacion_maestras to fetch.
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1561,130 +1674,141 @@ export type ubicacion_maestraFindManyArgs<
    */
   orderBy?:
     | Prisma.ubicacion_maestraOrderByWithRelationInput
-    | Prisma.ubicacion_maestraOrderByWithRelationInput[]
+    | Prisma.ubicacion_maestraOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing ubicacion_maestras.
    */
-  cursor?: Prisma.ubicacion_maestraWhereUniqueInput
+  cursor?: Prisma.ubicacion_maestraWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` ubicacion_maestras from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` ubicacion_maestras.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of ubicacion_maestras.
    */
-  distinct?: Prisma.Ubicacion_maestraScalarFieldEnum | Prisma.Ubicacion_maestraScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Ubicacion_maestraScalarFieldEnum
+    | Prisma.Ubicacion_maestraScalarFieldEnum[];
+};
 
 /**
  * ubicacion_maestra create
  */
 export type ubicacion_maestraCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * The data needed to create a ubicacion_maestra.
    */
   data: Prisma.XOR<
     Prisma.ubicacion_maestraCreateInput,
     Prisma.ubicacion_maestraUncheckedCreateInput
-  >
-}
+  >;
+};
 
 /**
  * ubicacion_maestra createMany
  */
 export type ubicacion_maestraCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many ubicacion_maestras.
    */
-  data: Prisma.ubicacion_maestraCreateManyInput | Prisma.ubicacion_maestraCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.ubicacion_maestraCreateManyInput
+    | Prisma.ubicacion_maestraCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * ubicacion_maestra createManyAndReturn
  */
 export type ubicacion_maestraCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * The data used to create many ubicacion_maestras.
    */
-  data: Prisma.ubicacion_maestraCreateManyInput | Prisma.ubicacion_maestraCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.ubicacion_maestraCreateManyInput
+    | Prisma.ubicacion_maestraCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * ubicacion_maestra update
  */
 export type ubicacion_maestraUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * The data needed to update a ubicacion_maestra.
    */
   data: Prisma.XOR<
     Prisma.ubicacion_maestraUpdateInput,
     Prisma.ubicacion_maestraUncheckedUpdateInput
-  >
+  >;
   /**
    * Choose, which ubicacion_maestra to update.
    */
-  where: Prisma.ubicacion_maestraWhereUniqueInput
-}
+  where: Prisma.ubicacion_maestraWhereUniqueInput;
+};
 
 /**
  * ubicacion_maestra updateMany
  */
 export type ubicacion_maestraUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update ubicacion_maestras.
@@ -1692,170 +1816,178 @@ export type ubicacion_maestraUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.ubicacion_maestraUpdateManyMutationInput,
     Prisma.ubicacion_maestraUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which ubicacion_maestras to update
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * Limit how many ubicacion_maestras to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * ubicacion_maestra updateManyAndReturn
  */
 export type ubicacion_maestraUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * The data used to update ubicacion_maestras.
    */
   data: Prisma.XOR<
     Prisma.ubicacion_maestraUpdateManyMutationInput,
     Prisma.ubicacion_maestraUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which ubicacion_maestras to update
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * Limit how many ubicacion_maestras to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * ubicacion_maestra upsert
  */
 export type ubicacion_maestraUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * The filter to search for the ubicacion_maestra to update in case it exists.
    */
-  where: Prisma.ubicacion_maestraWhereUniqueInput
+  where: Prisma.ubicacion_maestraWhereUniqueInput;
   /**
    * In case the ubicacion_maestra found by the `where` argument doesn't exist, create a new ubicacion_maestra with this data.
    */
   create: Prisma.XOR<
     Prisma.ubicacion_maestraCreateInput,
     Prisma.ubicacion_maestraUncheckedCreateInput
-  >
+  >;
   /**
    * In case the ubicacion_maestra was found with the provided `where` argument, update it with this data.
    */
   update: Prisma.XOR<
     Prisma.ubicacion_maestraUpdateInput,
     Prisma.ubicacion_maestraUncheckedUpdateInput
-  >
-}
+  >;
+};
 
 /**
  * ubicacion_maestra delete
  */
 export type ubicacion_maestraDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
   /**
    * Filter which ubicacion_maestra to delete.
    */
-  where: Prisma.ubicacion_maestraWhereUniqueInput
-}
+  where: Prisma.ubicacion_maestraWhereUniqueInput;
+};
 
 /**
  * ubicacion_maestra deleteMany
  */
 export type ubicacion_maestraDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which ubicacion_maestras to delete
    */
-  where?: Prisma.ubicacion_maestraWhereInput
+  where?: Prisma.ubicacion_maestraWhereInput;
   /**
    * Limit how many ubicacion_maestras to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * ubicacion_maestra.ubicacion_inmueble
  */
 export type ubicacion_maestra$ubicacion_inmuebleArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_inmueble
    */
-  select?: Prisma.ubicacion_inmuebleSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_inmuebleSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_inmueble
    */
-  omit?: Prisma.ubicacion_inmuebleOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_inmuebleOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_inmuebleInclude<ExtArgs> | null
-  where?: Prisma.ubicacion_inmuebleWhereInput
+  include?: Prisma.ubicacion_inmuebleInclude<ExtArgs> | null;
+  where?: Prisma.ubicacion_inmuebleWhereInput;
   orderBy?:
     | Prisma.ubicacion_inmuebleOrderByWithRelationInput
-    | Prisma.ubicacion_inmuebleOrderByWithRelationInput[]
-  cursor?: Prisma.ubicacion_inmuebleWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Ubicacion_inmuebleScalarFieldEnum | Prisma.Ubicacion_inmuebleScalarFieldEnum[]
-}
+    | Prisma.ubicacion_inmuebleOrderByWithRelationInput[];
+  cursor?: Prisma.ubicacion_inmuebleWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.Ubicacion_inmuebleScalarFieldEnum
+    | Prisma.Ubicacion_inmuebleScalarFieldEnum[];
+};
 
 /**
  * ubicacion_maestra without action
  */
 export type ubicacion_maestraDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the ubicacion_maestra
    */
-  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null
+  select?: Prisma.ubicacion_maestraSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the ubicacion_maestra
    */
-  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null
+  omit?: Prisma.ubicacion_maestraOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null
-}
+  include?: Prisma.ubicacion_maestraInclude<ExtArgs> | null;
+};

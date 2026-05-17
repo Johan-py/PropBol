@@ -13,7 +13,7 @@ export default function ParametrosPersonalizados({ parametros = [] }: Props) {
         (parametro) =>
           parametro &&
           typeof parametro.nombre === "string" &&
-          parametro.nombre.trim() !== ""
+          parametro.nombre.trim() !== "",
       )
     : [];
 

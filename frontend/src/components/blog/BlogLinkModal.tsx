@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Link as LinkIcon, X, ChevronRight, ChevronLeft, CheckCircle2, Type, Globe } from "lucide-react";
+import {
+  Link as LinkIcon,
+  X,
+  ChevronRight,
+  ChevronLeft,
+  CheckCircle2,
+  Type,
+  Globe,
+} from "lucide-react";
 
 interface BlogLinkModalProps {
   isOpen: boolean;
@@ -59,7 +67,9 @@ export default function BlogLinkModal({
               <div className="h-10 w-10 rounded-2xl bg-amber-50 flex items-center justify-center rotate-3">
                 <LinkIcon className="h-5 w-5 text-[#B45309]" />
               </div>
-              <h3 className="text-xl font-black text-[#1C1917] tracking-tight">Nuevo Enlace</h3>
+              <h3 className="text-xl font-black text-[#1C1917] tracking-tight">
+                Nuevo Enlace
+              </h3>
             </div>
             <button
               onClick={onClose}
@@ -74,8 +84,9 @@ export default function BlogLinkModal({
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${s <= step ? "bg-[#B45309]" : "bg-[#F5F5F4]"
-                  }`}
+                className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                  s <= step ? "bg-[#B45309]" : "bg-[#F5F5F4]"
+                }`}
               />
             ))}
           </div>
@@ -84,14 +95,23 @@ export default function BlogLinkModal({
         <form onSubmit={handleSubmit} className="px-10 pb-10">
           <div className="relative min-h-[220px] overflow-hidden">
             {/* Step 1: Text */}
-            <div className={`transition-all duration-500 absolute inset-0 ${step === 1 ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0 pointer-events-none"
-              }`}>
+            <div
+              className={`transition-all duration-500 absolute inset-0 ${
+                step === 1
+                  ? "translate-x-0 opacity-100"
+                  : "-translate-x-full opacity-0 pointer-events-none"
+              }`}
+            >
               <div className="space-y-6">
                 <div className="flex items-center gap-3 text-amber-600">
                   <Type className="h-4 w-4" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Paso 1: Identificación</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                    Paso 1: Identificación
+                  </span>
                 </div>
-                <h4 className="text-2xl font-bold text-[#1C1917] leading-tight">¿Qué texto verán tus lectores?</h4>
+                <h4 className="text-2xl font-bold text-[#1C1917] leading-tight">
+                  ¿Qué texto verán tus lectores?
+                </h4>
                 <div className="space-y-3">
                   <input
                     type="text"
@@ -102,21 +122,33 @@ export default function BlogLinkModal({
                     autoFocus
                   />
                   <p className="text-xs text-[#78716C] leading-relaxed px-1">
-                    Este es el texto amigable que aparecerá resaltado en tu blog.
+                    Este es el texto amigable que aparecerá resaltado en tu
+                    blog.
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Step 2: URL */}
-            <div className={`transition-all duration-500 absolute inset-0 ${step === 2 ? "translate-x-0 opacity-100" : step < 2 ? "translate-x-full opacity-0" : "-translate-x-full opacity-0 pointer-events-none"
-              }`}>
+            <div
+              className={`transition-all duration-500 absolute inset-0 ${
+                step === 2
+                  ? "translate-x-0 opacity-100"
+                  : step < 2
+                    ? "translate-x-full opacity-0"
+                    : "-translate-x-full opacity-0 pointer-events-none"
+              }`}
+            >
               <div className="space-y-6">
                 <div className="flex items-center gap-3 text-amber-600">
                   <Globe className="h-4 w-4" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Paso 2: Dirección</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                    Paso 2: Dirección
+                  </span>
                 </div>
-                <h4 className="text-2xl font-bold text-[#1C1917] leading-tight">¿A dónde los enviamos?</h4>
+                <h4 className="text-2xl font-bold text-[#1C1917] leading-tight">
+                  ¿A dónde los enviamos?
+                </h4>
                 <div className="space-y-3">
                   <input
                     type="url"
@@ -134,24 +166,36 @@ export default function BlogLinkModal({
             </div>
 
             {/* Step 3: Result */}
-            <div className={`transition-all duration-500 absolute inset-0 ${step === 3 ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
-              }`}>
+            <div
+              className={`transition-all duration-500 absolute inset-0 ${
+                step === 3
+                  ? "translate-x-0 opacity-100"
+                  : "translate-x-full opacity-0 pointer-events-none"
+              }`}
+            >
               <div className="space-y-6">
                 <div className="flex items-center gap-3 text-emerald-600">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Paso 3: Confirmación</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                    Paso 3: Confirmación
+                  </span>
                 </div>
-                <h4 className="text-2xl font-bold text-[#1C1917] leading-tight">¡Todo listo para brillar!</h4>
+                <h4 className="text-2xl font-bold text-[#1C1917] leading-tight">
+                  ¡Todo listo para brillar!
+                </h4>
                 <div className="rounded-3xl bg-emerald-50 p-6 border border-emerald-100 space-y-4">
                   <div className="space-y-1">
-                    <span className="text-[9px] font-bold uppercase text-emerald-600/60 tracking-wider">Vista previa final</span>
+                    <span className="text-[9px] font-bold uppercase text-emerald-600/60 tracking-wider">
+                      Vista previa final
+                    </span>
                     <p className="text-lg font-bold text-[#B45309] underline underline-offset-4 break-all">
                       {text.trim() || url.trim() || "mi-enlace"}
                     </p>
                   </div>
                   <div className="h-px bg-emerald-100 w-full" />
                   <p className="text-xs text-emerald-700/70 font-medium">
-                    Haz clic en "Finalizar" para insertar el enlace en tu artículo.
+                    Haz clic en "Finalizar" para insertar el enlace en tu
+                    artículo.
                   </p>
                 </div>
               </div>
@@ -174,7 +218,9 @@ export default function BlogLinkModal({
               <button
                 type="button"
                 onClick={handleNext}
-                disabled={step === 1 && !text.trim() && !url.trim() && step === 1} // Optional validation
+                disabled={
+                  step === 1 && !text.trim() && !url.trim() && step === 1
+                } // Optional validation
                 className="flex-1 flex items-center justify-center gap-3 h-16 rounded-2xl bg-[#B45309] text-sm font-bold uppercase tracking-widest text-white transition hover:bg-[#92400E] shadow-xl shadow-amber-900/20 active:scale-95"
               >
                 Continuar

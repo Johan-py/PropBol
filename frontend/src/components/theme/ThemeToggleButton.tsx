@@ -1,1 +1,1 @@
-export { default } from '@/components/layout/ThemeToggleButton'
+export { default } from "@/components/layout/ThemeToggleButton";

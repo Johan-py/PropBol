@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,7 +9,7 @@ interface Props {
   estado: "confirmando" | "publicando" | "exito" | "error_publicacion";
   progreso: number;
   onReintentar: () => void;
-  onPausar?: (pausado: boolean) => void; 
+  onPausar?: (pausado: boolean) => void;
 }
 
 export default function PublicarModal({
@@ -30,7 +21,7 @@ export default function PublicarModal({
   onPausar,
 }: Props) {
   const [checked, setChecked] = useState(false);
-  const [mostrarAdvertencia, setMostrarAdvertencia] = useState(false); 
+  const [mostrarAdvertencia, setMostrarAdvertencia] = useState(false);
 
   const estaPublicando = estado === "publicando";
   const esExito = estado === "exito";
@@ -71,16 +62,27 @@ export default function PublicarModal({
     // Overlay oscuro
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl relative overflow-hidden">
-        
         {/* 🟢 NUEVA VISTA: ADVERTENCIA CUSTOM */}
         {mostrarAdvertencia ? (
           <div className="flex flex-col items-center text-center py-2 animate-in fade-in duration-200">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-500">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
             </div>
-            <h3 className="mb-2 text-xl font-bold text-gray-800">¿Desea cancelar la publicación en curso?</h3>
+            <h3 className="mb-2 text-xl font-bold text-gray-800">
+              ¿Desea cancelar la publicación en curso?
+            </h3>
             <p className="mb-8 text-sm text-gray-500">
               El proceso se detendrá y tendrás que empezar de nuevo.
             </p>
@@ -103,7 +105,9 @@ export default function PublicarModal({
           <div className="animate-in fade-in duration-200">
             {/* VISTA ORIGINAL DEL MODAL */}
             {/* Título */}
-            <h2 className="text-xl font-bold text-gray-800">Publicar inmueble</h2>
+            <h2 className="text-xl font-bold text-gray-800">
+              Publicar inmueble
+            </h2>
             <p className="mb-5 text-sm text-gray-400">
               Confirma los datos y completa la publicación
             </p>
@@ -177,9 +181,24 @@ export default function PublicarModal({
                 >
                   {estaPublicando ? (
                     <span className="flex items-center justify-center gap-2">
-                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                      <svg
+                        className="h-4 w-4 animate-spin"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8z"
+                        />
                       </svg>
                       Publicando...
                     </span>

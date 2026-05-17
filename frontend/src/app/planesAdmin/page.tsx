@@ -1,7 +1,7 @@
 // src/app/admin/planes/page.tsx
 "use client";
 
-import { ReactNode, useState } from "react";           // ✅ Fix 1: ReactNode directo, sin React.*
+import { ReactNode, useState } from "react"; // ✅ Fix 1: ReactNode directo, sin React.*
 import { usePlanesStore, Plan } from "@/hooks/planesStore";
 import {
   Plus,
@@ -63,7 +63,7 @@ function PlanModal({
           comment: initial.comment,
           benefits: [...initial.benefits],
         }
-      : emptyForm()
+      : emptyForm(),
   );
 
   // ✅ Fix 3: key restringido a StringField, evita conflicto de tipo con benefits: string[]
@@ -89,10 +89,10 @@ function PlanModal({
   // ✅ Fix 2: Boolean() convierte a boolean puro para que disabled={!valid} no falle
   const valid = Boolean(
     form.name.trim() &&
-      form.description.trim() &&
-      form.price !== "" &&
-      !isNaN(Number(form.price)) &&
-      Number(form.price) >= 0
+    form.description.trim() &&
+    form.price !== "" &&
+    !isNaN(Number(form.price)) &&
+    Number(form.price) >= 0,
   );
 
   return (
@@ -109,7 +109,9 @@ function PlanModal({
         <div className="bg-gradient-to-r from-stone-900 to-stone-800 px-6 py-5 flex items-center justify-between">
           <div>
             <h2 className="text-white font-bold text-lg">
-              {mode === "create" ? "Crear nuevo plan" : `Editar — ${initial?.name}`}
+              {mode === "create"
+                ? "Crear nuevo plan"
+                : `Editar — ${initial?.name}`}
             </h2>
             <p className="text-stone-400 text-xs mt-0.5">
               {mode === "create"
@@ -259,7 +261,9 @@ function StatCard({
     <div className="bg-white rounded-2xl border border-stone-100 p-5 flex items-start gap-4 shadow-sm">
       <div className={`p-3 rounded-xl ${accent}`}>{icon}</div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
+          {label}
+        </p>
         <p className="text-2xl font-bold text-stone-900 mt-0.5">{value}</p>
         {sub && <p className="text-xs text-stone-400 mt-0.5">{sub}</p>}
       </div>
@@ -288,10 +292,14 @@ function ActivePlanRow({
         <td className="py-4 px-5">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center">
-              <span className="text-xs font-bold text-stone-500">#{plan.id}</span>
+              <span className="text-xs font-bold text-stone-500">
+                #{plan.id}
+              </span>
             </div>
             <div>
-              <p className="font-semibold text-stone-900 text-sm">{plan.name}</p>
+              <p className="font-semibold text-stone-900 text-sm">
+                {plan.name}
+              </p>
               <p className="text-xs text-stone-400">{plan.description}</p>
             </div>
             {isPopular && (
@@ -311,15 +319,21 @@ function ActivePlanRow({
             <div className="w-24 h-1.5 bg-stone-100 rounded-full overflow-hidden">
               <div
                 className={`h-full bg-amber-400 rounded-full transition-all duration-500 ${
-                  plan.subscribers >= 100 ? "w-full"
-                  : plan.subscribers >= 75  ? "w-3/4"
-                  : plan.subscribers >= 50  ? "w-1/2"
-                  : plan.subscribers >= 25  ? "w-1/4"
-                  : "w-1/12"
+                  plan.subscribers >= 100
+                    ? "w-full"
+                    : plan.subscribers >= 75
+                      ? "w-3/4"
+                      : plan.subscribers >= 50
+                        ? "w-1/2"
+                        : plan.subscribers >= 25
+                          ? "w-1/4"
+                          : "w-1/12"
                 }`}
               />
             </div>
-            <span className="text-xs text-stone-500 font-medium">{plan.subscribers}</span>
+            <span className="text-xs text-stone-500 font-medium">
+              {plan.subscribers}
+            </span>
           </div>
         </td>
 
@@ -385,8 +399,12 @@ function ActivePlanRow({
                 </p>
                 <ul className="space-y-1">
                   {plan.benefits.map((b, i) => (
-                    <li key={i} className="flex items-center gap-2 text-stone-700">
-                      <Check size={12} className="text-green-500 shrink-0" /> {b}
+                    <li
+                      key={i}
+                      className="flex items-center gap-2 text-stone-700"
+                    >
+                      <Check size={12} className="text-green-500 shrink-0" />{" "}
+                      {b}
                     </li>
                   ))}
                 </ul>
@@ -405,12 +423,17 @@ export default function PaginaAdminPlanes() {
   const { plans, createPlan, updatePlan, deletePlan, restorePlan } =
     usePlanesStore();
 
-  const [modal, setModal] = useState<{ mode: ModalMode; plan?: Plan } | null>(null);
+  const [modal, setModal] = useState<{ mode: ModalMode; plan?: Plan } | null>(
+    null,
+  );
 
   const activePlans = plans.filter((p) => !p.deleted);
   const deletedPlans = plans.filter((p) => p.deleted);
   const totalSubscribers = activePlans.reduce((s, p) => s + p.subscribers, 0);
-  const totalRevenue = activePlans.reduce((s, p) => s + p.price * p.subscribers, 0);
+  const totalRevenue = activePlans.reduce(
+    (s, p) => s + p.price * p.subscribers,
+    0,
+  );
   const maxSubs = Math.max(...activePlans.map((p) => p.subscribers), 1);
   const popularPlan = activePlans.find((p) => p.subscribers === maxSubs);
 
@@ -451,7 +474,8 @@ export default function PaginaAdminPlanes() {
               Administración de Planes
             </h1>
             <p className="text-stone-400 mt-1 text-sm">
-              Los cambios aquí se reflejan en tiempo real en la página de suscripciones.
+              Los cambios aquí se reflejan en tiempo real en la página de
+              suscripciones.
             </p>
           </div>
           <button
@@ -498,7 +522,9 @@ export default function PaginaAdminPlanes() {
         <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
           <div className="px-6 py-5 border-b border-stone-100 flex items-center justify-between">
             <div>
-              <h2 className="font-bold text-stone-900 text-base">Planes Activos</h2>
+              <h2 className="font-bold text-stone-900 text-base">
+                Planes Activos
+              </h2>
               <p className="text-stone-400 text-xs mt-0.5">
                 {activePlans.length} planes publicados
               </p>
@@ -518,16 +544,22 @@ export default function PaginaAdminPlanes() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-stone-50 border-b border-stone-100">
-                    {(["Plan", "Precio", "Suscriptores", "Beneficios", "Acciones"] as const).map(
-                      (h) => (
-                        <th
-                          key={h}
-                          className="py-3 px-5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider"
-                        >
-                          {h === "Acciones" ? "" : h}
-                        </th>
-                      )
-                    )}
+                    {(
+                      [
+                        "Plan",
+                        "Precio",
+                        "Suscriptores",
+                        "Beneficios",
+                        "Acciones",
+                      ] as const
+                    ).map((h) => (
+                      <th
+                        key={h}
+                        className="py-3 px-5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider"
+                      >
+                        {h === "Acciones" ? "" : h}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -551,7 +583,9 @@ export default function PaginaAdminPlanes() {
           <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b border-stone-100 flex items-center justify-between">
               <div>
-                <h2 className="font-bold text-stone-900 text-base">Planes Eliminados</h2>
+                <h2 className="font-bold text-stone-900 text-base">
+                  Planes Eliminados
+                </h2>
                 <p className="text-stone-400 text-xs mt-0.5">
                   {deletedPlans.length} planes en papelera
                 </p>
@@ -565,7 +599,9 @@ export default function PaginaAdminPlanes() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-stone-50 border-b border-stone-100">
-                    {(["Plan", "Precio", "Beneficios", "Restaurar"] as const).map((h) => (
+                    {(
+                      ["Plan", "Precio", "Beneficios", "Restaurar"] as const
+                    ).map((h) => (
                       <th
                         key={h}
                         className="py-3 px-5 text-[11px] font-semibold text-stone-400 uppercase tracking-wider"
@@ -577,17 +613,24 @@ export default function PaginaAdminPlanes() {
                 </thead>
                 <tbody>
                   {deletedPlans.map((plan) => (
-                    <tr key={plan.id} className="border-b border-stone-100 opacity-60">
+                    <tr
+                      key={plan.id}
+                      className="border-b border-stone-100 opacity-60"
+                    >
                       <td className="py-4 px-5">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
-                            <span className="text-xs font-bold text-red-300">#{plan.id}</span>
+                            <span className="text-xs font-bold text-red-300">
+                              #{plan.id}
+                            </span>
                           </div>
                           <div>
                             <p className="font-semibold text-stone-600 text-sm line-through">
                               {plan.name}
                             </p>
-                            <p className="text-xs text-stone-400">{plan.description}</p>
+                            <p className="text-xs text-stone-400">
+                              {plan.description}
+                            </p>
                           </div>
                         </div>
                       </td>

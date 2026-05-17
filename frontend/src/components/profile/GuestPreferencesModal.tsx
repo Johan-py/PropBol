@@ -1,15 +1,18 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 
 interface GuestPreferencesModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, onClose }) => {
-  const [genero, setGenero] = useState('');
-  const [edad, setEdad] = useState('');
-  const [zona, setZona] = useState('');
+const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
+  const [genero, setGenero] = useState("");
+  const [edad, setEdad] = useState("");
+  const [zona, setZona] = useState("");
   const [error, setError] = useState(false); // ✅ Estado para el bug de validación
 
   if (!isOpen) return null;
@@ -24,17 +27,18 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
     const payload = {
       genero: genero, // Ya no es undefined porque es obligatorio
       rango_edad: edad || undefined,
-      zona_interes: zona || undefined
+      zona_interes: zona || undefined,
     };
 
     try {
       // ✅ SE MANTIENE LA INTEGRACIÓN DE TU COMPAÑERO
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API_URL =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
       const response = await fetch(`${API_URL}/api/telemetria/visitante`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
@@ -42,20 +46,23 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
       const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem('guest_preferences', JSON.stringify({
-          genero,
-          rango_edad: edad,
-          zona
-        }));
+        localStorage.setItem(
+          "guest_preferences",
+          JSON.stringify({
+            genero,
+            rango_edad: edad,
+            zona,
+          }),
+        );
 
-        alert('¡Preferencias guardadas! Te mostraremos mejores resultados.');
+        alert("¡Preferencias guardadas! Te mostraremos mejores resultados.");
         onClose();
       } else {
-        alert(data.message || 'Error al guardar preferencias');
+        alert(data.message || "Error al guardar preferencias");
       }
     } catch (error) {
       console.error("Error guardando preferencias:", error);
-      alert('Error al guardar preferencias');
+      alert("Error al guardar preferencias");
     }
   };
 
@@ -63,10 +70,10 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-stone-900/40 backdrop-blur-sm animate-in fade-in duration-500">
       <div className="bg-[#fdf6e6] rounded-xl shadow-2xl max-w-md w-full p-7 m-4 border border-[#e5dfd7]">
         <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-[#292524]">
-            Tus Preferencias
-          </h2>
-          <p className="text-sm text-stone-500 mt-2">Ayúdanos a filtrar lo mejor para ti.</p>
+          <h2 className="text-xl font-bold text-[#292524]">Tus Preferencias</h2>
+          <p className="text-sm text-stone-500 mt-2">
+            Ayúdanos a filtrar lo mejor para ti.
+          </p>
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
@@ -81,9 +88,9 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
                 setError(false); // Limpia el error cuando el usuario selecciona algo
               }}
               className={`px-3 py-2 rounded text-sm bg-white border transition-all focus:outline-none focus:ring-1 ${
-                error 
-                  ? 'border-red-500 ring-red-500' 
-                  : 'border-stone-300 focus:border-amber-500 focus:ring-amber-500'
+                error
+                  ? "border-red-500 ring-red-500"
+                  : "border-stone-300 focus:border-amber-500 focus:ring-amber-500"
               }`}
             >
               <option value="">Seleccione...</option>
@@ -100,7 +107,9 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-stone-700">Rango de Edad:</label>
+            <label className="text-sm font-medium text-stone-700">
+              Rango de Edad:
+            </label>
             <select
               value={edad}
               onChange={(e) => setEdad(e.target.value)}
@@ -116,7 +125,9 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-stone-700">Zona de interés:</label>
+            <label className="text-sm font-medium text-stone-700">
+              Zona de interés:
+            </label>
             <input
               type="text"
               placeholder="Ej. Zona Norte, Cala Cala..."

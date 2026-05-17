@@ -7,113 +7,115 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model cambio_email
  *
  */
-export type cambio_emailModel = runtime.Types.Result.DefaultSelection<Prisma.$cambio_emailPayload>
+export type cambio_emailModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$cambio_emailPayload>;
 
 export type AggregateCambio_email = {
-  _count: Cambio_emailCountAggregateOutputType | null
-  _avg: Cambio_emailAvgAggregateOutputType | null
-  _sum: Cambio_emailSumAggregateOutputType | null
-  _min: Cambio_emailMinAggregateOutputType | null
-  _max: Cambio_emailMaxAggregateOutputType | null
-}
+  _count: Cambio_emailCountAggregateOutputType | null;
+  _avg: Cambio_emailAvgAggregateOutputType | null;
+  _sum: Cambio_emailSumAggregateOutputType | null;
+  _min: Cambio_emailMinAggregateOutputType | null;
+  _max: Cambio_emailMaxAggregateOutputType | null;
+};
 
 export type Cambio_emailAvgAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type Cambio_emailSumAggregateOutputType = {
-  id: number | null
-  usuario_id: number | null
-}
+  id: number | null;
+  usuario_id: number | null;
+};
 
 export type Cambio_emailMinAggregateOutputType = {
-  id: number | null
-  email_nuevo: string | null
-  token: string | null
-  expira_en: Date | null
-  creado_en: Date | null
-  completado_en: Date | null
-  usuario_id: number | null
-}
+  id: number | null;
+  email_nuevo: string | null;
+  token: string | null;
+  expira_en: Date | null;
+  creado_en: Date | null;
+  completado_en: Date | null;
+  usuario_id: number | null;
+};
 
 export type Cambio_emailMaxAggregateOutputType = {
-  id: number | null
-  email_nuevo: string | null
-  token: string | null
-  expira_en: Date | null
-  creado_en: Date | null
-  completado_en: Date | null
-  usuario_id: number | null
-}
+  id: number | null;
+  email_nuevo: string | null;
+  token: string | null;
+  expira_en: Date | null;
+  creado_en: Date | null;
+  completado_en: Date | null;
+  usuario_id: number | null;
+};
 
 export type Cambio_emailCountAggregateOutputType = {
-  id: number
-  email_nuevo: number
-  token: number
-  expira_en: number
-  creado_en: number
-  completado_en: number
-  usuario_id: number
-  _all: number
-}
+  id: number;
+  email_nuevo: number;
+  token: number;
+  expira_en: number;
+  creado_en: number;
+  completado_en: number;
+  usuario_id: number;
+  _all: number;
+};
 
 export type Cambio_emailAvgAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type Cambio_emailSumAggregateInputType = {
-  id?: true
-  usuario_id?: true
-}
+  id?: true;
+  usuario_id?: true;
+};
 
 export type Cambio_emailMinAggregateInputType = {
-  id?: true
-  email_nuevo?: true
-  token?: true
-  expira_en?: true
-  creado_en?: true
-  completado_en?: true
-  usuario_id?: true
-}
+  id?: true;
+  email_nuevo?: true;
+  token?: true;
+  expira_en?: true;
+  creado_en?: true;
+  completado_en?: true;
+  usuario_id?: true;
+};
 
 export type Cambio_emailMaxAggregateInputType = {
-  id?: true
-  email_nuevo?: true
-  token?: true
-  expira_en?: true
-  creado_en?: true
-  completado_en?: true
-  usuario_id?: true
-}
+  id?: true;
+  email_nuevo?: true;
+  token?: true;
+  expira_en?: true;
+  creado_en?: true;
+  completado_en?: true;
+  usuario_id?: true;
+};
 
 export type Cambio_emailCountAggregateInputType = {
-  id?: true
-  email_nuevo?: true
-  token?: true
-  expira_en?: true
-  creado_en?: true
-  completado_en?: true
-  usuario_id?: true
-  _all?: true
-}
+  id?: true;
+  email_nuevo?: true;
+  token?: true;
+  expira_en?: true;
+  creado_en?: true;
+  completado_en?: true;
+  usuario_id?: true;
+  _all?: true;
+};
 
 export type Cambio_emailAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which cambio_email to aggregate.
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -121,303 +123,371 @@ export type Cambio_emailAggregateArgs<
    */
   orderBy?:
     | Prisma.cambio_emailOrderByWithRelationInput
-    | Prisma.cambio_emailOrderByWithRelationInput[]
+    | Prisma.cambio_emailOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.cambio_emailWhereUniqueInput
+  cursor?: Prisma.cambio_emailWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` cambio_emails from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` cambio_emails.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned cambio_emails
    **/
-  _count?: true | Cambio_emailCountAggregateInputType
+  _count?: true | Cambio_emailCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Cambio_emailAvgAggregateInputType
+  _avg?: Cambio_emailAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Cambio_emailSumAggregateInputType
+  _sum?: Cambio_emailSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Cambio_emailMinAggregateInputType
+  _min?: Cambio_emailMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Cambio_emailMaxAggregateInputType
-}
+  _max?: Cambio_emailMaxAggregateInputType;
+};
 
-export type GetCambio_emailAggregateType<T extends Cambio_emailAggregateArgs> = {
-  [P in keyof T & keyof AggregateCambio_email]: P extends '_count' | 'count'
-    ? T[P] extends true
-      ? number
-      : Prisma.GetScalarType<T[P], AggregateCambio_email[P]>
-    : Prisma.GetScalarType<T[P], AggregateCambio_email[P]>
-}
+export type GetCambio_emailAggregateType<T extends Cambio_emailAggregateArgs> =
+  {
+    [P in keyof T & keyof AggregateCambio_email]: P extends "_count" | "count"
+      ? T[P] extends true
+        ? number
+        : Prisma.GetScalarType<T[P], AggregateCambio_email[P]>
+      : Prisma.GetScalarType<T[P], AggregateCambio_email[P]>;
+  };
 
 export type cambio_emailGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   orderBy?:
     | Prisma.cambio_emailOrderByWithAggregationInput
-    | Prisma.cambio_emailOrderByWithAggregationInput[]
-  by: Prisma.Cambio_emailScalarFieldEnum[] | Prisma.Cambio_emailScalarFieldEnum
-  having?: Prisma.cambio_emailScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Cambio_emailCountAggregateInputType | true
-  _avg?: Cambio_emailAvgAggregateInputType
-  _sum?: Cambio_emailSumAggregateInputType
-  _min?: Cambio_emailMinAggregateInputType
-  _max?: Cambio_emailMaxAggregateInputType
-}
+    | Prisma.cambio_emailOrderByWithAggregationInput[];
+  by: Prisma.Cambio_emailScalarFieldEnum[] | Prisma.Cambio_emailScalarFieldEnum;
+  having?: Prisma.cambio_emailScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Cambio_emailCountAggregateInputType | true;
+  _avg?: Cambio_emailAvgAggregateInputType;
+  _sum?: Cambio_emailSumAggregateInputType;
+  _min?: Cambio_emailMinAggregateInputType;
+  _max?: Cambio_emailMaxAggregateInputType;
+};
 
 export type Cambio_emailGroupByOutputType = {
-  id: number
-  email_nuevo: string
-  token: string
-  expira_en: Date
-  creado_en: Date | null
-  completado_en: Date | null
-  usuario_id: number
-  _count: Cambio_emailCountAggregateOutputType | null
-  _avg: Cambio_emailAvgAggregateOutputType | null
-  _sum: Cambio_emailSumAggregateOutputType | null
-  _min: Cambio_emailMinAggregateOutputType | null
-  _max: Cambio_emailMaxAggregateOutputType | null
-}
+  id: number;
+  email_nuevo: string;
+  token: string;
+  expira_en: Date;
+  creado_en: Date | null;
+  completado_en: Date | null;
+  usuario_id: number;
+  _count: Cambio_emailCountAggregateOutputType | null;
+  _avg: Cambio_emailAvgAggregateOutputType | null;
+  _sum: Cambio_emailSumAggregateOutputType | null;
+  _min: Cambio_emailMinAggregateOutputType | null;
+  _max: Cambio_emailMaxAggregateOutputType | null;
+};
 
-export type GetCambio_emailGroupByPayload<T extends cambio_emailGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<Cambio_emailGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof Cambio_emailGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], Cambio_emailGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], Cambio_emailGroupByOutputType[P]>
-    }
-  >
->
+export type GetCambio_emailGroupByPayload<T extends cambio_emailGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<Cambio_emailGroupByOutputType, T["by"]> & {
+        [P in keyof T & keyof Cambio_emailGroupByOutputType]: P extends "_count"
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], Cambio_emailGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], Cambio_emailGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type cambio_emailWhereInput = {
-  AND?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[]
-  OR?: Prisma.cambio_emailWhereInput[]
-  NOT?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[]
-  id?: Prisma.IntFilter<'cambio_email'> | number
-  email_nuevo?: Prisma.StringFilter<'cambio_email'> | string
-  token?: Prisma.StringFilter<'cambio_email'> | string
-  expira_en?: Prisma.DateTimeFilter<'cambio_email'> | Date | string
-  creado_en?: Prisma.DateTimeNullableFilter<'cambio_email'> | Date | string | null
-  completado_en?: Prisma.DateTimeNullableFilter<'cambio_email'> | Date | string | null
-  usuario_id?: Prisma.IntFilter<'cambio_email'> | number
-  usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
-}
+  AND?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[];
+  OR?: Prisma.cambio_emailWhereInput[];
+  NOT?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[];
+  id?: Prisma.IntFilter<"cambio_email"> | number;
+  email_nuevo?: Prisma.StringFilter<"cambio_email"> | string;
+  token?: Prisma.StringFilter<"cambio_email"> | string;
+  expira_en?: Prisma.DateTimeFilter<"cambio_email"> | Date | string;
+  creado_en?:
+    | Prisma.DateTimeNullableFilter<"cambio_email">
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.DateTimeNullableFilter<"cambio_email">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFilter<"cambio_email"> | number;
+  usuario?: Prisma.XOR<
+    Prisma.UsuarioScalarRelationFilter,
+    Prisma.usuarioWhereInput
+  >;
+};
 
 export type cambio_emailOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  email_nuevo?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  expira_en?: Prisma.SortOrder
-  creado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  completado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  usuario?: Prisma.usuarioOrderByWithRelationInput
-}
+  id?: Prisma.SortOrder;
+  email_nuevo?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  expira_en?: Prisma.SortOrder;
+  creado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  completado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  usuario?: Prisma.usuarioOrderByWithRelationInput;
+};
 
 export type cambio_emailWhereUniqueInput = Prisma.AtLeast<
   {
-    id?: number
-    token?: string
-    AND?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[]
-    OR?: Prisma.cambio_emailWhereInput[]
-    NOT?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[]
-    email_nuevo?: Prisma.StringFilter<'cambio_email'> | string
-    expira_en?: Prisma.DateTimeFilter<'cambio_email'> | Date | string
-    creado_en?: Prisma.DateTimeNullableFilter<'cambio_email'> | Date | string | null
-    completado_en?: Prisma.DateTimeNullableFilter<'cambio_email'> | Date | string | null
-    usuario_id?: Prisma.IntFilter<'cambio_email'> | number
-    usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
+    id?: number;
+    token?: string;
+    AND?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[];
+    OR?: Prisma.cambio_emailWhereInput[];
+    NOT?: Prisma.cambio_emailWhereInput | Prisma.cambio_emailWhereInput[];
+    email_nuevo?: Prisma.StringFilter<"cambio_email"> | string;
+    expira_en?: Prisma.DateTimeFilter<"cambio_email"> | Date | string;
+    creado_en?:
+      | Prisma.DateTimeNullableFilter<"cambio_email">
+      | Date
+      | string
+      | null;
+    completado_en?:
+      | Prisma.DateTimeNullableFilter<"cambio_email">
+      | Date
+      | string
+      | null;
+    usuario_id?: Prisma.IntFilter<"cambio_email"> | number;
+    usuario?: Prisma.XOR<
+      Prisma.UsuarioScalarRelationFilter,
+      Prisma.usuarioWhereInput
+    >;
   },
-  'id' | 'token'
->
+  "id" | "token"
+>;
 
 export type cambio_emailOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  email_nuevo?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  expira_en?: Prisma.SortOrder
-  creado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  completado_en?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-  _count?: Prisma.cambio_emailCountOrderByAggregateInput
-  _avg?: Prisma.cambio_emailAvgOrderByAggregateInput
-  _max?: Prisma.cambio_emailMaxOrderByAggregateInput
-  _min?: Prisma.cambio_emailMinOrderByAggregateInput
-  _sum?: Prisma.cambio_emailSumOrderByAggregateInput
-}
+  id?: Prisma.SortOrder;
+  email_nuevo?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  expira_en?: Prisma.SortOrder;
+  creado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  completado_en?: Prisma.SortOrderInput | Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+  _count?: Prisma.cambio_emailCountOrderByAggregateInput;
+  _avg?: Prisma.cambio_emailAvgOrderByAggregateInput;
+  _max?: Prisma.cambio_emailMaxOrderByAggregateInput;
+  _min?: Prisma.cambio_emailMinOrderByAggregateInput;
+  _sum?: Prisma.cambio_emailSumOrderByAggregateInput;
+};
 
 export type cambio_emailScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.cambio_emailScalarWhereWithAggregatesInput
-    | Prisma.cambio_emailScalarWhereWithAggregatesInput[]
-  OR?: Prisma.cambio_emailScalarWhereWithAggregatesInput[]
+    | Prisma.cambio_emailScalarWhereWithAggregatesInput[];
+  OR?: Prisma.cambio_emailScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.cambio_emailScalarWhereWithAggregatesInput
-    | Prisma.cambio_emailScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<'cambio_email'> | number
-  email_nuevo?: Prisma.StringWithAggregatesFilter<'cambio_email'> | string
-  token?: Prisma.StringWithAggregatesFilter<'cambio_email'> | string
-  expira_en?: Prisma.DateTimeWithAggregatesFilter<'cambio_email'> | Date | string
-  creado_en?: Prisma.DateTimeNullableWithAggregatesFilter<'cambio_email'> | Date | string | null
-  completado_en?: Prisma.DateTimeNullableWithAggregatesFilter<'cambio_email'> | Date | string | null
-  usuario_id?: Prisma.IntWithAggregatesFilter<'cambio_email'> | number
-}
+    | Prisma.cambio_emailScalarWhereWithAggregatesInput[];
+  id?: Prisma.IntWithAggregatesFilter<"cambio_email"> | number;
+  email_nuevo?: Prisma.StringWithAggregatesFilter<"cambio_email"> | string;
+  token?: Prisma.StringWithAggregatesFilter<"cambio_email"> | string;
+  expira_en?:
+    | Prisma.DateTimeWithAggregatesFilter<"cambio_email">
+    | Date
+    | string;
+  creado_en?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"cambio_email">
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"cambio_email">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntWithAggregatesFilter<"cambio_email"> | number;
+};
 
 export type cambio_emailCreateInput = {
-  email_nuevo: string
-  token: string
-  expira_en: Date | string
-  creado_en?: Date | string | null
-  completado_en?: Date | string | null
-  usuario: Prisma.usuarioCreateNestedOneWithoutCambio_emailInput
-}
+  email_nuevo: string;
+  token: string;
+  expira_en: Date | string;
+  creado_en?: Date | string | null;
+  completado_en?: Date | string | null;
+  usuario: Prisma.usuarioCreateNestedOneWithoutCambio_emailInput;
+};
 
 export type cambio_emailUncheckedCreateInput = {
-  id?: number
-  email_nuevo: string
-  token: string
-  expira_en: Date | string
-  creado_en?: Date | string | null
-  completado_en?: Date | string | null
-  usuario_id: number
-}
+  id?: number;
+  email_nuevo: string;
+  token: string;
+  expira_en: Date | string;
+  creado_en?: Date | string | null;
+  completado_en?: Date | string | null;
+  usuario_id: number;
+};
 
 export type cambio_emailUpdateInput = {
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario?: Prisma.usuarioUpdateOneRequiredWithoutCambio_emailNestedInput
-}
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutCambio_emailNestedInput;
+};
 
 export type cambio_emailUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type cambio_emailCreateManyInput = {
-  id?: number
-  email_nuevo: string
-  token: string
-  expira_en: Date | string
-  creado_en?: Date | string | null
-  completado_en?: Date | string | null
-  usuario_id: number
-}
+  id?: number;
+  email_nuevo: string;
+  token: string;
+  expira_en: Date | string;
+  creado_en?: Date | string | null;
+  completado_en?: Date | string | null;
+  usuario_id: number;
+};
 
 export type cambio_emailUpdateManyMutationInput = {
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type cambio_emailUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type cambio_emailCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  email_nuevo?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  expira_en?: Prisma.SortOrder
-  creado_en?: Prisma.SortOrder
-  completado_en?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  email_nuevo?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  expira_en?: Prisma.SortOrder;
+  creado_en?: Prisma.SortOrder;
+  completado_en?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type cambio_emailAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type cambio_emailMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  email_nuevo?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  expira_en?: Prisma.SortOrder
-  creado_en?: Prisma.SortOrder
-  completado_en?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  email_nuevo?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  expira_en?: Prisma.SortOrder;
+  creado_en?: Prisma.SortOrder;
+  completado_en?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type cambio_emailMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  email_nuevo?: Prisma.SortOrder
-  token?: Prisma.SortOrder
-  expira_en?: Prisma.SortOrder
-  creado_en?: Prisma.SortOrder
-  completado_en?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  email_nuevo?: Prisma.SortOrder;
+  token?: Prisma.SortOrder;
+  expira_en?: Prisma.SortOrder;
+  creado_en?: Prisma.SortOrder;
+  completado_en?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type cambio_emailSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
+  id?: Prisma.SortOrder;
+  usuario_id?: Prisma.SortOrder;
+};
 
 export type Cambio_emailListRelationFilter = {
-  every?: Prisma.cambio_emailWhereInput
-  some?: Prisma.cambio_emailWhereInput
-  none?: Prisma.cambio_emailWhereInput
-}
+  every?: Prisma.cambio_emailWhereInput;
+  some?: Prisma.cambio_emailWhereInput;
+  none?: Prisma.cambio_emailWhereInput;
+};
 
 export type cambio_emailOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
+  set?: Date | string;
+};
 
 export type cambio_emailCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -426,13 +496,15 @@ export type cambio_emailCreateNestedManyWithoutUsuarioInput = {
         Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.cambio_emailCreateWithoutUsuarioInput[]
-    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput
-    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope
-  connect?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-}
+    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+};
 
 export type cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput = {
   create?:
@@ -441,13 +513,15 @@ export type cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput = {
         Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.cambio_emailCreateWithoutUsuarioInput[]
-    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput
-    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[]
-  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope
-  connect?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-}
+    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[];
+  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope;
+  connect?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+};
 
 export type cambio_emailUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -456,26 +530,36 @@ export type cambio_emailUpdateManyWithoutUsuarioNestedInput = {
         Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.cambio_emailCreateWithoutUsuarioInput[]
-    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput
-    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope
-  set?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-  disconnect?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-  delete?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-  connect?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
+    | Prisma.cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+  disconnect?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+  delete?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+  connect?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
   update?:
     | Prisma.cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.cambio_emailUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.cambio_emailUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.cambio_emailScalarWhereInput | Prisma.cambio_emailScalarWhereInput[]
-}
+    | Prisma.cambio_emailUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.cambio_emailScalarWhereInput
+    | Prisma.cambio_emailScalarWhereInput[];
+};
 
 export type cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput = {
   create?:
@@ -484,252 +568,320 @@ export type cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput = {
         Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput
       >
     | Prisma.cambio_emailCreateWithoutUsuarioInput[]
-    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[]
+    | Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput[];
   connectOrCreate?:
     | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput
-    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[]
+    | Prisma.cambio_emailCreateOrConnectWithoutUsuarioInput[];
   upsert?:
     | Prisma.cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput
-    | Prisma.cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput[]
-  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope
-  set?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-  disconnect?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-  delete?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
-  connect?: Prisma.cambio_emailWhereUniqueInput | Prisma.cambio_emailWhereUniqueInput[]
+    | Prisma.cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput[];
+  createMany?: Prisma.cambio_emailCreateManyUsuarioInputEnvelope;
+  set?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+  disconnect?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+  delete?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
+  connect?:
+    | Prisma.cambio_emailWhereUniqueInput
+    | Prisma.cambio_emailWhereUniqueInput[];
   update?:
     | Prisma.cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput
-    | Prisma.cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput[]
+    | Prisma.cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput[];
   updateMany?:
     | Prisma.cambio_emailUpdateManyWithWhereWithoutUsuarioInput
-    | Prisma.cambio_emailUpdateManyWithWhereWithoutUsuarioInput[]
-  deleteMany?: Prisma.cambio_emailScalarWhereInput | Prisma.cambio_emailScalarWhereInput[]
-}
+    | Prisma.cambio_emailUpdateManyWithWhereWithoutUsuarioInput[];
+  deleteMany?:
+    | Prisma.cambio_emailScalarWhereInput
+    | Prisma.cambio_emailScalarWhereInput[];
+};
 
 export type cambio_emailCreateWithoutUsuarioInput = {
-  email_nuevo: string
-  token: string
-  expira_en: Date | string
-  creado_en?: Date | string | null
-  completado_en?: Date | string | null
-}
+  email_nuevo: string;
+  token: string;
+  expira_en: Date | string;
+  creado_en?: Date | string | null;
+  completado_en?: Date | string | null;
+};
 
 export type cambio_emailUncheckedCreateWithoutUsuarioInput = {
-  id?: number
-  email_nuevo: string
-  token: string
-  expira_en: Date | string
-  creado_en?: Date | string | null
-  completado_en?: Date | string | null
-}
+  id?: number;
+  email_nuevo: string;
+  token: string;
+  expira_en: Date | string;
+  creado_en?: Date | string | null;
+  completado_en?: Date | string | null;
+};
 
 export type cambio_emailCreateOrConnectWithoutUsuarioInput = {
-  where: Prisma.cambio_emailWhereUniqueInput
+  where: Prisma.cambio_emailWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.cambio_emailCreateWithoutUsuarioInput,
     Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type cambio_emailCreateManyUsuarioInputEnvelope = {
-  data: Prisma.cambio_emailCreateManyUsuarioInput | Prisma.cambio_emailCreateManyUsuarioInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.cambio_emailCreateManyUsuarioInput
+    | Prisma.cambio_emailCreateManyUsuarioInput[];
+  skipDuplicates?: boolean;
+};
 
 export type cambio_emailUpsertWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.cambio_emailWhereUniqueInput
+  where: Prisma.cambio_emailWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.cambio_emailUpdateWithoutUsuarioInput,
     Prisma.cambio_emailUncheckedUpdateWithoutUsuarioInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.cambio_emailCreateWithoutUsuarioInput,
     Prisma.cambio_emailUncheckedCreateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type cambio_emailUpdateWithWhereUniqueWithoutUsuarioInput = {
-  where: Prisma.cambio_emailWhereUniqueInput
+  where: Prisma.cambio_emailWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.cambio_emailUpdateWithoutUsuarioInput,
     Prisma.cambio_emailUncheckedUpdateWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type cambio_emailUpdateManyWithWhereWithoutUsuarioInput = {
-  where: Prisma.cambio_emailScalarWhereInput
+  where: Prisma.cambio_emailScalarWhereInput;
   data: Prisma.XOR<
     Prisma.cambio_emailUpdateManyMutationInput,
     Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioInput
-  >
-}
+  >;
+};
 
 export type cambio_emailScalarWhereInput = {
-  AND?: Prisma.cambio_emailScalarWhereInput | Prisma.cambio_emailScalarWhereInput[]
-  OR?: Prisma.cambio_emailScalarWhereInput[]
-  NOT?: Prisma.cambio_emailScalarWhereInput | Prisma.cambio_emailScalarWhereInput[]
-  id?: Prisma.IntFilter<'cambio_email'> | number
-  email_nuevo?: Prisma.StringFilter<'cambio_email'> | string
-  token?: Prisma.StringFilter<'cambio_email'> | string
-  expira_en?: Prisma.DateTimeFilter<'cambio_email'> | Date | string
-  creado_en?: Prisma.DateTimeNullableFilter<'cambio_email'> | Date | string | null
-  completado_en?: Prisma.DateTimeNullableFilter<'cambio_email'> | Date | string | null
-  usuario_id?: Prisma.IntFilter<'cambio_email'> | number
-}
+  AND?:
+    | Prisma.cambio_emailScalarWhereInput
+    | Prisma.cambio_emailScalarWhereInput[];
+  OR?: Prisma.cambio_emailScalarWhereInput[];
+  NOT?:
+    | Prisma.cambio_emailScalarWhereInput
+    | Prisma.cambio_emailScalarWhereInput[];
+  id?: Prisma.IntFilter<"cambio_email"> | number;
+  email_nuevo?: Prisma.StringFilter<"cambio_email"> | string;
+  token?: Prisma.StringFilter<"cambio_email"> | string;
+  expira_en?: Prisma.DateTimeFilter<"cambio_email"> | Date | string;
+  creado_en?:
+    | Prisma.DateTimeNullableFilter<"cambio_email">
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.DateTimeNullableFilter<"cambio_email">
+    | Date
+    | string
+    | null;
+  usuario_id?: Prisma.IntFilter<"cambio_email"> | number;
+};
 
 export type cambio_emailCreateManyUsuarioInput = {
-  id?: number
-  email_nuevo: string
-  token: string
-  expira_en: Date | string
-  creado_en?: Date | string | null
-  completado_en?: Date | string | null
-}
+  id?: number;
+  email_nuevo: string;
+  token: string;
+  expira_en: Date | string;
+  creado_en?: Date | string | null;
+  completado_en?: Date | string | null;
+};
 
 export type cambio_emailUpdateWithoutUsuarioInput = {
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type cambio_emailUncheckedUpdateWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type cambio_emailUncheckedUpdateManyWithoutUsuarioInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  creado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  email_nuevo?: Prisma.StringFieldUpdateOperationsInput | string;
+  token?: Prisma.StringFieldUpdateOperationsInput | string;
+  expira_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  creado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  completado_en?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+};
 
 export type cambio_emailSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    email_nuevo?: boolean
-    token?: boolean
-    expira_en?: boolean
-    creado_en?: boolean
-    completado_en?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    email_nuevo?: boolean;
+    token?: boolean;
+    expira_en?: boolean;
+    creado_en?: boolean;
+    completado_en?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['cambio_email']
->
+  ExtArgs["result"]["cambio_email"]
+>;
 
 export type cambio_emailSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    email_nuevo?: boolean
-    token?: boolean
-    expira_en?: boolean
-    creado_en?: boolean
-    completado_en?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    email_nuevo?: boolean;
+    token?: boolean;
+    expira_en?: boolean;
+    creado_en?: boolean;
+    completado_en?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['cambio_email']
->
+  ExtArgs["result"]["cambio_email"]
+>;
 
 export type cambio_emailSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    id?: boolean
-    email_nuevo?: boolean
-    token?: boolean
-    expira_en?: boolean
-    creado_en?: boolean
-    completado_en?: boolean
-    usuario_id?: boolean
-    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    id?: boolean;
+    email_nuevo?: boolean;
+    token?: boolean;
+    expira_en?: boolean;
+    creado_en?: boolean;
+    completado_en?: boolean;
+    usuario_id?: boolean;
+    usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['cambio_email']
->
+  ExtArgs["result"]["cambio_email"]
+>;
 
 export type cambio_emailSelectScalar = {
-  id?: boolean
-  email_nuevo?: boolean
-  token?: boolean
-  expira_en?: boolean
-  creado_en?: boolean
-  completado_en?: boolean
-  usuario_id?: boolean
-}
+  id?: boolean;
+  email_nuevo?: boolean;
+  token?: boolean;
+  expira_en?: boolean;
+  creado_en?: boolean;
+  completado_en?: boolean;
+  usuario_id?: boolean;
+};
 
 export type cambio_emailOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'email_nuevo' | 'token' | 'expira_en' | 'creado_en' | 'completado_en' | 'usuario_id',
-  ExtArgs['result']['cambio_email']
->
+  | "id"
+  | "email_nuevo"
+  | "token"
+  | "expira_en"
+  | "creado_en"
+  | "completado_en"
+  | "usuario_id",
+  ExtArgs["result"]["cambio_email"]
+>;
 export type cambio_emailInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type cambio_emailIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 export type cambio_emailIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
-}
+  usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>;
+};
 
 export type $cambio_emailPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'cambio_email'
+  name: "cambio_email";
   objects: {
-    usuario: Prisma.$usuarioPayload<ExtArgs>
-  }
+    usuario: Prisma.$usuarioPayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      id: number
-      email_nuevo: string
-      token: string
-      expira_en: Date
-      creado_en: Date | null
-      completado_en: Date | null
-      usuario_id: number
+      id: number;
+      email_nuevo: string;
+      token: string;
+      expira_en: Date;
+      creado_en: Date | null;
+      completado_en: Date | null;
+      usuario_id: number;
     },
-    ExtArgs['result']['cambio_email']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["cambio_email"]
+  >;
+  composites: {};
+};
 
-export type cambio_emailGetPayload<S extends boolean | null | undefined | cambio_emailDefaultArgs> =
-  runtime.Types.Result.GetResult<Prisma.$cambio_emailPayload, S>
+export type cambio_emailGetPayload<
+  S extends boolean | null | undefined | cambio_emailDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$cambio_emailPayload, S>;
 
 export type cambio_emailCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<cambio_emailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Cambio_emailCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  cambio_emailFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Cambio_emailCountAggregateInputType | true;
+};
 
 export interface cambio_emailDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['cambio_email']
-    meta: { name: 'cambio_email' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["cambio_email"];
+    meta: { name: "cambio_email" };
+  };
   /**
    * Find zero or one Cambio_email that matches the filter.
    * @param {cambio_emailFindUniqueArgs} args - Arguments to find a Cambio_email
@@ -742,18 +894,18 @@ export interface cambio_emailDelegate<
    * })
    */
   findUnique<T extends cambio_emailFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Cambio_email that matches the filter or throw an error with `error.code='P2025'`
@@ -768,18 +920,18 @@ export interface cambio_emailDelegate<
    * })
    */
   findUniqueOrThrow<T extends cambio_emailFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Cambio_email that matches the filter.
@@ -795,18 +947,18 @@ export interface cambio_emailDelegate<
    * })
    */
   findFirst<T extends cambio_emailFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, cambio_emailFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, cambio_emailFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Cambio_email that matches the filter or
@@ -823,18 +975,18 @@ export interface cambio_emailDelegate<
    * })
    */
   findFirstOrThrow<T extends cambio_emailFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, cambio_emailFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, cambio_emailFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Cambio_emails that matches the filter.
@@ -853,15 +1005,15 @@ export interface cambio_emailDelegate<
    *
    */
   findMany<T extends cambio_emailFindManyArgs>(
-    args?: Prisma.SelectSubset<T, cambio_emailFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, cambio_emailFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Cambio_email.
@@ -876,18 +1028,18 @@ export interface cambio_emailDelegate<
    *
    */
   create<T extends cambio_emailCreateArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Cambio_emails.
@@ -902,8 +1054,8 @@ export interface cambio_emailDelegate<
    *
    */
   createMany<T extends cambio_emailCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, cambio_emailCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, cambio_emailCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Cambio_emails and returns the data saved in the database.
@@ -928,15 +1080,15 @@ export interface cambio_emailDelegate<
    *
    */
   createManyAndReturn<T extends cambio_emailCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, cambio_emailCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, cambio_emailCreateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Cambio_email.
@@ -951,18 +1103,18 @@ export interface cambio_emailDelegate<
    *
    */
   delete<T extends cambio_emailDeleteArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Cambio_email.
@@ -980,18 +1132,18 @@ export interface cambio_emailDelegate<
    *
    */
   update<T extends cambio_emailUpdateArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Cambio_emails.
@@ -1006,8 +1158,8 @@ export interface cambio_emailDelegate<
    *
    */
   deleteMany<T extends cambio_emailDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, cambio_emailDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, cambio_emailDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Cambio_emails.
@@ -1027,8 +1179,8 @@ export interface cambio_emailDelegate<
    *
    */
   updateMany<T extends cambio_emailUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, cambio_emailUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Cambio_emails and returns the data updated in the database.
@@ -1059,15 +1211,15 @@ export interface cambio_emailDelegate<
    *
    */
   updateManyAndReturn<T extends cambio_emailUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Cambio_email.
@@ -1087,18 +1239,18 @@ export interface cambio_emailDelegate<
    * })
    */
   upsert<T extends cambio_emailUpsertArgs>(
-    args: Prisma.SelectSubset<T, cambio_emailUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, cambio_emailUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__cambio_emailClient<
     runtime.Types.Result.GetResult<
       Prisma.$cambio_emailPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Cambio_emails.
@@ -1114,14 +1266,17 @@ export interface cambio_emailDelegate<
    * })
    **/
   count<T extends cambio_emailCountArgs>(
-    args?: Prisma.Subset<T, cambio_emailCountArgs>
+    args?: Prisma.Subset<T, cambio_emailCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Cambio_emailCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Cambio_emailCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Cambio_email.
@@ -1148,8 +1303,8 @@ export interface cambio_emailDelegate<
    * })
    **/
   aggregate<T extends Cambio_emailAggregateArgs>(
-    args: Prisma.Subset<T, Cambio_emailAggregateArgs>
-  ): Prisma.PrismaPromise<GetCambio_emailAggregateType<T>>
+    args: Prisma.Subset<T, Cambio_emailAggregateArgs>,
+  ): Prisma.PrismaPromise<GetCambio_emailAggregateType<T>>;
 
   /**
    * Group by Cambio_email.
@@ -1172,20 +1327,20 @@ export interface cambio_emailDelegate<
   groupBy<
     T extends cambio_emailGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: cambio_emailGroupByArgs['orderBy'] }
-      : { orderBy?: cambio_emailGroupByArgs['orderBy'] },
+      ? { orderBy: cambio_emailGroupByArgs["orderBy"] }
+      : { orderBy?: cambio_emailGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1194,26 +1349,31 @@ export interface cambio_emailDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1221,15 +1381,18 @@ export interface cambio_emailDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, cambio_emailGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetCambio_emailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, cambio_emailGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetCambio_emailGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the cambio_email model
    */
-  readonly fields: cambio_emailFieldRefs
+  readonly fields: cambio_emailFieldRefs;
 }
 
 /**
@@ -1241,24 +1404,25 @@ export interface cambio_emailDelegate<
 export interface Prisma__cambio_emailClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__usuarioClient<
     | runtime.Types.Result.GetResult<
         Prisma.$usuarioPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1266,37 +1430,48 @@ export interface Prisma__cambio_emailClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the cambio_email model
  */
 export interface cambio_emailFieldRefs {
-  readonly id: Prisma.FieldRef<'cambio_email', 'Int'>
-  readonly email_nuevo: Prisma.FieldRef<'cambio_email', 'String'>
-  readonly token: Prisma.FieldRef<'cambio_email', 'String'>
-  readonly expira_en: Prisma.FieldRef<'cambio_email', 'DateTime'>
-  readonly creado_en: Prisma.FieldRef<'cambio_email', 'DateTime'>
-  readonly completado_en: Prisma.FieldRef<'cambio_email', 'DateTime'>
-  readonly usuario_id: Prisma.FieldRef<'cambio_email', 'Int'>
+  readonly id: Prisma.FieldRef<"cambio_email", "Int">;
+  readonly email_nuevo: Prisma.FieldRef<"cambio_email", "String">;
+  readonly token: Prisma.FieldRef<"cambio_email", "String">;
+  readonly expira_en: Prisma.FieldRef<"cambio_email", "DateTime">;
+  readonly creado_en: Prisma.FieldRef<"cambio_email", "DateTime">;
+  readonly completado_en: Prisma.FieldRef<"cambio_email", "DateTime">;
+  readonly usuario_id: Prisma.FieldRef<"cambio_email", "Int">;
 }
 
 // Custom InputTypes
@@ -1304,72 +1479,75 @@ export interface cambio_emailFieldRefs {
  * cambio_email findUnique
  */
 export type cambio_emailFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * Filter, which cambio_email to fetch.
    */
-  where: Prisma.cambio_emailWhereUniqueInput
-}
+  where: Prisma.cambio_emailWhereUniqueInput;
+};
 
 /**
  * cambio_email findUniqueOrThrow
  */
 export type cambio_emailFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * Filter, which cambio_email to fetch.
    */
-  where: Prisma.cambio_emailWhereUniqueInput
-}
+  where: Prisma.cambio_emailWhereUniqueInput;
+};
 
 /**
  * cambio_email findFirst
  */
 export type cambio_emailFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * Filter, which cambio_email to fetch.
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1377,55 +1555,58 @@ export type cambio_emailFindFirstArgs<
    */
   orderBy?:
     | Prisma.cambio_emailOrderByWithRelationInput
-    | Prisma.cambio_emailOrderByWithRelationInput[]
+    | Prisma.cambio_emailOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for cambio_emails.
    */
-  cursor?: Prisma.cambio_emailWhereUniqueInput
+  cursor?: Prisma.cambio_emailWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` cambio_emails from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` cambio_emails.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of cambio_emails.
    */
-  distinct?: Prisma.Cambio_emailScalarFieldEnum | Prisma.Cambio_emailScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Cambio_emailScalarFieldEnum
+    | Prisma.Cambio_emailScalarFieldEnum[];
+};
 
 /**
  * cambio_email findFirstOrThrow
  */
 export type cambio_emailFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * Filter, which cambio_email to fetch.
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1433,55 +1614,58 @@ export type cambio_emailFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.cambio_emailOrderByWithRelationInput
-    | Prisma.cambio_emailOrderByWithRelationInput[]
+    | Prisma.cambio_emailOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for cambio_emails.
    */
-  cursor?: Prisma.cambio_emailWhereUniqueInput
+  cursor?: Prisma.cambio_emailWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` cambio_emails from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` cambio_emails.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of cambio_emails.
    */
-  distinct?: Prisma.Cambio_emailScalarFieldEnum | Prisma.Cambio_emailScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Cambio_emailScalarFieldEnum
+    | Prisma.Cambio_emailScalarFieldEnum[];
+};
 
 /**
  * cambio_email findMany
  */
 export type cambio_emailFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * Filter, which cambio_emails to fetch.
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1489,128 +1673,145 @@ export type cambio_emailFindManyArgs<
    */
   orderBy?:
     | Prisma.cambio_emailOrderByWithRelationInput
-    | Prisma.cambio_emailOrderByWithRelationInput[]
+    | Prisma.cambio_emailOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing cambio_emails.
    */
-  cursor?: Prisma.cambio_emailWhereUniqueInput
+  cursor?: Prisma.cambio_emailWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` cambio_emails from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` cambio_emails.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of cambio_emails.
    */
-  distinct?: Prisma.Cambio_emailScalarFieldEnum | Prisma.Cambio_emailScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Cambio_emailScalarFieldEnum
+    | Prisma.Cambio_emailScalarFieldEnum[];
+};
 
 /**
  * cambio_email create
  */
 export type cambio_emailCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * The data needed to create a cambio_email.
    */
-  data: Prisma.XOR<Prisma.cambio_emailCreateInput, Prisma.cambio_emailUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.cambio_emailCreateInput,
+    Prisma.cambio_emailUncheckedCreateInput
+  >;
+};
 
 /**
  * cambio_email createMany
  */
 export type cambio_emailCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many cambio_emails.
    */
-  data: Prisma.cambio_emailCreateManyInput | Prisma.cambio_emailCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.cambio_emailCreateManyInput
+    | Prisma.cambio_emailCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * cambio_email createManyAndReturn
  */
 export type cambio_emailCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.cambio_emailSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * The data used to create many cambio_emails.
    */
-  data: Prisma.cambio_emailCreateManyInput | Prisma.cambio_emailCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.cambio_emailCreateManyInput
+    | Prisma.cambio_emailCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.cambio_emailIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * cambio_email update
  */
 export type cambio_emailUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * The data needed to update a cambio_email.
    */
-  data: Prisma.XOR<Prisma.cambio_emailUpdateInput, Prisma.cambio_emailUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.cambio_emailUpdateInput,
+    Prisma.cambio_emailUncheckedUpdateInput
+  >;
   /**
    * Choose, which cambio_email to update.
    */
-  where: Prisma.cambio_emailWhereUniqueInput
-}
+  where: Prisma.cambio_emailWhereUniqueInput;
+};
 
 /**
  * cambio_email updateMany
  */
 export type cambio_emailUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update cambio_emails.
@@ -1618,140 +1819,151 @@ export type cambio_emailUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.cambio_emailUpdateManyMutationInput,
     Prisma.cambio_emailUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which cambio_emails to update
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * Limit how many cambio_emails to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * cambio_email updateManyAndReturn
  */
 export type cambio_emailUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.cambio_emailSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * The data used to update cambio_emails.
    */
   data: Prisma.XOR<
     Prisma.cambio_emailUpdateManyMutationInput,
     Prisma.cambio_emailUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which cambio_emails to update
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * Limit how many cambio_emails to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.cambio_emailIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * cambio_email upsert
  */
 export type cambio_emailUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * The filter to search for the cambio_email to update in case it exists.
    */
-  where: Prisma.cambio_emailWhereUniqueInput
+  where: Prisma.cambio_emailWhereUniqueInput;
   /**
    * In case the cambio_email found by the `where` argument doesn't exist, create a new cambio_email with this data.
    */
-  create: Prisma.XOR<Prisma.cambio_emailCreateInput, Prisma.cambio_emailUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.cambio_emailCreateInput,
+    Prisma.cambio_emailUncheckedCreateInput
+  >;
   /**
    * In case the cambio_email was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.cambio_emailUpdateInput, Prisma.cambio_emailUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.cambio_emailUpdateInput,
+    Prisma.cambio_emailUncheckedUpdateInput
+  >;
+};
 
 /**
  * cambio_email delete
  */
 export type cambio_emailDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
   /**
    * Filter which cambio_email to delete.
    */
-  where: Prisma.cambio_emailWhereUniqueInput
-}
+  where: Prisma.cambio_emailWhereUniqueInput;
+};
 
 /**
  * cambio_email deleteMany
  */
 export type cambio_emailDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which cambio_emails to delete
    */
-  where?: Prisma.cambio_emailWhereInput
+  where?: Prisma.cambio_emailWhereInput;
   /**
    * Limit how many cambio_emails to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * cambio_email without action
  */
 export type cambio_emailDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the cambio_email
    */
-  select?: Prisma.cambio_emailSelect<ExtArgs> | null
+  select?: Prisma.cambio_emailSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the cambio_email
    */
-  omit?: Prisma.cambio_emailOmit<ExtArgs> | null
+  omit?: Prisma.cambio_emailOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.cambio_emailInclude<ExtArgs> | null
-}
+  include?: Prisma.cambio_emailInclude<ExtArgs> | null;
+};

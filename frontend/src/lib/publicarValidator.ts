@@ -98,6 +98,6 @@ export function agruparErroresPorSeccion(errores: ErrorValidacion[]) {
       acc[error.seccion].push(error);
       return acc;
     },
-    {} as Record<string, ErrorValidacion[]>
+    {} as Record<string, ErrorValidacion[]>,
   );
 }

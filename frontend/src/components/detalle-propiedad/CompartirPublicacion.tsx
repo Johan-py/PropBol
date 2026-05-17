@@ -1,111 +1,126 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Copy, Mail, MessageCircle, Send, Share2, X } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import { Copy, Mail, MessageCircle, Send, Share2, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+).replace(/\/$/, "");
 
 interface Props {
-  publicacionId: number
-  titulo: string
+  publicacionId: number;
+  titulo: string;
 }
 
-type MedioCompartido = 'WHATSAPP' | 'FACEBOOK' | 'TELEGRAM' | 'EMAIL' | 'COPIAR_LINK'
+type MedioCompartido =
+  | "WHATSAPP"
+  | "FACEBOOK"
+  | "TELEGRAM"
+  | "EMAIL"
+  | "COPIAR_LINK";
 
 export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const obtenerUrlPublicacion = () => {
-    if (typeof window === 'undefined') return ''
-    return window.location.href
-  }
+    if (typeof window === "undefined") return "";
+    return window.location.href;
+  };
 
   const registrarCompartido = async (medio: MedioCompartido) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      alert('Debes iniciar sesión para compartir esta publicación')
-      router.push('/sign-in')
-      return false
+      alert("Debes iniciar sesión para compartir esta publicación");
+      router.push("/sign-in");
+      return false;
     }
 
-    const response = await fetch(`${API_URL}/api/inmuebles/${publicacionId}/compartidos`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+    const response = await fetch(
+      `${API_URL}/api/inmuebles/${publicacionId}/compartidos`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          medio,
+        }),
       },
-      body: JSON.stringify({
-        medio
-      })
-    })
+    );
 
     if (response.status === 401) {
-      alert('Tu sesión expiró o debes iniciar sesión para compartir esta publicación')
-      router.push('/sign-in')
-      return false
+      alert(
+        "Tu sesión expiró o debes iniciar sesión para compartir esta publicación",
+      );
+      router.push("/sign-in");
+      return false;
     }
 
     if (!response.ok) {
-      alert('No se pudo registrar el compartido. Inténtalo nuevamente.')
-      return false
+      alert("No se pudo registrar el compartido. Inténtalo nuevamente.");
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   const compartir = async (medio: MedioCompartido) => {
     try {
-      setLoading(true)
+      setLoading(true);
 
-      const registrado = await registrarCompartido(medio)
+      const registrado = await registrarCompartido(medio);
 
-      if (!registrado) return
+      if (!registrado) return;
 
-      const urlPublicacion = obtenerUrlPublicacion()
-      const texto = `${titulo} - ${urlPublicacion}`
+      const urlPublicacion = obtenerUrlPublicacion();
+      const texto = `${titulo} - ${urlPublicacion}`;
 
-      if (medio === 'WHATSAPP') {
-        window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank')
+      if (medio === "WHATSAPP") {
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(texto)}`,
+          "_blank",
+        );
       }
 
-      if (medio === 'FACEBOOK') {
+      if (medio === "FACEBOOK") {
         window.open(
           `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlPublicacion)}`,
-          '_blank'
-        )
+          "_blank",
+        );
       }
 
-      if (medio === 'TELEGRAM') {
+      if (medio === "TELEGRAM") {
         window.open(
           `https://t.me/share/url?url=${encodeURIComponent(urlPublicacion)}&text=${encodeURIComponent(
-            titulo
+            titulo,
           )}`,
-          '_blank'
-        )
+          "_blank",
+        );
       }
 
-      if (medio === 'EMAIL') {
+      if (medio === "EMAIL") {
         window.location.href = `mailto:?subject=${encodeURIComponent(
-          titulo
-        )}&body=${encodeURIComponent(urlPublicacion)}`
+          titulo,
+        )}&body=${encodeURIComponent(urlPublicacion)}`;
       }
 
-      if (medio === 'COPIAR_LINK') {
-        await navigator.clipboard.writeText(urlPublicacion)
-        alert('Enlace copiado correctamente')
+      if (medio === "COPIAR_LINK") {
+        await navigator.clipboard.writeText(urlPublicacion);
+        alert("Enlace copiado correctamente");
       }
 
-      setOpen(false)
+      setOpen(false);
     } catch {
-      alert('Ocurrió un error al compartir la publicación.')
+      alert("Ocurrió un error al compartir la publicación.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="relative">
@@ -122,7 +137,9 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-[360px] rounded-2xl bg-white p-5 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-[#1f1f1f]">Compartir publicación</h3>
+              <h3 className="text-lg font-bold text-[#1f1f1f]">
+                Compartir publicación
+              </h3>
 
               <button
                 type="button"
@@ -138,7 +155,7 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => compartir('WHATSAPP')}
+                onClick={() => compartir("WHATSAPP")}
                 className="flex w-full items-center gap-3 rounded-xl border border-[#ddd] px-4 py-3 text-left text-sm font-semibold text-[#1f1f1f] transition hover:bg-[#f7f7f7] disabled:opacity-60"
               >
                 <MessageCircle className="h-5 w-5 text-[#d97f05]" />
@@ -148,7 +165,7 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => compartir('FACEBOOK')}
+                onClick={() => compartir("FACEBOOK")}
                 className="flex w-full items-center gap-3 rounded-xl border border-[#ddd] px-4 py-3 text-left text-sm font-semibold text-[#1f1f1f] transition hover:bg-[#f7f7f7] disabled:opacity-60"
               >
                 <Share2 className="h-5 w-5 text-[#d97f05]" />
@@ -158,7 +175,7 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => compartir('TELEGRAM')}
+                onClick={() => compartir("TELEGRAM")}
                 className="flex w-full items-center gap-3 rounded-xl border border-[#ddd] px-4 py-3 text-left text-sm font-semibold text-[#1f1f1f] transition hover:bg-[#f7f7f7] disabled:opacity-60"
               >
                 <Send className="h-5 w-5 text-[#d97f05]" />
@@ -168,7 +185,7 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => compartir('EMAIL')}
+                onClick={() => compartir("EMAIL")}
                 className="flex w-full items-center gap-3 rounded-xl border border-[#ddd] px-4 py-3 text-left text-sm font-semibold text-[#1f1f1f] transition hover:bg-[#f7f7f7] disabled:opacity-60"
               >
                 <Mail className="h-5 w-5 text-[#d97f05]" />
@@ -178,7 +195,7 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => compartir('COPIAR_LINK')}
+                onClick={() => compartir("COPIAR_LINK")}
                 className="flex w-full items-center gap-3 rounded-xl border border-[#ddd] px-4 py-3 text-left text-sm font-semibold text-[#1f1f1f] transition hover:bg-[#f7f7f7] disabled:opacity-60"
               >
                 <Copy className="h-5 w-5 text-[#d97f05]" />
@@ -195,5 +212,5 @@ export default function CompartirPublicacion({ publicacionId, titulo }: Props) {
         </div>
       )}
     </div>
-  )
+  );
 }

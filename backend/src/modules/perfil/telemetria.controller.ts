@@ -13,39 +13,41 @@ type DistribucionGenero = {
 };
 
 type DistribucionEdad = {
-  '0-18': number;
-  '19-25': number;
-  '26-35': number;
-  '36-50': number;
-  '51+': number;
+  "0-18": number;
+  "19-25": number;
+  "26-35": number;
+  "36-50": number;
+  "51+": number;
   NO_ESPECIFICADO: number;
 };
 
 // Utilidades
 function obtenerIPCliente(req: AuthRequest): string {
-  const forwarded = req.headers['x-forwarded-for'] as string;
-  const realIp = req.headers['x-real-ip'] as string;
+  const forwarded = req.headers["x-forwarded-for"] as string;
+  const realIp = req.headers["x-real-ip"] as string;
 
-  if (forwarded) return forwarded.split(',')[0];
+  if (forwarded) return forwarded.split(",")[0];
   if (realIp) return realIp;
-  return req.socket.remoteAddress || '0.0.0.0';
+  return req.socket.remoteAddress || "0.0.0.0";
 }
 
 async function obtenerZonaDesdeIP(ip: string): Promise<string> {
-  if (ip === '127.0.0.1' || ip === '::1' || ip === 'localhost') {
-    return 'desarrollo_local';
+  if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") {
+    return "desarrollo_local";
   }
 
   try {
-    const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city,regionName`);
+    const response = await fetch(
+      `http://ip-api.com/json/${ip}?fields=status,country,city,regionName`,
+    );
     const data = await response.json();
 
-    if (data.status === 'success') {
+    if (data.status === "success") {
       return `${data.city}, ${data.regionName}, ${data.country}`;
     }
-    return 'desconocida';
+    return "desconocida";
   } catch (error) {
-    return 'error_obteniendo_zona';
+    return "error_obteniendo_zona";
   }
 }
 
@@ -56,7 +58,10 @@ function calcularEdad(fechaNacimiento: Date | null): number | null {
   const edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
   const mesDiferencia = hoy.getMonth() - fechaNacimiento.getMonth();
 
-  if (mesDiferencia < 0 || (mesDiferencia === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+  if (
+    mesDiferencia < 0 ||
+    (mesDiferencia === 0 && hoy.getDate() < fechaNacimiento.getDate())
+  ) {
     return edad - 1;
   }
   return edad;
@@ -72,7 +77,7 @@ export const telemetriaController = {
       if (!usuario) {
         return res.status(401).json({
           success: false,
-          message: "Usuario no encontrado"
+          message: "Usuario no encontrado",
         });
       }
 
@@ -80,8 +85,8 @@ export const telemetriaController = {
 
       // Capturar datos automáticos
       const ip = obtenerIPCliente(req);
-      const userAgent = req.headers['user-agent'] || 'desconocido';
-      const acceptLanguage = req.headers['accept-language'] || 'es';
+      const userAgent = req.headers["user-agent"] || "desconocido";
+      const acceptLanguage = req.headers["accept-language"] || "es";
       const zonaConexion = await obtenerZonaDesdeIP(ip);
 
       // Calcular edad si enviaron fecha_nacimiento
@@ -103,8 +108,8 @@ export const telemetriaController = {
           ...(fechaNacimientoDate && { fecha_nacimiento: fechaNacimientoDate }),
           zona_conexion: usuario.zona_conexion || zonaConexion,
           telemetria_compartida: true,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       });
 
       // Registrar en visitor
@@ -122,11 +127,11 @@ export const telemetriaController = {
             endpoint: req.originalUrl,
             metodo: req.method,
             telemetria_aceptada: true,
-            tipo: "usuario_logueado"
+            tipo: "usuario_logueado",
           },
           fecha_visita: new Date(),
-          usuario_id: usuario.id
-        }
+          usuario_id: usuario.id,
+        },
       });
 
       return res.status(200).json({
@@ -139,15 +144,14 @@ export const telemetriaController = {
           edad: edad,
           zona_conexion: zonaConexion,
           pais: usuario.pais,
-          telemetria_compartida: true
-        }
+          telemetria_compartida: true,
+        },
       });
-
     } catch (error) {
       console.error("Error aceptando telemetría:", error);
       return res.status(500).json({
         success: false,
-        message: "Error interno del servidor"
+        message: "Error interno del servidor",
       });
     }
   },
@@ -158,8 +162,8 @@ export const telemetriaController = {
       const { genero, rango_edad, zona_interes } = req.body;
 
       const ip = obtenerIPCliente(req);
-      const userAgent = req.headers['user-agent'] || 'desconocido';
-      const acceptLanguage = req.headers['accept-language'] || 'es';
+      const userAgent = req.headers["user-agent"] || "desconocido";
+      const acceptLanguage = req.headers["accept-language"] || "es";
       const zonaConexion = await obtenerZonaDesdeIP(ip);
 
       await prisma.visitor.create({
@@ -174,11 +178,11 @@ export const telemetriaController = {
             idioma: acceptLanguage,
             timestamp: new Date().toISOString(),
             tipo: "visitante_no_autenticado",
-            telemetria_aceptada: true
+            telemetria_aceptada: true,
           },
           fecha_visita: new Date(),
-          usuario_id: null
-        }
+          usuario_id: null,
+        },
       });
 
       return res.status(200).json({
@@ -188,15 +192,14 @@ export const telemetriaController = {
           tipo: "visitante",
           zona: zonaConexion,
           genero: genero || "no_especificado",
-          rango_edad: rango_edad || "no_especificado"
-        }
+          rango_edad: rango_edad || "no_especificado",
+        },
       });
-
     } catch (error) {
       console.error("Error en telemetría visitante:", error);
       return res.status(500).json({
         success: false,
-        message: "Error interno del servidor"
+        message: "Error interno del servidor",
       });
     }
   },
@@ -217,16 +220,15 @@ export const telemetriaController = {
             tiene_zona: !!usuario.zona_conexion,
             genero_actual: usuario.genero,
             edad_actual: edad,
-            zona_actual: usuario.zona_conexion
-          }
-        }
+            zona_actual: usuario.zona_conexion,
+          },
+        },
       });
-
     } catch (error) {
       console.error("Error obteniendo estado:", error);
       return res.status(500).json({
         success: false,
-        message: "Error interno del servidor"
+        message: "Error interno del servidor",
       });
     }
   },
@@ -234,10 +236,10 @@ export const telemetriaController = {
   // Estadísticas para equipo de filtros
   async getEstadisticasFiltros(req: AuthRequest, res: Response) {
     try {
-      if (req.usuario.rol?.nombre !== 'ADMIN') {
+      if (req.usuario.rol?.nombre !== "ADMIN") {
         return res.status(403).json({
           success: false,
-          message: "No autorizado - Solo administradores"
+          message: "No autorizado - Solo administradores",
         });
       }
 
@@ -247,7 +249,7 @@ export const telemetriaController = {
       if (fechaInicio && fechaFin) {
         where.fechaRegistro = {
           gte: new Date(fechaInicio as string),
-          lte: new Date(fechaFin as string)
+          lte: new Date(fechaFin as string),
         };
       }
 
@@ -255,14 +257,14 @@ export const telemetriaController = {
       const usuarios = await prisma.usuario.findMany({
         where: {
           ...where,
-          telemetria_compartida: true
+          telemetria_compartida: true,
         },
         select: {
           genero: true,
           fecha_nacimiento: true,
           zona_conexion: true,
-          pais: true
-        }
+          pais: true,
+        },
       });
 
       // Obtener visitantes
@@ -270,12 +272,12 @@ export const telemetriaController = {
         where: {
           fecha_visita: {
             gte: fechaInicio ? new Date(fechaInicio as string) : undefined,
-            lte: fechaFin ? new Date(fechaFin as string) : undefined
-          }
+            lte: fechaFin ? new Date(fechaFin as string) : undefined,
+          },
         },
         select: {
-          meta_data: true
-        }
+          meta_data: true,
+        },
       });
 
       // Inicializar distribuciones con tipos correctos
@@ -284,16 +286,16 @@ export const telemetriaController = {
         FEMENINO: 0,
         OTRO: 0,
         PREFIERO_NO_DECIR: 0,
-        NO_ESPECIFICADO: 0
+        NO_ESPECIFICADO: 0,
       };
 
       const distribucionEdad: DistribucionEdad = {
-        '0-18': 0,
-        '19-25': 0,
-        '26-35': 0,
-        '36-50': 0,
-        '51+': 0,
-        NO_ESPECIFICADO: 0
+        "0-18": 0,
+        "19-25": 0,
+        "26-35": 0,
+        "36-50": 0,
+        "51+": 0,
+        NO_ESPECIFICADO: 0,
       };
 
       const generoVisitantes: DistribucionGenero = {
@@ -301,16 +303,16 @@ export const telemetriaController = {
         FEMENINO: 0,
         OTRO: 0,
         PREFIERO_NO_DECIR: 0,
-        NO_ESPECIFICADO: 0
+        NO_ESPECIFICADO: 0,
       };
 
       const edadVisitantes: DistribucionEdad = {
-        '0-18': 0,
-        '19-25': 0,
-        '26-35': 0,
-        '36-50': 0,
-        '51+': 0,
-        NO_ESPECIFICADO: 0
+        "0-18": 0,
+        "19-25": 0,
+        "26-35": 0,
+        "36-50": 0,
+        "51+": 0,
+        NO_ESPECIFICADO: 0,
       };
 
       const zonas: Record<string, number> = {};
@@ -319,7 +321,10 @@ export const telemetriaController = {
       // Procesar usuarios
       for (const u of usuarios) {
         // Género
-        if (u.genero && distribucionGenero[u.genero as keyof DistribucionGenero] !== undefined) {
+        if (
+          u.genero &&
+          distribucionGenero[u.genero as keyof DistribucionGenero] !== undefined
+        ) {
           distribucionGenero[u.genero as keyof DistribucionGenero]++;
         } else {
           distribucionGenero.NO_ESPECIFICADO++;
@@ -328,11 +333,11 @@ export const telemetriaController = {
         // Edad
         const edad = calcularEdad(u.fecha_nacimiento);
         if (edad) {
-          if (edad <= 18) distribucionEdad['0-18']++;
-          else if (edad <= 25) distribucionEdad['19-25']++;
-          else if (edad <= 35) distribucionEdad['26-35']++;
-          else if (edad <= 50) distribucionEdad['36-50']++;
-          else distribucionEdad['51+']++;
+          if (edad <= 18) distribucionEdad["0-18"]++;
+          else if (edad <= 25) distribucionEdad["19-25"]++;
+          else if (edad <= 35) distribucionEdad["26-35"]++;
+          else if (edad <= 50) distribucionEdad["36-50"]++;
+          else distribucionEdad["51+"]++;
         } else {
           distribucionEdad.NO_ESPECIFICADO++;
         }
@@ -352,13 +357,21 @@ export const telemetriaController = {
       for (const v of visitantes) {
         const meta = v.meta_data as any;
 
-        if (meta?.genero && generoVisitantes[meta.genero as keyof DistribucionGenero] !== undefined) {
+        if (
+          meta?.genero &&
+          generoVisitantes[meta.genero as keyof DistribucionGenero] !==
+            undefined
+        ) {
           generoVisitantes[meta.genero as keyof DistribucionGenero]++;
         } else {
           generoVisitantes.NO_ESPECIFICADO++;
         }
 
-        if (meta?.rango_edad && edadVisitantes[meta.rango_edad as keyof DistribucionEdad] !== undefined) {
+        if (
+          meta?.rango_edad &&
+          edadVisitantes[meta.rango_edad as keyof DistribucionEdad] !==
+            undefined
+        ) {
           edadVisitantes[meta.rango_edad as keyof DistribucionEdad]++;
         } else {
           edadVisitantes.NO_ESPECIFICADO++;
@@ -381,24 +394,23 @@ export const telemetriaController = {
             paises_top: Object.entries(paises)
               .map(([pais, count]) => ({ pais, count }))
               .sort((a, b) => b.count - a.count)
-              .slice(0, 10)
+              .slice(0, 10),
           },
           visitantes: {
             total: visitantes.length,
             distribucion_genero: generoVisitantes,
-            distribucion_edad: edadVisitantes
+            distribucion_edad: edadVisitantes,
           },
           total_telemetria: usuarios.length + visitantes.length,
-          fecha_analisis: new Date().toISOString()
-        }
+          fecha_analisis: new Date().toISOString(),
+        },
       });
-
     } catch (error) {
       console.error("Error obteniendo estadísticas:", error);
       return res.status(500).json({
         success: false,
-        message: "Error interno del servidor"
+        message: "Error interno del servidor",
       });
     }
-  }
+  },
 };

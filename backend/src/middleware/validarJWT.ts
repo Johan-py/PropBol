@@ -56,7 +56,7 @@ export const validarJWT = async (
 export const validarJWTOpcional = async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const authHeader = req.headers.authorization;
@@ -68,7 +68,7 @@ export const validarJWTOpcional = async (
 
     const decoded = verifyJwtToken(token) as any;
     const session = await findActiveSessionByToken(token);
-    
+
     if (session) {
       req.usuario = session.usuario;
     }

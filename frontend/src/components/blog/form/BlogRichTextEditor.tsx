@@ -6,7 +6,14 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Markdown } from "tiptap-markdown";
-import { Bold, Italic, List, Quote, Link as LinkIcon, Eraser } from "lucide-react";
+import {
+  Bold,
+  Italic,
+  List,
+  Quote,
+  Link as LinkIcon,
+  Eraser,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface BlogRichTextEditorProps {
@@ -20,7 +27,7 @@ export default function BlogRichTextEditor({
   contenido,
   setContenido,
   onEditorReady,
-  onLink
+  onLink,
 }: BlogRichTextEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -39,7 +46,8 @@ export default function BlogRichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: "prose prose-stone prose-amber max-w-none focus:outline-none min-h-[500px] px-8 py-8 text-lg text-[#44403C]",
+        class:
+          "prose prose-stone prose-amber max-w-none focus:outline-none min-h-[500px] px-8 py-8 text-lg text-[#44403C]",
       },
     },
   });
@@ -110,7 +118,9 @@ export default function BlogRichTextEditor({
         <div className="w-px h-4 bg-[#F5F5F4] mx-1" />
         <button
           type="button"
-          onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+          onClick={() =>
+            editor.chain().focus().unsetAllMarks().clearNodes().run()
+          }
           className="p-1.5 rounded transition text-[#78716C] hover:bg-red-50 hover:text-red-600"
           title="Limpiar todo el formato"
         >
@@ -136,26 +146,54 @@ export default function BlogRichTextEditor({
 
       <style jsx global>{`
         .prose blockquote {
-          border-left: 4px solid #B45309 !important;
+          border-left: 4px solid #b45309 !important;
           padding-left: 1rem !important;
           font-style: italic !important;
-          color: #78716C !important;
+          color: #78716c !important;
         }
-        .prose a { color: #B45309 !important; text-decoration: underline !important; cursor: pointer !important; }
-        .prose ul { list-style-type: disc !important; padding-left: 1.5rem !important; margin-bottom: 1.25rem !important; }
-        .prose ol { list-style-type: decimal !important; padding-left: 1.5rem !important; margin-bottom: 1.25rem !important; }
-        .prose li { margin-bottom: 0.5rem !important; }
+        .prose a {
+          color: #b45309 !important;
+          text-decoration: underline !important;
+          cursor: pointer !important;
+        }
+        .prose ul {
+          list-style-type: disc !important;
+          padding-left: 1.5rem !important;
+          margin-bottom: 1.25rem !important;
+        }
+        .prose ol {
+          list-style-type: decimal !important;
+          padding-left: 1.5rem !important;
+          margin-bottom: 1.25rem !important;
+        }
+        .prose li {
+          margin-bottom: 0.5rem !important;
+        }
         .prose p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
           float: left;
-          color: #A8A29E;
+          color: #a8a29e;
           pointer-events: none;
           height: 0;
         }
-        .prose p { margin-bottom: 1.25em !important; }
-        .prose h1 { color: #1C1917 !important; font-weight: 700 !important; font-size: 1.875rem !important; }
-        .prose h2 { color: #1C1917 !important; font-weight: 700 !important; font-size: 1.5rem !important; }
-        .prose h3 { color: #1C1917 !important; font-weight: 700 !important; font-size: 1.25rem !important; }
+        .prose p {
+          margin-bottom: 1.25em !important;
+        }
+        .prose h1 {
+          color: #1c1917 !important;
+          font-weight: 700 !important;
+          font-size: 1.875rem !important;
+        }
+        .prose h2 {
+          color: #1c1917 !important;
+          font-weight: 700 !important;
+          font-size: 1.5rem !important;
+        }
+        .prose h3 {
+          color: #1c1917 !important;
+          font-weight: 700 !important;
+          font-size: 1.25rem !important;
+        }
       `}</style>
     </div>
   );

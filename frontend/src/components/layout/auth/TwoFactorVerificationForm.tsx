@@ -295,7 +295,7 @@ export default function TwoFactorVerificationForm() {
           value={code}
           onChange={(e) => handleCodeChange(e.target.value)}
           onPaste={handleCodePaste}
-          onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()} 
+          onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
           placeholder="123456"
           className={`w-full rounded-md border px-3 py-2 text-sm outline-none ${
             error

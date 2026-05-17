@@ -347,8 +347,10 @@ export const listarMisPublicaciones = async (
     const publicacionesConMetricas = await Promise.all(
       publicaciones.map(async (pub: any) => ({
         ...pub,
-        metricas: await publicacionesService.obtenerMetricasPorInmueble(pub.inmuebleId)
-      }))
+        metricas: await publicacionesService.obtenerMetricasPorInmueble(
+          pub.inmuebleId,
+        ),
+      })),
     );
 
     // Obtener estadísticas de publicaciones y suscripción
@@ -393,17 +395,24 @@ export const eliminarPublicacion = async (req: AuthRequest, res: Response) => {
     console.error("Error en eliminarPublicacion:", error);
 
     if (error.message === "PUBLICACION_NOT_FOUND") {
-      return res.status(404).json({ ok: false, msg: "Publicación no encontrada" });
+      return res
+        .status(404)
+        .json({ ok: false, msg: "Publicación no encontrada" });
     }
     if (error.message === "UNAUTHORIZED") {
       return res.status(403).json({ ok: false, msg: "No autorizado" });
     }
 
-    return res.status(500).json({ ok: false, msg: "Error al eliminar la publicación" });
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al eliminar la publicación" });
   }
 };
 
-export const togglePublicacionEstado = async (req: AuthRequest, res: Response) => {
+export const togglePublicacionEstado = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
     const usuarioId = req.usuario?.id;
     const { id } = req.params;
@@ -413,8 +422,10 @@ export const togglePublicacionEstado = async (req: AuthRequest, res: Response) =
       return res.status(401).json({ ok: false, msg: "No hay token válido" });
     }
 
-    if (typeof activa !== 'boolean') {
-      return res.status(400).json({ ok: false, msg: "El campo 'activa' debe ser true o false" });
+    if (typeof activa !== "boolean") {
+      return res
+        .status(400)
+        .json({ ok: false, msg: "El campo 'activa' debe ser true o false" });
     }
 
     // ✅ CORRECCIÓN: Asegurar que id sea string
@@ -429,27 +440,35 @@ export const togglePublicacionEstado = async (req: AuthRequest, res: Response) =
 
     return res.json({
       ok: true,
-      msg: `Publicación ${activa ? 'activada' : 'desactivada'} correctamente`,
-      activa
+      msg: `Publicación ${activa ? "activada" : "desactivada"} correctamente`,
+      activa,
     });
   } catch (error: any) {
     console.error("Error en togglePublicacionEstado:", error);
 
     if (error.message === "PUBLICACION_NOT_FOUND") {
-      return res.status(404).json({ ok: false, msg: "Publicación no encontrada" });
+      return res
+        .status(404)
+        .json({ ok: false, msg: "Publicación no encontrada" });
     }
     if (error.message === "UNAUTHORIZED") {
       return res.status(403).json({ ok: false, msg: "No autorizado" });
     }
 
-    return res.status(500).json({ ok: false, msg: "Error al cambiar el estado" });
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al cambiar el estado" });
   }
 };
 
-export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
+export const obtenerPreferenciasNotificacion = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
-    const usuarioId = req.usuario?.id
-    if (!usuarioId) return res.status(401).json({ ok: false, msg: 'No hay token válido' })
+    const usuarioId = req.usuario?.id;
+    if (!usuarioId)
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },
       select: {
@@ -458,56 +477,72 @@ export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Res
         correo: true,
         telefonos: {
           take: 1,
-          select: { numero: true, principal: true }
+          select: { numero: true, principal: true },
         },
         telefono_telefono_usuario_idTousuario: {
           take: 1,
-          select: { numero: true }
-        }
-      }
-    })
-    if (!usuario) return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
+          select: { numero: true },
+        },
+      },
+    });
+    if (!usuario)
+      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
     return res.json({
       ok: true,
       preferencias: {
         email: usuario.notificacion_email ?? true,
-        whatsapp: usuario.notificacion_whatsapp ?? false
+        whatsapp: usuario.notificacion_whatsapp ?? false,
       },
       tieneCorreo: !!usuario.correo,
-      tieneTelefono: usuario.telefonos.length > 0 || usuario.telefono_telefono_usuario_idTousuario.length > 0
-    })
+      tieneTelefono:
+        usuario.telefonos.length > 0 ||
+        usuario.telefono_telefono_usuario_idTousuario.length > 0,
+    });
   } catch (error) {
-    console.error('Error en obtenerPreferenciasNotificacion:', error)
-    return res.status(500).json({ ok: false, msg: 'Error al obtener preferencias' })
+    console.error("Error en obtenerPreferenciasNotificacion:", error);
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al obtener preferencias" });
   }
-}
-export const actualizarPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
+};
+export const actualizarPreferenciasNotificacion = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
-    const usuarioId = req.usuario?.id
-    if (!usuarioId) return res.status(401).json({ ok: false, msg: 'No hay token válido' })
-    const { email, whatsapp } = req.body
-    if (typeof email !== 'boolean' || typeof whatsapp !== 'boolean') {
-      return res.status(400).json({ ok: false, msg: 'Los valores deben ser booleanos' })
+    const usuarioId = req.usuario?.id;
+    if (!usuarioId)
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    const { email, whatsapp } = req.body;
+    if (typeof email !== "boolean" || typeof whatsapp !== "boolean") {
+      return res
+        .status(400)
+        .json({ ok: false, msg: "Los valores deben ser booleanos" });
     }
     await prisma.usuario.update({
       where: { id: usuarioId },
       data: {
         notificacion_email: email,
-        notificacion_whatsapp: whatsapp
-      }
-    })
+        notificacion_whatsapp: whatsapp,
+      },
+    });
     return res.json({
       ok: true,
-      msg: 'Preferencias guardadas correctamente',
-      preferencias: { email, whatsapp }
-    })
+      msg: "Preferencias guardadas correctamente",
+      preferencias: { email, whatsapp },
+    });
   } catch (error) {
-    console.error('Error en actualizarPreferenciasNotificacion:', error)
-    return res.status(500).json({ ok: false, msg: 'Error al guardar preferencias' })
+    console.error("Error en actualizarPreferenciasNotificacion:", error);
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al guardar preferencias" });
   }
-}
+};
 // Editar fecha de nacimiento
-export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => {
+export const editarFechaNacimiento = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
     const usuarioId = req.usuario?.id;
     const { fecha_nacimiento } = req.body;
@@ -559,13 +594,13 @@ export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => 
       where: { id: usuarioId },
       data: {
         fecha_nacimiento: fechaDate,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
     });
 
     // Formatear fecha para respuesta
     const fechaFormateada = usuarioActualizado.fecha_nacimiento
-      ? usuarioActualizado.fecha_nacimiento.toISOString().split('T')[0]
+      ? usuarioActualizado.fecha_nacimiento.toISOString().split("T")[0]
       : null;
 
     return res.json({
@@ -583,7 +618,10 @@ export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => 
 };
 
 // Obtener fecha de nacimiento
-export const obtenerFechaNacimiento = async (req: AuthRequest, res: Response) => {
+export const obtenerFechaNacimiento = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
     const usuarioId = req.usuario?.id;
 
@@ -612,13 +650,16 @@ export const obtenerFechaNacimiento = async (req: AuthRequest, res: Response) =>
       const nacimiento = new Date(usuario.fecha_nacimiento);
       edad = hoy.getFullYear() - nacimiento.getFullYear();
       const mesDiff = hoy.getMonth() - nacimiento.getMonth();
-      if (mesDiff < 0 || (mesDiff === 0 && hoy.getDate() < nacimiento.getDate())) {
+      if (
+        mesDiff < 0 ||
+        (mesDiff === 0 && hoy.getDate() < nacimiento.getDate())
+      ) {
         edad--;
       }
     }
 
     const fechaFormateada = usuario.fecha_nacimiento
-      ? usuario.fecha_nacimiento.toISOString().split('T')[0]
+      ? usuario.fecha_nacimiento.toISOString().split("T")[0]
       : null;
 
     return res.json({
@@ -636,5 +677,3 @@ export const obtenerFechaNacimiento = async (req: AuthRequest, res: Response) =>
     });
   }
 };
-
-

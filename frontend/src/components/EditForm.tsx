@@ -37,7 +37,6 @@ export default function EditForm({
   toast,
   globalError,
 }: EditFormProps) {
-
   // Función auxiliar para cumplir con el Criterio 12 (Solo números/decimales en precio)
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -71,10 +70,12 @@ export default function EditForm({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        
         {/* Título - Criterio 13 y 22 */}
         <div>
-          <label htmlFor="title" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="title"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Título Propiedad
           </label>
           <input
@@ -91,13 +92,18 @@ export default function EditForm({
             placeholder="Residencia Moderna"
           />
           {fieldErrors.title && (
-            <p className="mt-1 text-[12px] font-medium text-red-500">{fieldErrors.title}</p>
+            <p className="mt-1 text-[12px] font-medium text-red-500">
+              {fieldErrors.title}
+            </p>
           )}
         </div>
 
         {/* Detalles - Criterio 22 */}
         <div>
-          <label htmlFor="details" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="details"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Detalles de la Propiedad
           </label>
           <textarea
@@ -114,13 +120,18 @@ export default function EditForm({
             placeholder="Descripción de la propiedad"
           />
           {fieldErrors.details && (
-            <p className="mt-1 text-[12px] font-medium text-red-500">{fieldErrors.details}</p>
+            <p className="mt-1 text-[12px] font-medium text-red-500">
+              {fieldErrors.details}
+            </p>
           )}
         </div>
 
         {/* Tipo Operación */}
         <div>
-          <label htmlFor="operationType" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="operationType"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Tipo Operación
           </label>
           <select
@@ -141,13 +152,18 @@ export default function EditForm({
             ))}
           </select>
           {fieldErrors.operationType && (
-            <p className="mt-1 text-[12px] font-medium text-red-500">{fieldErrors.operationType}</p>
+            <p className="mt-1 text-[12px] font-medium text-red-500">
+              {fieldErrors.operationType}
+            </p>
           )}
         </div>
 
         {/* Ubicación */}
         <div>
-          <label htmlFor="location" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="location"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Ubicación
           </label>
           <input
@@ -163,13 +179,18 @@ export default function EditForm({
             placeholder="Cochabamba, Sacaba"
           />
           {fieldErrors.location && (
-            <p className="mt-1 text-[12px] font-medium text-red-500">{fieldErrors.location}</p>
+            <p className="mt-1 text-[12px] font-medium text-red-500">
+              {fieldErrors.location}
+            </p>
           )}
         </div>
 
         {/* Precio - Criterio 12 y 18 */}
         <div className="md:col-span-1">
-          <label htmlFor="price" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="price"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Precio (USD)
           </label>
           <input
@@ -186,7 +207,9 @@ export default function EditForm({
             placeholder="Ej: 180000.00"
           />
           {fieldErrors.price && (
-            <p className="mt-1 text-[12px] font-medium text-red-500">{fieldErrors.price}</p>
+            <p className="mt-1 text-[12px] font-medium text-red-500">
+              {fieldErrors.price}
+            </p>
           )}
         </div>
       </div>

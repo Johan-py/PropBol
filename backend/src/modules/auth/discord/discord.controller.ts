@@ -92,7 +92,7 @@ const sendPopupResponse = (
         type: "propbol:discord-login-error";
         code: string;
         message: string;
-         }
+      }
     | {
         type: "propbol:social-link-success";
         provider: "discord";
@@ -205,7 +205,7 @@ export const discordCallbackController = async (
   }
 
   try {
-     if (state?.mode === "link") {
+    if (state?.mode === "link") {
       const result = await linkDiscordToCurrentUserByCodeService(
         state.sessionToken,
         code,
@@ -263,7 +263,7 @@ export const discordCallbackController = async (
       type: "propbol:discord-login-error",
       code: "DISCORD_AUTH_FAILED",
       message:
-          state?.mode === "register"
+        state?.mode === "register"
           ? "No se pudo completar el registro con Discord."
           : "No se pudo completar el inicio de sesión con Discord.",
     });

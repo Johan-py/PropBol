@@ -18,11 +18,13 @@ const evolutionFetch = async (path: string, method = "GET", body?: object) => {
 export const obtenerEstado = async (_req: Request, res: Response) => {
   try {
     const data = await evolutionFetch(
-      `/instance/connectionState/${env.EVOLUTION_INSTANCE}`
+      `/instance/connectionState/${env.EVOLUTION_INSTANCE}`,
     );
     return res.json({ ok: true, estado: data });
   } catch (error) {
-    return res.status(500).json({ ok: false, msg: "Error al obtener estado", error });
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al obtener estado", error });
   }
 };
 
@@ -31,11 +33,13 @@ export const obtenerEstado = async (_req: Request, res: Response) => {
 export const obtenerQR = async (_req: Request, res: Response) => {
   try {
     const data = await evolutionFetch(
-      `/instance/connect/${env.EVOLUTION_INSTANCE}`
+      `/instance/connect/${env.EVOLUTION_INSTANCE}`,
     );
     return res.json({ ok: true, qr: data });
   } catch (error) {
-    return res.status(500).json({ ok: false, msg: "Error al obtener QR", error });
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al obtener QR", error });
   }
 };
 
@@ -50,6 +54,8 @@ export const crearInstancia = async (_req: Request, res: Response) => {
     });
     return res.json({ ok: true, instancia: data });
   } catch (error) {
-    return res.status(500).json({ ok: false, msg: "Error al crear instancia", error });
+    return res
+      .status(500)
+      .json({ ok: false, msg: "Error al crear instancia", error });
   }
 };

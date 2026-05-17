@@ -1,17 +1,18 @@
-import type { Request, Response } from 'express'
-import { suscripcionesService } from './suscripciones.service.js'
-import { prisma } from '../../lib/prisma.client.js'
+import type { Request, Response } from "express";
+import { suscripcionesService } from "./suscripciones.service.js";
+import { prisma } from "../../lib/prisma.client.js";
 
 interface AuthRequest extends Request {
-  user?: { id: number }
+  user?: { id: number };
 }
 
 export const obtenerMiSuscripcion = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id
-    if (!userId) return res.status(401).json({ error: 'No autenticado' })
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: "No autenticado" });
 
-    const suscripcion = await suscripcionesService.obtenerSuscripcionActiva(userId)
+    const suscripcion =
+      await suscripcionesService.obtenerSuscripcionActiva(userId);
 
     if (suscripcion) {
       return res.json({
@@ -23,15 +24,15 @@ export const obtenerMiSuscripcion = async (req: AuthRequest, res: Response) => {
           : null,
         fechaInicio: suscripcion.fecha_inicio,
         fechaFin: suscripcion.fecha_fin,
-      })
+      });
     }
 
     // Check for most recent expired subscription
     const expirada = await prisma.suscripciones_activas.findFirst({
       where: { id_usuario: userId },
       include: { plan_suscripcion: true },
-      orderBy: { fecha_fin: 'desc' },
-    })
+      orderBy: { fecha_fin: "desc" },
+    });
 
     if (expirada) {
       return res.json({
@@ -44,13 +45,18 @@ export const obtenerMiSuscripcion = async (req: AuthRequest, res: Response) => {
           : null,
         fechaInicio: expirada.fecha_inicio,
         fechaFin: expirada.fecha_fin,
-      })
+      });
     }
 
-    return res.json({ activa: false, idSuscripcion: null, planNombre: null, precioPlan: null })
+    return res.json({
+      activa: false,
+      idSuscripcion: null,
+      planNombre: null,
+      precioPlan: null,
+    });
   } catch (error) {
     return res.status(500).json({
-      error: error instanceof Error ? error.message : 'Error interno',
-    })
+      error: error instanceof Error ? error.message : "Error interno",
+    });
   }
-}
+};

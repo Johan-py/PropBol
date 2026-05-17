@@ -1,125 +1,142 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useCallback } from 'react'
-import { ThumbsUp, ChevronLeft, ChevronRight } from 'lucide-react'
-import { getTestimonios, toggleLikeTestimonio, type Testimonio } from '@/services/testimonio.service'
+import { useState, useEffect, useCallback } from "react";
+import { ThumbsUp, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  getTestimonios,
+  toggleLikeTestimonio,
+  type Testimonio,
+} from "@/services/testimonio.service";
 
-const CIUDADES = ['Todos', 'La Paz', 'Santa Cruz', 'Cochabamba', 'Sucre', 'Tarija', 'Potosí', 'Oruro', 'Beni', 'Pando']
+const CIUDADES = [
+  "Todos",
+  "La Paz",
+  "Santa Cruz",
+  "Cochabamba",
+  "Sucre",
+  "Tarija",
+  "Potosí",
+  "Oruro",
+  "Beni",
+  "Pando",
+];
 
 // Cuántas tarjetas mostrar según el ancho de pantalla
 const getVisibleCount = () => {
-  if (typeof window === 'undefined') return 1
-  if (window.innerWidth >= 768) return 2
-  return 1
-}
+  if (typeof window === "undefined") return 1;
+  if (window.innerWidth >= 768) return 2;
+  return 1;
+};
 
 export default function TestimoniosSection() {
-  const [ciudadActiva, setCiudadActiva] = useState('Todos')
-  const [testimonios, setTestimonios] = useState<Testimonio[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [likingId, setLikingId] = useState<number | null>(null)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [visibleCount, setVisibleCount] = useState(1)
+  const [ciudadActiva, setCiudadActiva] = useState("Todos");
+  const [testimonios, setTestimonios] = useState<Testimonio[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [likingId, setLikingId] = useState<number | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(1);
 
   // Sincronizar estado de sesión con localStorage
   useEffect(() => {
-    const checkSession = () => setIsLoggedIn(!!localStorage.getItem('token'))
-    checkSession()
-    window.addEventListener('propbol:login', checkSession)
-    window.addEventListener('propbol:session-changed', checkSession)
+    const checkSession = () => setIsLoggedIn(!!localStorage.getItem("token"));
+    checkSession();
+    window.addEventListener("propbol:login", checkSession);
+    window.addEventListener("propbol:session-changed", checkSession);
     return () => {
-      window.removeEventListener('propbol:login', checkSession)
-      window.removeEventListener('propbol:session-changed', checkSession)
-    }
-  }, [])
+      window.removeEventListener("propbol:login", checkSession);
+      window.removeEventListener("propbol:session-changed", checkSession);
+    };
+  }, []);
 
   // Detectar breakpoint al montar y en resize
   useEffect(() => {
-    const update = () => setVisibleCount(getVisibleCount())
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
+    const update = () => setVisibleCount(getVisibleCount());
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   const cargarTestimonios = useCallback(async (ciudad: string) => {
-    setLoading(true)
-    setCurrentIndex(0)
-    const data = await getTestimonios(ciudad === 'Todos' ? undefined : ciudad)
-    setTestimonios(data)
-    setLoading(false)
-  }, [])
+    setLoading(true);
+    setCurrentIndex(0);
+    const data = await getTestimonios(ciudad === "Todos" ? undefined : ciudad);
+    setTestimonios(data);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    cargarTestimonios(ciudadActiva)
-  }, [ciudadActiva, cargarTestimonios])
+    cargarTestimonios(ciudadActiva);
+  }, [ciudadActiva, cargarTestimonios]);
 
   // Autoplay — avanza cada 5 segundos
   useEffect(() => {
-    if (testimonios.length <= visibleCount) return
+    if (testimonios.length <= visibleCount) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
-        const maxIndex = testimonios.length - visibleCount
-        return prev >= maxIndex ? 0 : prev + 1
-      })
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [testimonios.length, visibleCount])
+        const maxIndex = testimonios.length - visibleCount;
+        return prev >= maxIndex ? 0 : prev + 1;
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [testimonios.length, visibleCount]);
 
   const handleCiudad = (ciudad: string) => {
-    setCiudadActiva(ciudad)
-  }
+    setCiudadActiva(ciudad);
+  };
 
   const handlePrev = () => {
     setCurrentIndex((prev) => {
-      const maxIndex = testimonios.length - visibleCount
-      return prev === 0 ? maxIndex : prev - 1
-    })
-  }
+      const maxIndex = testimonios.length - visibleCount;
+      return prev === 0 ? maxIndex : prev - 1;
+    });
+  };
 
   const handleNext = () => {
     setCurrentIndex((prev) => {
-      const maxIndex = testimonios.length - visibleCount
-      return prev >= maxIndex ? 0 : prev + 1
-    })
-  }
+      const maxIndex = testimonios.length - visibleCount;
+      return prev >= maxIndex ? 0 : prev + 1;
+    });
+  };
 
   const handleLike = async (testimonio: Testimonio) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-    if (!token) return
-    if (likingId === testimonio.id) return
-    setLikingId(testimonio.id)
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) return;
+    if (likingId === testimonio.id) return;
+    setLikingId(testimonio.id);
     try {
-      const result = await toggleLikeTestimonio(testimonio.id)
+      const result = await toggleLikeTestimonio(testimonio.id);
       setTestimonios((prev) =>
         prev.map((t) =>
           t.id === testimonio.id
             ? { ...t, meGusta: result.meGusta, totalLikes: result.totalLikes }
-            : t
-        )
-      )
+            : t,
+        ),
+      );
     } catch {
       // ignorar error silenciosamente
     } finally {
-      setLikingId(null)
+      setLikingId(null);
     }
-  }
+  };
 
   // Tarjetas visibles en este momento
-  const visibleTestimonios = testimonios.slice(currentIndex, currentIndex + visibleCount)
-  const maxIndex = Math.max(0, testimonios.length - visibleCount)
-  const totalDots = maxIndex + 1
+  const visibleTestimonios = testimonios.slice(
+    currentIndex,
+    currentIndex + visibleCount,
+  );
+  const maxIndex = Math.max(0, testimonios.length - visibleCount);
+  const totalDots = maxIndex + 1;
 
   return (
     // FIX commit3: overflow-hidden en section evita scroll horizontal en 390px
     <section className="bg-white py-10 md:py-14 lg:py-16 w-full overflow-hidden">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8">
-
         {/* Título */}
         <div className="text-center mb-6 md:mb-8">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-stone-900 mb-1 leading-snug">
-            Historias reales de{' '}
-            <span className="text-amber-600">Bolivia</span>
+            Historias reales de <span className="text-amber-600">Bolivia</span>
           </h2>
           <p className="text-[10px] sm:text-xs tracking-widest text-stone-400 uppercase font-medium">
             Lo que dicen nuestros usuarios
@@ -134,8 +151,8 @@ export default function TestimoniosSection() {
               onClick={() => handleCiudad(ciudad)}
               className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all duration-200 whitespace-nowrap ${
                 ciudadActiva === ciudad
-                  ? 'bg-amber-600 text-white border-amber-600'
-                  : 'bg-white text-stone-600 border-stone-300 hover:border-amber-400 hover:text-amber-600'
+                  ? "bg-amber-600 text-white border-amber-600"
+                  : "bg-white text-stone-600 border-stone-300 hover:border-amber-400 hover:text-amber-600"
               }`}
             >
               {ciudad}
@@ -150,7 +167,9 @@ export default function TestimoniosSection() {
           </div>
         ) : testimonios.length === 0 ? (
           <div className="text-center py-16 text-stone-400">
-            <p className="text-sm sm:text-base">No hay testimonios disponibles para esta ciudad.</p>
+            <p className="text-sm sm:text-base">
+              No hay testimonios disponibles para esta ciudad.
+            </p>
           </div>
         ) : (
           <>
@@ -194,8 +213,8 @@ export default function TestimoniosSection() {
                     onClick={() => setCurrentIndex(i)}
                     className={`rounded-full transition-all duration-200 ${
                       i === currentIndex
-                        ? 'w-6 h-2.5 bg-amber-600'
-                        : 'w-2.5 h-2.5 bg-stone-300 hover:bg-stone-400'
+                        ? "w-6 h-2.5 bg-amber-600"
+                        : "w-2.5 h-2.5 bg-stone-300 hover:bg-stone-400"
                     }`}
                   />
                 ))}
@@ -205,7 +224,7 @@ export default function TestimoniosSection() {
         )}
       </div>
     </section>
-  )
+  );
 }
 
 // ─── Subcomponente tarjeta ───────────────────────────────────────────────────
@@ -216,10 +235,10 @@ function TarjetaTestimonio({
   likingId,
   onLike,
 }: {
-  testimonio: Testimonio
-  isLoggedIn: boolean
-  likingId: number | null
-  onLike: (t: Testimonio) => void
+  testimonio: Testimonio;
+  isLoggedIn: boolean;
+  likingId: number | null;
+  onLike: (t: Testimonio) => void;
 }) {
   return (
     // FIX commit3: min-w-0 + overflow-hidden evitan que texto largo rompa el layout
@@ -243,7 +262,9 @@ function TarjetaTestimonio({
             </p>
             {(testimonio.ciudad || testimonio.zona) && (
               <p className="text-[11px] text-stone-400 truncate">
-                {[testimonio.ciudad, testimonio.zona].filter(Boolean).join(' – ')}
+                {[testimonio.ciudad, testimonio.zona]
+                  .filter(Boolean)
+                  .join(" – ")}
               </p>
             )}
             {testimonio.categoria && (
@@ -257,17 +278,19 @@ function TarjetaTestimonio({
         <button
           onClick={() => onLike(testimonio)}
           disabled={!isLoggedIn || likingId === testimonio.id}
-          title={!isLoggedIn ? 'Inicia sesión para dar like' : ''}
+          title={!isLoggedIn ? "Inicia sesión para dar like" : ""}
           className={`flex items-center gap-1 md:gap-1.5 px-2.5 md:px-3 py-1.5 rounded-full border text-xs md:text-sm font-medium transition-all shrink-0 ${
             testimonio.meGusta
-              ? 'bg-amber-50 border-amber-400 text-amber-600'
-              : 'border-stone-200 text-stone-400 hover:border-amber-400 hover:text-amber-600'
-          } ${!isLoggedIn ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+              ? "bg-amber-50 border-amber-400 text-amber-600"
+              : "border-stone-200 text-stone-400 hover:border-amber-400 hover:text-amber-600"
+          } ${!isLoggedIn ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
         >
-          <ThumbsUp className={`w-3.5 h-3.5 md:w-4 md:h-4 ${testimonio.meGusta ? 'fill-amber-500 text-amber-500' : ''}`} />
+          <ThumbsUp
+            className={`w-3.5 h-3.5 md:w-4 md:h-4 ${testimonio.meGusta ? "fill-amber-500 text-amber-500" : ""}`}
+          />
           <span>{testimonio.totalLikes}</span>
         </button>
       </div>
     </div>
-  )
+  );
 }

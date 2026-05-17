@@ -36,7 +36,8 @@ const TOUR_STEPS = [
     mobileId: "tour-planes-mobile",
     requiresMobileMenu: true,
     title: "Planes de membresía",
-    description: "Conoce nuestros planes y beneficios para publicar tu inmueble.",
+    description:
+      "Conoce nuestros planes y beneficios para publicar tu inmueble.",
     required: true,
   },
   {
@@ -88,7 +89,8 @@ const TOUR_STEPS = [
   {
     id: "tour-footer-logo",
     title: "PropBol",
-    description: "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
+    description:
+      "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
     required: true,
   },
   {
@@ -100,13 +102,15 @@ const TOUR_STEPS = [
   {
     id: "tour-footer-conocenos",
     title: "Conócenos",
-    description: "Accede a información sobre nosotros, términos y políticas de privacidad.",
+    description:
+      "Accede a información sobre nosotros, términos y políticas de privacidad.",
     required: true,
   },
   {
     id: "tour-footer-redes",
     title: "Redes Sociales",
-    description: "Síguenos en Facebook e Instagram para estar al tanto de las novedades.",
+    description:
+      "Síguenos en Facebook e Instagram para estar al tanto de las novedades.",
     required: true,
   },
 ];
@@ -139,7 +143,7 @@ const waitForMenuClose = (onClosed: () => void): (() => void) => {
   // Si el menú ya no está en el DOM, ejecutar inmediatamente
   if (!isMobileMenuInDOM()) {
     onClosed();
-    return () => { };
+    return () => {};
   }
 
   let done = false;
@@ -174,7 +178,7 @@ const waitForMenuClose = (onClosed: () => void): (() => void) => {
 const waitForMenuOpen = (onOpened: () => void): (() => void) => {
   if (isMobileMenuInDOM()) {
     onOpened();
-    return () => { };
+    return () => {};
   }
 
   let done = false;
@@ -216,17 +220,19 @@ export default function TourGuiado() {
   const [tooltipH, setTooltipH] = useState(0);
   const [isDark, setIsDark] = useState(false);
 
-useEffect(() => {
-  const check = () =>
-    setIsDark(document.documentElement.classList.contains("propbol-theme-dark"));
-  check();
-  const observer = new MutationObserver(check);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  return () => observer.disconnect();
-}, []);
+  useEffect(() => {
+    const check = () =>
+      setIsDark(
+        document.documentElement.classList.contains("propbol-theme-dark"),
+      );
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // Ref para trackear el step desde el que venimos REALMENTE
   // (funciona igual en navegación hacia adelante y hacia atrás)
@@ -272,10 +278,12 @@ useEffect(() => {
             const sessionUser = JSON.parse(raw);
             localStorage.setItem(
               "propbol_user",
-              JSON.stringify({ ...sessionUser, controlador })
+              JSON.stringify({ ...sessionUser, controlador }),
             );
           }
-        } catch { /* ignorar */ }
+        } catch {
+          /* ignorar */
+        }
 
         // Solo mostrar si el backend confirma explícitamente false o null
         // (undefined = error de red / respuesta inválida → no mostrar)
@@ -286,7 +294,7 @@ useEffect(() => {
           setShowTour(true);
         }
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -305,21 +313,25 @@ useEffect(() => {
       }
     };
     window.addEventListener("propbol:session-changed", handleSessionChanged);
-    return () => window.removeEventListener("propbol:session-changed", handleSessionChanged);
+    return () =>
+      window.removeEventListener(
+        "propbol:session-changed",
+        handleSessionChanged,
+      );
   }, []);
 
   useEffect(() => {
-  if (showTour) {
-    document.body.style.overflow = "hidden";
-    window.scrollTo({ top: 0, behavior: "auto" });
-  } else {
-    document.body.style.overflow = "";
-  }
+    if (showTour) {
+      document.body.style.overflow = "hidden";
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } else {
+      document.body.style.overflow = "";
+    }
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [showTour]);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showTour]);
 
   useEffect(() => {
     if (!showTour) return;
@@ -400,9 +412,18 @@ useEffect(() => {
     const isFooter = stepIndex >= FOOTER_STEP_INDEX;
 
     // Cancelar cualquier medición pendiente del paso anterior
-    if (timeoutRef.current) { clearTimeout(timeoutRef.current); timeoutRef.current = null; }
-    if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
-    if (ioRef.current) { ioRef.current.disconnect(); ioRef.current = null; }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    if (ioRef.current) {
+      ioRef.current.disconnect();
+      ioRef.current = null;
+    }
 
     const measure = (isFooter: boolean) => {
       rafRef.current = requestAnimationFrame(() => {
@@ -459,7 +480,8 @@ useEffect(() => {
     const needsMobileMenu = isMobileNav && !!step.requiresMobileMenu;
 
     const prevIndex = prevStepRef.current;
-    const prevStep = prevIndex >= 0 ? (TOUR_STEPS[prevIndex] as TourStep) : null;
+    const prevStep =
+      prevIndex >= 0 ? (TOUR_STEPS[prevIndex] as TourStep) : null;
     const prevNeededMobileMenu = isMobileNav && !!prevStep?.requiresMobileMenu;
 
     // Actualizar ref con el step actual antes de cualquier async
@@ -543,8 +565,14 @@ useEffect(() => {
       }
       if (retryRef.current) clearTimeout(retryRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
-      if (ioRef.current) { ioRef.current.disconnect(); ioRef.current = null; }
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      if (ioRef.current) {
+        ioRef.current.disconnect();
+        ioRef.current = null;
+      }
     };
   }, [currentStep, showTour]);
 
@@ -560,7 +588,7 @@ useEffect(() => {
         const sessionUser = JSON.parse(raw);
         localStorage.setItem(
           "propbol_user",
-          JSON.stringify({ ...sessionUser, controlador: true })
+          JSON.stringify({ ...sessionUser, controlador: true }),
         );
       }
     } catch {
@@ -571,7 +599,7 @@ useEffect(() => {
     fetch(`${apiUrl}/api/auth/tour`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
-    }).catch(() => { });
+    }).catch(() => {});
   };
 
   const handleNext = () => {
@@ -590,15 +618,14 @@ useEffect(() => {
     setShowTour(false);
   };
   const theme = {
-  bg:           isDark ? "#111111" : "#ffffff",
-  text:         isDark ? "#ffffff" : "#111827",
-  textMuted:    isDark ? "#d1d5db" : "#374151",
-  textSubtle:   isDark ? "#6b7280" : "#9ca3af",
-  stepInactive: isDark ? "#374151" : "#e5e7eb",
-};
+    bg: isDark ? "#111111" : "#ffffff",
+    text: isDark ? "#ffffff" : "#111827",
+    textMuted: isDark ? "#d1d5db" : "#374151",
+    textSubtle: isDark ? "#6b7280" : "#9ca3af",
+    stepInactive: isDark ? "#374151" : "#e5e7eb",
+  };
 
   if (!showTour) return null;
-  
 
   const PADDING = 8;
   const hasValid = highlight !== null;
@@ -632,7 +659,10 @@ useEffect(() => {
         : highlight.top - H - GAP;
 
     const clampedH = Math.min(H, vh - 20);
-    top = Math.max(vOffsetTop + 10, Math.min(top, vOffsetTop + vh - clampedH - 10));
+    top = Math.max(
+      vOffsetTop + 10,
+      Math.min(top, vOffsetTop + vh - clampedH - 10),
+    );
 
     left = Math.max(
       vOffsetLeft + 12,
@@ -725,7 +755,13 @@ useEffect(() => {
           {TOUR_STEPS[currentStep].title}
         </p>
 
-        <p style={{ fontSize: fontDesc, color: theme.textMuted, marginBottom: !hasValid ? 8 : 14 }}>
+        <p
+          style={{
+            fontSize: fontDesc,
+            color: theme.textMuted,
+            marginBottom: !hasValid ? 8 : 14,
+          }}
+        >
           {TOUR_STEPS[currentStep].description}
         </p>
 
@@ -735,7 +771,7 @@ useEffect(() => {
               fontSize: fontMeta,
               color: theme.textSubtle,
               marginBottom: 14,
-            fontStyle: "italic",
+              fontStyle: "italic",
             }}
           >
             Esta sección no está visible en tu dispositivo actual.
@@ -770,18 +806,18 @@ useEffect(() => {
                 onClick={() => setCurrentStep((prev) => prev - 1)}
                 className="propbol-tour-btn-prev"
                 style={{
-                 background: "none",
-                 color: "#E68B25",
-                 border: "1px solid #E68B25",
-                 borderRadius: 8,
-                 padding: isMobile ? "8px 12px" : "10px 18px",
-                 fontSize: fontBtn,
-                 fontWeight: 600,
-                 cursor: "pointer",
-                 minHeight: 44,
-                 backgroundColor: isDark ? "transparent" : "transparent",
-                 WebkitTextFillColor: "#E68B25",
-            }}
+                  background: "none",
+                  color: "#E68B25",
+                  border: "1px solid #E68B25",
+                  borderRadius: 8,
+                  padding: isMobile ? "8px 12px" : "10px 18px",
+                  fontSize: fontBtn,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  minHeight: 44,
+                  backgroundColor: isDark ? "transparent" : "transparent",
+                  WebkitTextFillColor: "#E68B25",
+                }}
               >
                 ← Anterior
               </button>
@@ -801,7 +837,9 @@ useEffect(() => {
                 minHeight: 44,
               }}
             >
-              {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
+              {currentStep < TOUR_STEPS.length - 1
+                ? "Siguiente →"
+                : "Finalizar"}
             </button>
           </div>
         </div>

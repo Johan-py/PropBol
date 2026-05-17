@@ -7,84 +7,85 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model inmueble_etiqueta
  *
  */
 export type inmueble_etiquetaModel =
-  runtime.Types.Result.DefaultSelection<Prisma.$inmueble_etiquetaPayload>
+  runtime.Types.Result.DefaultSelection<Prisma.$inmueble_etiquetaPayload>;
 
 export type AggregateInmueble_etiqueta = {
-  _count: Inmueble_etiquetaCountAggregateOutputType | null
-  _avg: Inmueble_etiquetaAvgAggregateOutputType | null
-  _sum: Inmueble_etiquetaSumAggregateOutputType | null
-  _min: Inmueble_etiquetaMinAggregateOutputType | null
-  _max: Inmueble_etiquetaMaxAggregateOutputType | null
-}
+  _count: Inmueble_etiquetaCountAggregateOutputType | null;
+  _avg: Inmueble_etiquetaAvgAggregateOutputType | null;
+  _sum: Inmueble_etiquetaSumAggregateOutputType | null;
+  _min: Inmueble_etiquetaMinAggregateOutputType | null;
+  _max: Inmueble_etiquetaMaxAggregateOutputType | null;
+};
 
 export type Inmueble_etiquetaAvgAggregateOutputType = {
-  inmueble_id: number | null
-  etiqueta_id: number | null
-}
+  inmueble_id: number | null;
+  etiqueta_id: number | null;
+};
 
 export type Inmueble_etiquetaSumAggregateOutputType = {
-  inmueble_id: number | null
-  etiqueta_id: number | null
-}
+  inmueble_id: number | null;
+  etiqueta_id: number | null;
+};
 
 export type Inmueble_etiquetaMinAggregateOutputType = {
-  inmueble_id: number | null
-  etiqueta_id: number | null
-}
+  inmueble_id: number | null;
+  etiqueta_id: number | null;
+};
 
 export type Inmueble_etiquetaMaxAggregateOutputType = {
-  inmueble_id: number | null
-  etiqueta_id: number | null
-}
+  inmueble_id: number | null;
+  etiqueta_id: number | null;
+};
 
 export type Inmueble_etiquetaCountAggregateOutputType = {
-  inmueble_id: number
-  etiqueta_id: number
-  _all: number
-}
+  inmueble_id: number;
+  etiqueta_id: number;
+  _all: number;
+};
 
 export type Inmueble_etiquetaAvgAggregateInputType = {
-  inmueble_id?: true
-  etiqueta_id?: true
-}
+  inmueble_id?: true;
+  etiqueta_id?: true;
+};
 
 export type Inmueble_etiquetaSumAggregateInputType = {
-  inmueble_id?: true
-  etiqueta_id?: true
-}
+  inmueble_id?: true;
+  etiqueta_id?: true;
+};
 
 export type Inmueble_etiquetaMinAggregateInputType = {
-  inmueble_id?: true
-  etiqueta_id?: true
-}
+  inmueble_id?: true;
+  etiqueta_id?: true;
+};
 
 export type Inmueble_etiquetaMaxAggregateInputType = {
-  inmueble_id?: true
-  etiqueta_id?: true
-}
+  inmueble_id?: true;
+  etiqueta_id?: true;
+};
 
 export type Inmueble_etiquetaCountAggregateInputType = {
-  inmueble_id?: true
-  etiqueta_id?: true
-  _all?: true
-}
+  inmueble_id?: true;
+  etiqueta_id?: true;
+  _all?: true;
+};
 
 export type Inmueble_etiquetaAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which inmueble_etiqueta to aggregate.
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -92,230 +93,259 @@ export type Inmueble_etiquetaAggregateArgs<
    */
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithRelationInput
-    | Prisma.inmueble_etiquetaOrderByWithRelationInput[]
+    | Prisma.inmueble_etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput
+  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmueble_etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmueble_etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned inmueble_etiquetas
    **/
-  _count?: true | Inmueble_etiquetaCountAggregateInputType
+  _count?: true | Inmueble_etiquetaCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Inmueble_etiquetaAvgAggregateInputType
+  _avg?: Inmueble_etiquetaAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Inmueble_etiquetaSumAggregateInputType
+  _sum?: Inmueble_etiquetaSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Inmueble_etiquetaMinAggregateInputType
+  _min?: Inmueble_etiquetaMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Inmueble_etiquetaMaxAggregateInputType
-}
+  _max?: Inmueble_etiquetaMaxAggregateInputType;
+};
 
-export type GetInmueble_etiquetaAggregateType<T extends Inmueble_etiquetaAggregateArgs> = {
-  [P in keyof T & keyof AggregateInmueble_etiqueta]: P extends '_count' | 'count'
+export type GetInmueble_etiquetaAggregateType<
+  T extends Inmueble_etiquetaAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateInmueble_etiqueta]: P extends
+    | "_count"
+    | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateInmueble_etiqueta[P]>
-    : Prisma.GetScalarType<T[P], AggregateInmueble_etiqueta[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateInmueble_etiqueta[P]>;
+};
 
 export type inmueble_etiquetaGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithAggregationInput
-    | Prisma.inmueble_etiquetaOrderByWithAggregationInput[]
-  by: Prisma.Inmueble_etiquetaScalarFieldEnum[] | Prisma.Inmueble_etiquetaScalarFieldEnum
-  having?: Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Inmueble_etiquetaCountAggregateInputType | true
-  _avg?: Inmueble_etiquetaAvgAggregateInputType
-  _sum?: Inmueble_etiquetaSumAggregateInputType
-  _min?: Inmueble_etiquetaMinAggregateInputType
-  _max?: Inmueble_etiquetaMaxAggregateInputType
-}
+    | Prisma.inmueble_etiquetaOrderByWithAggregationInput[];
+  by:
+    | Prisma.Inmueble_etiquetaScalarFieldEnum[]
+    | Prisma.Inmueble_etiquetaScalarFieldEnum;
+  having?: Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Inmueble_etiquetaCountAggregateInputType | true;
+  _avg?: Inmueble_etiquetaAvgAggregateInputType;
+  _sum?: Inmueble_etiquetaSumAggregateInputType;
+  _min?: Inmueble_etiquetaMinAggregateInputType;
+  _max?: Inmueble_etiquetaMaxAggregateInputType;
+};
 
 export type Inmueble_etiquetaGroupByOutputType = {
-  inmueble_id: number
-  etiqueta_id: number
-  _count: Inmueble_etiquetaCountAggregateOutputType | null
-  _avg: Inmueble_etiquetaAvgAggregateOutputType | null
-  _sum: Inmueble_etiquetaSumAggregateOutputType | null
-  _min: Inmueble_etiquetaMinAggregateOutputType | null
-  _max: Inmueble_etiquetaMaxAggregateOutputType | null
-}
+  inmueble_id: number;
+  etiqueta_id: number;
+  _count: Inmueble_etiquetaCountAggregateOutputType | null;
+  _avg: Inmueble_etiquetaAvgAggregateOutputType | null;
+  _sum: Inmueble_etiquetaSumAggregateOutputType | null;
+  _min: Inmueble_etiquetaMinAggregateOutputType | null;
+  _max: Inmueble_etiquetaMaxAggregateOutputType | null;
+};
 
-export type GetInmueble_etiquetaGroupByPayload<T extends inmueble_etiquetaGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<Inmueble_etiquetaGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Inmueble_etiquetaGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], Inmueble_etiquetaGroupByOutputType[P]>
+export type GetInmueble_etiquetaGroupByPayload<
+  T extends inmueble_etiquetaGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<Inmueble_etiquetaGroupByOutputType, T["by"]> & {
+      [P in keyof T &
+        keyof Inmueble_etiquetaGroupByOutputType]: P extends "_count"
+        ? T[P] extends boolean
+          ? number
           : Prisma.GetScalarType<T[P], Inmueble_etiquetaGroupByOutputType[P]>
-      }
-    >
+        : Prisma.GetScalarType<T[P], Inmueble_etiquetaGroupByOutputType[P]>;
+    }
   >
+>;
 
 export type inmueble_etiquetaWhereInput = {
-  AND?: Prisma.inmueble_etiquetaWhereInput | Prisma.inmueble_etiquetaWhereInput[]
-  OR?: Prisma.inmueble_etiquetaWhereInput[]
-  NOT?: Prisma.inmueble_etiquetaWhereInput | Prisma.inmueble_etiquetaWhereInput[]
-  inmueble_id?: Prisma.IntFilter<'inmueble_etiqueta'> | number
-  etiqueta_id?: Prisma.IntFilter<'inmueble_etiqueta'> | number
-  etiqueta?: Prisma.XOR<Prisma.EtiquetaScalarRelationFilter, Prisma.etiquetaWhereInput>
-  inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
-}
+  AND?:
+    | Prisma.inmueble_etiquetaWhereInput
+    | Prisma.inmueble_etiquetaWhereInput[];
+  OR?: Prisma.inmueble_etiquetaWhereInput[];
+  NOT?:
+    | Prisma.inmueble_etiquetaWhereInput
+    | Prisma.inmueble_etiquetaWhereInput[];
+  inmueble_id?: Prisma.IntFilter<"inmueble_etiqueta"> | number;
+  etiqueta_id?: Prisma.IntFilter<"inmueble_etiqueta"> | number;
+  etiqueta?: Prisma.XOR<
+    Prisma.EtiquetaScalarRelationFilter,
+    Prisma.etiquetaWhereInput
+  >;
+  inmueble?: Prisma.XOR<
+    Prisma.InmuebleScalarRelationFilter,
+    Prisma.inmuebleWhereInput
+  >;
+};
 
 export type inmueble_etiquetaOrderByWithRelationInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-  etiqueta?: Prisma.etiquetaOrderByWithRelationInput
-  inmueble?: Prisma.inmuebleOrderByWithRelationInput
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+  etiqueta?: Prisma.etiquetaOrderByWithRelationInput;
+  inmueble?: Prisma.inmuebleOrderByWithRelationInput;
+};
 
 export type inmueble_etiquetaWhereUniqueInput = Prisma.AtLeast<
   {
-    inmueble_id_etiqueta_id?: Prisma.inmueble_etiquetaInmueble_idEtiqueta_idCompoundUniqueInput
-    AND?: Prisma.inmueble_etiquetaWhereInput | Prisma.inmueble_etiquetaWhereInput[]
-    OR?: Prisma.inmueble_etiquetaWhereInput[]
-    NOT?: Prisma.inmueble_etiquetaWhereInput | Prisma.inmueble_etiquetaWhereInput[]
-    inmueble_id?: Prisma.IntFilter<'inmueble_etiqueta'> | number
-    etiqueta_id?: Prisma.IntFilter<'inmueble_etiqueta'> | number
-    etiqueta?: Prisma.XOR<Prisma.EtiquetaScalarRelationFilter, Prisma.etiquetaWhereInput>
-    inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
+    inmueble_id_etiqueta_id?: Prisma.inmueble_etiquetaInmueble_idEtiqueta_idCompoundUniqueInput;
+    AND?:
+      | Prisma.inmueble_etiquetaWhereInput
+      | Prisma.inmueble_etiquetaWhereInput[];
+    OR?: Prisma.inmueble_etiquetaWhereInput[];
+    NOT?:
+      | Prisma.inmueble_etiquetaWhereInput
+      | Prisma.inmueble_etiquetaWhereInput[];
+    inmueble_id?: Prisma.IntFilter<"inmueble_etiqueta"> | number;
+    etiqueta_id?: Prisma.IntFilter<"inmueble_etiqueta"> | number;
+    etiqueta?: Prisma.XOR<
+      Prisma.EtiquetaScalarRelationFilter,
+      Prisma.etiquetaWhereInput
+    >;
+    inmueble?: Prisma.XOR<
+      Prisma.InmuebleScalarRelationFilter,
+      Prisma.inmuebleWhereInput
+    >;
   },
-  'inmueble_id_etiqueta_id'
->
+  "inmueble_id_etiqueta_id"
+>;
 
 export type inmueble_etiquetaOrderByWithAggregationInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-  _count?: Prisma.inmueble_etiquetaCountOrderByAggregateInput
-  _avg?: Prisma.inmueble_etiquetaAvgOrderByAggregateInput
-  _max?: Prisma.inmueble_etiquetaMaxOrderByAggregateInput
-  _min?: Prisma.inmueble_etiquetaMinOrderByAggregateInput
-  _sum?: Prisma.inmueble_etiquetaSumOrderByAggregateInput
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+  _count?: Prisma.inmueble_etiquetaCountOrderByAggregateInput;
+  _avg?: Prisma.inmueble_etiquetaAvgOrderByAggregateInput;
+  _max?: Prisma.inmueble_etiquetaMaxOrderByAggregateInput;
+  _min?: Prisma.inmueble_etiquetaMinOrderByAggregateInput;
+  _sum?: Prisma.inmueble_etiquetaSumOrderByAggregateInput;
+};
 
 export type inmueble_etiquetaScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput
-    | Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput[]
-  OR?: Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput[]
+    | Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput[];
+  OR?: Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput
-    | Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput[]
-  inmueble_id?: Prisma.IntWithAggregatesFilter<'inmueble_etiqueta'> | number
-  etiqueta_id?: Prisma.IntWithAggregatesFilter<'inmueble_etiqueta'> | number
-}
+    | Prisma.inmueble_etiquetaScalarWhereWithAggregatesInput[];
+  inmueble_id?: Prisma.IntWithAggregatesFilter<"inmueble_etiqueta"> | number;
+  etiqueta_id?: Prisma.IntWithAggregatesFilter<"inmueble_etiqueta"> | number;
+};
 
 export type inmueble_etiquetaCreateInput = {
-  etiqueta: Prisma.etiquetaCreateNestedOneWithoutInmueble_etiquetaInput
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutInmueble_etiquetaInput
-}
+  etiqueta: Prisma.etiquetaCreateNestedOneWithoutInmueble_etiquetaInput;
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutInmueble_etiquetaInput;
+};
 
 export type inmueble_etiquetaUncheckedCreateInput = {
-  inmueble_id: number
-  etiqueta_id: number
-}
+  inmueble_id: number;
+  etiqueta_id: number;
+};
 
 export type inmueble_etiquetaUpdateInput = {
-  etiqueta?: Prisma.etiquetaUpdateOneRequiredWithoutInmueble_etiquetaNestedInput
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutInmueble_etiquetaNestedInput
-}
+  etiqueta?: Prisma.etiquetaUpdateOneRequiredWithoutInmueble_etiquetaNestedInput;
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutInmueble_etiquetaNestedInput;
+};
 
 export type inmueble_etiquetaUncheckedUpdateInput = {
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type inmueble_etiquetaCreateManyInput = {
-  inmueble_id: number
-  etiqueta_id: number
-}
+  inmueble_id: number;
+  etiqueta_id: number;
+};
 
-export type inmueble_etiquetaUpdateManyMutationInput = {}
+export type inmueble_etiquetaUpdateManyMutationInput = {};
 
 export type inmueble_etiquetaUncheckedUpdateManyInput = {
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type Inmueble_etiquetaListRelationFilter = {
-  every?: Prisma.inmueble_etiquetaWhereInput
-  some?: Prisma.inmueble_etiquetaWhereInput
-  none?: Prisma.inmueble_etiquetaWhereInput
-}
+  every?: Prisma.inmueble_etiquetaWhereInput;
+  some?: Prisma.inmueble_etiquetaWhereInput;
+  none?: Prisma.inmueble_etiquetaWhereInput;
+};
 
 export type inmueble_etiquetaOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type inmueble_etiquetaInmueble_idEtiqueta_idCompoundUniqueInput = {
-  inmueble_id: number
-  etiqueta_id: number
-}
+  inmueble_id: number;
+  etiqueta_id: number;
+};
 
 export type inmueble_etiquetaCountOrderByAggregateInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+};
 
 export type inmueble_etiquetaAvgOrderByAggregateInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+};
 
 export type inmueble_etiquetaMaxOrderByAggregateInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+};
 
 export type inmueble_etiquetaMinOrderByAggregateInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+};
 
 export type inmueble_etiquetaSumOrderByAggregateInput = {
-  inmueble_id?: Prisma.SortOrder
-  etiqueta_id?: Prisma.SortOrder
-}
+  inmueble_id?: Prisma.SortOrder;
+  etiqueta_id?: Prisma.SortOrder;
+};
 
 export type inmueble_etiquetaCreateNestedManyWithoutEtiquetaInput = {
   create?:
@@ -324,13 +354,15 @@ export type inmueble_etiquetaCreateNestedManyWithoutEtiquetaInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutEtiquetaInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-}
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope;
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+};
 
 export type inmueble_etiquetaUncheckedCreateNestedManyWithoutEtiquetaInput = {
   create?:
@@ -339,13 +371,15 @@ export type inmueble_etiquetaUncheckedCreateNestedManyWithoutEtiquetaInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutEtiquetaInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-}
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope;
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+};
 
 export type inmueble_etiquetaUpdateManyWithoutEtiquetaNestedInput = {
   create?:
@@ -354,26 +388,36 @@ export type inmueble_etiquetaUpdateManyWithoutEtiquetaNestedInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutEtiquetaInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[];
   upsert?:
     | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope
-  set?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  disconnect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  delete?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
+    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope;
+  set?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  delete?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
   update?:
     | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput[];
   updateMany?:
     | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput[]
-  deleteMany?: Prisma.inmueble_etiquetaScalarWhereInput | Prisma.inmueble_etiquetaScalarWhereInput[]
-}
+    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput[];
+  deleteMany?:
+    | Prisma.inmueble_etiquetaScalarWhereInput
+    | Prisma.inmueble_etiquetaScalarWhereInput[];
+};
 
 export type inmueble_etiquetaUncheckedUpdateManyWithoutEtiquetaNestedInput = {
   create?:
@@ -382,26 +426,36 @@ export type inmueble_etiquetaUncheckedUpdateManyWithoutEtiquetaNestedInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutEtiquetaInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput[];
   upsert?:
     | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope
-  set?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  disconnect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  delete?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
+    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyEtiquetaInputEnvelope;
+  set?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  delete?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
   update?:
     | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput[]
+    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput[];
   updateMany?:
     | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput
-    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput[]
-  deleteMany?: Prisma.inmueble_etiquetaScalarWhereInput | Prisma.inmueble_etiquetaScalarWhereInput[]
-}
+    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput[];
+  deleteMany?:
+    | Prisma.inmueble_etiquetaScalarWhereInput
+    | Prisma.inmueble_etiquetaScalarWhereInput[];
+};
 
 export type inmueble_etiquetaCreateNestedManyWithoutInmuebleInput = {
   create?:
@@ -410,13 +464,15 @@ export type inmueble_etiquetaCreateNestedManyWithoutInmuebleInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutInmuebleInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-}
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope;
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+};
 
 export type inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput = {
   create?:
@@ -425,13 +481,15 @@ export type inmueble_etiquetaUncheckedCreateNestedManyWithoutInmuebleInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutInmuebleInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-}
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope;
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+};
 
 export type inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput = {
   create?:
@@ -440,26 +498,36 @@ export type inmueble_etiquetaUpdateManyWithoutInmuebleNestedInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutInmuebleInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[];
   upsert?:
     | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope
-  set?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  disconnect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  delete?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
+    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope;
+  set?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  delete?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
   update?:
     | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput[];
   updateMany?:
     | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput[]
-  deleteMany?: Prisma.inmueble_etiquetaScalarWhereInput | Prisma.inmueble_etiquetaScalarWhereInput[]
-}
+    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput[];
+  deleteMany?:
+    | Prisma.inmueble_etiquetaScalarWhereInput
+    | Prisma.inmueble_etiquetaScalarWhereInput[];
+};
 
 export type inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput = {
   create?:
@@ -468,271 +536,298 @@ export type inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleNestedInput = {
         Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput
       >
     | Prisma.inmueble_etiquetaCreateWithoutInmuebleInput[]
-    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput[];
   connectOrCreate?:
     | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaCreateOrConnectWithoutInmuebleInput[];
   upsert?:
     | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput[]
-  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope
-  set?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  disconnect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  delete?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
-  connect?: Prisma.inmueble_etiquetaWhereUniqueInput | Prisma.inmueble_etiquetaWhereUniqueInput[]
+    | Prisma.inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput[];
+  createMany?: Prisma.inmueble_etiquetaCreateManyInmuebleInputEnvelope;
+  set?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  disconnect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  delete?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
+  connect?:
+    | Prisma.inmueble_etiquetaWhereUniqueInput
+    | Prisma.inmueble_etiquetaWhereUniqueInput[];
   update?:
     | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput[]
+    | Prisma.inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput[];
   updateMany?:
     | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput
-    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput[]
-  deleteMany?: Prisma.inmueble_etiquetaScalarWhereInput | Prisma.inmueble_etiquetaScalarWhereInput[]
-}
+    | Prisma.inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput[];
+  deleteMany?:
+    | Prisma.inmueble_etiquetaScalarWhereInput
+    | Prisma.inmueble_etiquetaScalarWhereInput[];
+};
 
 export type inmueble_etiquetaCreateWithoutEtiquetaInput = {
-  inmueble: Prisma.inmuebleCreateNestedOneWithoutInmueble_etiquetaInput
-}
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutInmueble_etiquetaInput;
+};
 
 export type inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput = {
-  inmueble_id: number
-}
+  inmueble_id: number;
+};
 
 export type inmueble_etiquetaCreateOrConnectWithoutEtiquetaInput = {
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmueble_etiquetaCreateWithoutEtiquetaInput,
     Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaCreateManyEtiquetaInputEnvelope = {
   data:
     | Prisma.inmueble_etiquetaCreateManyEtiquetaInput
-    | Prisma.inmueble_etiquetaCreateManyEtiquetaInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.inmueble_etiquetaCreateManyEtiquetaInput[];
+  skipDuplicates?: boolean;
+};
 
 export type inmueble_etiquetaUpsertWithWhereUniqueWithoutEtiquetaInput = {
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateWithoutEtiquetaInput,
     Prisma.inmueble_etiquetaUncheckedUpdateWithoutEtiquetaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmueble_etiquetaCreateWithoutEtiquetaInput,
     Prisma.inmueble_etiquetaUncheckedCreateWithoutEtiquetaInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaUpdateWithWhereUniqueWithoutEtiquetaInput = {
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateWithoutEtiquetaInput,
     Prisma.inmueble_etiquetaUncheckedUpdateWithoutEtiquetaInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaUpdateManyWithWhereWithoutEtiquetaInput = {
-  where: Prisma.inmueble_etiquetaScalarWhereInput
+  where: Prisma.inmueble_etiquetaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateManyMutationInput,
     Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutEtiquetaInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaScalarWhereInput = {
-  AND?: Prisma.inmueble_etiquetaScalarWhereInput | Prisma.inmueble_etiquetaScalarWhereInput[]
-  OR?: Prisma.inmueble_etiquetaScalarWhereInput[]
-  NOT?: Prisma.inmueble_etiquetaScalarWhereInput | Prisma.inmueble_etiquetaScalarWhereInput[]
-  inmueble_id?: Prisma.IntFilter<'inmueble_etiqueta'> | number
-  etiqueta_id?: Prisma.IntFilter<'inmueble_etiqueta'> | number
-}
+  AND?:
+    | Prisma.inmueble_etiquetaScalarWhereInput
+    | Prisma.inmueble_etiquetaScalarWhereInput[];
+  OR?: Prisma.inmueble_etiquetaScalarWhereInput[];
+  NOT?:
+    | Prisma.inmueble_etiquetaScalarWhereInput
+    | Prisma.inmueble_etiquetaScalarWhereInput[];
+  inmueble_id?: Prisma.IntFilter<"inmueble_etiqueta"> | number;
+  etiqueta_id?: Prisma.IntFilter<"inmueble_etiqueta"> | number;
+};
 
 export type inmueble_etiquetaCreateWithoutInmuebleInput = {
-  etiqueta: Prisma.etiquetaCreateNestedOneWithoutInmueble_etiquetaInput
-}
+  etiqueta: Prisma.etiquetaCreateNestedOneWithoutInmueble_etiquetaInput;
+};
 
 export type inmueble_etiquetaUncheckedCreateWithoutInmuebleInput = {
-  etiqueta_id: number
-}
+  etiqueta_id: number;
+};
 
 export type inmueble_etiquetaCreateOrConnectWithoutInmuebleInput = {
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.inmueble_etiquetaCreateWithoutInmuebleInput,
     Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaCreateManyInmuebleInputEnvelope = {
   data:
     | Prisma.inmueble_etiquetaCreateManyInmuebleInput
-    | Prisma.inmueble_etiquetaCreateManyInmuebleInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.inmueble_etiquetaCreateManyInmuebleInput[];
+  skipDuplicates?: boolean;
+};
 
 export type inmueble_etiquetaUpsertWithWhereUniqueWithoutInmuebleInput = {
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateWithoutInmuebleInput,
     Prisma.inmueble_etiquetaUncheckedUpdateWithoutInmuebleInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.inmueble_etiquetaCreateWithoutInmuebleInput,
     Prisma.inmueble_etiquetaUncheckedCreateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaUpdateWithWhereUniqueWithoutInmuebleInput = {
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateWithoutInmuebleInput,
     Prisma.inmueble_etiquetaUncheckedUpdateWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaUpdateManyWithWhereWithoutInmuebleInput = {
-  where: Prisma.inmueble_etiquetaScalarWhereInput
+  where: Prisma.inmueble_etiquetaScalarWhereInput;
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateManyMutationInput,
     Prisma.inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleInput
-  >
-}
+  >;
+};
 
 export type inmueble_etiquetaCreateManyEtiquetaInput = {
-  inmueble_id: number
-}
+  inmueble_id: number;
+};
 
 export type inmueble_etiquetaUpdateWithoutEtiquetaInput = {
-  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutInmueble_etiquetaNestedInput
-}
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutInmueble_etiquetaNestedInput;
+};
 
 export type inmueble_etiquetaUncheckedUpdateWithoutEtiquetaInput = {
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type inmueble_etiquetaUncheckedUpdateManyWithoutEtiquetaInput = {
-  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type inmueble_etiquetaCreateManyInmuebleInput = {
-  etiqueta_id: number
-}
+  etiqueta_id: number;
+};
 
 export type inmueble_etiquetaUpdateWithoutInmuebleInput = {
-  etiqueta?: Prisma.etiquetaUpdateOneRequiredWithoutInmueble_etiquetaNestedInput
-}
+  etiqueta?: Prisma.etiquetaUpdateOneRequiredWithoutInmueble_etiquetaNestedInput;
+};
 
 export type inmueble_etiquetaUncheckedUpdateWithoutInmuebleInput = {
-  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type inmueble_etiquetaUncheckedUpdateManyWithoutInmuebleInput = {
-  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  etiqueta_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type inmueble_etiquetaSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    inmueble_id?: boolean
-    etiqueta_id?: boolean
-    etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
+    inmueble_id?: boolean;
+    etiqueta_id?: boolean;
+    etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['inmueble_etiqueta']
->
+  ExtArgs["result"]["inmueble_etiqueta"]
+>;
 
 export type inmueble_etiquetaSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    inmueble_id?: boolean
-    etiqueta_id?: boolean
-    etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
+    inmueble_id?: boolean;
+    etiqueta_id?: boolean;
+    etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['inmueble_etiqueta']
->
+  ExtArgs["result"]["inmueble_etiqueta"]
+>;
 
 export type inmueble_etiquetaSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    inmueble_id?: boolean
-    etiqueta_id?: boolean
-    etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>
-    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
+    inmueble_id?: boolean;
+    etiqueta_id?: boolean;
+    etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>;
+    inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['inmueble_etiqueta']
->
+  ExtArgs["result"]["inmueble_etiqueta"]
+>;
 
 export type inmueble_etiquetaSelectScalar = {
-  inmueble_id?: boolean
-  etiqueta_id?: boolean
-}
+  inmueble_id?: boolean;
+  etiqueta_id?: boolean;
+};
 
 export type inmueble_etiquetaOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'inmueble_id' | 'etiqueta_id',
-  ExtArgs['result']['inmueble_etiqueta']
->
+  "inmueble_id" | "etiqueta_id",
+  ExtArgs["result"]["inmueble_etiqueta"]
+>;
 export type inmueble_etiquetaInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-}
+  etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>;
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+};
 export type inmueble_etiquetaIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-}
+  etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>;
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+};
 export type inmueble_etiquetaIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>
-  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
-}
+  etiqueta?: boolean | Prisma.etiquetaDefaultArgs<ExtArgs>;
+  inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>;
+};
 
 export type $inmueble_etiquetaPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'inmueble_etiqueta'
+  name: "inmueble_etiqueta";
   objects: {
-    etiqueta: Prisma.$etiquetaPayload<ExtArgs>
-    inmueble: Prisma.$inmueblePayload<ExtArgs>
-  }
+    etiqueta: Prisma.$etiquetaPayload<ExtArgs>;
+    inmueble: Prisma.$inmueblePayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      inmueble_id: number
-      etiqueta_id: number
+      inmueble_id: number;
+      etiqueta_id: number;
     },
-    ExtArgs['result']['inmueble_etiqueta']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["inmueble_etiqueta"]
+  >;
+  composites: {};
+};
 
 export type inmueble_etiquetaGetPayload<
-  S extends boolean | null | undefined | inmueble_etiquetaDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$inmueble_etiquetaPayload, S>
+  S extends boolean | null | undefined | inmueble_etiquetaDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$inmueble_etiquetaPayload, S>;
 
 export type inmueble_etiquetaCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<inmueble_etiquetaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Inmueble_etiquetaCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  inmueble_etiquetaFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Inmueble_etiquetaCountAggregateInputType | true;
+};
 
 export interface inmueble_etiquetaDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['inmueble_etiqueta']
-    meta: { name: 'inmueble_etiqueta' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["inmueble_etiqueta"];
+    meta: { name: "inmueble_etiqueta" };
+  };
   /**
    * Find zero or one Inmueble_etiqueta that matches the filter.
    * @param {inmueble_etiquetaFindUniqueArgs} args - Arguments to find a Inmueble_etiqueta
@@ -745,18 +840,18 @@ export interface inmueble_etiquetaDelegate<
    * })
    */
   findUnique<T extends inmueble_etiquetaFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmueble_etiquetaFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Inmueble_etiqueta that matches the filter or throw an error with `error.code='P2025'`
@@ -771,18 +866,21 @@ export interface inmueble_etiquetaDelegate<
    * })
    */
   findUniqueOrThrow<T extends inmueble_etiquetaFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      inmueble_etiquetaFindUniqueOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Inmueble_etiqueta that matches the filter.
@@ -798,18 +896,18 @@ export interface inmueble_etiquetaDelegate<
    * })
    */
   findFirst<T extends inmueble_etiquetaFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, inmueble_etiquetaFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, inmueble_etiquetaFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Inmueble_etiqueta that matches the filter or
@@ -826,18 +924,21 @@ export interface inmueble_etiquetaDelegate<
    * })
    */
   findFirstOrThrow<T extends inmueble_etiquetaFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, inmueble_etiquetaFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      inmueble_etiquetaFindFirstOrThrowArgs<ExtArgs>
+    >,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Inmueble_etiquetas that matches the filter.
@@ -856,15 +957,15 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   findMany<T extends inmueble_etiquetaFindManyArgs>(
-    args?: Prisma.SelectSubset<T, inmueble_etiquetaFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, inmueble_etiquetaFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Inmueble_etiqueta.
@@ -879,18 +980,18 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   create<T extends inmueble_etiquetaCreateArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmueble_etiquetaCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Inmueble_etiquetas.
@@ -905,8 +1006,8 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   createMany<T extends inmueble_etiquetaCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, inmueble_etiquetaCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, inmueble_etiquetaCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Inmueble_etiquetas and returns the data saved in the database.
@@ -931,15 +1032,18 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   createManyAndReturn<T extends inmueble_etiquetaCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, inmueble_etiquetaCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      inmueble_etiquetaCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Inmueble_etiqueta.
@@ -954,18 +1058,18 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   delete<T extends inmueble_etiquetaDeleteArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmueble_etiquetaDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Inmueble_etiqueta.
@@ -983,18 +1087,18 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   update<T extends inmueble_etiquetaUpdateArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmueble_etiquetaUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Inmueble_etiquetas.
@@ -1009,8 +1113,8 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   deleteMany<T extends inmueble_etiquetaDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, inmueble_etiquetaDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, inmueble_etiquetaDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Inmueble_etiquetas.
@@ -1030,8 +1134,8 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   updateMany<T extends inmueble_etiquetaUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, inmueble_etiquetaUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Inmueble_etiquetas and returns the data updated in the database.
@@ -1062,15 +1166,18 @@ export interface inmueble_etiquetaDelegate<
    *
    */
   updateManyAndReturn<T extends inmueble_etiquetaUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<
+      T,
+      inmueble_etiquetaUpdateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Inmueble_etiqueta.
@@ -1090,18 +1197,18 @@ export interface inmueble_etiquetaDelegate<
    * })
    */
   upsert<T extends inmueble_etiquetaUpsertArgs>(
-    args: Prisma.SelectSubset<T, inmueble_etiquetaUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, inmueble_etiquetaUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__inmueble_etiquetaClient<
     runtime.Types.Result.GetResult<
       Prisma.$inmueble_etiquetaPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Inmueble_etiquetas.
@@ -1117,14 +1224,17 @@ export interface inmueble_etiquetaDelegate<
    * })
    **/
   count<T extends inmueble_etiquetaCountArgs>(
-    args?: Prisma.Subset<T, inmueble_etiquetaCountArgs>
+    args?: Prisma.Subset<T, inmueble_etiquetaCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Inmueble_etiquetaCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Inmueble_etiquetaCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Inmueble_etiqueta.
@@ -1151,8 +1261,8 @@ export interface inmueble_etiquetaDelegate<
    * })
    **/
   aggregate<T extends Inmueble_etiquetaAggregateArgs>(
-    args: Prisma.Subset<T, Inmueble_etiquetaAggregateArgs>
-  ): Prisma.PrismaPromise<GetInmueble_etiquetaAggregateType<T>>
+    args: Prisma.Subset<T, Inmueble_etiquetaAggregateArgs>,
+  ): Prisma.PrismaPromise<GetInmueble_etiquetaAggregateType<T>>;
 
   /**
    * Group by Inmueble_etiqueta.
@@ -1175,20 +1285,20 @@ export interface inmueble_etiquetaDelegate<
   groupBy<
     T extends inmueble_etiquetaGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: inmueble_etiquetaGroupByArgs['orderBy'] }
-      : { orderBy?: inmueble_etiquetaGroupByArgs['orderBy'] },
+      ? { orderBy: inmueble_etiquetaGroupByArgs["orderBy"] }
+      : { orderBy?: inmueble_etiquetaGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1197,26 +1307,31 @@ export interface inmueble_etiquetaDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1224,17 +1339,22 @@ export interface inmueble_etiquetaDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, inmueble_etiquetaGroupByArgs, OrderByArg> & InputErrors
+    args: Prisma.SubsetIntersection<
+      T,
+      inmueble_etiquetaGroupByArgs,
+      OrderByArg
+    > &
+      InputErrors,
   ): {} extends InputErrors
     ? GetInmueble_etiquetaGroupByPayload<T>
-    : Prisma.PrismaPromise<InputErrors>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the inmueble_etiqueta model
    */
-  readonly fields: inmueble_etiquetaFieldRefs
+  readonly fields: inmueble_etiquetaFieldRefs;
 }
 
 /**
@@ -1246,38 +1366,39 @@ export interface inmueble_etiquetaDelegate<
 export interface Prisma__inmueble_etiquetaClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   etiqueta<T extends Prisma.etiquetaDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.etiquetaDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.etiquetaDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__etiquetaClient<
     | runtime.Types.Result.GetResult<
         Prisma.$etiquetaPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   inmueble<T extends Prisma.inmuebleDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__inmuebleClient<
     | runtime.Types.Result.GetResult<
         Prisma.$inmueblePayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1285,32 +1406,43 @@ export interface Prisma__inmueble_etiquetaClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the inmueble_etiqueta model
  */
 export interface inmueble_etiquetaFieldRefs {
-  readonly inmueble_id: Prisma.FieldRef<'inmueble_etiqueta', 'Int'>
-  readonly etiqueta_id: Prisma.FieldRef<'inmueble_etiqueta', 'Int'>
+  readonly inmueble_id: Prisma.FieldRef<"inmueble_etiqueta", "Int">;
+  readonly etiqueta_id: Prisma.FieldRef<"inmueble_etiqueta", "Int">;
 }
 
 // Custom InputTypes
@@ -1318,72 +1450,75 @@ export interface inmueble_etiquetaFieldRefs {
  * inmueble_etiqueta findUnique
  */
 export type inmueble_etiquetaFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble_etiqueta to fetch.
    */
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
-}
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
+};
 
 /**
  * inmueble_etiqueta findUniqueOrThrow
  */
 export type inmueble_etiquetaFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble_etiqueta to fetch.
    */
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
-}
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
+};
 
 /**
  * inmueble_etiqueta findFirst
  */
 export type inmueble_etiquetaFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble_etiqueta to fetch.
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1391,55 +1526,58 @@ export type inmueble_etiquetaFindFirstArgs<
    */
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithRelationInput
-    | Prisma.inmueble_etiquetaOrderByWithRelationInput[]
+    | Prisma.inmueble_etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for inmueble_etiquetas.
    */
-  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput
+  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmueble_etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmueble_etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of inmueble_etiquetas.
    */
-  distinct?: Prisma.Inmueble_etiquetaScalarFieldEnum | Prisma.Inmueble_etiquetaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Inmueble_etiquetaScalarFieldEnum
+    | Prisma.Inmueble_etiquetaScalarFieldEnum[];
+};
 
 /**
  * inmueble_etiqueta findFirstOrThrow
  */
 export type inmueble_etiquetaFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble_etiqueta to fetch.
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1447,55 +1585,58 @@ export type inmueble_etiquetaFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithRelationInput
-    | Prisma.inmueble_etiquetaOrderByWithRelationInput[]
+    | Prisma.inmueble_etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for inmueble_etiquetas.
    */
-  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput
+  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmueble_etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmueble_etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of inmueble_etiquetas.
    */
-  distinct?: Prisma.Inmueble_etiquetaScalarFieldEnum | Prisma.Inmueble_etiquetaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Inmueble_etiquetaScalarFieldEnum
+    | Prisma.Inmueble_etiquetaScalarFieldEnum[];
+};
 
 /**
  * inmueble_etiqueta findMany
  */
 export type inmueble_etiquetaFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * Filter, which inmueble_etiquetas to fetch.
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1503,134 +1644,145 @@ export type inmueble_etiquetaFindManyArgs<
    */
   orderBy?:
     | Prisma.inmueble_etiquetaOrderByWithRelationInput
-    | Prisma.inmueble_etiquetaOrderByWithRelationInput[]
+    | Prisma.inmueble_etiquetaOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing inmueble_etiquetas.
    */
-  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput
+  cursor?: Prisma.inmueble_etiquetaWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` inmueble_etiquetas from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` inmueble_etiquetas.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of inmueble_etiquetas.
    */
-  distinct?: Prisma.Inmueble_etiquetaScalarFieldEnum | Prisma.Inmueble_etiquetaScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Inmueble_etiquetaScalarFieldEnum
+    | Prisma.Inmueble_etiquetaScalarFieldEnum[];
+};
 
 /**
  * inmueble_etiqueta create
  */
 export type inmueble_etiquetaCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * The data needed to create a inmueble_etiqueta.
    */
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaCreateInput,
     Prisma.inmueble_etiquetaUncheckedCreateInput
-  >
-}
+  >;
+};
 
 /**
  * inmueble_etiqueta createMany
  */
 export type inmueble_etiquetaCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many inmueble_etiquetas.
    */
-  data: Prisma.inmueble_etiquetaCreateManyInput | Prisma.inmueble_etiquetaCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.inmueble_etiquetaCreateManyInput
+    | Prisma.inmueble_etiquetaCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * inmueble_etiqueta createManyAndReturn
  */
 export type inmueble_etiquetaCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * The data used to create many inmueble_etiquetas.
    */
-  data: Prisma.inmueble_etiquetaCreateManyInput | Prisma.inmueble_etiquetaCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.inmueble_etiquetaCreateManyInput
+    | Prisma.inmueble_etiquetaCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.inmueble_etiquetaIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * inmueble_etiqueta update
  */
 export type inmueble_etiquetaUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * The data needed to update a inmueble_etiqueta.
    */
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateInput,
     Prisma.inmueble_etiquetaUncheckedUpdateInput
-  >
+  >;
   /**
    * Choose, which inmueble_etiqueta to update.
    */
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
-}
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
+};
 
 /**
  * inmueble_etiqueta updateMany
  */
 export type inmueble_etiquetaUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update inmueble_etiquetas.
@@ -1638,146 +1790,151 @@ export type inmueble_etiquetaUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateManyMutationInput,
     Prisma.inmueble_etiquetaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which inmueble_etiquetas to update
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * Limit how many inmueble_etiquetas to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * inmueble_etiqueta updateManyAndReturn
  */
 export type inmueble_etiquetaUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * The data used to update inmueble_etiquetas.
    */
   data: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateManyMutationInput,
     Prisma.inmueble_etiquetaUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which inmueble_etiquetas to update
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * Limit how many inmueble_etiquetas to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.inmueble_etiquetaIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * inmueble_etiqueta upsert
  */
 export type inmueble_etiquetaUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * The filter to search for the inmueble_etiqueta to update in case it exists.
    */
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
   /**
    * In case the inmueble_etiqueta found by the `where` argument doesn't exist, create a new inmueble_etiqueta with this data.
    */
   create: Prisma.XOR<
     Prisma.inmueble_etiquetaCreateInput,
     Prisma.inmueble_etiquetaUncheckedCreateInput
-  >
+  >;
   /**
    * In case the inmueble_etiqueta was found with the provided `where` argument, update it with this data.
    */
   update: Prisma.XOR<
     Prisma.inmueble_etiquetaUpdateInput,
     Prisma.inmueble_etiquetaUncheckedUpdateInput
-  >
-}
+  >;
+};
 
 /**
  * inmueble_etiqueta delete
  */
 export type inmueble_etiquetaDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
   /**
    * Filter which inmueble_etiqueta to delete.
    */
-  where: Prisma.inmueble_etiquetaWhereUniqueInput
-}
+  where: Prisma.inmueble_etiquetaWhereUniqueInput;
+};
 
 /**
  * inmueble_etiqueta deleteMany
  */
 export type inmueble_etiquetaDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which inmueble_etiquetas to delete
    */
-  where?: Prisma.inmueble_etiquetaWhereInput
+  where?: Prisma.inmueble_etiquetaWhereInput;
   /**
    * Limit how many inmueble_etiquetas to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * inmueble_etiqueta without action
  */
 export type inmueble_etiquetaDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the inmueble_etiqueta
    */
-  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null
+  select?: Prisma.inmueble_etiquetaSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the inmueble_etiqueta
    */
-  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null
+  omit?: Prisma.inmueble_etiquetaOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null
-}
+  include?: Prisma.inmueble_etiquetaInclude<ExtArgs> | null;
+};

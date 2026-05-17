@@ -27,8 +27,20 @@ export function useExchangeRate() {
   useEffect(() => {
     fetch("/api/exchange-rate", { cache: "no-store" })
       .then((response) => response.json() as Promise<ExchangeRateData>)
-      .then((data) => setState({ ...data, isLoading: false, isError: data.referentialRate === null }))
-      .catch(() => setState((current) => ({ ...current, isLoading: false, isError: true })));
+      .then((data) =>
+        setState({
+          ...data,
+          isLoading: false,
+          isError: data.referentialRate === null,
+        }),
+      )
+      .catch(() =>
+        setState((current) => ({
+          ...current,
+          isLoading: false,
+          isError: true,
+        })),
+      );
   }, []);
 
   return state;

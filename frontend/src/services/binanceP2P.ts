@@ -22,7 +22,9 @@ export const buildBinanceRequest = (
   next: { revalidate: 1800 },
 });
 
-export const getReferentialRateFromAds = (ads?: Array<{ adv?: { price?: string } }>) => {
+export const getReferentialRateFromAds = (
+  ads?: Array<{ adv?: { price?: string } }>,
+) => {
   const prices = (ads ?? [])
     .map((item) => Number(item.adv?.price))
     .filter((price) => Number.isFinite(price))
@@ -32,5 +34,9 @@ export const getReferentialRateFromAds = (ads?: Array<{ adv?: { price?: string }
     return null;
   }
 
-  return Number((prices.reduce((total, price) => total + price, 0) / prices.length).toFixed(2));
+  return Number(
+    (prices.reduce((total, price) => total + price, 0) / prices.length).toFixed(
+      2,
+    ),
+  );
 };

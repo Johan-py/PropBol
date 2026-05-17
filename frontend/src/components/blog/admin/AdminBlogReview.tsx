@@ -29,10 +29,12 @@ function StatusBanner({
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-green-600">
           Estado actual
         </p>
-        <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo publicado</h2>
+        <h2 className="mt-2 text-2xl font-bold font-montserrat">
+          Artículo publicado
+        </h2>
         <p className="mt-2 text-sm leading-7">
-          Este blog ya fue publicado, por lo que no volverá a
-          aparecer en la pestaña de pendientes.
+          Este blog ya fue publicado, por lo que no volverá a aparecer en la
+          pestaña de pendientes.
         </p>
       </div>
     );
@@ -43,7 +45,9 @@ function StatusBanner({
       <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">
         Estado actual
       </p>
-      <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo rechazado</h2>
+      <h2 className="mt-2 text-2xl font-bold font-montserrat">
+        Artículo rechazado
+      </h2>
       <p className="mt-2 text-sm leading-7">
         Comentario registrado: {rejectionComment || "Sin comentario adicional."}
       </p>
@@ -193,9 +197,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                   </h2>
                 )}
 
-                <MarkdownRenderer
-                  content={section.paragraphs.join("\n\n")}
-                />
+                <MarkdownRenderer content={section.paragraphs.join("\n\n")} />
               </section>
             ))}
           </div>
@@ -233,7 +235,9 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                 </label>
 
                 {formError && (
-                  <p className="text-sm font-medium text-red-600 font-inter">{formError}</p>
+                  <p className="text-sm font-medium text-red-600 font-inter">
+                    {formError}
+                  </p>
                 )}
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-end font-inter">
@@ -241,19 +245,19 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                     type="button"
                     onClick={handleReject}
                     disabled={isSubmitting}
-                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-red-500 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-red-600 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-50'}`}
+                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-red-500 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-red-600 transition-colors ${isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-red-50"}`}
                   >
                     <XCircle className="h-4 w-4" />
-                    {isSubmitting ? 'Procesando...' : 'Rechazar'}
+                    {isSubmitting ? "Procesando..." : "Rechazar"}
                   </button>
                   <button
                     type="button"
                     onClick={handleApprove}
                     disabled={isSubmitting}
-                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-amber-600 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition-colors shadow-sm shadow-amber-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-amber-700'}`}
+                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-amber-600 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition-colors shadow-sm shadow-amber-200 ${isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-amber-700"}`}
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    {isSubmitting ? 'Procesando...' : 'Publicar'}
+                    {isSubmitting ? "Procesando..." : "Publicar"}
                   </button>
                 </div>
               </div>

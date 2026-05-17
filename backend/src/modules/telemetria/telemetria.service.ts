@@ -1,25 +1,35 @@
-import { TelemetriaRepository } from './telemetria.repository.js'
-import { SearchTelemetriaData, ClickTelemetriaData } from './telemetria.types.js'
+import { TelemetriaRepository } from "./telemetria.repository.js";
+import {
+  SearchTelemetriaData,
+  ClickTelemetriaData,
+} from "./telemetria.types.js";
 
 export class TelemetriaService {
-  private repository: TelemetriaRepository
+  private repository: TelemetriaRepository;
 
   constructor() {
-    this.repository = new TelemetriaRepository()
+    this.repository = new TelemetriaRepository();
   }
 
-  async trackSearch(usuarioId: number | null, ip: string, searchData: SearchTelemetriaData) {
+  async trackSearch(
+    usuarioId: number | null,
+    ip: string,
+    searchData: SearchTelemetriaData,
+  ) {
     return await this.repository.guardarBusqueda(usuarioId, ip, {
       ...searchData,
-      timestamp: new Date().toISOString()
-    })
+      timestamp: new Date().toISOString(),
+    });
   }
 
   async trackClick(usuarioId: number, clickData: ClickTelemetriaData) {
-    return await this.repository.registrarClickInmueble(usuarioId, clickData.inmuebleId)
+    return await this.repository.registrarClickInmueble(
+      usuarioId,
+      clickData.inmuebleId,
+    );
   }
 
   async getRecomendados(usuarioId?: number): Promise<number[]> {
-    return await this.repository.obtenerInmueblesRecomendados(usuarioId)
+    return await this.repository.obtenerInmueblesRecomendados(usuarioId);
   }
 }

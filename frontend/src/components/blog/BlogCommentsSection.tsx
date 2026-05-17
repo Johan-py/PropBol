@@ -1,86 +1,106 @@
-'use client'
+"use client";
 
-import { useEffect, useRef } from 'react'
-import { MessageCircle, MoreHorizontal, Pencil, Reply, ThumbsUp, Trash2 } from 'lucide-react'
-import { useBlogComments } from '@/hooks/useBlogComments'
-import { BlogComment, BlogCommentAuthor } from '@/types/blogComment'
-import { DeleteConfirmationModal } from '@/components/blog/globalModals'
-import { useState } from 'react'
+import { useEffect, useRef } from "react";
+import {
+  MessageCircle,
+  MoreHorizontal,
+  Pencil,
+  Reply,
+  ThumbsUp,
+  Trash2,
+} from "lucide-react";
+import { useBlogComments } from "@/hooks/useBlogComments";
+import { BlogComment, BlogCommentAuthor } from "@/types/blogComment";
+import { DeleteConfirmationModal } from "@/components/blog/globalModals";
+import { useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const formatRelativeTime = (dateString: string) => {
-  const diffInMinutes = Math.max(1, Math.floor((Date.now() - new Date(dateString).getTime()) / 60000))
+  const diffInMinutes = Math.max(
+    1,
+    Math.floor((Date.now() - new Date(dateString).getTime()) / 60000),
+  );
 
   if (diffInMinutes < 60) {
-    return `hace ${diffInMinutes} minuto${diffInMinutes === 1 ? '' : 's'}`
+    return `hace ${diffInMinutes} minuto${diffInMinutes === 1 ? "" : "s"}`;
   }
 
-  const diffInHours = Math.floor(diffInMinutes / 60)
+  const diffInHours = Math.floor(diffInMinutes / 60);
 
   if (diffInHours < 24) {
-    return `hace ${diffInHours} hora${diffInHours === 1 ? '' : 's'}`
+    return `hace ${diffInHours} hora${diffInHours === 1 ? "" : "s"}`;
   }
 
-  const diffInDays = Math.floor(diffInHours / 24)
+  const diffInDays = Math.floor(diffInHours / 24);
 
   if (diffInDays < 30) {
-    return `hace ${diffInDays} dia${diffInDays === 1 ? '' : 's'}`
+    return `hace ${diffInDays} dia${diffInDays === 1 ? "" : "s"}`;
   }
 
-  const diffInMonths = Math.floor(diffInDays / 30)
+  const diffInMonths = Math.floor(diffInDays / 30);
 
   if (diffInMonths < 12) {
-    return `hace ${diffInMonths} mes${diffInMonths === 1 ? '' : 'es'}`
+    return `hace ${diffInMonths} mes${diffInMonths === 1 ? "" : "es"}`;
   }
 
-  const diffInYears = Math.floor(diffInMonths / 12)
-  return `hace ${diffInYears} ano${diffInYears === 1 ? '' : 's'}`
-}
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `hace ${diffInYears} ano${diffInYears === 1 ? "" : "s"}`;
+};
 
 const getAvatarUrl = (avatar: string | null) => {
   if (!avatar) {
-    return null
+    return null;
   }
 
-  return avatar.startsWith('http') ? avatar : `${API_URL}${avatar}`
-}
+  return avatar.startsWith("http") ? avatar : `${API_URL}${avatar}`;
+};
 
 const getInitials = (name: string) =>
   name
-    .split(' ')
+    .split(" ")
     .filter(Boolean)
     .slice(0, 2)
-    .map((value) => value[0]?.toUpperCase() ?? '')
-    .join('')
+    .map((value) => value[0]?.toUpperCase() ?? "")
+    .join("");
 
-const Avatar = ({ author, sizeClass }: { author: BlogCommentAuthor; sizeClass: string }) => {
-  const avatarUrl = getAvatarUrl(author.avatar)
+const Avatar = ({
+  author,
+  sizeClass,
+}: {
+  author: BlogCommentAuthor;
+  sizeClass: string;
+}) => {
+  const avatarUrl = getAvatarUrl(author.avatar);
 
   return avatarUrl ? (
-    <img src={avatarUrl} alt={author.name} className={`${sizeClass} rounded-full object-cover`} />
+    <img
+      src={avatarUrl}
+      alt={author.name}
+      className={`${sizeClass} rounded-full object-cover`}
+    />
   ) : (
     <div
       className={`${sizeClass} flex items-center justify-center rounded-full bg-stone-900 text-xs font-bold text-white`}
     >
       {getInitials(author.name)}
     </div>
-  )
-}
+  );
+};
 
 type CommentItemProps = {
-  comment: BlogComment
-  currentUserId: string
-  getReplies: (commentId: string) => BlogComment[]
-  menuOpenForId: string | null
-  onDelete: (commentId: string) => void
-  onEdit: (commentId: string) => void
-  onReply: (commentId: string) => void
-  onToggleLike: (commentId: string) => void
-  onToggleMenu: (commentId: string | null) => void
-  level?: number
-  parentAuthorName?: string
-}
+  comment: BlogComment;
+  currentUserId: string;
+  getReplies: (commentId: string) => BlogComment[];
+  menuOpenForId: string | null;
+  onDelete: (commentId: string) => void;
+  onEdit: (commentId: string) => void;
+  onReply: (commentId: string) => void;
+  onToggleLike: (commentId: string) => void;
+  onToggleMenu: (commentId: string | null) => void;
+  level?: number;
+  parentAuthorName?: string;
+};
 
 const CommentItem = ({
   comment,
@@ -93,18 +113,23 @@ const CommentItem = ({
   onToggleLike,
   onToggleMenu,
   level = 0,
-  parentAuthorName
+  parentAuthorName,
 }: CommentItemProps) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const replies = getReplies(comment.id)
-  const isOwnComment = comment.author.id === currentUserId
-  const hasReplies = replies.length > 0
+  const [isExpanded, setIsExpanded] = useState(false);
+  const replies = getReplies(comment.id);
+  const isOwnComment = comment.author.id === currentUserId;
+  const hasReplies = replies.length > 0;
 
   return (
-    <div className={level > 0 ? 'border-l-2 border-stone-200 pl-6 sm:pl-10' : ''}>
+    <div
+      className={level > 0 ? "border-l-2 border-stone-200 pl-6 sm:pl-10" : ""}
+    >
       <article className="rounded-[32px] bg-white p-4 shadow-md sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
-          <Avatar author={comment.author} sizeClass="h-11 w-11 sm:h-12 sm:w-12" />
+          <Avatar
+            author={comment.author}
+            sizeClass="h-11 w-11 sm:h-12 sm:w-12"
+          />
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -122,11 +147,12 @@ const CommentItem = ({
                 </div>
 
                 <p className="mt-3 text-sm leading-7 text-stone-600 sm:text-base">
-                  {parentAuthorName && parentAuthorName !== comment.author.name && (
-                    <span className="mr-2 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700">
-                      @{parentAuthorName}
-                    </span>
-                  )}
+                  {parentAuthorName &&
+                    parentAuthorName !== comment.author.name && (
+                      <span className="mr-2 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700">
+                        @{parentAuthorName}
+                      </span>
+                    )}
                   {comment.content}
                 </p>
               </div>
@@ -135,10 +161,16 @@ const CommentItem = ({
                 <button
                   type="button"
                   onClick={() => onToggleLike(comment.id)}
-                  className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors ${comment.likedByCurrentUser ? 'text-[#a56400]' : 'hover:text-[#a56400]'
-                    }`}
+                  className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors ${
+                    comment.likedByCurrentUser
+                      ? "text-[#a56400]"
+                      : "hover:text-[#a56400]"
+                  }`}
                 >
-                  <ThumbsUp size={15} className={comment.likedByCurrentUser ? 'fill-current' : ''} />
+                  <ThumbsUp
+                    size={15}
+                    className={comment.likedByCurrentUser ? "fill-current" : ""}
+                  />
                   <span>{comment.likes}</span>
                 </button>
 
@@ -155,7 +187,11 @@ const CommentItem = ({
                   <div className="relative">
                     <button
                       type="button"
-                      onClick={() => onToggleMenu(menuOpenForId === comment.id ? null : comment.id)}
+                      onClick={() =>
+                        onToggleMenu(
+                          menuOpenForId === comment.id ? null : comment.id,
+                        )
+                      }
                       className="rounded-full p-1 transition-colors hover:bg-stone-100 hover:text-stone-700"
                       aria-label="Abrir acciones del comentario"
                     >
@@ -201,7 +237,10 @@ const CommentItem = ({
             {isExpanded ? (
               <span>Ocultar respuestas</span>
             ) : (
-              <span>Ver {replies.length} {replies.length === 1 ? 'respuesta' : 'respuestas'}</span>
+              <span>
+                Ver {replies.length}{" "}
+                {replies.length === 1 ? "respuesta" : "respuestas"}
+              </span>
             )}
           </button>
 
@@ -228,8 +267,8 @@ const CommentItem = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default function BlogCommentsSection({ blogId }: { blogId: string }) {
   const {
@@ -255,17 +294,17 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
     toggleLike,
     totalComments,
     visibleComments,
-    isLoading
-  } = useBlogComments(blogId)
+    isLoading,
+  } = useBlogComments(blogId);
 
-  const [commentToDelete, setCommentToDelete] = useState<string | null>(null)
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     if (activeEdition || activeParent) {
-      textareaRef.current?.focus()
+      textareaRef.current?.focus();
     }
-  }, [activeEdition, activeParent])
+  }, [activeEdition, activeParent]);
 
   return (
     <section className="mt-16 bg-stone-50 py-12 sm:mt-20 sm:py-16">
@@ -283,13 +322,19 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
 
         <div className="mt-8 rounded-[32px] bg-white p-4 shadow-md sm:p-6">
           <div className="flex items-start gap-4">
-            <Avatar author={currentUser} sizeClass="h-12 w-12 sm:h-14 sm:w-14" />
+            <Avatar
+              author={currentUser}
+              sizeClass="h-12 w-12 sm:h-14 sm:w-14"
+            />
 
             <div className="min-w-0 flex-1">
               {activeParent ? (
                 <div className="mb-3 flex flex-wrap items-center gap-3 rounded-2xl bg-stone-100 px-4 py-3 text-sm text-stone-600">
                   <span>
-                    Respondiendo a <strong className="text-stone-900">{activeParent.author.name}</strong>
+                    Respondiendo a{" "}
+                    <strong className="text-stone-900">
+                      {activeParent.author.name}
+                    </strong>
                   </span>
                   <button
                     type="button"
@@ -304,8 +349,10 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
               {activeEdition ? (
                 <div className="mb-3 flex flex-wrap items-center gap-3 rounded-2xl bg-stone-100 px-4 py-3 text-sm text-stone-600">
                   <span>
-                    Editando tu comentario de{' '}
-                    <strong className="text-stone-900">{formatRelativeTime(activeEdition.createdAt)}</strong>
+                    Editando tu comentario de{" "}
+                    <strong className="text-stone-900">
+                      {formatRelativeTime(activeEdition.createdAt)}
+                    </strong>
                   </span>
                   <button
                     type="button"
@@ -334,14 +381,18 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
               <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="space-y-1">
                   <p
-                    className={`text-sm ${isAtCharacterLimit ? 'font-semibold text-red-600' : 'text-stone-500'
-                      }`}
+                    className={`text-sm ${
+                      isAtCharacterLimit
+                        ? "font-semibold text-red-600"
+                        : "text-stone-500"
+                    }`}
                   >
                     {draft.length}/{maxLength} caracteres
                   </p>
                   {isAtCharacterLimit ? (
                     <p className="text-sm text-red-600">
-                      Alcanzaste el maximo permitido para evitar comentarios demasiado largos.
+                      Alcanzaste el maximo permitido para evitar comentarios
+                      demasiado largos.
                     </p>
                   ) : null}
                 </div>
@@ -363,12 +414,12 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
                     className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-600 px-7 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-stone-300 shadow-lg shadow-amber-600/20"
                   >
                     {isSubmitting
-                      ? 'Publicando...'
+                      ? "Publicando..."
                       : activeEdition
-                        ? 'Guardar cambios'
+                        ? "Guardar cambios"
                         : activeParent
-                          ? 'Publicar respuesta'
-                          : 'Publicar comentario'}
+                          ? "Publicar respuesta"
+                          : "Publicar comentario"}
                   </button>
                 </div>
               </div>
@@ -401,9 +452,12 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-stone-100 text-stone-500">
                 <MessageCircle size={24} />
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-stone-900">Aun no hay comentarios</h3>
+              <h3 className="mt-4 text-xl font-semibold text-stone-900">
+                Aun no hay comentarios
+              </h3>
               <p className="mt-2 text-sm leading-7 text-stone-500 sm:text-base">
-                Se la primera persona en dejar una opinion o una duda sobre este articulo.
+                Se la primera persona en dejar una opinion o una duda sobre este
+                articulo.
               </p>
             </div>
           )}
@@ -431,8 +485,6 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
         confirmText="Sí, eliminar"
         cancelText="Cancelar"
       />
-
-
     </section>
-  )
+  );
 }

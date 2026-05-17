@@ -1,12 +1,12 @@
 // backend/src/modules/sesion/sesion.routes.ts
-import { Router } from 'express'
-import { sesionController } from './sesion.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'
+import { Router } from "express";
+import { sesionController } from "./sesion.controller.js";
+import { validarJWT } from "../../middleware/validarJWT.js";
 
-const router = Router()
+const router = Router();
 
 // Todas las rutas requieren autenticación
-router.use(validarJWT)
+router.use(validarJWT);
 
 /**
  * @route GET /
@@ -30,7 +30,7 @@ router.use(validarJWT)
  *   ]
  * }
  */
-router.get('/', sesionController.getMisSesiones)
+router.get("/", sesionController.getMisSesiones);
 
 /**
  * @route GET /:id
@@ -39,7 +39,7 @@ router.get('/', sesionController.getMisSesiones)
  *
  * @params id - ID de la sesión
  */
-router.get('/:id', sesionController.getSesionById)
+router.get("/:id", sesionController.getSesionById);
 
 /**
  * @route DELETE /:id
@@ -54,7 +54,7 @@ router.get('/:id', sesionController.getSesionById)
  *   "sesionId": 1
  * }
  */
-router.delete('/:id', sesionController.cerrarSesion)
+router.delete("/:id", sesionController.cerrarSesion);
 
 /**
  * @route DELETE /cerrar/todas
@@ -67,6 +67,9 @@ router.delete('/:id', sesionController.cerrarSesion)
  *   "sesionesCerradas": 2
  * }
  */
-router.delete('/cerrar/todas', sesionController.cerrarTodasSesionesExceptoActual)
+router.delete(
+  "/cerrar/todas",
+  sesionController.cerrarTodasSesionesExceptoActual,
+);
 
-export default router
+export default router;

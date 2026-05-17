@@ -1,217 +1,243 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 interface Sesion {
-  id: number
-  token: string
-  fechaInicio: string
-  fechaExpiracion: string
-  estado: boolean
-  metodoAuth: string
-  esActual: boolean
+  id: number;
+  token: string;
+  fechaInicio: string;
+  fechaExpiracion: string;
+  estado: boolean;
+  metodoAuth: string;
+  esActual: boolean;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export default function ActiveSessions() {
-  const [sesiones, setSesiones] = useState<Sesion[]>([])
-  const [seleccionadas, setSeleccionadas] = useState<number[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [sesiones, setSesiones] = useState<Sesion[]>([]);
+  const [seleccionadas, setSeleccionadas] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const getToken = () => localStorage.getItem('token')
+  const getToken = () => localStorage.getItem("token");
 
   // ── GET: Cargar sesiones ──────────────────────────────
   const cargarSesiones = async () => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
-      const token = getToken()
+      const token = getToken();
       if (!token) {
         // Mock si no hay token
         setSesiones([
-          { id: 1, token: 'mock', fechaInicio: new Date().toISOString(), fechaExpiracion: new Date().toISOString(), estado: true, metodoAuth: 'email', esActual: true },
-          { id: 2, token: 'mock2', fechaInicio: new Date().toISOString(), fechaExpiracion: new Date().toISOString(), estado: true, metodoAuth: 'email', esActual: false },
-          { id: 3, token: 'mock3', fechaInicio: new Date().toISOString(), fechaExpiracion: new Date().toISOString(), estado: true, metodoAuth: 'email', esActual: false },
-        ])
-        return
+          {
+            id: 1,
+            token: "mock",
+            fechaInicio: new Date().toISOString(),
+            fechaExpiracion: new Date().toISOString(),
+            estado: true,
+            metodoAuth: "email",
+            esActual: true,
+          },
+          {
+            id: 2,
+            token: "mock2",
+            fechaInicio: new Date().toISOString(),
+            fechaExpiracion: new Date().toISOString(),
+            estado: true,
+            metodoAuth: "email",
+            esActual: false,
+          },
+          {
+            id: 3,
+            token: "mock3",
+            fechaInicio: new Date().toISOString(),
+            fechaExpiracion: new Date().toISOString(),
+            estado: true,
+            metodoAuth: "email",
+            esActual: false,
+          },
+        ]);
+        return;
       }
 
       const res = await fetch(`${API_URL}/api/sesion/`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        credentials: 'include'
-      })
+        credentials: "include",
+      });
 
       // Verificar si la respuesta es JSON
-      const contentType = res.headers.get('content-type')
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await res.text()
-        console.error('Respuesta no JSON:', text.substring(0, 200))
-        throw new Error(`Error del servidor: ${res.status} ${res.statusText}`)
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Respuesta no JSON:", text.substring(0, 200));
+        throw new Error(`Error del servidor: ${res.status} ${res.statusText}`);
       }
 
       if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.error || `Error ${res.status}: ${res.statusText}`)
+        const errorData = await res.json();
+        throw new Error(
+          errorData.error || `Error ${res.status}: ${res.statusText}`,
+        );
       }
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (data.sesiones && Array.isArray(data.sesiones)) {
-        setSesiones(data.sesiones)
+        setSesiones(data.sesiones);
       } else if (Array.isArray(data)) {
-        setSesiones(data)
+        setSesiones(data);
       } else {
-        throw new Error('Formato de respuesta inválido')
+        throw new Error("Formato de respuesta inválido");
       }
     } catch (err: any) {
-      console.error('Error cargando sesiones:', err)
-      setError(err.message || 'Error al cargar sesiones')
+      console.error("Error cargando sesiones:", err);
+      setError(err.message || "Error al cargar sesiones");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    cargarSesiones()
-  }, [])
+    cargarSesiones();
+  }, []);
 
   // ── Seleccionar / deseleccionar ───────────────────────
   const toggleSeleccion = (id: number, esActual: boolean) => {
-    if (esActual) return
-    setSeleccionadas(prev =>
-      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
-    )
-  }
+    if (esActual) return;
+    setSeleccionadas((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+    );
+  };
 
   const seleccionarTodas = () => {
-    const idsActivas = sesiones
-      .filter(s => !s.esActual)
-      .map(s => s.id)
+    const idsActivas = sesiones.filter((s) => !s.esActual).map((s) => s.id);
     if (seleccionadas.length === idsActivas.length) {
-      setSeleccionadas([])
+      setSeleccionadas([]);
     } else {
-      setSeleccionadas(idsActivas)
+      setSeleccionadas(idsActivas);
     }
-  }
+  };
 
   // ── DELETE: Cerrar sesiones seleccionadas ─────────────
   const cerrarSesiones = async () => {
-    if (seleccionadas.length === 0) return
-    setIsLoading(true)
-    setError(null)
+    if (seleccionadas.length === 0) return;
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const token = getToken()
+      const token = getToken();
       if (!token) {
-        throw new Error('No hay token de autenticación')
+        throw new Error("No hay token de autenticación");
       }
 
       // Usar Promise.all para mejor rendimiento
-      const promises = seleccionadas.map(id =>
+      const promises = seleccionadas.map((id) =>
         fetch(`${API_URL}/api/sesion/${id}`, {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          credentials: 'include'
-        })
-      )
+          credentials: "include",
+        }),
+      );
 
-      const responses = await Promise.all(promises)
-      const failed = responses.filter(r => !r.ok)
+      const responses = await Promise.all(promises);
+      const failed = responses.filter((r) => !r.ok);
 
       if (failed.length > 0) {
-        throw new Error(`Fallaron ${failed.length} cierres de sesión`)
+        throw new Error(`Fallaron ${failed.length} cierres de sesión`);
       }
 
       // Actualizar estado local
-      setSesiones(prev => prev.filter(s => !seleccionadas.includes(s.id)))
-      setSeleccionadas([])
-
+      setSesiones((prev) => prev.filter((s) => !seleccionadas.includes(s.id)));
+      setSeleccionadas([]);
     } catch (err: any) {
-      console.error('Error cerrando sesiones:', err)
-      setError(err.message || 'Error al cerrar sesiones')
+      console.error("Error cerrando sesiones:", err);
+      setError(err.message || "Error al cerrar sesiones");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   // ── DELETE: Cerrar todas excepto actual ───────────────
   const cerrarTodas = async () => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const token = getToken()
+      const token = getToken();
       if (!token) {
-        throw new Error('No hay token de autenticación')
+        throw new Error("No hay token de autenticación");
       }
 
       const res = await fetch(`${API_URL}/api/sesion/cerrar/todas`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        credentials: 'include'
-      })
+        credentials: "include",
+      });
 
       if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.error || 'Error al cerrar todas las sesiones')
+        const errorData = await res.json();
+        throw new Error(
+          errorData.error || "Error al cerrar todas las sesiones",
+        );
       }
 
       // Mantener solo la sesión actual
-      setSesiones(prev => prev.filter(s => s.esActual))
-      setSeleccionadas([])
-
+      setSesiones((prev) => prev.filter((s) => s.esActual));
+      setSeleccionadas([]);
     } catch (err: any) {
-      console.error('Error cerrando todas:', err)
-      setError(err.message || 'Error al cerrar todas las sesiones')
+      console.error("Error cerrando todas:", err);
+      setError(err.message || "Error al cerrar todas las sesiones");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   // ── Formatear fecha ───────────────────────────────────
   const formatearFecha = (fecha: string) => {
     try {
-      const diff = Date.now() - new Date(fecha).getTime()
-      const minutos = Math.floor(diff / 60000)
-      const horas = Math.floor(diff / 3600000)
-      const dias = Math.floor(diff / 86400000)
+      const diff = Date.now() - new Date(fecha).getTime();
+      const minutos = Math.floor(diff / 60000);
+      const horas = Math.floor(diff / 3600000);
+      const dias = Math.floor(diff / 86400000);
 
-      if (minutos < 1) return 'Hace unos segundos'
-      if (minutos < 60) return `Hace ${minutos} ${minutos === 1 ? 'minuto' : 'minutos'}`
-      if (horas < 24) return `Hace ${horas} ${horas === 1 ? 'hora' : 'horas'}`
-      return `Hace ${dias} ${dias === 1 ? 'día' : 'días'}`
+      if (minutos < 1) return "Hace unos segundos";
+      if (minutos < 60)
+        return `Hace ${minutos} ${minutos === 1 ? "minuto" : "minutos"}`;
+      if (horas < 24) return `Hace ${horas} ${horas === 1 ? "hora" : "horas"}`;
+      return `Hace ${dias} ${dias === 1 ? "día" : "días"}`;
     } catch {
-      return 'Fecha desconocida'
+      return "Fecha desconocida";
     }
-  }
+  };
 
-  const todasSeleccionadas = sesiones.filter(s => !s.esActual).length > 0 &&
-    seleccionadas.length === sesiones.filter(s => !s.esActual).length
+  const todasSeleccionadas =
+    sesiones.filter((s) => !s.esActual).length > 0 &&
+    seleccionadas.length === sesiones.filter((s) => !s.esActual).length;
 
-  const sesionesActivasCount = sesiones.filter(s => !s.esActual).length
+  const sesionesActivasCount = sesiones.filter((s) => !s.esActual).length;
 
   return (
     <div className="min-h-screen bg-[#EAEAEA] p-4">
       <div className="bg-[#D9D9D9] rounded-sm p-6">
-
         {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-black">
             Gestión de Sesiones Activas
           </h1>
           <p className="text-lg text-black mt-2">
-            {sesiones.length} {sesiones.length === 1 ? 'sesión activa' : 'sesiones activas'}
+            {sesiones.length}{" "}
+            {sesiones.length === 1 ? "sesión activa" : "sesiones activas"}
           </p>
         </div>
 
@@ -233,7 +259,6 @@ export default function ActiveSessions() {
           </div>
         ) : (
           <div className="bg-[#F4F4F4] rounded-2xl p-8">
-
             {/* HEADER TABLA */}
             <div className="max-w-5xl mx-auto grid grid-cols-4 bg-[#E8962F] text-white font-bold rounded-lg py-4 px-6 mb-4 text-center text-lg">
               <p>ID</p>
@@ -248,16 +273,19 @@ export default function ActiveSessions() {
                 <div
                   key={sesion.id}
                   className={`max-w-5xl mx-auto grid grid-cols-4 items-center rounded-lg py-5 px-6 text-center text-lg transition-colors
-                    ${seleccionadas.includes(sesion.id)
-                      ? 'bg-amber-100'
-                      : 'bg-[#E7DFD7]'
+                    ${
+                      seleccionadas.includes(sesion.id)
+                        ? "bg-amber-100"
+                        : "bg-[#E7DFD7]"
                     }`}
                 >
                   <p className="font-medium">#{sesion.id}</p>
                   <p>{formatearFecha(sesion.fechaInicio)}</p>
                   <p>
                     {sesion.esActual ? (
-                      <span className="text-green-600 font-semibold">✓ Sesión actual</span>
+                      <span className="text-green-600 font-semibold">
+                        ✓ Sesión actual
+                      </span>
                     ) : (
                       <span className="text-blue-600">Activa</span>
                     )}
@@ -267,12 +295,15 @@ export default function ActiveSessions() {
                     <input
                       type="checkbox"
                       checked={seleccionadas.includes(sesion.id)}
-                      onChange={() => toggleSeleccion(sesion.id, sesion.esActual)}
+                      onChange={() =>
+                        toggleSeleccion(sesion.id, sesion.esActual)
+                      }
                       disabled={sesion.esActual}
-                      className={`w-5 h-5 accent-amber-500 ${sesion.esActual
-                        ? 'cursor-not-allowed opacity-60'
-                        : 'cursor-pointer'
-                        }`}
+                      className={`w-5 h-5 accent-amber-500 ${
+                        sesion.esActual
+                          ? "cursor-not-allowed opacity-60"
+                          : "cursor-pointer"
+                      }`}
                     />
                     {sesion.esActual && (
                       <p className="text-xs text-red-500 mt-2 text-center">
@@ -283,7 +314,6 @@ export default function ActiveSessions() {
                 </div>
               ))}
             </div>
-
           </div>
         )}
 
@@ -295,7 +325,7 @@ export default function ActiveSessions() {
               disabled={sesionesActivasCount === 0}
               className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {todasSeleccionadas ? 'Deseleccionar todas' : 'Seleccionar todas'}
+              {todasSeleccionadas ? "Deseleccionar todas" : "Seleccionar todas"}
             </button>
 
             <div className="flex gap-4">
@@ -311,9 +341,10 @@ export default function ActiveSessions() {
                 onClick={cerrarSesiones}
                 disabled={seleccionadas.length === 0 || isLoading}
                 className={`transition px-12 py-3 rounded-lg text-xl font-bold text-white
-                  ${seleccionadas.length === 0 || isLoading
-                    ? 'bg-red-300 cursor-not-allowed'
-                    : 'bg-[#EC7467] hover:bg-[#df6557]'
+                  ${
+                    seleccionadas.length === 0 || isLoading
+                      ? "bg-red-300 cursor-not-allowed"
+                      : "bg-[#EC7467] hover:bg-[#df6557]"
                   }`}
               >
                 {isLoading ? (
@@ -322,14 +353,13 @@ export default function ActiveSessions() {
                     Cerrando...
                   </span>
                 ) : (
-                  `Cerrar${seleccionadas.length > 1 ? ' todas' : ''}${seleccionadas.length > 0 ? ` (${seleccionadas.length})` : ''}`
+                  `Cerrar${seleccionadas.length > 1 ? " todas" : ""}${seleccionadas.length > 0 ? ` (${seleccionadas.length})` : ""}`
                 )}
               </button>
             </div>
           </div>
         )}
-
       </div>
     </div>
-  )
+  );
 }

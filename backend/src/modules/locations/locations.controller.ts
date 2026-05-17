@@ -1,16 +1,16 @@
-import { Request, Response } from 'express';
-import { prisma } from '../../lib/prisma.client.js';
+import { Request, Response } from "express";
+import { prisma } from "../../lib/prisma.client.js";
 
 export const locationsController = {
   // 1. Departamentos
   async getDepartamentos(req: Request, res: Response) {
     try {
       const departamentos = await prisma.departamento.findMany({
-        orderBy: { nombre: 'asc' }
+        orderBy: { nombre: "asc" },
       });
       res.json(departamentos);
     } catch (error) {
-      res.status(500).json({ error: 'Error al obtener departamentos' });
+      res.status(500).json({ error: "Error al obtener departamentos" });
     }
   },
 
@@ -20,11 +20,11 @@ export const locationsController = {
       const { deptoId } = req.params;
       const provincias = await prisma.provincia.findMany({
         where: { departamento_id: Number(deptoId) },
-        orderBy: { nombre: 'asc' }
+        orderBy: { nombre: "asc" },
       });
       res.json(provincias);
     } catch (error) {
-      res.status(500).json({ error: 'Error al obtener provincias' });
+      res.status(500).json({ error: "Error al obtener provincias" });
     }
   },
 
@@ -34,11 +34,11 @@ export const locationsController = {
       const { provId } = req.params;
       const municipios = await prisma.municipio.findMany({
         where: { provincia_id: Number(provId) },
-        orderBy: { nombre: 'asc' }
+        orderBy: { nombre: "asc" },
       });
       res.json(municipios);
     } catch (error) {
-      res.status(500).json({ error: 'Error al obtener municipios' });
+      res.status(500).json({ error: "Error al obtener municipios" });
     }
   },
 
@@ -46,13 +46,14 @@ export const locationsController = {
   async getZonas(req: Request, res: Response) {
     try {
       const { munId } = req.params;
-      const zonas = await prisma.zona_geografica.findMany({ // <--- Cambio aquí
+      const zonas = await prisma.zona_geografica.findMany({
+        // <--- Cambio aquí
         where: { municipio_id: Number(munId) },
-        orderBy: { nombre: 'asc' }
+        orderBy: { nombre: "asc" },
       });
       res.json(zonas);
     } catch (error) {
-      res.status(500).json({ error: 'Error al obtener zonas' });
+      res.status(500).json({ error: "Error al obtener zonas" });
     }
   },
 
@@ -62,11 +63,11 @@ export const locationsController = {
       const { zonaId } = req.params;
       const barrios = await prisma.barrio.findMany({
         where: { zona_id: Number(zonaId) },
-        orderBy: { nombre: 'asc' }
+        orderBy: { nombre: "asc" },
       });
       res.json(barrios);
     } catch (error) {
-      res.status(500).json({ error: 'Error al obtener barrios' });
+      res.status(500).json({ error: "Error al obtener barrios" });
     }
-  }
+  },
 };

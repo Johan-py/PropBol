@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import VideoPublicacionCard from './VideoPublicacionCard';
+import { useState } from "react";
+import { X } from "lucide-react";
+import VideoPublicacionCard from "./VideoPublicacionCard";
 
 type VideoPublicacionModalProps = {
   onClose?: () => void;
@@ -69,8 +69,8 @@ export default function VideoPublicacionModal({
           onClick={handleContinue}
           className={`mt-5 w-full rounded-lg py-3 text-sm font-semibold text-white transition ${
             aceptado
-              ? 'bg-orange-400 hover:bg-orange-500'
-              : 'cursor-not-allowed bg-orange-300 opacity-70'
+              ? "bg-orange-400 hover:bg-orange-500"
+              : "cursor-not-allowed bg-orange-300 opacity-70"
           }`}
         >
           Continuar

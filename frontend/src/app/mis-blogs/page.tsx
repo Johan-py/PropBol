@@ -51,7 +51,9 @@ export default function MisBlogsPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const lista = Array.isArray(data) ? data : data.blogs || data.data || [];
+        const lista = Array.isArray(data)
+          ? data
+          : data.blogs || data.data || [];
         setBlogs(lista);
       })
       .finally(() => setLoading(false));
@@ -154,19 +156,18 @@ export default function MisBlogsPage() {
             <button
               key={estado}
               onClick={() => setFiltro(estado)}
-              className={`flex items-center px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${filtro === estado
-                ? "bg-[#111111] text-white border-[#111111]"
-                : estado === "TODOS"
-                  ? "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
-                  : `${getEstadoColor(estado)} hover:opacity-80`
-                }`}
+              className={`flex items-center px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${
+                filtro === estado
+                  ? "bg-[#111111] text-white border-[#111111]"
+                  : estado === "TODOS"
+                    ? "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
+                    : `${getEstadoColor(estado)} hover:opacity-80`
+              }`}
             >
               {estado === "TODOS" ? "Todos" : getEstadoLabel(estado)}
 
               {estado !== "TODOS" && (
-                <span className="ml-2 text-xs opacity-70">
-                  {count(estado)}
-                </span>
+                <span className="ml-2 text-xs opacity-70">{count(estado)}</span>
               )}
             </button>
           ))}
@@ -203,14 +204,12 @@ export default function MisBlogsPage() {
                     src={getImagenSrc(blog.imagen)}
                     alt={blog.titulo}
                     className="w-full h-full object-cover"
-                    onError={(e) =>
-                      (e.currentTarget.src = "/placeholder.jpg")
-                    }
+                    onError={(e) => (e.currentTarget.src = "/placeholder.jpg")}
                   />
 
                   <span
                     className={`absolute left-4 top-4 text-[10px] font-extrabold uppercase tracking-[0.12em] px-3 py-1 rounded-full border ${getEstadoColor(
-                      blog.estado
+                      blog.estado,
                     )}`}
                   >
                     {getEstadoLabel(blog.estado)}
@@ -226,18 +225,24 @@ export default function MisBlogsPage() {
                     {blog.titulo}
                   </h2>
 
-                  {blog.estado === "RECHAZADO" && blog.blog_rechazo && blog.blog_rechazo.length > 0 && (
-                    <div className="mb-4 p-3 bg-[#FDECEC] border border-[#F3BABA] rounded-lg">
-                      <p className="text-xs font-bold text-[#D94848] uppercase tracking-wider mb-1">Motivo de rechazo:</p>
-                      <p className="text-sm text-[#D94848]">{blog.blog_rechazo[0].comentario}</p>
-                    </div>
-                  )}
+                  {blog.estado === "RECHAZADO" &&
+                    blog.blog_rechazo &&
+                    blog.blog_rechazo.length > 0 && (
+                      <div className="mb-4 p-3 bg-[#FDECEC] border border-[#F3BABA] rounded-lg">
+                        <p className="text-xs font-bold text-[#D94848] uppercase tracking-wider mb-1">
+                          Motivo de rechazo:
+                        </p>
+                        <p className="text-sm text-[#D94848]">
+                          {blog.blog_rechazo[0].comentario}
+                        </p>
+                      </div>
+                    )}
 
                   <div className="flex justify-between items-center border-t border-[#EEE6DC] pt-4">
                     {blog.estado === "BORRADOR" ||
-                      blog.estado === "RECHAZADO" ||
-                      blog.estado === "PENDIENTE" ||
-                      blog.estado === "PUBLICADO" ? (
+                    blog.estado === "RECHAZADO" ||
+                    blog.estado === "PENDIENTE" ||
+                    blog.estado === "PUBLICADO" ? (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -248,7 +253,9 @@ export default function MisBlogsPage() {
                         ✎ {blog.estado === "BORRADOR" ? "Continuar" : "Editar"}
                       </button>
                     ) : (
-                      <span className="text-xs font-bold text-gray-300">✎ Editar</span>
+                      <span className="text-xs font-bold text-gray-300">
+                        ✎ Editar
+                      </span>
                     )}
 
                     <button

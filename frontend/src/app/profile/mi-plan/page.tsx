@@ -1,74 +1,94 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { CreditCard, Calendar, BarChart2, Zap, CheckCircle, AlertCircle, ArrowRight, RefreshCw } from 'lucide-react'
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  CreditCard,
+  Calendar,
+  BarChart2,
+  Zap,
+  CheckCircle,
+  AlertCircle,
+  ArrowRight,
+  RefreshCw,
+} from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 interface Suscripcion {
-  activa: boolean
-  expirado?: boolean
-  idSuscripcion: number | null
-  planNombre: string | null
-  precioPlan: number | null
-  fechaInicio: string | null
-  fechaFin: string | null
+  activa: boolean;
+  expirado?: boolean;
+  idSuscripcion: number | null;
+  planNombre: string | null;
+  precioPlan: number | null;
+  fechaInicio: string | null;
+  fechaFin: string | null;
 }
 
 interface Consumo {
-  usadas: number
-  limite: number
-  plan: string
+  usadas: number;
+  limite: number;
+  plan: string;
 }
 
 function diasRestantes(fechaFin: string): number {
-  return Math.max(0, Math.ceil((new Date(fechaFin).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+  return Math.max(
+    0,
+    Math.ceil(
+      (new Date(fechaFin).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    ),
+  );
 }
 
 function formatDate(iso: string | null): string {
-  if (!iso) return '—'
-  const d = new Date(iso)
-  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
 }
 
 export default function MiPlanPage() {
-  const [sus, setSus] = useState<Suscripcion | null>(null)
-  const [consumo, setConsumo] = useState<Consumo | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [sus, setSus] = useState<Suscripcion | null>(null);
+  const [consumo, setConsumo] = useState<Consumo | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) { setLoading(false); return }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
-    const headers = { Authorization: `Bearer ${token}` }
+    const headers = { Authorization: `Bearer ${token}` };
 
     Promise.all([
-      fetch(`${API_URL}/api/suscripciones/mi-suscripcion`, { headers }).then((r) => r.json()),
+      fetch(`${API_URL}/api/suscripciones/mi-suscripcion`, { headers }).then(
+        (r) => r.json(),
+      ),
       fetch(`${API_URL}/api/consumo/me`, { headers }).then((r) => r.json()),
     ])
       .then(([s, c]) => {
-        setSus(s)
-        setConsumo(c)
+        setSus(s);
+        setConsumo(c);
       })
       .catch(console.error)
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(false));
+  }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600" />
       </div>
-    )
+    );
   }
 
-  const activa = sus?.activa ?? false
-  const expirado = sus?.expirado ?? false
-  const dias = sus?.fechaFin ? diasRestantes(sus.fechaFin) : 0
-  const porcentajeUso = consumo && consumo.limite > 0
-    ? Math.min(100, Math.round((consumo.usadas / consumo.limite) * 100))
-    : 0
+  const activa = sus?.activa ?? false;
+  const expirado = sus?.expirado ?? false;
+  const dias = sus?.fechaFin ? diasRestantes(sus.fechaFin) : 0;
+  const porcentajeUso =
+    consumo && consumo.limite > 0
+      ? Math.min(100, Math.round((consumo.usadas / consumo.limite) * 100))
+      : 0;
 
   return (
     <div className="min-h-screen bg-stone-50 py-10">
@@ -84,30 +104,40 @@ export default function MiPlanPage() {
         {activa || expirado ? (
           <>
             {/* Plan card */}
-            <div className={`rounded-2xl border p-6 shadow-sm ${expirado ? 'border-stone-200 bg-stone-50' : 'border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50'}`}>
+            <div
+              className={`rounded-2xl border p-6 shadow-sm ${expirado ? "border-stone-200 bg-stone-50" : "border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50"}`}
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     {expirado ? (
                       <>
                         <AlertCircle className="h-5 w-5 text-stone-400" />
-                        <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">Expirado</span>
+                        <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+                          Expirado
+                        </span>
                       </>
                     ) : (
                       <>
                         <CheckCircle className="h-5 w-5 text-green-500" />
-                        <span className="text-xs font-semibold uppercase tracking-wide text-green-600">Activa</span>
+                        <span className="text-xs font-semibold uppercase tracking-wide text-green-600">
+                          Activa
+                        </span>
                       </>
                     )}
                   </div>
-                  <h2 className="text-2xl font-bold font-montserrat text-stone-900">{sus?.planNombre}</h2>
+                  <h2 className="text-2xl font-bold font-montserrat text-stone-900">
+                    {sus?.planNombre}
+                  </h2>
                   {sus?.precioPlan != null && (
                     <p className="text-sm text-stone-500 mt-0.5">
                       Bs. {sus.precioPlan.toFixed(2)} / mes
                     </p>
                   )}
                 </div>
-                <Zap className={`h-8 w-8 ${expirado ? 'text-stone-300' : 'text-amber-500'}`} />
+                <Zap
+                  className={`h-8 w-8 ${expirado ? "text-stone-300" : "text-amber-500"}`}
+                />
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
@@ -134,7 +164,9 @@ export default function MiPlanPage() {
               {!expirado && (
                 <div className="mt-3 rounded-xl bg-white/70 px-4 py-3 flex items-center justify-between">
                   <span className="text-sm text-stone-600">Días restantes</span>
-                  <span className={`text-lg font-bold font-montserrat ${dias <= 7 ? 'text-red-600' : 'text-amber-600'}`}>
+                  <span
+                    className={`text-lg font-bold font-montserrat ${dias <= 7 ? "text-red-600" : "text-amber-600"}`}
+                  >
                     {dias} días
                   </span>
                 </div>
@@ -146,7 +178,9 @@ export default function MiPlanPage() {
               <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-sm space-y-3">
                 <div className="flex items-center gap-2">
                   <BarChart2 className="h-5 w-5 text-amber-600" />
-                  <h3 className="text-base font-bold font-montserrat text-stone-900">Uso de publicaciones</h3>
+                  <h3 className="text-base font-bold font-montserrat text-stone-900">
+                    Uso de publicaciones
+                  </h3>
                 </div>
                 <div className="flex items-end justify-between text-sm mb-1">
                   <span className="text-stone-500">Este mes</span>
@@ -156,7 +190,7 @@ export default function MiPlanPage() {
                 </div>
                 <div className="h-3 rounded-full bg-stone-100 overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${porcentajeUso >= 90 ? 'bg-red-500' : porcentajeUso >= 70 ? 'bg-amber-500' : 'bg-green-500'}`}
+                    className={`h-full rounded-full transition-all ${porcentajeUso >= 90 ? "bg-red-500" : porcentajeUso >= 70 ? "bg-amber-500" : "bg-green-500"}`}
                     style={{ width: `${porcentajeUso}%` }}
                   />
                 </div>
@@ -170,9 +204,12 @@ export default function MiPlanPage() {
           /* No subscription at all */
           <div className="rounded-2xl border border-dashed border-stone-300 bg-white p-10 text-center space-y-4">
             <AlertCircle className="h-12 w-12 text-stone-300 mx-auto" />
-            <h2 className="text-xl font-bold font-montserrat text-stone-900">Sin suscripción activa</h2>
+            <h2 className="text-xl font-bold font-montserrat text-stone-900">
+              Sin suscripción activa
+            </h2>
             <p className="text-stone-500 text-sm max-w-xs mx-auto">
-              Elige un plan para desbloquear más publicaciones y funciones exclusivas.
+              Elige un plan para desbloquear más publicaciones y funciones
+              exclusivas.
             </p>
             <Link
               href="/planes"
@@ -214,5 +251,5 @@ export default function MiPlanPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

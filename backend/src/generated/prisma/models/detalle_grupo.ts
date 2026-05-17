@@ -7,83 +7,85 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from '@prisma/client/runtime/client'
-import type * as $Enums from '../enums.js'
-import type * as Prisma from '../internal/prismaNamespace.js'
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
+import type * as Prisma from "../internal/prismaNamespace.js";
 
 /**
  * Model detalle_grupo
  *
  */
-export type detalle_grupoModel = runtime.Types.Result.DefaultSelection<Prisma.$detalle_grupoPayload>
+export type detalle_grupoModel =
+  runtime.Types.Result.DefaultSelection<Prisma.$detalle_grupoPayload>;
 
 export type AggregateDetalle_grupo = {
-  _count: Detalle_grupoCountAggregateOutputType | null
-  _avg: Detalle_grupoAvgAggregateOutputType | null
-  _sum: Detalle_grupoSumAggregateOutputType | null
-  _min: Detalle_grupoMinAggregateOutputType | null
-  _max: Detalle_grupoMaxAggregateOutputType | null
-}
+  _count: Detalle_grupoCountAggregateOutputType | null;
+  _avg: Detalle_grupoAvgAggregateOutputType | null;
+  _sum: Detalle_grupoSumAggregateOutputType | null;
+  _min: Detalle_grupoMinAggregateOutputType | null;
+  _max: Detalle_grupoMaxAggregateOutputType | null;
+};
 
 export type Detalle_grupoAvgAggregateOutputType = {
-  grupo_id: number | null
-  marcador_id: number | null
-}
+  grupo_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Detalle_grupoSumAggregateOutputType = {
-  grupo_id: number | null
-  marcador_id: number | null
-}
+  grupo_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Detalle_grupoMinAggregateOutputType = {
-  grupo_id: number | null
-  marcador_id: number | null
-}
+  grupo_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Detalle_grupoMaxAggregateOutputType = {
-  grupo_id: number | null
-  marcador_id: number | null
-}
+  grupo_id: number | null;
+  marcador_id: number | null;
+};
 
 export type Detalle_grupoCountAggregateOutputType = {
-  grupo_id: number
-  marcador_id: number
-  _all: number
-}
+  grupo_id: number;
+  marcador_id: number;
+  _all: number;
+};
 
 export type Detalle_grupoAvgAggregateInputType = {
-  grupo_id?: true
-  marcador_id?: true
-}
+  grupo_id?: true;
+  marcador_id?: true;
+};
 
 export type Detalle_grupoSumAggregateInputType = {
-  grupo_id?: true
-  marcador_id?: true
-}
+  grupo_id?: true;
+  marcador_id?: true;
+};
 
 export type Detalle_grupoMinAggregateInputType = {
-  grupo_id?: true
-  marcador_id?: true
-}
+  grupo_id?: true;
+  marcador_id?: true;
+};
 
 export type Detalle_grupoMaxAggregateInputType = {
-  grupo_id?: true
-  marcador_id?: true
-}
+  grupo_id?: true;
+  marcador_id?: true;
+};
 
 export type Detalle_grupoCountAggregateInputType = {
-  grupo_id?: true
-  marcador_id?: true
-  _all?: true
-}
+  grupo_id?: true;
+  marcador_id?: true;
+  _all?: true;
+};
 
 export type Detalle_grupoAggregateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which detalle_grupo to aggregate.
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -91,242 +93,248 @@ export type Detalle_grupoAggregateArgs<
    */
   orderBy?:
     | Prisma.detalle_grupoOrderByWithRelationInput
-    | Prisma.detalle_grupoOrderByWithRelationInput[]
+    | Prisma.detalle_grupoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the start position
    */
-  cursor?: Prisma.detalle_grupoWhereUniqueInput
+  cursor?: Prisma.detalle_grupoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` detalle_grupos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` detalle_grupos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Count returned detalle_grupos
    **/
-  _count?: true | Detalle_grupoCountAggregateInputType
+  _count?: true | Detalle_grupoCountAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to average
    **/
-  _avg?: Detalle_grupoAvgAggregateInputType
+  _avg?: Detalle_grupoAvgAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to sum
    **/
-  _sum?: Detalle_grupoSumAggregateInputType
+  _sum?: Detalle_grupoSumAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the minimum value
    **/
-  _min?: Detalle_grupoMinAggregateInputType
+  _min?: Detalle_grupoMinAggregateInputType;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
    * Select which fields to find the maximum value
    **/
-  _max?: Detalle_grupoMaxAggregateInputType
-}
+  _max?: Detalle_grupoMaxAggregateInputType;
+};
 
-export type GetDetalle_grupoAggregateType<T extends Detalle_grupoAggregateArgs> = {
-  [P in keyof T & keyof AggregateDetalle_grupo]: P extends '_count' | 'count'
+export type GetDetalle_grupoAggregateType<
+  T extends Detalle_grupoAggregateArgs,
+> = {
+  [P in keyof T & keyof AggregateDetalle_grupo]: P extends "_count" | "count"
     ? T[P] extends true
       ? number
       : Prisma.GetScalarType<T[P], AggregateDetalle_grupo[P]>
-    : Prisma.GetScalarType<T[P], AggregateDetalle_grupo[P]>
-}
+    : Prisma.GetScalarType<T[P], AggregateDetalle_grupo[P]>;
+};
 
 export type detalle_grupoGroupByArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   orderBy?:
     | Prisma.detalle_grupoOrderByWithAggregationInput
-    | Prisma.detalle_grupoOrderByWithAggregationInput[]
-  by: Prisma.Detalle_grupoScalarFieldEnum[] | Prisma.Detalle_grupoScalarFieldEnum
-  having?: Prisma.detalle_grupoScalarWhereWithAggregatesInput
-  take?: number
-  skip?: number
-  _count?: Detalle_grupoCountAggregateInputType | true
-  _avg?: Detalle_grupoAvgAggregateInputType
-  _sum?: Detalle_grupoSumAggregateInputType
-  _min?: Detalle_grupoMinAggregateInputType
-  _max?: Detalle_grupoMaxAggregateInputType
-}
+    | Prisma.detalle_grupoOrderByWithAggregationInput[];
+  by:
+    | Prisma.Detalle_grupoScalarFieldEnum[]
+    | Prisma.Detalle_grupoScalarFieldEnum;
+  having?: Prisma.detalle_grupoScalarWhereWithAggregatesInput;
+  take?: number;
+  skip?: number;
+  _count?: Detalle_grupoCountAggregateInputType | true;
+  _avg?: Detalle_grupoAvgAggregateInputType;
+  _sum?: Detalle_grupoSumAggregateInputType;
+  _min?: Detalle_grupoMinAggregateInputType;
+  _max?: Detalle_grupoMaxAggregateInputType;
+};
 
 export type Detalle_grupoGroupByOutputType = {
-  grupo_id: number
-  marcador_id: number
-  _count: Detalle_grupoCountAggregateOutputType | null
-  _avg: Detalle_grupoAvgAggregateOutputType | null
-  _sum: Detalle_grupoSumAggregateOutputType | null
-  _min: Detalle_grupoMinAggregateOutputType | null
-  _max: Detalle_grupoMaxAggregateOutputType | null
-}
+  grupo_id: number;
+  marcador_id: number;
+  _count: Detalle_grupoCountAggregateOutputType | null;
+  _avg: Detalle_grupoAvgAggregateOutputType | null;
+  _sum: Detalle_grupoSumAggregateOutputType | null;
+  _min: Detalle_grupoMinAggregateOutputType | null;
+  _max: Detalle_grupoMaxAggregateOutputType | null;
+};
 
 export type GetDetalle_grupoGroupByPayload<T extends detalle_grupoGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
-      Prisma.PickEnumerable<Detalle_grupoGroupByOutputType, T['by']> & {
-        [P in keyof T & keyof Detalle_grupoGroupByOutputType]: P extends '_count'
+      Prisma.PickEnumerable<Detalle_grupoGroupByOutputType, T["by"]> & {
+        [P in keyof T &
+          keyof Detalle_grupoGroupByOutputType]: P extends "_count"
           ? T[P] extends boolean
             ? number
             : Prisma.GetScalarType<T[P], Detalle_grupoGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], Detalle_grupoGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], Detalle_grupoGroupByOutputType[P]>;
       }
     >
-  >
+  >;
 
 export type detalle_grupoWhereInput = {
-  AND?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[]
-  OR?: Prisma.detalle_grupoWhereInput[]
-  NOT?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[]
-  grupo_id?: Prisma.IntFilter<'detalle_grupo'> | number
-  marcador_id?: Prisma.IntFilter<'detalle_grupo'> | number
+  AND?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[];
+  OR?: Prisma.detalle_grupoWhereInput[];
+  NOT?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[];
+  grupo_id?: Prisma.IntFilter<"detalle_grupo"> | number;
+  marcador_id?: Prisma.IntFilter<"detalle_grupo"> | number;
   grupo_marcadores?: Prisma.XOR<
     Prisma.Grupo_marcadoresScalarRelationFilter,
     Prisma.grupo_marcadoresWhereInput
-  >
+  >;
   marcador_mapa?: Prisma.XOR<
     Prisma.Marcador_mapaScalarRelationFilter,
     Prisma.marcador_mapaWhereInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoOrderByWithRelationInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-  grupo_marcadores?: Prisma.grupo_marcadoresOrderByWithRelationInput
-  marcador_mapa?: Prisma.marcador_mapaOrderByWithRelationInput
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+  grupo_marcadores?: Prisma.grupo_marcadoresOrderByWithRelationInput;
+  marcador_mapa?: Prisma.marcador_mapaOrderByWithRelationInput;
+};
 
 export type detalle_grupoWhereUniqueInput = Prisma.AtLeast<
   {
-    grupo_id_marcador_id?: Prisma.detalle_grupoGrupo_idMarcador_idCompoundUniqueInput
-    AND?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[]
-    OR?: Prisma.detalle_grupoWhereInput[]
-    NOT?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[]
-    grupo_id?: Prisma.IntFilter<'detalle_grupo'> | number
-    marcador_id?: Prisma.IntFilter<'detalle_grupo'> | number
+    grupo_id_marcador_id?: Prisma.detalle_grupoGrupo_idMarcador_idCompoundUniqueInput;
+    AND?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[];
+    OR?: Prisma.detalle_grupoWhereInput[];
+    NOT?: Prisma.detalle_grupoWhereInput | Prisma.detalle_grupoWhereInput[];
+    grupo_id?: Prisma.IntFilter<"detalle_grupo"> | number;
+    marcador_id?: Prisma.IntFilter<"detalle_grupo"> | number;
     grupo_marcadores?: Prisma.XOR<
       Prisma.Grupo_marcadoresScalarRelationFilter,
       Prisma.grupo_marcadoresWhereInput
-    >
+    >;
     marcador_mapa?: Prisma.XOR<
       Prisma.Marcador_mapaScalarRelationFilter,
       Prisma.marcador_mapaWhereInput
-    >
+    >;
   },
-  'grupo_id_marcador_id'
->
+  "grupo_id_marcador_id"
+>;
 
 export type detalle_grupoOrderByWithAggregationInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-  _count?: Prisma.detalle_grupoCountOrderByAggregateInput
-  _avg?: Prisma.detalle_grupoAvgOrderByAggregateInput
-  _max?: Prisma.detalle_grupoMaxOrderByAggregateInput
-  _min?: Prisma.detalle_grupoMinOrderByAggregateInput
-  _sum?: Prisma.detalle_grupoSumOrderByAggregateInput
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+  _count?: Prisma.detalle_grupoCountOrderByAggregateInput;
+  _avg?: Prisma.detalle_grupoAvgOrderByAggregateInput;
+  _max?: Prisma.detalle_grupoMaxOrderByAggregateInput;
+  _min?: Prisma.detalle_grupoMinOrderByAggregateInput;
+  _sum?: Prisma.detalle_grupoSumOrderByAggregateInput;
+};
 
 export type detalle_grupoScalarWhereWithAggregatesInput = {
   AND?:
     | Prisma.detalle_grupoScalarWhereWithAggregatesInput
-    | Prisma.detalle_grupoScalarWhereWithAggregatesInput[]
-  OR?: Prisma.detalle_grupoScalarWhereWithAggregatesInput[]
+    | Prisma.detalle_grupoScalarWhereWithAggregatesInput[];
+  OR?: Prisma.detalle_grupoScalarWhereWithAggregatesInput[];
   NOT?:
     | Prisma.detalle_grupoScalarWhereWithAggregatesInput
-    | Prisma.detalle_grupoScalarWhereWithAggregatesInput[]
-  grupo_id?: Prisma.IntWithAggregatesFilter<'detalle_grupo'> | number
-  marcador_id?: Prisma.IntWithAggregatesFilter<'detalle_grupo'> | number
-}
+    | Prisma.detalle_grupoScalarWhereWithAggregatesInput[];
+  grupo_id?: Prisma.IntWithAggregatesFilter<"detalle_grupo"> | number;
+  marcador_id?: Prisma.IntWithAggregatesFilter<"detalle_grupo"> | number;
+};
 
 export type detalle_grupoCreateInput = {
-  grupo_marcadores: Prisma.grupo_marcadoresCreateNestedOneWithoutDetalle_grupoInput
-  marcador_mapa: Prisma.marcador_mapaCreateNestedOneWithoutDetalle_grupoInput
-}
+  grupo_marcadores: Prisma.grupo_marcadoresCreateNestedOneWithoutDetalle_grupoInput;
+  marcador_mapa: Prisma.marcador_mapaCreateNestedOneWithoutDetalle_grupoInput;
+};
 
 export type detalle_grupoUncheckedCreateInput = {
-  grupo_id: number
-  marcador_id: number
-}
+  grupo_id: number;
+  marcador_id: number;
+};
 
 export type detalle_grupoUpdateInput = {
-  grupo_marcadores?: Prisma.grupo_marcadoresUpdateOneRequiredWithoutDetalle_grupoNestedInput
-  marcador_mapa?: Prisma.marcador_mapaUpdateOneRequiredWithoutDetalle_grupoNestedInput
-}
+  grupo_marcadores?: Prisma.grupo_marcadoresUpdateOneRequiredWithoutDetalle_grupoNestedInput;
+  marcador_mapa?: Prisma.marcador_mapaUpdateOneRequiredWithoutDetalle_grupoNestedInput;
+};
 
 export type detalle_grupoUncheckedUpdateInput = {
-  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number
-  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type detalle_grupoCreateManyInput = {
-  grupo_id: number
-  marcador_id: number
-}
+  grupo_id: number;
+  marcador_id: number;
+};
 
-export type detalle_grupoUpdateManyMutationInput = {}
+export type detalle_grupoUpdateManyMutationInput = {};
 
 export type detalle_grupoUncheckedUpdateManyInput = {
-  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number
-  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number;
+  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type detalle_grupoGrupo_idMarcador_idCompoundUniqueInput = {
-  grupo_id: number
-  marcador_id: number
-}
+  grupo_id: number;
+  marcador_id: number;
+};
 
 export type detalle_grupoCountOrderByAggregateInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type detalle_grupoAvgOrderByAggregateInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type detalle_grupoMaxOrderByAggregateInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type detalle_grupoMinOrderByAggregateInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type detalle_grupoSumOrderByAggregateInput = {
-  grupo_id?: Prisma.SortOrder
-  marcador_id?: Prisma.SortOrder
-}
+  grupo_id?: Prisma.SortOrder;
+  marcador_id?: Prisma.SortOrder;
+};
 
 export type Detalle_grupoListRelationFilter = {
-  every?: Prisma.detalle_grupoWhereInput
-  some?: Prisma.detalle_grupoWhereInput
-  none?: Prisma.detalle_grupoWhereInput
-}
+  every?: Prisma.detalle_grupoWhereInput;
+  some?: Prisma.detalle_grupoWhereInput;
+  none?: Prisma.detalle_grupoWhereInput;
+};
 
 export type detalle_grupoOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
+  _count?: Prisma.SortOrder;
+};
 
 export type detalle_grupoCreateNestedManyWithoutGrupo_marcadoresInput = {
   create?:
@@ -335,28 +343,33 @@ export type detalle_grupoCreateNestedManyWithoutGrupo_marcadoresInput = {
         Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
       >
     | Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[]
+    | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[];
   connectOrCreate?:
     | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[]
-  createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-}
+    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[];
+  createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope;
+  connect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+};
 
-export type detalle_grupoUncheckedCreateNestedManyWithoutGrupo_marcadoresInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput,
-        Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
-      >
-    | Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[]
-  connectOrCreate?:
-    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[]
-  createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-}
+export type detalle_grupoUncheckedCreateNestedManyWithoutGrupo_marcadoresInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput,
+          Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
+        >
+      | Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput[]
+      | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[];
+    connectOrCreate?:
+      | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput
+      | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[];
+    createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope;
+    connect?:
+      | Prisma.detalle_grupoWhereUniqueInput
+      | Prisma.detalle_grupoWhereUniqueInput[];
+  };
 
 export type detalle_grupoUpdateManyWithoutGrupo_marcadoresNestedInput = {
   create?:
@@ -365,54 +378,75 @@ export type detalle_grupoUpdateManyWithoutGrupo_marcadoresNestedInput = {
         Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
       >
     | Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[]
+    | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[];
   connectOrCreate?:
     | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[]
+    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[];
   upsert?:
     | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput[]
-  createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope
-  set?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  disconnect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  delete?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
+    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput[];
+  createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope;
+  set?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  disconnect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  delete?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  connect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
   update?:
     | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput[]
+    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput[];
   updateMany?:
     | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput[]
-  deleteMany?: Prisma.detalle_grupoScalarWhereInput | Prisma.detalle_grupoScalarWhereInput[]
-}
+    | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput[];
+  deleteMany?:
+    | Prisma.detalle_grupoScalarWhereInput
+    | Prisma.detalle_grupoScalarWhereInput[];
+};
 
-export type detalle_grupoUncheckedUpdateManyWithoutGrupo_marcadoresNestedInput = {
-  create?:
-    | Prisma.XOR<
-        Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput,
-        Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
-      >
-    | Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[]
-  connectOrCreate?:
-    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[]
-  upsert?:
-    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput[]
-  createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope
-  set?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  disconnect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  delete?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  update?:
-    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput[]
-  updateMany?:
-    | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput
-    | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput[]
-  deleteMany?: Prisma.detalle_grupoScalarWhereInput | Prisma.detalle_grupoScalarWhereInput[]
-}
+export type detalle_grupoUncheckedUpdateManyWithoutGrupo_marcadoresNestedInput =
+  {
+    create?:
+      | Prisma.XOR<
+          Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput,
+          Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
+        >
+      | Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput[]
+      | Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput[];
+    connectOrCreate?:
+      | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput
+      | Prisma.detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput[];
+    upsert?:
+      | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput
+      | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput[];
+    createMany?: Prisma.detalle_grupoCreateManyGrupo_marcadoresInputEnvelope;
+    set?:
+      | Prisma.detalle_grupoWhereUniqueInput
+      | Prisma.detalle_grupoWhereUniqueInput[];
+    disconnect?:
+      | Prisma.detalle_grupoWhereUniqueInput
+      | Prisma.detalle_grupoWhereUniqueInput[];
+    delete?:
+      | Prisma.detalle_grupoWhereUniqueInput
+      | Prisma.detalle_grupoWhereUniqueInput[];
+    connect?:
+      | Prisma.detalle_grupoWhereUniqueInput
+      | Prisma.detalle_grupoWhereUniqueInput[];
+    update?:
+      | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput
+      | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput[];
+    updateMany?:
+      | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput
+      | Prisma.detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput[];
+    deleteMany?:
+      | Prisma.detalle_grupoScalarWhereInput
+      | Prisma.detalle_grupoScalarWhereInput[];
+  };
 
 export type detalle_grupoCreateNestedManyWithoutMarcador_mapaInput = {
   create?:
@@ -421,13 +455,15 @@ export type detalle_grupoCreateNestedManyWithoutMarcador_mapaInput = {
         Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput
       >
     | Prisma.detalle_grupoCreateWithoutMarcador_mapaInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[];
   connectOrCreate?:
     | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[]
-  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-}
+    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[];
+  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope;
+  connect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+};
 
 export type detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput = {
   create?:
@@ -436,13 +472,15 @@ export type detalle_grupoUncheckedCreateNestedManyWithoutMarcador_mapaInput = {
         Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput
       >
     | Prisma.detalle_grupoCreateWithoutMarcador_mapaInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[];
   connectOrCreate?:
     | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[]
-  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-}
+    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[];
+  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope;
+  connect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+};
 
 export type detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput = {
   create?:
@@ -451,26 +489,36 @@ export type detalle_grupoUpdateManyWithoutMarcador_mapaNestedInput = {
         Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput
       >
     | Prisma.detalle_grupoCreateWithoutMarcador_mapaInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[];
   connectOrCreate?:
     | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[];
   upsert?:
     | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput[]
-  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope
-  set?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  disconnect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  delete?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
+    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput[];
+  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope;
+  set?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  disconnect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  delete?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  connect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
   update?:
     | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput[];
   updateMany?:
     | Prisma.detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput[]
-  deleteMany?: Prisma.detalle_grupoScalarWhereInput | Prisma.detalle_grupoScalarWhereInput[]
-}
+    | Prisma.detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput[];
+  deleteMany?:
+    | Prisma.detalle_grupoScalarWhereInput
+    | Prisma.detalle_grupoScalarWhereInput[];
+};
 
 export type detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput = {
   create?:
@@ -479,268 +527,298 @@ export type detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaNestedInput = {
         Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput
       >
     | Prisma.detalle_grupoCreateWithoutMarcador_mapaInput[]
-    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput[];
   connectOrCreate?:
     | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoCreateOrConnectWithoutMarcador_mapaInput[];
   upsert?:
     | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput[]
-  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope
-  set?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  disconnect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  delete?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
-  connect?: Prisma.detalle_grupoWhereUniqueInput | Prisma.detalle_grupoWhereUniqueInput[]
+    | Prisma.detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput[];
+  createMany?: Prisma.detalle_grupoCreateManyMarcador_mapaInputEnvelope;
+  set?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  disconnect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  delete?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
+  connect?:
+    | Prisma.detalle_grupoWhereUniqueInput
+    | Prisma.detalle_grupoWhereUniqueInput[];
   update?:
     | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput[]
+    | Prisma.detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput[];
   updateMany?:
     | Prisma.detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput
-    | Prisma.detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput[]
-  deleteMany?: Prisma.detalle_grupoScalarWhereInput | Prisma.detalle_grupoScalarWhereInput[]
-}
+    | Prisma.detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput[];
+  deleteMany?:
+    | Prisma.detalle_grupoScalarWhereInput
+    | Prisma.detalle_grupoScalarWhereInput[];
+};
 
 export type detalle_grupoCreateWithoutGrupo_marcadoresInput = {
-  marcador_mapa: Prisma.marcador_mapaCreateNestedOneWithoutDetalle_grupoInput
-}
+  marcador_mapa: Prisma.marcador_mapaCreateNestedOneWithoutDetalle_grupoInput;
+};
 
 export type detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput = {
-  marcador_id: number
-}
+  marcador_id: number;
+};
 
 export type detalle_grupoCreateOrConnectWithoutGrupo_marcadoresInput = {
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput,
     Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoCreateManyGrupo_marcadoresInputEnvelope = {
   data:
     | Prisma.detalle_grupoCreateManyGrupo_marcadoresInput
-    | Prisma.detalle_grupoCreateManyGrupo_marcadoresInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.detalle_grupoCreateManyGrupo_marcadoresInput[];
+  skipDuplicates?: boolean;
+};
 
 export type detalle_grupoUpsertWithWhereUniqueWithoutGrupo_marcadoresInput = {
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.detalle_grupoUpdateWithoutGrupo_marcadoresInput,
     Prisma.detalle_grupoUncheckedUpdateWithoutGrupo_marcadoresInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.detalle_grupoCreateWithoutGrupo_marcadoresInput,
     Prisma.detalle_grupoUncheckedCreateWithoutGrupo_marcadoresInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoUpdateWithWhereUniqueWithoutGrupo_marcadoresInput = {
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.detalle_grupoUpdateWithoutGrupo_marcadoresInput,
     Prisma.detalle_grupoUncheckedUpdateWithoutGrupo_marcadoresInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoUpdateManyWithWhereWithoutGrupo_marcadoresInput = {
-  where: Prisma.detalle_grupoScalarWhereInput
+  where: Prisma.detalle_grupoScalarWhereInput;
   data: Prisma.XOR<
     Prisma.detalle_grupoUpdateManyMutationInput,
     Prisma.detalle_grupoUncheckedUpdateManyWithoutGrupo_marcadoresInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoScalarWhereInput = {
-  AND?: Prisma.detalle_grupoScalarWhereInput | Prisma.detalle_grupoScalarWhereInput[]
-  OR?: Prisma.detalle_grupoScalarWhereInput[]
-  NOT?: Prisma.detalle_grupoScalarWhereInput | Prisma.detalle_grupoScalarWhereInput[]
-  grupo_id?: Prisma.IntFilter<'detalle_grupo'> | number
-  marcador_id?: Prisma.IntFilter<'detalle_grupo'> | number
-}
+  AND?:
+    | Prisma.detalle_grupoScalarWhereInput
+    | Prisma.detalle_grupoScalarWhereInput[];
+  OR?: Prisma.detalle_grupoScalarWhereInput[];
+  NOT?:
+    | Prisma.detalle_grupoScalarWhereInput
+    | Prisma.detalle_grupoScalarWhereInput[];
+  grupo_id?: Prisma.IntFilter<"detalle_grupo"> | number;
+  marcador_id?: Prisma.IntFilter<"detalle_grupo"> | number;
+};
 
 export type detalle_grupoCreateWithoutMarcador_mapaInput = {
-  grupo_marcadores: Prisma.grupo_marcadoresCreateNestedOneWithoutDetalle_grupoInput
-}
+  grupo_marcadores: Prisma.grupo_marcadoresCreateNestedOneWithoutDetalle_grupoInput;
+};
 
 export type detalle_grupoUncheckedCreateWithoutMarcador_mapaInput = {
-  grupo_id: number
-}
+  grupo_id: number;
+};
 
 export type detalle_grupoCreateOrConnectWithoutMarcador_mapaInput = {
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   create: Prisma.XOR<
     Prisma.detalle_grupoCreateWithoutMarcador_mapaInput,
     Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoCreateManyMarcador_mapaInputEnvelope = {
   data:
     | Prisma.detalle_grupoCreateManyMarcador_mapaInput
-    | Prisma.detalle_grupoCreateManyMarcador_mapaInput[]
-  skipDuplicates?: boolean
-}
+    | Prisma.detalle_grupoCreateManyMarcador_mapaInput[];
+  skipDuplicates?: boolean;
+};
 
 export type detalle_grupoUpsertWithWhereUniqueWithoutMarcador_mapaInput = {
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   update: Prisma.XOR<
     Prisma.detalle_grupoUpdateWithoutMarcador_mapaInput,
     Prisma.detalle_grupoUncheckedUpdateWithoutMarcador_mapaInput
-  >
+  >;
   create: Prisma.XOR<
     Prisma.detalle_grupoCreateWithoutMarcador_mapaInput,
     Prisma.detalle_grupoUncheckedCreateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoUpdateWithWhereUniqueWithoutMarcador_mapaInput = {
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   data: Prisma.XOR<
     Prisma.detalle_grupoUpdateWithoutMarcador_mapaInput,
     Prisma.detalle_grupoUncheckedUpdateWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoUpdateManyWithWhereWithoutMarcador_mapaInput = {
-  where: Prisma.detalle_grupoScalarWhereInput
+  where: Prisma.detalle_grupoScalarWhereInput;
   data: Prisma.XOR<
     Prisma.detalle_grupoUpdateManyMutationInput,
     Prisma.detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaInput
-  >
-}
+  >;
+};
 
 export type detalle_grupoCreateManyGrupo_marcadoresInput = {
-  marcador_id: number
-}
+  marcador_id: number;
+};
 
 export type detalle_grupoUpdateWithoutGrupo_marcadoresInput = {
-  marcador_mapa?: Prisma.marcador_mapaUpdateOneRequiredWithoutDetalle_grupoNestedInput
-}
+  marcador_mapa?: Prisma.marcador_mapaUpdateOneRequiredWithoutDetalle_grupoNestedInput;
+};
 
 export type detalle_grupoUncheckedUpdateWithoutGrupo_marcadoresInput = {
-  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type detalle_grupoUncheckedUpdateManyWithoutGrupo_marcadoresInput = {
-  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  marcador_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type detalle_grupoCreateManyMarcador_mapaInput = {
-  grupo_id: number
-}
+  grupo_id: number;
+};
 
 export type detalle_grupoUpdateWithoutMarcador_mapaInput = {
-  grupo_marcadores?: Prisma.grupo_marcadoresUpdateOneRequiredWithoutDetalle_grupoNestedInput
-}
+  grupo_marcadores?: Prisma.grupo_marcadoresUpdateOneRequiredWithoutDetalle_grupoNestedInput;
+};
 
 export type detalle_grupoUncheckedUpdateWithoutMarcador_mapaInput = {
-  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type detalle_grupoUncheckedUpdateManyWithoutMarcador_mapaInput = {
-  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
+  grupo_id?: Prisma.IntFieldUpdateOperationsInput | number;
+};
 
 export type detalle_grupoSelect<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    grupo_id?: boolean
-    marcador_id?: boolean
-    grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>
-    marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>
+    grupo_id?: boolean;
+    marcador_id?: boolean;
+    grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>;
+    marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['detalle_grupo']
->
+  ExtArgs["result"]["detalle_grupo"]
+>;
 
 export type detalle_grupoSelectCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    grupo_id?: boolean
-    marcador_id?: boolean
-    grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>
-    marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>
+    grupo_id?: boolean;
+    marcador_id?: boolean;
+    grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>;
+    marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['detalle_grupo']
->
+  ExtArgs["result"]["detalle_grupo"]
+>;
 
 export type detalle_grupoSelectUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
   {
-    grupo_id?: boolean
-    marcador_id?: boolean
-    grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>
-    marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>
+    grupo_id?: boolean;
+    marcador_id?: boolean;
+    grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>;
+    marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>;
   },
-  ExtArgs['result']['detalle_grupo']
->
+  ExtArgs["result"]["detalle_grupo"]
+>;
 
 export type detalle_grupoSelectScalar = {
-  grupo_id?: boolean
-  marcador_id?: boolean
-}
+  grupo_id?: boolean;
+  marcador_id?: boolean;
+};
 
 export type detalle_grupoOmit<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = runtime.Types.Extensions.GetOmit<'grupo_id' | 'marcador_id', ExtArgs['result']['detalle_grupo']>
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = runtime.Types.Extensions.GetOmit<
+  "grupo_id" | "marcador_id",
+  ExtArgs["result"]["detalle_grupo"]
+>;
 export type detalle_grupoInclude<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>
-  marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>
-}
+  grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>;
+  marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>;
+};
 export type detalle_grupoIncludeCreateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>
-  marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>
-}
+  grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>;
+  marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>;
+};
 export type detalle_grupoIncludeUpdateManyAndReturn<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>
-  marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>
-}
+  grupo_marcadores?: boolean | Prisma.grupo_marcadoresDefaultArgs<ExtArgs>;
+  marcador_mapa?: boolean | Prisma.marcador_mapaDefaultArgs<ExtArgs>;
+};
 
 export type $detalle_grupoPayload<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
-  name: 'detalle_grupo'
+  name: "detalle_grupo";
   objects: {
-    grupo_marcadores: Prisma.$grupo_marcadoresPayload<ExtArgs>
-    marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs>
-  }
+    grupo_marcadores: Prisma.$grupo_marcadoresPayload<ExtArgs>;
+    marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs>;
+  };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
-      grupo_id: number
-      marcador_id: number
+      grupo_id: number;
+      marcador_id: number;
     },
-    ExtArgs['result']['detalle_grupo']
-  >
-  composites: {}
-}
+    ExtArgs["result"]["detalle_grupo"]
+  >;
+  composites: {};
+};
 
 export type detalle_grupoGetPayload<
-  S extends boolean | null | undefined | detalle_grupoDefaultArgs
-> = runtime.Types.Result.GetResult<Prisma.$detalle_grupoPayload, S>
+  S extends boolean | null | undefined | detalle_grupoDefaultArgs,
+> = runtime.Types.Result.GetResult<Prisma.$detalle_grupoPayload, S>;
 
 export type detalle_grupoCountArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
-> = Omit<detalle_grupoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-  select?: Detalle_grupoCountAggregateInputType | true
-}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = Omit<
+  detalle_grupoFindManyArgs,
+  "select" | "include" | "distinct" | "omit"
+> & {
+  select?: Detalle_grupoCountAggregateInputType | true;
+};
 
 export interface detalle_grupoDelegate<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > {
   [K: symbol]: {
-    types: Prisma.TypeMap<ExtArgs>['model']['detalle_grupo']
-    meta: { name: 'detalle_grupo' }
-  }
+    types: Prisma.TypeMap<ExtArgs>["model"]["detalle_grupo"];
+    meta: { name: "detalle_grupo" };
+  };
   /**
    * Find zero or one Detalle_grupo that matches the filter.
    * @param {detalle_grupoFindUniqueArgs} args - Arguments to find a Detalle_grupo
@@ -753,18 +831,18 @@ export interface detalle_grupoDelegate<
    * })
    */
   findUnique<T extends detalle_grupoFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoFindUniqueArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoFindUniqueArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'findUnique',
+      "findUnique",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find one Detalle_grupo that matches the filter or throw an error with `error.code='P2025'`
@@ -779,18 +857,18 @@ export interface detalle_grupoDelegate<
    * })
    */
   findUniqueOrThrow<T extends detalle_grupoFindUniqueOrThrowArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoFindUniqueOrThrowArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoFindUniqueOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'findUniqueOrThrow',
+      "findUniqueOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Detalle_grupo that matches the filter.
@@ -806,18 +884,18 @@ export interface detalle_grupoDelegate<
    * })
    */
   findFirst<T extends detalle_grupoFindFirstArgs>(
-    args?: Prisma.SelectSubset<T, detalle_grupoFindFirstArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, detalle_grupoFindFirstArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'findFirst',
+      "findFirst",
       GlobalOmitOptions
     > | null,
     null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find the first Detalle_grupo that matches the filter or
@@ -834,18 +912,18 @@ export interface detalle_grupoDelegate<
    * })
    */
   findFirstOrThrow<T extends detalle_grupoFindFirstOrThrowArgs>(
-    args?: Prisma.SelectSubset<T, detalle_grupoFindFirstOrThrowArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, detalle_grupoFindFirstOrThrowArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'findFirstOrThrow',
+      "findFirstOrThrow",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Find zero or more Detalle_grupos that matches the filter.
@@ -864,15 +942,15 @@ export interface detalle_grupoDelegate<
    *
    */
   findMany<T extends detalle_grupoFindManyArgs>(
-    args?: Prisma.SelectSubset<T, detalle_grupoFindManyArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<T, detalle_grupoFindManyArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'findMany',
+      "findMany",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create a Detalle_grupo.
@@ -887,18 +965,18 @@ export interface detalle_grupoDelegate<
    *
    */
   create<T extends detalle_grupoCreateArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoCreateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoCreateArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'create',
+      "create",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Create many Detalle_grupos.
@@ -913,8 +991,8 @@ export interface detalle_grupoDelegate<
    *
    */
   createMany<T extends detalle_grupoCreateManyArgs>(
-    args?: Prisma.SelectSubset<T, detalle_grupoCreateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, detalle_grupoCreateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Create many Detalle_grupos and returns the data saved in the database.
@@ -939,15 +1017,18 @@ export interface detalle_grupoDelegate<
    *
    */
   createManyAndReturn<T extends detalle_grupoCreateManyAndReturnArgs>(
-    args?: Prisma.SelectSubset<T, detalle_grupoCreateManyAndReturnArgs<ExtArgs>>
+    args?: Prisma.SelectSubset<
+      T,
+      detalle_grupoCreateManyAndReturnArgs<ExtArgs>
+    >,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'createManyAndReturn',
+      "createManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Delete a Detalle_grupo.
@@ -962,18 +1043,18 @@ export interface detalle_grupoDelegate<
    *
    */
   delete<T extends detalle_grupoDeleteArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoDeleteArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoDeleteArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'delete',
+      "delete",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Update one Detalle_grupo.
@@ -991,18 +1072,18 @@ export interface detalle_grupoDelegate<
    *
    */
   update<T extends detalle_grupoUpdateArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoUpdateArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoUpdateArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'update',
+      "update",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Delete zero or more Detalle_grupos.
@@ -1017,8 +1098,8 @@ export interface detalle_grupoDelegate<
    *
    */
   deleteMany<T extends detalle_grupoDeleteManyArgs>(
-    args?: Prisma.SelectSubset<T, detalle_grupoDeleteManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args?: Prisma.SelectSubset<T, detalle_grupoDeleteManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Detalle_grupos.
@@ -1038,8 +1119,8 @@ export interface detalle_grupoDelegate<
    *
    */
   updateMany<T extends detalle_grupoUpdateManyArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoUpdateManyArgs<ExtArgs>>
-  ): Prisma.PrismaPromise<Prisma.BatchPayload>
+    args: Prisma.SelectSubset<T, detalle_grupoUpdateManyArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<Prisma.BatchPayload>;
 
   /**
    * Update zero or more Detalle_grupos and returns the data updated in the database.
@@ -1070,15 +1151,15 @@ export interface detalle_grupoDelegate<
    *
    */
   updateManyAndReturn<T extends detalle_grupoUpdateManyAndReturnArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoUpdateManyAndReturnArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoUpdateManyAndReturnArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'updateManyAndReturn',
+      "updateManyAndReturn",
       GlobalOmitOptions
     >
-  >
+  >;
 
   /**
    * Create or update one Detalle_grupo.
@@ -1098,18 +1179,18 @@ export interface detalle_grupoDelegate<
    * })
    */
   upsert<T extends detalle_grupoUpsertArgs>(
-    args: Prisma.SelectSubset<T, detalle_grupoUpsertArgs<ExtArgs>>
+    args: Prisma.SelectSubset<T, detalle_grupoUpsertArgs<ExtArgs>>,
   ): Prisma.Prisma__detalle_grupoClient<
     runtime.Types.Result.GetResult<
       Prisma.$detalle_grupoPayload<ExtArgs>,
       T,
-      'upsert',
+      "upsert",
       GlobalOmitOptions
     >,
     never,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
 
   /**
    * Count the number of Detalle_grupos.
@@ -1125,14 +1206,17 @@ export interface detalle_grupoDelegate<
    * })
    **/
   count<T extends detalle_grupoCountArgs>(
-    args?: Prisma.Subset<T, detalle_grupoCountArgs>
+    args?: Prisma.Subset<T, detalle_grupoCountArgs>,
   ): Prisma.PrismaPromise<
-    T extends runtime.Types.Utils.Record<'select', any>
-      ? T['select'] extends true
+    T extends runtime.Types.Utils.Record<"select", any>
+      ? T["select"] extends true
         ? number
-        : Prisma.GetScalarType<T['select'], Detalle_grupoCountAggregateOutputType>
+        : Prisma.GetScalarType<
+            T["select"],
+            Detalle_grupoCountAggregateOutputType
+          >
       : number
-  >
+  >;
 
   /**
    * Allows you to perform aggregations operations on a Detalle_grupo.
@@ -1159,8 +1243,8 @@ export interface detalle_grupoDelegate<
    * })
    **/
   aggregate<T extends Detalle_grupoAggregateArgs>(
-    args: Prisma.Subset<T, Detalle_grupoAggregateArgs>
-  ): Prisma.PrismaPromise<GetDetalle_grupoAggregateType<T>>
+    args: Prisma.Subset<T, Detalle_grupoAggregateArgs>,
+  ): Prisma.PrismaPromise<GetDetalle_grupoAggregateType<T>>;
 
   /**
    * Group by Detalle_grupo.
@@ -1183,20 +1267,20 @@ export interface detalle_grupoDelegate<
   groupBy<
     T extends detalle_grupoGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
-      Prisma.Extends<'skip', Prisma.Keys<T>>,
-      Prisma.Extends<'take', Prisma.Keys<T>>
+      Prisma.Extends<"skip", Prisma.Keys<T>>,
+      Prisma.Extends<"take", Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: detalle_grupoGroupByArgs['orderBy'] }
-      : { orderBy?: detalle_grupoGroupByArgs['orderBy'] },
+      ? { orderBy: detalle_grupoGroupByArgs["orderBy"] }
+      : { orderBy?: detalle_grupoGroupByArgs["orderBy"] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<
-      Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>
+      Prisma.Keys<Prisma.MaybeTupleToUnion<T["orderBy"]>>
     >,
-    ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
+    ByFields extends Prisma.MaybeTupleToUnion<T["by"]>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
-    HavingFields extends Prisma.GetHavingFields<T['having']>,
+    HavingFields extends Prisma.GetHavingFields<T["having"]>,
     HavingValid extends Prisma.Has<ByFields, HavingFields>,
-    ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False,
+    ByEmpty extends T["by"] extends never[] ? Prisma.True : Prisma.False,
     InputErrors extends ByEmpty extends Prisma.True
       ? `Error: "by" must not be empty.`
       : HavingValid extends Prisma.False
@@ -1205,26 +1289,31 @@ export interface detalle_grupoDelegate<
               ? never
               : P extends string
                 ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-                : [Error, 'Field ', P, ` in "having" needs to be provided in "by"`]
+                : [
+                    Error,
+                    "Field ",
+                    P,
+                    ` in "having" needs to be provided in "by"`,
+                  ];
           }[HavingFields]
-        : 'take' extends Prisma.Keys<T>
-          ? 'orderBy' extends Prisma.Keys<T>
+        : "take" extends Prisma.Keys<T>
+          ? "orderBy" extends Prisma.Keys<T>
             ? ByValid extends Prisma.True
               ? {}
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                 }[OrderFields]
             : 'Error: If you provide "take", you also need to provide "orderBy"'
-          : 'skip' extends Prisma.Keys<T>
-            ? 'orderBy' extends Prisma.Keys<T>
+          : "skip" extends Prisma.Keys<T>
+            ? "orderBy" extends Prisma.Keys<T>
               ? ByValid extends Prisma.True
                 ? {}
                 : {
                     [P in OrderFields]: P extends ByFields
                       ? never
-                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+                      : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
                   }[OrderFields]
               : 'Error: If you provide "skip", you also need to provide "orderBy"'
             : ByValid extends Prisma.True
@@ -1232,15 +1321,18 @@ export interface detalle_grupoDelegate<
               : {
                   [P in OrderFields]: P extends ByFields
                     ? never
-                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-                }[OrderFields]
+                    : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+                }[OrderFields],
   >(
-    args: Prisma.SubsetIntersection<T, detalle_grupoGroupByArgs, OrderByArg> & InputErrors
-  ): {} extends InputErrors ? GetDetalle_grupoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    args: Prisma.SubsetIntersection<T, detalle_grupoGroupByArgs, OrderByArg> &
+      InputErrors,
+  ): {} extends InputErrors
+    ? GetDetalle_grupoGroupByPayload<T>
+    : Prisma.PrismaPromise<InputErrors>;
   /**
    * Fields of the detalle_grupo model
    */
-  readonly fields: detalle_grupoFieldRefs
+  readonly fields: detalle_grupoFieldRefs;
 }
 
 /**
@@ -1252,38 +1344,39 @@ export interface detalle_grupoDelegate<
 export interface Prisma__detalle_grupoClient<
   T,
   Null = never,
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-  GlobalOmitOptions = {}
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+  GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
-  readonly [Symbol.toStringTag]: 'PrismaPromise'
+  readonly [Symbol.toStringTag]: "PrismaPromise";
   grupo_marcadores<T extends Prisma.grupo_marcadoresDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.grupo_marcadoresDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.grupo_marcadoresDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__grupo_marcadoresClient<
     | runtime.Types.Result.GetResult<
         Prisma.$grupo_marcadoresPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   marcador_mapa<T extends Prisma.marcador_mapaDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.marcador_mapaDefaultArgs<ExtArgs>>
+    args?: Prisma.Subset<T, Prisma.marcador_mapaDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__marcador_mapaClient<
     | runtime.Types.Result.GetResult<
         Prisma.$marcador_mapaPayload<ExtArgs>,
         T,
-        'findUniqueOrThrow',
+        "findUniqueOrThrow",
         GlobalOmitOptions
       >
     | Null,
     Null,
     ExtArgs,
     GlobalOmitOptions
-  >
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1291,32 +1384,43 @@ export interface Prisma__detalle_grupoClient<
    * @returns A Promise for the completion of which ever callback is executed.
    */
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
   /**
    * Attaches a callback for only the rejection of the Promise.
    * @param onrejected The callback to execute when the Promise is rejected.
    * @returns A Promise for the completion of the callback.
    */
   catch<TResult = never>(
-    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
-  ): runtime.Types.Utils.JsPromise<T | TResult>
+    onrejected?:
+      | ((reason: any) => TResult | PromiseLike<TResult>)
+      | undefined
+      | null,
+  ): runtime.Types.Utils.JsPromise<T | TResult>;
   /**
    * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
    * resolved value cannot be modified from the callback.
    * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
    * @returns A Promise for the completion of the callback.
    */
-  finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>
+  finally(
+    onfinally?: (() => void) | undefined | null,
+  ): runtime.Types.Utils.JsPromise<T>;
 }
 
 /**
  * Fields of the detalle_grupo model
  */
 export interface detalle_grupoFieldRefs {
-  readonly grupo_id: Prisma.FieldRef<'detalle_grupo', 'Int'>
-  readonly marcador_id: Prisma.FieldRef<'detalle_grupo', 'Int'>
+  readonly grupo_id: Prisma.FieldRef<"detalle_grupo", "Int">;
+  readonly marcador_id: Prisma.FieldRef<"detalle_grupo", "Int">;
 }
 
 // Custom InputTypes
@@ -1324,72 +1428,75 @@ export interface detalle_grupoFieldRefs {
  * detalle_grupo findUnique
  */
 export type detalle_grupoFindUniqueArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * Filter, which detalle_grupo to fetch.
    */
-  where: Prisma.detalle_grupoWhereUniqueInput
-}
+  where: Prisma.detalle_grupoWhereUniqueInput;
+};
 
 /**
  * detalle_grupo findUniqueOrThrow
  */
 export type detalle_grupoFindUniqueOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * Filter, which detalle_grupo to fetch.
    */
-  where: Prisma.detalle_grupoWhereUniqueInput
-}
+  where: Prisma.detalle_grupoWhereUniqueInput;
+};
 
 /**
  * detalle_grupo findFirst
  */
 export type detalle_grupoFindFirstArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * Filter, which detalle_grupo to fetch.
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1397,55 +1504,58 @@ export type detalle_grupoFindFirstArgs<
    */
   orderBy?:
     | Prisma.detalle_grupoOrderByWithRelationInput
-    | Prisma.detalle_grupoOrderByWithRelationInput[]
+    | Prisma.detalle_grupoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for detalle_grupos.
    */
-  cursor?: Prisma.detalle_grupoWhereUniqueInput
+  cursor?: Prisma.detalle_grupoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` detalle_grupos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` detalle_grupos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of detalle_grupos.
    */
-  distinct?: Prisma.Detalle_grupoScalarFieldEnum | Prisma.Detalle_grupoScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Detalle_grupoScalarFieldEnum
+    | Prisma.Detalle_grupoScalarFieldEnum[];
+};
 
 /**
  * detalle_grupo findFirstOrThrow
  */
 export type detalle_grupoFindFirstOrThrowArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * Filter, which detalle_grupo to fetch.
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1453,55 +1563,58 @@ export type detalle_grupoFindFirstOrThrowArgs<
    */
   orderBy?:
     | Prisma.detalle_grupoOrderByWithRelationInput
-    | Prisma.detalle_grupoOrderByWithRelationInput[]
+    | Prisma.detalle_grupoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for searching for detalle_grupos.
    */
-  cursor?: Prisma.detalle_grupoWhereUniqueInput
+  cursor?: Prisma.detalle_grupoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` detalle_grupos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` detalle_grupos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of detalle_grupos.
    */
-  distinct?: Prisma.Detalle_grupoScalarFieldEnum | Prisma.Detalle_grupoScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Detalle_grupoScalarFieldEnum
+    | Prisma.Detalle_grupoScalarFieldEnum[];
+};
 
 /**
  * detalle_grupo findMany
  */
 export type detalle_grupoFindManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * Filter, which detalle_grupos to fetch.
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    *
@@ -1509,128 +1622,145 @@ export type detalle_grupoFindManyArgs<
    */
   orderBy?:
     | Prisma.detalle_grupoOrderByWithRelationInput
-    | Prisma.detalle_grupoOrderByWithRelationInput[]
+    | Prisma.detalle_grupoOrderByWithRelationInput[];
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    *
    * Sets the position for listing detalle_grupos.
    */
-  cursor?: Prisma.detalle_grupoWhereUniqueInput
+  cursor?: Prisma.detalle_grupoWhereUniqueInput;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Take `±n` detalle_grupos from the position of the cursor.
    */
-  take?: number
+  take?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    *
    * Skip the first `n` detalle_grupos.
    */
-  skip?: number
+  skip?: number;
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    *
    * Filter by unique combinations of detalle_grupos.
    */
-  distinct?: Prisma.Detalle_grupoScalarFieldEnum | Prisma.Detalle_grupoScalarFieldEnum[]
-}
+  distinct?:
+    | Prisma.Detalle_grupoScalarFieldEnum
+    | Prisma.Detalle_grupoScalarFieldEnum[];
+};
 
 /**
  * detalle_grupo create
  */
 export type detalle_grupoCreateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * The data needed to create a detalle_grupo.
    */
-  data: Prisma.XOR<Prisma.detalle_grupoCreateInput, Prisma.detalle_grupoUncheckedCreateInput>
-}
+  data: Prisma.XOR<
+    Prisma.detalle_grupoCreateInput,
+    Prisma.detalle_grupoUncheckedCreateInput
+  >;
+};
 
 /**
  * detalle_grupo createMany
  */
 export type detalle_grupoCreateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to create many detalle_grupos.
    */
-  data: Prisma.detalle_grupoCreateManyInput | Prisma.detalle_grupoCreateManyInput[]
-  skipDuplicates?: boolean
-}
+  data:
+    | Prisma.detalle_grupoCreateManyInput
+    | Prisma.detalle_grupoCreateManyInput[];
+  skipDuplicates?: boolean;
+};
 
 /**
  * detalle_grupo createManyAndReturn
  */
 export type detalle_grupoCreateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelectCreateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * The data used to create many detalle_grupos.
    */
-  data: Prisma.detalle_grupoCreateManyInput | Prisma.detalle_grupoCreateManyInput[]
-  skipDuplicates?: boolean
+  data:
+    | Prisma.detalle_grupoCreateManyInput
+    | Prisma.detalle_grupoCreateManyInput[];
+  skipDuplicates?: boolean;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoIncludeCreateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.detalle_grupoIncludeCreateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * detalle_grupo update
  */
 export type detalle_grupoUpdateArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * The data needed to update a detalle_grupo.
    */
-  data: Prisma.XOR<Prisma.detalle_grupoUpdateInput, Prisma.detalle_grupoUncheckedUpdateInput>
+  data: Prisma.XOR<
+    Prisma.detalle_grupoUpdateInput,
+    Prisma.detalle_grupoUncheckedUpdateInput
+  >;
   /**
    * Choose, which detalle_grupo to update.
    */
-  where: Prisma.detalle_grupoWhereUniqueInput
-}
+  where: Prisma.detalle_grupoWhereUniqueInput;
+};
 
 /**
  * detalle_grupo updateMany
  */
 export type detalle_grupoUpdateManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * The data used to update detalle_grupos.
@@ -1638,140 +1768,151 @@ export type detalle_grupoUpdateManyArgs<
   data: Prisma.XOR<
     Prisma.detalle_grupoUpdateManyMutationInput,
     Prisma.detalle_grupoUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which detalle_grupos to update
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * Limit how many detalle_grupos to update.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * detalle_grupo updateManyAndReturn
  */
 export type detalle_grupoUpdateManyAndReturnArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelectUpdateManyAndReturn<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * The data used to update detalle_grupos.
    */
   data: Prisma.XOR<
     Prisma.detalle_grupoUpdateManyMutationInput,
     Prisma.detalle_grupoUncheckedUpdateManyInput
-  >
+  >;
   /**
    * Filter which detalle_grupos to update
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * Limit how many detalle_grupos to update.
    */
-  limit?: number
+  limit?: number;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoIncludeUpdateManyAndReturn<ExtArgs> | null
-}
+  include?: Prisma.detalle_grupoIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
 
 /**
  * detalle_grupo upsert
  */
 export type detalle_grupoUpsertArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * The filter to search for the detalle_grupo to update in case it exists.
    */
-  where: Prisma.detalle_grupoWhereUniqueInput
+  where: Prisma.detalle_grupoWhereUniqueInput;
   /**
    * In case the detalle_grupo found by the `where` argument doesn't exist, create a new detalle_grupo with this data.
    */
-  create: Prisma.XOR<Prisma.detalle_grupoCreateInput, Prisma.detalle_grupoUncheckedCreateInput>
+  create: Prisma.XOR<
+    Prisma.detalle_grupoCreateInput,
+    Prisma.detalle_grupoUncheckedCreateInput
+  >;
   /**
    * In case the detalle_grupo was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.detalle_grupoUpdateInput, Prisma.detalle_grupoUncheckedUpdateInput>
-}
+  update: Prisma.XOR<
+    Prisma.detalle_grupoUpdateInput,
+    Prisma.detalle_grupoUncheckedUpdateInput
+  >;
+};
 
 /**
  * detalle_grupo delete
  */
 export type detalle_grupoDeleteArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
   /**
    * Filter which detalle_grupo to delete.
    */
-  where: Prisma.detalle_grupoWhereUniqueInput
-}
+  where: Prisma.detalle_grupoWhereUniqueInput;
+};
 
 /**
  * detalle_grupo deleteMany
  */
 export type detalle_grupoDeleteManyArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Filter which detalle_grupos to delete
    */
-  where?: Prisma.detalle_grupoWhereInput
+  where?: Prisma.detalle_grupoWhereInput;
   /**
    * Limit how many detalle_grupos to delete.
    */
-  limit?: number
-}
+  limit?: number;
+};
 
 /**
  * detalle_grupo without action
  */
 export type detalle_grupoDefaultArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
    * Select specific fields to fetch from the detalle_grupo
    */
-  select?: Prisma.detalle_grupoSelect<ExtArgs> | null
+  select?: Prisma.detalle_grupoSelect<ExtArgs> | null;
   /**
    * Omit specific fields from the detalle_grupo
    */
-  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null
+  omit?: Prisma.detalle_grupoOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.detalle_grupoInclude<ExtArgs> | null
-}
+  include?: Prisma.detalle_grupoInclude<ExtArgs> | null;
+};

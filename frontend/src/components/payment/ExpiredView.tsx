@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ExpiredViewProps {
-  planId?: string
+  planId?: string;
 }
 
 export function ExpiredView({ planId }: ExpiredViewProps) {
-  const router = useRouter()
-  const [countdown, setCountdown] = useState(3)
+  const router = useRouter();
+  const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
     if (countdown <= 0) {
-      router.push(planId ? `/pago/resumen?planId=${planId}` : '/cobros-suscripciones')
-      return
+      router.push(
+        planId ? `/pago/resumen?planId=${planId}` : "/cobros-suscripciones",
+      );
+      return;
     }
-    const id = setTimeout(() => setCountdown(c => c - 1), 1000)
-    return () => clearTimeout(id)
-  }, [countdown, planId, router])
+    const id = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(id);
+  }, [countdown, planId, router]);
 
   return (
     <div className="min-h-screen bg-red-50 dark:bg-red-950 flex items-center justify-center p-4">
@@ -33,5 +35,5 @@ export function ExpiredView({ planId }: ExpiredViewProps) {
         </p>
       </div>
     </div>
-  )
+  );
 }

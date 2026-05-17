@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -85,7 +85,7 @@ export default function NavLinks() {
                   };
 
                   const currentFilters = JSON.parse(
-                    sessionStorage.getItem("propbol_global_filters") || "{}"
+                    sessionStorage.getItem("propbol_global_filters") || "{}",
                   );
 
                   sessionStorage.setItem(
@@ -93,7 +93,7 @@ export default function NavLinks() {
                     JSON.stringify({
                       ...currentFilters,
                       ...nuevosFiltros,
-                    })
+                    }),
                   );
 
                   const params = new URLSearchParams();
@@ -147,8 +147,8 @@ export default function NavLinks() {
           }, 300);
         }}
         className={linkStyle}
-        >
-         Ayuda
+      >
+        Ayuda
       </button>
     </div>
   );

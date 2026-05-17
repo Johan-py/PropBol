@@ -1,24 +1,29 @@
-'use client'
+"use client";
 // -- BitPro
 // Pills de filtros activos + botón "Limpiar todo"
 
-import { X, SlidersHorizontal } from 'lucide-react'
-import { FiltroActivo } from '@/hooks/useFiltrosActivos'
+import { X, SlidersHorizontal } from "lucide-react";
+import { FiltroActivo } from "@/hooks/useFiltrosActivos";
 
 interface ActiveFilterTagsProps {
-  filtros: FiltroActivo[]
-  onClearAll: () => void
+  filtros: FiltroActivo[];
+  onClearAll: () => void;
 }
 
-export function ActiveFilterTags({ filtros, onClearAll }: ActiveFilterTagsProps) {
+export function ActiveFilterTags({
+  filtros,
+  onClearAll,
+}: ActiveFilterTagsProps) {
   // AC 4 & 6 — Si no hay filtros el componente desaparece completamente
-  if (filtros.length === 0) return null
+  if (filtros.length === 0) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-1.5 px-4 py-2.5 border-b border-orange-100 bg-orange-50/60">
-
       {/* Ícono indicador */}
-      <SlidersHorizontal size={12} className="text-orange-400 shrink-0 mr-0.5" />
+      <SlidersHorizontal
+        size={12}
+        className="text-orange-400 shrink-0 mr-0.5"
+      />
 
       {/* AC 4 — Pills individuales con su propio botón X */}
       {filtros.map((filtro) => (
@@ -48,5 +53,5 @@ export function ActiveFilterTags({ filtros, onClearAll }: ActiveFilterTagsProps)
         Limpiar todo
       </button>
     </div>
-  )
+  );
 }

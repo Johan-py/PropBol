@@ -1,5 +1,5 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
 interface GuestTelemetryModalProps {
   isOpen: boolean;
@@ -7,7 +7,11 @@ interface GuestTelemetryModalProps {
   onAccept: () => void;
 }
 
-const GuestTelemetryModal: React.FC<GuestTelemetryModalProps> = ({ isOpen, onClose, onAccept }) => {
+const GuestTelemetryModal: React.FC<GuestTelemetryModalProps> = ({
+  isOpen,
+  onClose,
+  onAccept,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -21,21 +25,23 @@ const GuestTelemetryModal: React.FC<GuestTelemetryModalProps> = ({ isOpen, onClo
 
         <div className="text-[#78716c] text-sm space-y-4 mb-8 leading-relaxed text-center">
           <p>
-            Aún no has iniciado sesión, pero queremos mostrarte las mejores propiedades en tu zona.
+            Aún no has iniciado sesión, pero queremos mostrarte las mejores
+            propiedades en tu zona.
           </p>
           <p>
-            ¿Te gustaría personalizar tu experiencia para que te recomendemos inmuebles que realmente se ajusten a lo que buscas?
+            ¿Te gustaría personalizar tu experiencia para que te recomendemos
+            inmuebles que realmente se ajusten a lo que buscas?
           </p>
         </div>
 
         <div className="flex justify-end gap-3 font-semibold">
-          <button 
+          <button
             onClick={onClose}
             className="px-4 py-2 border border-stone-300 text-stone-500 rounded-md hover:bg-[#f5f5f4] transition-colors text-sm"
           >
             Entendido (Quizás luego)
           </button>
-          <button 
+          <button
             className="px-5 py-2 bg-[#D97706] text-white rounded-md hover:bg-[#b45309] transition-all shadow-md active:scale-95 text-sm"
             onClick={onAccept}
           >

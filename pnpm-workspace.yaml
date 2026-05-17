@@ -1,8 +1,8 @@
 packages:
-  - 'frontend'
-  - 'backend'
+  - "frontend"
+  - "backend"
 allowBuilds:
-  '@prisma/engines': false
+  "@prisma/engines": false
   core-js: false
   esbuild: false
   prisma: false

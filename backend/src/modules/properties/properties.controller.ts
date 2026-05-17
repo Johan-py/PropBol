@@ -1,6 +1,6 @@
-import type { Request, Response } from 'express'
-import { propertiesService } from './properties.service.js'
-import type { FiltrosBusqueda } from './properties.repository.js'
+import type { Request, Response } from "express";
+import { propertiesService } from "./properties.service.js";
+import type { FiltrosBusqueda } from "./properties.repository.js";
 
 export const propertiesController = {
   async getAll(req: Request, res: Response) {
@@ -31,21 +31,31 @@ export const propertiesController = {
         lat,
         lng,
         radius,
-        amenities, 
+        amenities,
         labels,
-        soloOfertas
-      } = req.query
+        soloOfertas,
+      } = req.query;
 
-      let banoCompartido: boolean | undefined = undefined
-      if (tipoBano === 'privado') banoCompartido = false
-      if (tipoBano === 'compartido') banoCompartido = true
+      let banoCompartido: boolean | undefined = undefined;
+      if (tipoBano === "privado") banoCompartido = false;
+      if (tipoBano === "compartido") banoCompartido = true;
       //HU6
-      const parsedAmenities = amenities ? String(amenities).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
-      const parsedLabels = labels ? String(labels).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
+      const parsedAmenities = amenities
+        ? String(amenities)
+            .split(",")
+            .map(Number)
+            .filter((n) => !isNaN(n))
+        : undefined;
+      const parsedLabels = labels
+        ? String(labels)
+            .split(",")
+            .map(Number)
+            .filter((n) => !isNaN(n))
+        : undefined;
       // NUEVA CAPA DE SEGURIDAD: Validar longitud del texto
       let queryValidado = query as string;
       if (queryValidado && queryValidado.trim().length < 3) {
-        queryValidado = ''; // Ignoramos silenciosamente para no romper los demás filtros
+        queryValidado = ""; // Ignoramos silenciosamente para no romper los demás filtros
       }
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
@@ -58,7 +68,7 @@ export const propertiesController = {
         municipioId: municipioId as string,
         zonaId: zonaId as string,
         barrioId: barrioId as string,
-        
+
         fecha: fecha as any,
         precio: precio as any,
         superficie: superficie as any,
@@ -67,8 +77,12 @@ export const propertiesController = {
         maxPrice: maxPrice ? Number(maxPrice) : null,
         currency: (currency as string) ?? null,
 
-        dormitoriosMin: dormitoriosMin ? parseInt(dormitoriosMin as string) : undefined,
-        dormitoriosMax: dormitoriosMax ? parseInt(dormitoriosMax as string) : undefined,
+        dormitoriosMin: dormitoriosMin
+          ? parseInt(dormitoriosMin as string)
+          : undefined,
+        dormitoriosMax: dormitoriosMax
+          ? parseInt(dormitoriosMax as string)
+          : undefined,
         banosMin: banosMin ? parseInt(banosMin as string) : undefined,
         banosMax: banosMax ? parseInt(banosMax as string) : undefined,
         banoCompartido,
@@ -81,30 +95,33 @@ export const propertiesController = {
         //HU6
         amenities: parsedAmenities,
         labels: parsedLabels,
-        soloOfertas: soloOfertas === 'true'
-      }
+        soloOfertas: soloOfertas === "true",
+      };
 
       const orden = {
-        fecha: fecha as 'mas-recientes' | 'mas-populares' | undefined,
-        precio: precio as 'menor-a-mayor' | 'mayor-a-menor' | undefined,
-        superficie: superficie as 'menor-a-mayor' | 'mayor-a-menor' | undefined
-      }
-      console.log('📥 Controller recibió filtros:', filtros)
-      const inmuebles = await propertiesService.getAll(filtros)
-      res.json({ ok: true, data: inmuebles })
+        fecha: fecha as "mas-recientes" | "mas-populares" | undefined,
+        precio: precio as "menor-a-mayor" | "mayor-a-menor" | undefined,
+        superficie: superficie as "menor-a-mayor" | "mayor-a-menor" | undefined,
+      };
+      console.log("📥 Controller recibió filtros:", filtros);
+      const inmuebles = await propertiesService.getAll(filtros);
+      res.json({ ok: true, data: inmuebles });
     } catch (error) {
-      console.error('Error detallado en getAll:', error)
-      res.status(500).json({ ok: false, message: 'Error al obtener inmuebles' })
+      console.error("Error detallado en getAll:", error);
+      res
+        .status(500)
+        .json({ ok: false, message: "Error al obtener inmuebles" });
     }
   },
   search: async (req: Request, res: Response) => {
     try {
       // Capturamos lo que envía el usePropertySearch del frontend
-      const { locationId, categoria, tipoAccion, search, lat, lng, radius } = req.query
+      const { locationId, categoria, tipoAccion, search, lat, lng, radius } =
+        req.query;
       // NUEVA CAPA DE SEGURIDAD
       let searchValidado = search as string;
       if (searchValidado && searchValidado.trim().length < 3) {
-        searchValidado = ''; 
+        searchValidado = "";
       }
 
       const filtros: FiltrosBusqueda = {
@@ -115,16 +132,18 @@ export const propertiesController = {
         query: searchValidado, // Usamos la variable validada
         lat: lat ? Number(lat) : undefined,
         lng: lng ? Number(lng) : undefined,
-        radius: radius ? Number(radius) : 1
-      }
+        radius: radius ? Number(radius) : 1,
+      };
 
-      const inmuebles = await propertiesService.getAll(filtros)
+      const inmuebles = await propertiesService.getAll(filtros);
 
       // Enviamos la data en el formato que espera tu frontend (data: json)
-      res.json({ ok: true, data: inmuebles })
+      res.json({ ok: true, data: inmuebles });
     } catch (error) {
-      console.error('Error en búsqueda:', error)
-      res.status(500).json({ ok: false, error: 'Error en la búsqueda avanzada' })
+      console.error("Error en búsqueda:", error);
+      res
+        .status(500)
+        .json({ ok: false, error: "Error en la búsqueda avanzada" });
     }
   },
   // NUEVO MÉTODO COMPARADOR: compare
@@ -140,17 +159,20 @@ export const propertiesController = {
 
       // Ordenar para que el modal muestre las propiedades en el mismo orden que se hizo clic
       const sortedInmuebles = inmuebles.sort(
-        (a, b) => idsNumericos.indexOf(a.id) - idsNumericos.indexOf(b.id)
+        (a, b) => idsNumericos.indexOf(a.id) - idsNumericos.indexOf(b.id),
       );
 
       res.json({ ok: true, data: sortedInmuebles });
     } catch (error) {
-      console.error('Error en compare:', error);
-      res.status(500).json({ ok: false, error: 'Error al obtener propiedades para comparar' });
+      console.error("Error en compare:", error);
+      res.status(500).json({
+        ok: false,
+        error: "Error al obtener propiedades para comparar",
+      });
     }
-  }
-}
+  },
+};
 
-export const search = propertiesController.search
-export const getAll = propertiesController.getAll
-export const compare = propertiesController.compare
+export const search = propertiesController.search;
+export const getAll = propertiesController.getAll;
+export const compare = propertiesController.compare;

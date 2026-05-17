@@ -1,90 +1,97 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
 type TestimonioFormData = {
-  nombreUsuario: string
-  apellidoUsuario: string
-  departamento: string
-  zonaBarrio: string
-  categoria: string
-  texto: string
-  activo: boolean
-  calificacion: number
-}
+  nombreUsuario: string;
+  apellidoUsuario: string;
+  departamento: string;
+  zonaBarrio: string;
+  categoria: string;
+  texto: string;
+  activo: boolean;
+  calificacion: number;
+};
 
 type FormularioTestimoniosProps = {
-  onCreate?: (testimonio: TestimonioFormData & { id: number; likes: number }) => void
-}
+  onCreate?: (
+    testimonio: TestimonioFormData & { id: number; likes: number },
+  ) => void;
+};
 
-export default function FormularioTestimonios({ onCreate }: FormularioTestimoniosProps) {
-  const [nombreUsuario, setNombreUsuario] = useState('')
-  const [apellidoUsuario, setApellidoUsuario] = useState('')
-  const [departamento, setDepartamento] = useState('')
-  const [zonaBarrio, setZonaBarrio] = useState('')
-  const [categoria, setCategoria] = useState('')
-  const [texto, setTexto] = useState('')
-  const [activo, setActivo] = useState(true)
-  const [calificacion, setCalificacion] = useState(5)
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [successMessage, setSuccessMessage] = useState('')
-  const [serverError, setServerError] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export default function FormularioTestimonios({
+  onCreate,
+}: FormularioTestimoniosProps) {
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [apellidoUsuario, setApellidoUsuario] = useState("");
+  const [departamento, setDepartamento] = useState("");
+  const [zonaBarrio, setZonaBarrio] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [texto, setTexto] = useState("");
+  const [activo, setActivo] = useState(true);
+  const [calificacion, setCalificacion] = useState(5);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [serverError, setServerError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const resetForm = () => {
-    setNombreUsuario('')
-    setApellidoUsuario('')
-    setDepartamento('')
-    setZonaBarrio('')
-    setCategoria('')
-    setTexto('')
-    setActivo(true)
-    setCalificacion(5)
-    setErrors({})
-    setServerError('')
-  }
+    setNombreUsuario("");
+    setApellidoUsuario("");
+    setDepartamento("");
+    setZonaBarrio("");
+    setCategoria("");
+    setTexto("");
+    setActivo(true);
+    setCalificacion(5);
+    setErrors({});
+    setServerError("");
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const validationErrors: Record<string, string> = {}
+    const validationErrors: Record<string, string> = {};
 
     if (!nombreUsuario.trim()) {
-      validationErrors.nombreUsuario = 'Nombre de usuario es obligatorio.'
+      validationErrors.nombreUsuario = "Nombre de usuario es obligatorio.";
     }
 
     if (!departamento.trim()) {
-      validationErrors.departamento = 'Departamento es obligatorio.'
+      validationErrors.departamento = "Departamento es obligatorio.";
     }
 
     if (!texto.trim()) {
-      validationErrors.texto = 'El comentario es obligatorio.'
+      validationErrors.texto = "El comentario es obligatorio.";
     }
 
     if (!categoria.trim()) {
-      validationErrors.categoria = 'Categoría es obligatoria.'
+      validationErrors.categoria = "Categoría es obligatoria.";
     }
 
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
-      return
+      setErrors(validationErrors);
+      return;
     }
 
-    setIsSubmitting(true)
-    setServerError('')
+    setIsSubmitting(true);
+    setServerError("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
       if (!token) {
-        throw new Error('No se encontró token de autenticación. Inicia sesión nuevamente.')
+        throw new Error(
+          "No se encontró token de autenticación. Inicia sesión nuevamente.",
+        );
       }
 
       const response = await fetch(`${apiUrl}/api/admin/testimonios`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -95,36 +102,41 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
           visible: activo,
           nombreAutor: nombreUsuario.trim(),
           apellidoAutor: apellidoUsuario.trim(),
-          calificacion: calificacion
+          calificacion: calificacion,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || 'Error al crear testimonio')
+        throw new Error(data?.message || "Error al crear testimonio");
       }
 
-      onCreate?.(data)
-      setSuccessMessage('Testimonio creado correctamente.')
-      resetForm()
+      onCreate?.(data);
+      setSuccessMessage("Testimonio creado correctamente.");
+      resetForm();
     } catch (error: unknown) {
       const message =
-        error instanceof Error ? error.message : 'Error al crear testimonio'
-      setServerError(message)
+        error instanceof Error ? error.message : "Error al crear testimonio";
+      setServerError(message);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-2xl shadow-amber-100/40 border border-amber-100 mb-6">
       <div className="mb-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-amber-600">Nuevo testimonio</p>
-          <h2 className="mt-2 text-2xl font-semibold text-stone-900">Crear testimonio</h2>
+          <p className="text-sm uppercase tracking-[0.24em] text-amber-600">
+            Nuevo testimonio
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+            Crear testimonio
+          </h2>
           <p className="mt-2 max-w-xl text-sm text-stone-600">
-            Completa los datos para agregar una reseña destacada en la sección de testimonios.
+            Completa los datos para agregar una reseña destacada en la sección
+            de testimonios.
           </p>
         </div>
         <button
@@ -139,7 +151,9 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-semibold text-stone-700">Nombre de usuario</span>
+            <span className="text-sm font-semibold text-stone-700">
+              Nombre de usuario
+            </span>
             <input
               value={nombreUsuario}
               onChange={(event) => setNombreUsuario(event.target.value)}
@@ -147,12 +161,16 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
               placeholder="Ej. Ana"
             />
             {errors.nombreUsuario && (
-              <p className="mt-1 text-xs font-medium text-red-600">{errors.nombreUsuario}</p>
+              <p className="mt-1 text-xs font-medium text-red-600">
+                {errors.nombreUsuario}
+              </p>
             )}
           </label>
 
           <label className="block">
-            <span className="text-sm font-semibold text-stone-700">Apellido (opcional)</span>
+            <span className="text-sm font-semibold text-stone-700">
+              Apellido (opcional)
+            </span>
             <input
               value={apellidoUsuario}
               onChange={(event) => setApellidoUsuario(event.target.value)}
@@ -164,7 +182,9 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-semibold text-stone-700">Departamento</span>
+            <span className="text-sm font-semibold text-stone-700">
+              Departamento
+            </span>
             <select
               value={departamento}
               onChange={(event) => setDepartamento(event.target.value)}
@@ -182,14 +202,18 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
               <option value="Pando">Pando</option>
             </select>
             {errors.departamento && (
-              <p className="mt-1 text-xs font-medium text-red-600">{errors.departamento}</p>
+              <p className="mt-1 text-xs font-medium text-red-600">
+                {errors.departamento}
+              </p>
             )}
           </label>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-semibold text-stone-700">Zona / Barrio</span>
+            <span className="text-sm font-semibold text-stone-700">
+              Zona / Barrio
+            </span>
             <input
               value={zonaBarrio}
               onChange={(event) => setZonaBarrio(event.target.value)}
@@ -199,7 +223,9 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
           </label>
 
           <label className="block">
-            <span className="text-sm font-semibold text-stone-700">Categoría</span>
+            <span className="text-sm font-semibold text-stone-700">
+              Categoría
+            </span>
             <input
               value={categoria}
               onChange={(event) => setCategoria(event.target.value)}
@@ -207,13 +233,17 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
               placeholder="Ej. Cliente satisfecho"
             />
             {errors.categoria && (
-              <p className="mt-1 text-xs font-medium text-red-600">{errors.categoria}</p>
+              <p className="mt-1 text-xs font-medium text-red-600">
+                {errors.categoria}
+              </p>
             )}
           </label>
         </div>
 
         <label className="block">
-          <span className="text-sm font-semibold text-stone-700">Comentario</span>
+          <span className="text-sm font-semibold text-stone-700">
+            Comentario
+          </span>
           <textarea
             value={texto}
             onChange={(event) => setTexto(event.target.value)}
@@ -222,13 +252,17 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
             placeholder="Escribe el testimonio aquí..."
           />
           {errors.texto && (
-            <p className="mt-1 text-xs font-medium text-red-600">{errors.texto}</p>
+            <p className="mt-1 text-xs font-medium text-red-600">
+              {errors.texto}
+            </p>
           )}
         </label>
 
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="flex flex-col justify-center">
-            <span className="text-sm font-semibold text-stone-700 mb-2">Calificación</span>
+            <span className="text-sm font-semibold text-stone-700 mb-2">
+              Calificación
+            </span>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((num) => (
                 <button
@@ -237,8 +271,8 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
                   onClick={() => setCalificacion(num)}
                   className={`h-9 w-9 rounded-lg border text-sm font-bold transition-all ${
                     calificacion >= num
-                      ? 'border-amber-500 bg-amber-500 text-white shadow-md'
-                      : 'border-stone-200 bg-stone-50 text-stone-400'
+                      ? "border-amber-500 bg-amber-500 text-white shadow-md"
+                      : "border-stone-200 bg-stone-50 text-stone-400"
                   }`}
                 >
                   {num}
@@ -255,7 +289,10 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
               onChange={(event) => setActivo(event.target.checked)}
               className="h-5 w-5 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
             />
-            <label htmlFor="new-activo" className="text-sm font-semibold text-stone-700 cursor-pointer">
+            <label
+              htmlFor="new-activo"
+              className="text-sm font-semibold text-stone-700 cursor-pointer"
+            >
               Visible
             </label>
           </div>
@@ -267,11 +304,13 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
             disabled={isSubmitting}
             className="inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-200 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
-            {isSubmitting ? 'Guardando...' : 'Guardar testimonio'}
+            {isSubmitting ? "Guardando..." : "Guardar testimonio"}
           </button>
 
           {successMessage && (
-            <p className="text-sm font-medium text-emerald-700">{successMessage}</p>
+            <p className="text-sm font-medium text-emerald-700">
+              {successMessage}
+            </p>
           )}
         </div>
         {serverError && (
@@ -279,5 +318,5 @@ export default function FormularioTestimonios({ onCreate }: FormularioTestimonio
         )}
       </form>
     </div>
-  )
+  );
 }

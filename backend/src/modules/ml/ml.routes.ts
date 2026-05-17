@@ -1,10 +1,10 @@
-import { Router } from 'express'
-import { entrenarModelo } from './ml.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'
-import { validarAdmin } from '../../middleware/validarAdmin.js'
+import { Router } from "express";
+import { entrenarModelo } from "./ml.controller.js";
+import { validarJWT } from "../../middleware/validarJWT.js";
+import { validarAdmin } from "../../middleware/validarAdmin.js";
 
-const router = Router()
+const router = Router();
 
-router.post('/entrenar', validarJWT, validarAdmin, entrenarModelo)
+router.post("/entrenar", validarJWT, validarAdmin, entrenarModelo);
 
-export default router
+export default router;

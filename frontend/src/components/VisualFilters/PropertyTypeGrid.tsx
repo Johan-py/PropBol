@@ -48,16 +48,21 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
 
               const params = new URLSearchParams();
               params.set("tipoInmueble", tipo);
-              modos.forEach(m => params.append("modoInmueble", m));
+              modos.forEach((m) => params.append("modoInmueble", m));
 
-              const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
-              sessionStorage.setItem('propbol_global_filters', JSON.stringify({
-                ...currentFilters,
-                tipoInmueble: [tipo],
-                modoInmueble: modos,
-                query: "",
-                updatedAt: new Date().toISOString()
-              }));
+              const currentFilters = JSON.parse(
+                sessionStorage.getItem("propbol_global_filters") || "{}",
+              );
+              sessionStorage.setItem(
+                "propbol_global_filters",
+                JSON.stringify({
+                  ...currentFilters,
+                  tipoInmueble: [tipo],
+                  modoInmueble: modos,
+                  query: "",
+                  updatedAt: new Date().toISOString(),
+                }),
+              );
 
               router.push(`/busqueda_mapa?${params.toString()}`);
             }}

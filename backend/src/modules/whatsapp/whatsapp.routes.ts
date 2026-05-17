@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { obtenerEstado, obtenerQR, crearInstancia } from "./whatsapp.controller.js";
+import {
+  obtenerEstado,
+  obtenerQR,
+  crearInstancia,
+} from "./whatsapp.controller.js";
 import { validarJWT } from "../../middleware/validarJWT.js";
 
 const router = Router();

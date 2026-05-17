@@ -58,7 +58,9 @@ function ParametrosPageContent() {
   const returnTo = searchParams.get("returnTo");
   const origen = searchParams.get("origen");
 
-  const [catalogoParametros, setCatalogoParametros] = useState<ParametroBackend[]>([]);
+  const [catalogoParametros, setCatalogoParametros] = useState<
+    ParametroBackend[]
+  >([]);
   const [parametrosGuardados, setParametrosGuardados] = useState<string[]>([]);
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
@@ -76,7 +78,11 @@ function ParametrosPageContent() {
       return;
     }
 
-    if (destino === "multimedia" && publicacionId && !Number.isNaN(publicacionId)) {
+    if (
+      destino === "multimedia" &&
+      publicacionId &&
+      !Number.isNaN(publicacionId)
+    ) {
       router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
       return;
     }
@@ -101,12 +107,15 @@ function ParametrosPageContent() {
         setCargando(true);
         setMensaje("");
 
-        const [catalogoRes, publicacionRes, tagsRes, tagsPubRes] = await Promise.all([
-          fetch(`${getApiUrl()}/api/parametros`),
-          fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/parametros`),
-          fetch(`${getApiUrl()}/api/tags`),
-          fetch(`${getApiUrl()}/api/tags/publicaciones/${publicacionId}`),
-        ]);
+        const [catalogoRes, publicacionRes, tagsRes, tagsPubRes] =
+          await Promise.all([
+            fetch(`${getApiUrl()}/api/parametros`),
+            fetch(
+              `${getApiUrl()}/api/publicaciones/${publicacionId}/parametros`,
+            ),
+            fetch(`${getApiUrl()}/api/tags`),
+            fetch(`${getApiUrl()}/api/tags/publicaciones/${publicacionId}`),
+          ]);
 
         const catalogoJson = await catalogoRes.json().catch(() => null);
         const publicacionJson = await publicacionRes.json().catch(() => null);
@@ -114,12 +123,15 @@ function ParametrosPageContent() {
         const tagsPubJson = await tagsPubRes.json().catch(() => null);
 
         if (!catalogoRes.ok) {
-          throw new Error(catalogoJson?.message || "No se pudieron obtener los parámetros.");
+          throw new Error(
+            catalogoJson?.message || "No se pudieron obtener los parámetros.",
+          );
         }
 
         if (!publicacionRes.ok) {
           throw new Error(
-            publicacionJson?.message || "No se pudieron obtener los parámetros de la publicación."
+            publicacionJson?.message ||
+              "No se pudieron obtener los parámetros de la publicación.",
           );
         }
 
@@ -127,7 +139,9 @@ function ParametrosPageContent() {
           ? catalogoJson.data
           : [];
 
-        const parametrosPublicacion: ParametroPublicacion[] = Array.isArray(publicacionJson?.data)
+        const parametrosPublicacion: ParametroPublicacion[] = Array.isArray(
+          publicacionJson?.data,
+        )
           ? publicacionJson.data
               .map((item: any) => ({
                 id: item.parametros_personalizados?.id,
@@ -137,19 +151,26 @@ function ParametrosPageContent() {
           : [];
 
         setCatalogoParametros(catalogo);
-        setParametrosGuardados(parametrosPublicacion.map((item) => item.nombre));
+        setParametrosGuardados(
+          parametrosPublicacion.map((item) => item.nombre),
+        );
 
         const catalogoTagsData: TagBackend[] = Array.isArray(tagsJson?.data)
-          ? tagsJson.data : [];
+          ? tagsJson.data
+          : [];
         const tagsPubData: string[] = Array.isArray(tagsPubJson?.data)
-          ? tagsPubJson.data.map((item: any) => item.tag?.nombre).filter(Boolean)
+          ? tagsPubJson.data
+              .map((item: any) => item.tag?.nombre)
+              .filter(Boolean)
           : [];
 
         setCatalogoTags(catalogoTagsData);
         setTagsGuardados(tagsPubData);
       } catch (error) {
         const mensajeError =
-          error instanceof Error ? error.message : "Error al cargar parámetros.";
+          error instanceof Error
+            ? error.message
+            : "Error al cargar parámetros.";
         setMensaje(mensajeError);
       } finally {
         setCargando(false);
@@ -174,22 +195,26 @@ function ParametrosPageContent() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ tags }),
-        }
+        },
       );
 
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.mensaje || "No se pudieron guardar los tags.");
+      if (!response.ok)
+        throw new Error(data?.mensaje || "No se pudieron guardar los tags.");
       setTagsGuardados(tags);
       setMostrarExitoTags(true);
       setTimeout(() => setMostrarExitoTags(false), 5000);
     } catch (error) {
-      setMensaje(error instanceof Error ? error.message : "Error al guardar tags.");
+      setMensaje(
+        error instanceof Error ? error.message : "Error al guardar tags.",
+      );
     }
   };
-  
+
   const crearParametroSiNoExiste = async (nombre: string, token: string) => {
     const existente = catalogoParametros.find(
-      (item) => item.nombre.trim().toLowerCase() === nombre.trim().toLowerCase()
+      (item) =>
+        item.nombre.trim().toLowerCase() === nombre.trim().toLowerCase(),
     );
 
     if (existente) return existente;
@@ -210,7 +235,9 @@ function ParametrosPageContent() {
 
     if (!response.ok) {
       throw new Error(
-        data?.mensaje || data?.message || `No se pudo crear el parámetro "${nombre}".`
+        data?.mensaje ||
+          data?.message ||
+          `No se pudo crear el parámetro "${nombre}".`,
       );
     }
 
@@ -262,14 +289,16 @@ function ParametrosPageContent() {
           body: JSON.stringify({
             parametros: parametrosConId,
           }),
-        }
+        },
       );
 
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
         throw new Error(
-          data?.mensaje || data?.message || "No se pudieron guardar los parámetros."
+          data?.mensaje ||
+            data?.message ||
+            "No se pudieron guardar los parámetros.",
         );
       }
 
@@ -297,7 +326,8 @@ function ParametrosPageContent() {
         </h1>
 
         <p className="mb-6 text-gray-600">
-          Agrega tags para mejorar la búsqueda de tu inmueble, y parámetros personalizados para destacar sus características únicas.
+          Agrega tags para mejorar la búsqueda de tu inmueble, y parámetros
+          personalizados para destacar sus características únicas.
         </p>
 
         {mensaje && (

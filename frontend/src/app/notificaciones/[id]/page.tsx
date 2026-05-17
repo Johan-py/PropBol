@@ -1,62 +1,64 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, Bell } from 'lucide-react'
-import type { NotificationItem } from '@/types/notification'
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft, Bell } from "lucide-react";
+import type { NotificationItem } from "@/types/notification";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 const formatRelativeTime = (fecha: string | null): string => {
-  if (!fecha) return ''
-  const diff = Date.now() - new Date(fecha).getTime()
-  const mins = Math.floor(diff / 60000)
+  if (!fecha) return "";
+  const diff = Date.now() - new Date(fecha).getTime();
+  const mins = Math.floor(diff / 60000);
 
-  if (mins < 1) return 'hace un momento'
-  if (mins < 60) return `hace ${mins} min`
+  if (mins < 1) return "hace un momento";
+  if (mins < 60) return `hace ${mins} min`;
 
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `hace ${hours} h`
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `hace ${hours} h`;
 
-  const days = Math.floor(hours / 24)
-  if (days < 7) return `hace ${days} d`
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `hace ${days} d`;
 
-  return new Date(fecha).toLocaleDateString('es-BO', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  })
-}
+  return new Date(fecha).toLocaleDateString("es-BO", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
 
 export default function NotificationDetailPage() {
-  const { id } = useParams()
-  const router = useRouter()
+  const { id } = useParams();
+  const router = useRouter();
 
-  const [notification, setNotification] = useState<NotificationItem | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [notification, setNotification] = useState<NotificationItem | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNotification = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem("token");
 
         const res = await fetch(`${API_URL}/notificaciones/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        const data = await res.json()
-        setNotification(data.item)
+        const data = await res.json();
+        setNotification(data.item);
       } catch (error) {
-        console.error('Error al obtener la notificación:', error)
+        console.error("Error al obtener la notificación:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchNotification()
-  }, [id])
+    fetchNotification();
+  }, [id]);
 
   if (loading) {
     return (
@@ -65,7 +67,7 @@ export default function NotificationDetailPage() {
           <p className="text-sm text-stone-500">Cargando notificación...</p>
         </div>
       </section>
-    )
+    );
   }
 
   if (!notification) {
@@ -81,14 +83,14 @@ export default function NotificationDetailPage() {
 
           <button
             type="button"
-            onClick={() => router.push('/notificaciones')}
+            onClick={() => router.push("/notificaciones")}
             className="mt-4 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700"
           >
             Volver a notificaciones
           </button>
         </div>
       </section>
-    )
+    );
   }
 
   return (
@@ -96,7 +98,7 @@ export default function NotificationDetailPage() {
       <div className="mb-4">
         <button
           type="button"
-          onClick={() => router.push('/notificaciones')}
+          onClick={() => router.push("/notificaciones")}
           className="inline-flex items-center gap-2 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -117,31 +119,31 @@ export default function NotificationDetailPage() {
               </p>
 
               <h1 className="mt-1 text-2xl font-bold text-stone-900">
-                {notification.title?.trim() || '(Sin título)'}
+                {notification.title?.trim() || "(Sin título)"}
               </h1>
 
               <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-stone-500">
                 <span
                   className={`rounded-full px-2.5 py-1 font-medium ${
-                    notification.status === 'no leida'
-                      ? 'bg-amber-100 text-amber-700'
-                      : 'bg-stone-200 text-stone-700'
+                    notification.status === "no leida"
+                      ? "bg-amber-100 text-amber-700"
+                      : "bg-stone-200 text-stone-700"
                   }`}
                 >
-                  {notification.status === 'no leida' ? 'No leída' : 'Leída'}
+                  {notification.status === "no leida" ? "No leída" : "Leída"}
                 </span>
 
-                {notification.tipo === 'BLOG_APROBADO' && (
+                {notification.tipo === "BLOG_APROBADO" && (
                   <span className="rounded-full bg-green-100 px-2.5 py-1 font-semibold text-green-700">
                     Aprobado
                   </span>
                 )}
-                {notification.tipo === 'BLOG_RECHAZADO' && (
+                {notification.tipo === "BLOG_RECHAZADO" && (
                   <span className="rounded-full bg-red-100 px-2.5 py-1 font-semibold text-red-600">
                     Rechazado
                   </span>
                 )}
-                {notification.tipo === 'BLOG_PENDIENTE' && (
+                {notification.tipo === "BLOG_PENDIENTE" && (
                   <span className="rounded-full bg-amber-100 px-2.5 py-1 font-semibold text-amber-700">
                     Pendiente
                   </span>
@@ -161,12 +163,15 @@ export default function NotificationDetailPage() {
               Mensaje
             </h2>
 
-            <p className={`whitespace-pre-line text-base leading-7 ${notification.tipo === 'BLOG_RECHAZADO' ? 'text-red-600' : 'text-stone-700'}`}>
-              {notification.description?.trim() || '(Sin descripción disponible)'}
+            <p
+              className={`whitespace-pre-line text-base leading-7 ${notification.tipo === "BLOG_RECHAZADO" ? "text-red-600" : "text-stone-700"}`}
+            >
+              {notification.description?.trim() ||
+                "(Sin descripción disponible)"}
             </p>
           </div>
 
-          {notification.tipo === 'BLOG_APROBADO' && notification.blogId && (
+          {notification.tipo === "BLOG_APROBADO" && notification.blogId && (
             <div className="flex justify-end">
               <button
                 type="button"
@@ -178,7 +183,7 @@ export default function NotificationDetailPage() {
             </div>
           )}
 
-          {notification.tipo === 'BLOG_RECHAZADO' && notification.blogId && (
+          {notification.tipo === "BLOG_RECHAZADO" && notification.blogId && (
             <div className="flex justify-end">
               <button
                 type="button"
@@ -192,5 +197,5 @@ export default function NotificationDetailPage() {
         </div>
       </article>
     </section>
-  )
+  );
 }

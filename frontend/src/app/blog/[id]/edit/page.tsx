@@ -71,11 +71,17 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
     const isDeleted = error === "No se encontró el blog solicitado.";
     return (
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div className={`rounded-[32px] border px-6 py-8 text-center shadow-sm ${isDeleted ? "border-stone-200 bg-stone-50" : "border-red-200 bg-red-50"}`}>
+        <div
+          className={`rounded-[32px] border px-6 py-8 text-center shadow-sm ${isDeleted ? "border-stone-200 bg-stone-50" : "border-red-200 bg-red-50"}`}
+        >
           {isDeleted ? (
             <>
-              <p className="text-base font-semibold text-stone-700">El blog ya no está disponible</p>
-              <p className="mt-2 text-sm text-stone-500">Este blog fue eliminado y no puede editarse.</p>
+              <p className="text-base font-semibold text-stone-700">
+                El blog ya no está disponible
+              </p>
+              <p className="mt-2 text-sm text-stone-500">
+                Este blog fue eliminado y no puede editarse.
+              </p>
               <button
                 type="button"
                 onClick={() => router.push("/blogs")}
@@ -85,7 +91,9 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
               </button>
             </>
           ) : (
-            <p className="text-sm text-red-700">{error || "No se pudo cargar el blog."}</p>
+            <p className="text-sm text-red-700">
+              {error || "No se pudo cargar el blog."}
+            </p>
           )}
         </div>
       </div>

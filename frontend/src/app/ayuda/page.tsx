@@ -42,7 +42,8 @@ const PASOS = [
   {
     icon: Star,
     title: "Planes de membresía",
-    description: "Conoce nuestros planes y beneficios para publicar tu inmueble.",
+    description:
+      "Conoce nuestros planes y beneficios para publicar tu inmueble.",
   },
   {
     icon: HelpCircle,
@@ -80,7 +81,8 @@ const PASOS = [
   {
     icon: Building2,
     title: "PropBol",
-    description: "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
+    description:
+      "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
   },
   {
     icon: Compass,
@@ -122,9 +124,12 @@ export default function AyudaPage() {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E68B25]/10 mb-4">
           <HelpCircle className="w-8 h-8 text-[#E68B25]" />
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Centro de Ayuda</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Centro de Ayuda
+        </h1>
         <p className="text-gray-500 max-w-md mx-auto mb-8">
-          Conoce todas las funciones de PropBol con nuestro tour guiado interactivo.
+          Conoce todas las funciones de PropBol con nuestro tour guiado
+          interactivo.
         </p>
         <button
           onClick={iniciarTour}
