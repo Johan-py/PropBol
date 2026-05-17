@@ -3,6 +3,13 @@ export default function Terminos() {
     <div
       className="min-h-screen py-10 w-[100vw] -ml-[calc(50vw+50%)] overflow-x-hidden bg-cover bg-center bg-no-repeat bg-fixed dark:bg-black/60"
       style={{
+        width: '100vw',
+        marginLeft: 'calc(-50vw + 50%)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        overflowX: 'hidden',
         backgroundImage: "url('/icons/fondoTerminos.jpg')",
       }}
     >
