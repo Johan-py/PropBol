@@ -134,7 +134,7 @@ export default function LimiteConsumoPage() {
           <Zap size={18} className="text-yellow-600 shrink-0" />
           <span className="text-xl font-medium">
             Tienes publicaciones restantes este mes. Te quedan{" "}
-            <strong>{disponibles}</strong>.
+            <strong>{disponibles} publicaciones</strong>.
           </span>
         </div>
 
