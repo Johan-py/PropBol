@@ -1951,11 +1951,12 @@ function BusquedaMapaContent() {
                               }}
                               precio={property.precio ? Number(property.precio) : undefined}
                               precio_anterior={
-                                property.precio_anterior
-                                  ? Number(property.precio_anterior)
-                                  : undefined
+                              property.precio_anterior
+                               ? Number(property.precio_anterior)
+                              : undefined
                               }
-                            />
+                             esRecomendadoIA={isRecomendadosActive}
+                              />
                           ) : (
                             <PropertyRow
                               title={property.title}
