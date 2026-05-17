@@ -517,9 +517,11 @@ export default function EditarPublicacionPage() {
     }
     videoActual={detallePublicacion.videoUrl}
     videoUrlsActuales={
-      detallePublicacion.videoUrls ??
-      [detallePublicacion.videoUrl].filter(Boolean)
-    }
+     detallePublicacion.videoUrls?.filter(
+    (video): video is string => typeof video === 'string' && video.trim() !== ''
+     ) ??
+     (detallePublicacion.videoUrl ? [detallePublicacion.videoUrl] : [])
+   }
     onClose={() => setMostrarModalMultimedia(false)}
     onSaved={async () => {
       const detalleActualizado =
