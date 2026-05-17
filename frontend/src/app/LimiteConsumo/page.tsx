@@ -209,7 +209,7 @@ export default function LimiteConsumoPage() {
         {limitado && (
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div className="flex items-center gap-3">
-              <AlertTriangle size={16} className="shrink-0" />
+              <AlertTriangle size={18} className="shrink-0 text-red-600" />
               <span className="text-sm font-medium">
                 Has alcanzado el límite de publicaciones de tu plan actual.
               </span>
