@@ -9,7 +9,8 @@ export interface MisPublicacionesItem {
   imagenUrl: string | null;
   tipoOperacion?: string;
   activa?: boolean;
-   promoted?: boolean;  
+  promoted?: boolean;
+
   // Estadísticas de la publicación
   totalVisualizaciones?: number;
   totalCompartidos?: number;
@@ -22,32 +23,32 @@ export interface MisPublicacionesItem {
 }
 
 export interface FormPublicar {
-  titulo: string;
-  tipoPropiedad: string;
-  precio: string;
-  superficie: string;
-  habitaciones: string;
-  banos: string;
-  direccion: string;
-  ciudad: string;
-  codigoPostal: string;
-  descripcion: string;
+  titulo: string
+  tipoPropiedad: string
+  precio: string
+  superficie: string
+  habitaciones: string
+  banos: string
+  direccion: string
+  ciudad: string
+  codigoPostal: string
+  descripcion: string
 }
 
 export interface ErrorValidacion {
-  campo: keyof FormPublicar;
-  seccion: "Información Básica" | "Características" | "Ubicación" | "Detalles";
-  mensaje: string;
+  campo: keyof FormPublicar
+  seccion: 'Información Básica' | 'Características' | 'Ubicación' | 'Detalles'
+  mensaje: string
 }
 
 export type EstadoPublicacion =
-  | "idle"
-  | "validando"
-  | "errores"
-  | "confirmando"
-  | "publicando"
-  | "exito"
-  | "error_publicacion";
+  | 'idle'
+  | 'validando'
+  | 'errores'
+  | 'confirmando'
+  | 'publicando'
+  | 'exito'
+  | 'error_publicacion'
 
 export interface PublicacionImagen {
   id: number;
@@ -65,6 +66,7 @@ export interface PublicacionDetalle {
   ubicacionTexto: string;
   imagenes: PublicacionImagen[];
   videoUrl?: string | null;
+  videoUrls?: string[];
 }
 
 export interface EditarPublicacionPayload {
@@ -74,6 +76,7 @@ export interface EditarPublicacionPayload {
   tipoAccion: "VENTA" | "ALQUILER" | "ANTICRETO";
   ubicacion: string;
 }
+
 // ==================== NUEVOS TIPOS HU-11 ====================
 // PUBLICIDAD DE PROPIEDADES
 
