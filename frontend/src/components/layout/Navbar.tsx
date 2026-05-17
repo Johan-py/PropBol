@@ -458,7 +458,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+      <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 dark:border-stone-700 bg-[#F9F6EE] dark:bg-black shadow-sm transition-colors duration-300">
         <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
