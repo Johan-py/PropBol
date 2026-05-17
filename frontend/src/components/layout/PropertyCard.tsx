@@ -6,6 +6,7 @@ import ContactButton from '../galeria/ContactButton' // <-- Tu botón modular im
 import ActionButton from '../galeria/ActionButton' // <-- Botón de ver detalles (opcional, lo puedes usar o no dependiendo de tu diseño)
 import { useState } from 'react'
 import ComoLlegarButton from '../galeria/ComoLlegarButton'
+import { useCompareStore } from '@/hooks/useCompareStore'
 
 type PropsTarjeta = {
   imagen?: string
@@ -55,6 +56,9 @@ export default function PropertyCard({
 }: PropsTarjeta) {
   const [isHovered, setIsHovered] = useState(false)
 
+  // Obtenemos el estado isCompareMode
+  const { isCompareMode } = useCompareStore()
+
   // Calcular oferta HU6
   const precioNum = Number(precio)
   const precioAnteriorNum = Number(precio_anterior)
@@ -91,7 +95,7 @@ export default function PropertyCard({
             src={normalizePropertyThumbnailUrl(imagen)}
             alt={descripcion}
             sizes="(max-w-7xl) 30vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
               const target = e.target as HTMLImageElement
               target.src = '/placeholder-house.jpg'
@@ -122,12 +126,12 @@ export default function PropertyCard({
           {esOferta ? (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-orange-600">${formatPrice(precio)} USD</span>
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-lg text-gray-400 line-through">
                 ${formatPrice(precio_anterior)} USD
               </span>
             </div>
           ) : (
-            precioFormateado
+             <span className="text-orange-600">${formatPrice(precio)} USD</span>
           )}
         </h2>
 
@@ -175,11 +179,11 @@ export default function PropertyCard({
 
         {/* 3. Botón de contacto modular */}
         <div className="mt-1 w-full min-h-[44px] flex items-center">
-          <ContactButton type="whatsapp" variant="grid" />
+          <ContactButton type="whatsapp" variant="grid" disabled={isCompareMode} />
         </div>
         {/* HU13 #68 #69 - Botón ¿Cómo llegar? visible sin scroll horizontal, con estado deshabilitado y tooltip */}
         <div className="mt-1 w-full min-h-[44px] flex items-center">
-          <ComoLlegarButton lat={lat} lng={lng} variant="grid" />
+          <ComoLlegarButton lat={lat} lng={lng} variant="grid" disabled={isCompareMode} />
         </div>
 
         {/* 4. Botón de ver detalles (HU4 - Nuevo botón para abrir el detalle en una nueva pestaña) */}
@@ -187,6 +191,8 @@ export default function PropertyCard({
           <ActionButton
             variant="grid"
             label="Ver detalles"
+            // Deshabilitamos ActionButton si está en modo comparación
+            disabled={isCompareMode}
             onClick={(event) => {
               // HU4 - Evita disparar el click general del card
               event.stopPropagation()
