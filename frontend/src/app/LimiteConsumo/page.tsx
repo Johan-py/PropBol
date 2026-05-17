@@ -156,7 +156,7 @@ export default function LimiteConsumoPage() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4">
             <p className="text-sm font-semibold opacity-90">{mensaje}</p>
             <p className="text-2xl opacity-70">{Math.round(porcentaje)}% utilizado</p>
           </div>
