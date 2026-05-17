@@ -8,7 +8,13 @@ export interface Etiqueta {
   id: string
   nombre: string
   color?: string
-  cantidad?: number
+  cantidad?: number 
+}
+
+type EtiquetaApi = {
+  id: number
+  nombre: string
+  cantidad?: number | null
 }
 
 interface EtiquetasSidebarProps {
@@ -42,26 +48,26 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
   useEffect(() => {
     if (!isOpen) return
     const fetchEtiquetas = async () => {
-      if (etiquetasDB.length > 0) return
       setIsLoading(true)
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
-        const res = await fetch(`${API_URL}/api/parametros`)
-        if (!res.ok) throw new Error(`Error ${res.status}`)
+        const res = await fetch(`${API_URL}/api/tags`, { cache: 'no-store' })
+        if (!res.ok) throw new Error(`Error ${res.status}`)     
         const json = await res.json()
 
-        const etiquetas: Etiqueta[] = (json.data || []).map((item: { id: number; nombre: string }) => ({
+        const etiquetas: Etiqueta[] = (json.data || []).map((item: EtiquetaApi) => ({
           id: String(item.id),
-          nombre: item.nombre ?? '',
-          color: getFallbackColor(item.nombre ?? ''),
+          nombre: item.nombre?.trim() ?? '',
+          color: getFallbackColor(item.nombre?.trim() ?? ''),
+          cantidad: item.cantidad ?? undefined
         }))
-        setEtiquetasDB(etiquetas)
-        const nombresMap: Record<string, string> = {}
 
+        setEtiquetasDB(etiquetas)
+
+        const nombresMap: Record<string, string> = {}
         etiquetas.forEach((e) => {
           nombresMap[e.id] = e.nombre
         })
-
         sessionStorage.setItem(
           'propbol_etiquetas_nombres',
           JSON.stringify(nombresMap)
@@ -89,12 +95,14 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
     [etiquetasDB, selectedIds]
   )
 
-  // Disponibles: excluye las ya seleccionadas + aplica buscador
   const availableEtiquetas = useMemo(() => {
-    const sinSeleccionadas = etiquetasDB.filter(e => !selectedIds.includes(e.id))
-    if (!searchQuery.trim()) return sinSeleccionadas
-    const query = searchQuery.toLowerCase()
-    return sinSeleccionadas.filter(e => e.nombre.toLowerCase().includes(query))
+    const sinSeleccionadas = etiquetasDB.filter((e) => !selectedIds.includes(e.id))
+    const query = searchQuery.trim().toLowerCase()
+
+    if (!query) {
+      return sinSeleccionadas.filter(e => e.cantidad === undefined || e.cantidad > 0)
+    }
+    return sinSeleccionadas.filter((e) => e.nombre.toLowerCase().includes(query))
   }, [etiquetasDB, selectedIds, searchQuery])
 
   if (!isOpen) return null
@@ -229,6 +237,11 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: etiqueta.color }} />
                   <span>{etiqueta.nombre}</span>
+                  {typeof etiqueta.cantidad === 'number' && etiqueta.cantidad > 0 && (
+                    <span className="text-[10px] px-1.5 rounded-full bg-stone-100">
+                      {etiqueta.cantidad}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>

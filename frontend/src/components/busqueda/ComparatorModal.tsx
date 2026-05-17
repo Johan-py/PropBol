@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { X, Loader2, BarChart2 } from 'lucide-react';
+import { X, Loader2, BarChart2, Info } from 'lucide-react';
 import { useCompareStore } from '@/hooks/useCompareStore';
 
-// Tipado basado en la respuesta de tu backend Prisma
+// 1. Ampliamos la interfaz con la estructura exacta que envía Prisma
 interface PropertyData {
   id: number;
   titulo: string;
@@ -11,8 +11,12 @@ interface PropertyData {
   superficieM2?: number;
   nroCuartos?: number;
   nroBanos?: number;
+  nroParqueos?: number; 
+  antiguedad?: number; 
+  estado_conservacion?: string; 
   publicaciones?: { multimedia?: { url: string }[] }[];
   inmueble_etiqueta?: { etiqueta: { nombre: string } }[];
+  inmueble_amenidad?: { amenidad: { nombre: string } }[]; 
 }
 
 interface ComparatorModalProps {
@@ -25,14 +29,12 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
   const [properties, setProperties] = useState<PropertyData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Escenario 6: Cierre automático si la cantidad se reduce a 1
   useEffect(() => {
     if (isOpen && selectedIds.length < 2) {
       onClose();
     }
   }, [selectedIds.length, isOpen, onClose]);
 
-  // Carga inicial de datos al abrir el modal
   useEffect(() => {
     if (!isOpen || selectedIds.length === 0) return;
 
@@ -40,18 +42,16 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
       setIsLoading(true);
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
-    
+   
         const res = await fetch(`${API_URL}/api/propiedad/comparar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ids: selectedIds }),
         });
-        if (!res.ok) {
-          throw new Error(`Error en la petición: HTTP ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Error en la petición: HTTP ${res.status}`);
 
         const data = await res.json();
-        
+       
         if (data.ok) {
           setProperties(data.data);
         }
@@ -63,16 +63,14 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
     };
 
     fetchProperties();
-  }, [isOpen]); // Solo vuelve a cargar desde BD si el modal se reabre
+  }, [isOpen]);
 
-  // Remover columnas dinámicamente sin recargar de BD
   useEffect(() => {
     setProperties(prev => prev.filter(p => selectedIds.includes(String(p.id))));
   }, [selectedIds]);
 
   if (!isOpen) return null;
 
-  // Helper para renderizar valores nulos con un guion
   const renderVal = (val: string | number | undefined | null, suffix = '') => {
     if (val === null || val === undefined || val === '') return <span className="text-stone-400 font-normal">-</span>;
     return <span className="font-semibold text-stone-700">{val} {suffix}</span>;
@@ -89,41 +87,39 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
             <BarChart2 className="w-5 h-5 text-[#ea580c]" />
             <h2 className="text-xl font-bold text-stone-800">Comparativa de Inmuebles</h2>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
             <X className="w-5 h-5 text-stone-500" />
           </button>
         </div>
 
-        {/* Contenido (Tabla) */}
-        <div className="flex-1 overflow-y-auto bg-stone-50/50">
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto bg-white">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-64 gap-3 text-stone-500">
               <Loader2 className="w-8 h-8 animate-spin text-[#ea580c]" />
-              <p className="text-sm font-medium">Obteniendo datos frescos...</p>
+              <p className="text-sm font-medium">Sincronizando parámetros...</p>
             </div>
           ) : (
-            //  Scroll horizontal con primera columna fija
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto pb-8">
               <table className="w-full text-left border-collapse min-w-max">
                 <thead>
                   <tr>
-                    <th className="sticky left-0 z-20 bg-white border-b border-r border-stone-200 p-4 w-40 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                    <th className="sticky left-0 z-30 bg-white border-b border-r border-stone-200 p-4 w-48 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                       <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">Atributo</span>
                     </th>
                     {properties.map((prop) => (
-                      <th key={prop.id} className="border-b border-stone-200 p-4 w-64 bg-white align-top relative group">
-                        {/* Escenario 6: Botón Eliminar */}
-                        <button 
+                      <th key={prop.id} className="border-b border-stone-200 p-4 w-72 bg-white align-top relative group">
+                        <button
                           onClick={() => removeProperty(String(prop.id))}
                           className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-sm transition-colors opacity-0 group-hover:opacity-100 z-10"
-                          title="Remover de la comparativa"
+                          title="Remover"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
-                        
+                       
                         <div className="aspect-[4/3] rounded-lg overflow-hidden bg-stone-100 mb-3 relative">
-                          <img 
-                            src={prop.publicaciones?.[0]?.multimedia?.[0]?.url || '/placeholder-house.jpg'} 
+                          <img
+                            src={prop.publicaciones?.[0]?.multimedia?.[0]?.url || '/placeholder-house.jpg'}
                             alt={prop.titulo}
                             className="w-full h-full object-cover"
                           />
@@ -144,9 +140,7 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
                     <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Tipo</td>
                     {properties.map(prop => (
                       <td key={prop.id} className="p-4">
-                        <span className="px-2.5 py-1 bg-stone-100 text-stone-600 text-xs font-bold rounded-md uppercase">
-                          {prop.categoria || 'No especificado'}
-                        </span>
+                        <span className="px-2.5 py-1 bg-stone-100 text-stone-600 text-xs font-bold rounded-md uppercase">{prop.categoria || '-'}</span>
                       </td>
                     ))}
                   </tr>
@@ -171,7 +165,7 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
                           {tags.length > 0 ? (
                             <div className="flex flex-wrap gap-1.5">
                               {tags.map(t => (
-                                <span key={t.etiqueta.nombre} className="px-2 py-0.5 bg-orange-50 text-[#ea580c] border border-orange-200 rounded-full text-[11px] font-medium whitespace-nowrap">
+                                <span key={`tag-${prop.id}-${t.etiqueta.nombre}`} className="px-2.5 py-1 bg-stone-100 text-stone-600 border border-stone-200 rounded-lg text-[11px] font-bold uppercase tracking-wide">
                                   {t.etiqueta.nombre}
                                 </span>
                               ))}
@@ -183,6 +177,31 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
                       )
                     })}
                   </tr>
+
+                  {/* 👇 NUEVA FILA 2: AMENIDADES */}
+                  <tr className="hover:bg-stone-50/50 transition-colors">
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">Amenidades</td>
+                    {properties.map(prop => {
+                      // Ya podemos mapear inmueble_amenidad sin que TS se queje
+                      const amenidades = prop.inmueble_amenidad || [];
+                      return (
+                        <td key={prop.id} className="p-4">
+                          {amenidades.length > 0 ? (
+                            <div className="flex flex-wrap gap-1.5">
+                              {amenidades.map(a => (
+                                <span key={`amenity-${prop.id}-${a.amenidad.nombre}`} className="px-2.5 py-1 bg-orange-50 text-[#ea580c] border border-orange-200 rounded-lg text-xs font-medium">
+                                  {a.amenidad.nombre}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-sm italic text-stone-400">Sin amenidades</span>
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
+
                 </tbody>
               </table>
             </div>

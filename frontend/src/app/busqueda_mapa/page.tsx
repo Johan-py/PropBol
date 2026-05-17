@@ -183,9 +183,15 @@ function BusquedaMapaContent() {
 
   const toggleOferta = () => {
     const newState = !isOfertaOpen
+
+    if (newState) {
+      setIsPriceFilterOpen(false)
+      setActiveSidebarView('results')
+      setIsSidebarOpen(true)
+    }
+
     setIsOfertaOpen(newState)
 
-    // Actualizar URL
     const params = new URLSearchParams(searchParams.toString())
     if (newState) {
       params.set('soloOfertas', 'true')
@@ -196,12 +202,26 @@ function BusquedaMapaContent() {
   }
 
   const toggleCapacidad = () => {
+    if (isOfertaOpen) {
+      setIsOfertaOpen(false)
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete('soloOfertas')
+      router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+    }
+
     setIsPriceFilterOpen(false)
     setIsSidebarOpen(true)
     setActiveSidebarView((prev) => (prev === 'capacidad' ? 'results' : 'capacidad'))
   }
 
   const openEtiquetas = () => {
+    if (isOfertaOpen) {
+      setIsOfertaOpen(false)
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete('soloOfertas')
+      router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+    }
+
     setIsPriceFilterOpen(false)
     setIsSidebarOpen(true)
     setActiveSidebarView((prev) => (prev === 'etiquetas' ? 'results' : 'etiquetas'))
@@ -855,17 +875,15 @@ function BusquedaMapaContent() {
     <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
       <button
         onClick={() => setViewMode('grid')}
-        className={`p-1 rounded transition-colors ${
-          viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-        }`}
+        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+          }`}
       >
         <LayoutGrid size={16} />
       </button>
       <button
         onClick={() => setViewMode('list')}
-        className={`p-1 rounded transition-colors ${
-          viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-        }`}
+        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+          }`}
       >
         <ListIcon size={16} />
       </button>
@@ -907,11 +925,10 @@ function BusquedaMapaContent() {
         />
       ) : (
         <div
-          className={`gap-3 flex flex-col ${
-            viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
-          }`}
+          className={`gap-3 flex flex-col ${viewMode === 'list'
+            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+            : ''
+            }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
             const isSelected = isCompareMode && selectedIds.includes(property.id);
@@ -1188,8 +1205,8 @@ function BusquedaMapaContent() {
 
           {/* ── BOTONES FLOTANTES DE ZONAS (portrait móvil) ──
               z-[35] para quedar siempre sobre el bottom sheet (z-[30])
-              Centrados horizontalmente en la parte superior del mapa */}
-          <div className="absolute top-3 left-0 right-0 z-[35] flex flex-col items-center gap-2 pointer-events-none">
+              Alineados a la derecha en la parte superior del mapa para no solapar el zoom */}
+          <div className="absolute top-3 right-4 z-[35] flex flex-col items-end gap-2 pointer-events-none">
             {/* Estado normal: Mis zonas + Dibujar zona */}
             {!isDrawingMode && !editingZoneId && (
               <div className="flex flex-row gap-2 pointer-events-auto">
@@ -1554,11 +1571,25 @@ function BusquedaMapaContent() {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
         onOpenPriceFilter={() => {
+          if (isOfertaOpen) {
+            setIsOfertaOpen(false)
+            const params = new URLSearchParams(searchParams.toString())
+            params.delete('soloOfertas')
+            router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+          }
+
           setIsPriceFilterOpen((prev) => !prev)
           setIsSidebarOpen(true)
           setActiveSidebarView('results')
         }}
         onOpenSuperficieFilter={() => {
+          if (isOfertaOpen) {
+            setIsOfertaOpen(false)
+            const params = new URLSearchParams(searchParams.toString())
+            params.delete('soloOfertas')
+            router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+          }
+
           setIsPriceFilterOpen(false)
           setIsSidebarOpen(true)
           setActiveSidebarView((prev) => (prev === 'superficie' ? 'results' : 'superficie'))
@@ -1679,9 +1710,8 @@ function BusquedaMapaContent() {
                 {/* BLOQUE 2: títulos + orden+vista: grid evita hueco enorme al ensanchar el panel */}
                 <div className={`px-4 pb-3 flex flex-col ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}>
                   <div
-                    className={`grid items-start gap-x-4 gap-y-3 ${
-                      resultsHeaderSideBySide ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-1'
-                    }`}
+                    className={`grid items-start gap-x-4 gap-y-3 ${resultsHeaderSideBySide ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-1'
+                      }`}
                   >
                     <div className="flex min-w-0 justify-between gap-2">
                       <div className="flex min-w-0 flex-col">
@@ -1769,16 +1799,14 @@ function BusquedaMapaContent() {
                     </div>
 
                     <div
-                      className={`flex w-full flex-col gap-2 ${
-                        resultsHeaderSideBySide ? 'w-auto max-w-full shrink-0 items-end' : ''
-                      }`}
+                      className={`flex w-full flex-col gap-2 ${resultsHeaderSideBySide ? 'w-auto max-w-full shrink-0 items-end' : ''
+                        }`}
                     >
                       <div
-                        className={`flex w-full flex-wrap items-end gap-x-2 gap-y-2 ${
-                          resultsHeaderSideBySide
-                            ? 'w-auto max-w-[22rem] justify-end'
-                            : 'justify-start'
-                        }`}
+                        className={`flex w-full flex-wrap items-end gap-x-2 gap-y-2 ${resultsHeaderSideBySide
+                          ? 'w-auto max-w-[22rem] justify-end'
+                          : 'justify-start'
+                          }`}
                       >
                         <MenuOrdenamiento
                           totalResultados={displayedProperties.length}
@@ -1865,7 +1893,7 @@ function BusquedaMapaContent() {
                       viewMode === 'list'
                         ? 'divide-y divide-gray-100 dark:divide-stone-800 bg-white dark:bg-stone-900 border border-gray-100 dark:border-stone-800 rounded-xl shadow-sm'
                         : ''
-                    }`}
+                      }`}
                     style={
                       viewMode === 'grid'
                         ? { ['--card-min-width' as string]: `${desktopGridMinWidth}px` }
@@ -1931,11 +1959,12 @@ function BusquedaMapaContent() {
                               }}
                               precio={property.precio ? Number(property.precio) : undefined}
                               precio_anterior={
-                                property.precio_anterior
-                                  ? Number(property.precio_anterior)
-                                  : undefined
+                              property.precio_anterior
+                               ? Number(property.precio_anterior)
+                              : undefined
                               }
-                            />
+                             esRecomendadoIA={isRecomendadosActive}
+                              />
                           ) : (
                             <PropertyRow
                               title={property.title}
@@ -2221,7 +2250,7 @@ function BusquedaMapaContent() {
         />
       </main>
       {/* MONTAJE DEL MODAL COMPARATIVO */}
-      <CompareFooter 
+      <CompareFooter
         onOpenModal={() => {
           // Abrimos el modal instantáneamente para el usuario
           setIsModalOpen(true);
@@ -2242,12 +2271,12 @@ function BusquedaMapaContent() {
               })
             }).catch(err => console.error("Error al guardar historial de comparación:", err));
           }
-        }} 
+        }}
       />
-      
-      <ComparatorModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+
+      <ComparatorModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </div>
   )
